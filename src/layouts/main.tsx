@@ -6,7 +6,7 @@ import React from "react";
 export const MainLayout = ({ children }: MainLayoutInterface) => {
   //444 - 600 - 900 - 1200
   return (
-    <>
+    <Box component={"section"}>
       <Container maxWidth="md">
         <Stack minHeight="100vh">
           <HeaderComponent />
@@ -16,6 +16,6 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
           <FooterComponent />
         </Stack>
       </Container>
-    </>
+    </Box>
   );
 };

@@ -5,20 +5,20 @@ import React from "react";
 
 export const LoginLayout = ({ children }: LoginLayoutInterface) => {
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="xs">
       <Stack minHeight={"100vh"}>
-        <Box
-          component="div"
-          p={1}
-          my={3}
-          flexGrow={1}
-          sx={{
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-          }}
-        >
-          {children}
-        </Box>
+        <Stack my={3} flexGrow={1} justifyContent={"center"}>
+          <Stack
+            justifyContent={"center"}
+            p={2}
+            sx={{
+              border: "1px solid #ccc",
+              borderRadius: "5px",
+            }}
+          >
+            {children}
+          </Stack>
+        </Stack>
       </Stack>
     </Container>
   );

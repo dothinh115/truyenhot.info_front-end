@@ -1,7 +1,5 @@
 import { LoginLayout } from "@/layouts";
-import { API } from "@/utils/config";
 import { Box, Button, TextField } from "@mui/material";
-import React from "react";
 import { Controller, useForm } from "react-hook-form";
 
 type Props = {};
@@ -25,32 +23,68 @@ const Login = (props: Props) => {
   });
 
   const submitHandle = async (data: any) => {
-    const result = await API.post("/signIn", data);
-    console.log(result);
+    console.log(data);
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit(submitHandle)}>
+    <form onSubmit={handleSubmit(submitHandle)}>
+      <Box
+        component={"h1"}
+        m={0}
+        mb={1}
+        sx={{
+          borderBottom: "1px solid #eee",
+        }}
+      >
+        Đăng nhập
+      </Box>
+      <Box py={1}>
         <Controller
           name={"email"}
           control={control}
+          rules={{
+            required: "Không được để trống",
+          }}
           render={({ field: { onChange, value } }) => (
-            <TextField onChange={onChange} value={value} label={"Email"} />
+            <TextField
+              fullWidth
+              label={"Email"}
+              onChange={onChange}
+              value={value}
+              error={!!errors?.email}
+              helperText={errors.email?.message ? errors.email?.message : null}
+            />
           )}
         />
+      </Box>
+      <Box py={1}>
         <Controller
           name={"password"}
           control={control}
+          rules={{
+            required: "Không được để trống",
+          }}
           render={({ field: { onChange, value } }) => (
-            <TextField onChange={onChange} value={value} label={"Password"} />
+            <TextField
+              fullWidth
+              type="password"
+              label={"Password"}
+              onChange={onChange}
+              value={value}
+              error={!!errors?.password}
+              helperText={
+                errors.password?.message ? errors.password?.message : null
+              }
+            />
           )}
         />
+      </Box>
+      <Box textAlign={"right"}>
         <Button color="success" type="submit" variant="contained">
           Submit
         </Button>
-      </form>
-    </>
+      </Box>
+    </form>
   );
 };
 
