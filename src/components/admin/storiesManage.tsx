@@ -63,6 +63,13 @@ export const StoriesManage = (props: Props) => {
           </ListItemButton>
         </List>
       </Collapse>
+
+      <ListItemButton component={Link} href="/admin/categories/new">
+        <ListItemIcon>
+          <AddIcon />
+        </ListItemIcon>
+        <ListItemText primary="Thêm thể loại" />
+      </ListItemButton>
     </>
   );
 };

@@ -22,7 +22,6 @@ export const AdminLayout = ({ children }: AdminLayoutInterface) => {
           visibility: isLoading ? "visible" : "hidden",
         }}
       />
-
       <Container maxWidth={false}>
         <Stack direction={"row"}>
           <AdminSidebar />

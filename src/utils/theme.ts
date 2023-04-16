@@ -28,13 +28,15 @@ const theme = createTheme({
   },
   components: {
     MuiContainer: {
+      defaultProps: {},
       styleOverrides: {
         root: {
-          padding: "0px!important",
-          margin: "0px!important",
+          "@media (min-width: 600px)": {
+            padding: "0px",
+            margin: "0px",
+          },
         },
       },
-      defaultProps: {},
       variants: [],
     },
   },

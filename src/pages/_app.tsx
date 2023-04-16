@@ -28,8 +28,9 @@ export default function App({
         <CssBaseline />
         <SWRConfig
           value={{
-            fetcher: (url) => API.get(url),
             shouldRetryOnError: false,
+            revalidateOnFocus: false,
+            fetcher: (url) => API.get(url),
           }}
         >
           <Layout>
