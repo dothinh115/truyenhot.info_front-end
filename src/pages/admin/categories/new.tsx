@@ -1,3 +1,4 @@
+import { useSnackbar } from "@/hooks/snackbar";
 import { AdminLayout } from "@/layouts";
 import { API } from "@/utils/config";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -32,20 +33,8 @@ interface CategoryDataInterface {
 }
 
 const NewCategory = (props: Props) => {
-  const [snackbarOpen, setSnackbarOpen] = useState<{
-    open: boolean;
-    message: string;
-    type: AlertColor | undefined;
-  }>({
-    open: false,
-    message: "",
-    type: undefined,
-  });
-  const {
-    data: categoriesData,
-    isLoading,
-    mutate,
-  } = useSWR("/categories/getAll");
+  const { snackbar, setSnackbar } = useSnackbar();
+  const { data: categoriesData, mutate } = useSWR("/categories/getAll");
 
   const {
     control,
@@ -61,9 +50,9 @@ const NewCategory = (props: Props) => {
 
   const submitHandle = async (data: any) => {
     try {
-      await API.post("/categories/new", data);
+      await API("/categories/new", data);
       await mutate();
-      setSnackbarOpen({
+      setSnackbar({
         open: true,
         message: "Thêm thể loại thành công!",
         type: "success",
@@ -72,7 +61,7 @@ const NewCategory = (props: Props) => {
         cate_title: "",
       });
     } catch (error: any) {
-      setSnackbarOpen({
+      setSnackbar({
         open: true,
         message: error.response?.data.message,
         type: "error",
@@ -80,25 +69,11 @@ const NewCategory = (props: Props) => {
     }
   };
 
-  const handleClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setSnackbarOpen({
-      open: false,
-      message: "",
-      type: "info",
-    });
-  };
-
   const deleteHandle = async (cate_id: number) => {
     try {
       await API.delete(`/categories/delete/${cate_id}`);
       await mutate();
-      setSnackbarOpen({
+      setSnackbar({
         open: true,
         message: "Xóa thể loại thành công!",
         type: "success",
@@ -110,16 +85,7 @@ const NewCategory = (props: Props) => {
 
   return (
     <>
-      <Snackbar
-        autoHideDuration={6000}
-        open={snackbarOpen.open}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-      >
-        <Alert onClose={handleClose} severity={snackbarOpen.type}>
-          {snackbarOpen.message}
-        </Alert>
-      </Snackbar>
+      {snackbar}
 
       <Stack direction={"row"} justifyContent={"center"}>
         <Container maxWidth={"sm"}>

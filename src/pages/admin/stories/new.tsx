@@ -6,15 +6,22 @@ import {
   Box,
   TextField,
   Button,
-  AutocompleteGetTagProps,
-  autocompleteClasses,
   useAutocomplete,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { NewStoryInterface } from "@/models";
 import CheckIcon from "@mui/icons-material/Check";
 import useSWR from "swr";
 import { InputWrapper, Listbox, Root, StyledTag } from "@/style/autoselectBox";
+import { API } from "@/utils/config";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { useSnackbar } from "@/hooks/snackbar";
 
 type Props = {};
 
@@ -33,6 +40,8 @@ const newStoryShape: NewStoryInterface = {
 
 const AdminNewStories = (props: Props) => {
   const { data: categoriesList } = useSWR("/categories/getAll");
+  const { data: storiesList, mutate } = useSWR("/stories/getAll");
+  const { snackbar, setSnackbar } = useSnackbar();
 
   const {
     getInputProps,
@@ -58,19 +67,65 @@ const AdminNewStories = (props: Props) => {
     defaultValues: newStoryShape,
   });
 
-  const newStorySubmitHandle = (data: any) => {
-    let cateList: CategoryInterface[] = [];
-    for (let cate of value) {
-      cateList = [...cateList, cate.cate_id];
+  const newStorySubmitHandle = async (data: any) => {
+    try {
+      let cateList: CategoryInterface[] = [];
+      for (let cate of value) {
+        cateList = [...cateList, cate.cate_id];
+      }
+      const newData = {
+        ...data,
+        story_category: cateList.join(","),
+      };
+
+      const formData = new FormData();
+      for (let key in newData) {
+        formData.append(key, newData[key]);
+      }
+      await API({
+        url: "/stories/new",
+        data: formData,
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      await mutate();
+      setSnackbar({
+        message: "Thêm truyện thành công",
+        open: true,
+        type: "success",
+      });
+    } catch (error: any) {
+      setSnackbar({
+        message: error.response?.data.message,
+        open: true,
+        type: "error",
+      });
     }
-    console.log({
-      ...data,
-      story_category: cateList.join(","),
-    });
+  };
+
+  const deleteHandle = async (story_id: number) => {
+    try {
+      await API.delete(`/stories/delete/${story_id}`);
+      await mutate();
+      setSnackbar({
+        message: "Xóa truyện thành công",
+        open: true,
+        type: "success",
+      });
+    } catch (error: any) {
+      setSnackbar({
+        message: error.response?.data.message,
+        open: true,
+        type: "error",
+      });
+    }
   };
 
   return (
     <>
+      {snackbar}
       <Stack component={"div"} flexDirection={"row"} justifyContent={"center"}>
         <Container maxWidth={"sm"}>
           <Box
@@ -220,6 +275,44 @@ const AdminNewStories = (props: Props) => {
                 </Button>
               </Stack>
             </form>
+          </Box>
+          <Box
+            sx={{
+              mt: 4,
+            }}
+          >
+            <Box component={"h1"}>ĐĂNG GẦN ĐÂY</Box>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Tên truyện</TableCell>
+                    <TableCell width={"20%"}>Tác giả</TableCell>
+                    <TableCell width={"10%"}>Xóa</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {storiesList?.result.map((story: any) => {
+                    return (
+                      <TableRow key={story.story_id}>
+                        <TableCell>{story.story_title}</TableCell>
+                        <TableCell>{story.story_author}</TableCell>
+                        <TableCell>
+                          <Button
+                            color="error"
+                            variant="contained"
+                            type="button"
+                            onClick={() => deleteHandle(story.story_id)}
+                          >
+                            <DeleteForeverIcon />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Box>
         </Container>
       </Stack>
