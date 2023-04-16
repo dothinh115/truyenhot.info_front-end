@@ -1,15 +1,16 @@
+import { useAuth } from "@/hooks/auth";
 import { LoginLayout } from "@/layouts";
+import { LoginType } from "@/models";
 import { Box, Button, TextField } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 
 type Props = {};
 
-type LoginType = {
-  email: string;
-  password: string;
-};
-
 const Login = (props: Props) => {
+  const { login } = useAuth({
+    revalidateOnMount: false,
+  });
+
   const {
     handleSubmit,
     control,
@@ -23,7 +24,11 @@ const Login = (props: Props) => {
   });
 
   const submitHandle = async (data: any) => {
-    console.log(data);
+    try {
+      await login(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -71,7 +76,7 @@ const Login = (props: Props) => {
               label={"Password"}
               onChange={onChange}
               value={value}
-              error={!!errors?.password}
+              error={!!errors.password?.message}
               helperText={
                 errors.password?.message ? errors.password?.message : null
               }
@@ -80,7 +85,7 @@ const Login = (props: Props) => {
         />
       </Box>
       <Box textAlign={"right"}>
-        <Button color="success" type="submit" variant="contained">
+        <Button type="submit" variant="contained">
           Submit
         </Button>
       </Box>

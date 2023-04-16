@@ -1,11 +1,14 @@
 import { MainLayout } from "@/layouts";
 import { MyAppProps } from "@/models";
+import { API } from "@/utils/config";
 import createEmotionCache from "@/utils/createEmotionCache";
 import theme from "@/utils/theme";
 import { CacheProvider } from "@emotion/react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import Head from "next/head";
+import { SWRConfig } from "swr/_internal";
+import "../style/style.scss";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -23,9 +26,16 @@ export default function App({
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <SWRConfig
+          value={{
+            fetcher: (url) => API.get(url),
+            shouldRetryOnError: false,
+          }}
+        >
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </SWRConfig>
       </ThemeProvider>
     </CacheProvider>
   );

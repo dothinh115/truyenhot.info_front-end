@@ -16,18 +16,8 @@ const proxy = httpProxy.createServer();
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   new Promise((resolve) => {
     const cookies = new Cookies(req, res);
-    const accessToken = cookies.get("accessToken");
-    if (accessToken) {
-      req.headers.Authorization = `Bearer ${accessToken}`;
-    }
-    req.headers.cookie = "";
-
-    proxy.web(req, res, {
-      target: "http://localhost:5000",
-      changeOrigin: true,
-      selfHandleResponse: false,
-    });
-
-    proxy.once("proxyRes", () => resolve(true));
+    cookies.set("accessToken");
+    res.status(200).json({ message: "Đăng xuất thành công!" });
+    resolve(true);
   });
 }

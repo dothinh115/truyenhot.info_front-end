@@ -1,0 +1,14 @@
+.admin-list-style {
+  & > h1 {
+    background-color: $admin-sidebar-background-color;
+    color: $primary-contrastText;
+  }
+  & > li > *,
+  & * {
+    color: $primary-contrastText;
+  }
+  & a:hover,
+  & div.MuiListItemButton-root:hover {
+    background-color: $admin-sidebar-hover-background-color;
+  }
+}
