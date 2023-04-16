@@ -1,6 +1,7 @@
 import { AdminLayout } from "@/layouts";
 import { API } from "@/utils/config";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+// import AlertColor from "";
 import {
   Alert,
   Button,
@@ -12,6 +13,7 @@ import {
   TableHead,
   TableRow,
   TextField,
+  AlertColor,
 } from "@mui/material";
 import { Box, Container, Stack } from "@mui/system";
 import React, { useState } from "react";
@@ -30,9 +32,14 @@ interface CategoryDataInterface {
 }
 
 const NewCategory = (props: Props) => {
-  const [snackbarOpen, setSnackbarOpen] = useState({
+  const [snackbarOpen, setSnackbarOpen] = useState<{
+    open: boolean;
+    message: string;
+    type: AlertColor | undefined;
+  }>({
     open: false,
     message: "",
+    type: undefined,
   });
   const {
     data: categoriesData,
@@ -59,12 +66,17 @@ const NewCategory = (props: Props) => {
       setSnackbarOpen({
         open: true,
         message: "Thêm thể loại thành công!",
+        type: "success",
       });
       reset({
         cate_title: "",
       });
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      setSnackbarOpen({
+        open: true,
+        message: error.response?.data.message,
+        type: "error",
+      });
     }
   };
 
@@ -78,6 +90,7 @@ const NewCategory = (props: Props) => {
     setSnackbarOpen({
       open: false,
       message: "",
+      type: "info",
     });
   };
 
@@ -88,6 +101,7 @@ const NewCategory = (props: Props) => {
       setSnackbarOpen({
         open: true,
         message: "Xóa thể loại thành công!",
+        type: "success",
       });
     } catch (error) {
       console.log(error);
@@ -102,7 +116,9 @@ const NewCategory = (props: Props) => {
         onClose={handleClose}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
-        <Alert severity="success">{snackbarOpen.message}</Alert>
+        <Alert onClose={handleClose} severity={snackbarOpen.type}>
+          {snackbarOpen.message}
+        </Alert>
       </Snackbar>
 
       <Stack direction={"row"} justifyContent={"center"}>
@@ -155,6 +171,15 @@ const NewCategory = (props: Props) => {
               mt: 4,
             }}
           >
+            <Box
+              component={"h1"}
+              sx={{
+                pb: 1,
+                borderBottom: "1px solid #ccc",
+              }}
+            >
+              THỂ LOẠI ĐÃ THÊM
+            </Box>
             <TableContainer>
               <Table>
                 <TableHead>
