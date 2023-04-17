@@ -62,6 +62,9 @@ const AdminNewStories = (props: Props) => {
     control,
     handleSubmit,
     formState: { errors },
+    setError,
+    clearErrors,
+    reset,
   } = useForm<NewStoryInterface>({
     mode: "onChange",
     defaultValues: newStoryShape,
@@ -126,8 +129,15 @@ const AdminNewStories = (props: Props) => {
   return (
     <>
       {snackbar}
-      <Stack component={"div"} flexDirection={"row"} justifyContent={"center"}>
-        <Container maxWidth={"sm"}>
+      <Stack
+        component={"div"}
+        flexDirection={"row"}
+        justifyContent={"center"}
+        p={2}
+        maxHeight={"calc(100vh - 56px)"}
+        overflow={"auto"}
+      >
+        <Container maxWidth={false}>
           <Box
             component={"h2"}
             sx={{
@@ -137,145 +147,207 @@ const AdminNewStories = (props: Props) => {
           >
             Đăng truyện mới
           </Box>
-          <Box>
-            <form onSubmit={handleSubmit(newStorySubmitHandle)}>
-              <Controller
-                name={"story_title"}
-                control={control}
-                rules={{
-                  required: "Không được để trống",
-                }}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    sx={{
-                      mb: 1,
-                    }}
-                    fullWidth
-                    type="text"
-                    label={"Tiêu đề truyện"}
-                    onChange={onChange}
-                    value={value}
-                    error={!!errors.story_title?.message}
-                    helperText={
-                      errors.story_title?.message
-                        ? errors.story_title?.message
-                        : null
-                    }
-                  />
-                )}
-              />
-
-              <Controller
-                name={"story_author"}
-                control={control}
-                rules={{
-                  required: "Không được để trống",
-                }}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    sx={{
-                      mb: 1,
-                    }}
-                    fullWidth
-                    type="text"
-                    label={"Tác giả"}
-                    onChange={onChange}
-                    value={value}
-                    error={!!errors.story_author?.message}
-                    helperText={
-                      errors.story_author?.message
-                        ? errors.story_author?.message
-                        : null
-                    }
-                  />
-                )}
-              />
-
-              <Controller
-                name={"story_description"}
-                control={control}
-                rules={{
-                  required: "Không được để trống",
-                }}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    sx={{
-                      mb: 1,
-                    }}
-                    multiline
-                    rows={4}
-                    fullWidth
-                    type="text"
-                    label={"Mô tả ngắn"}
-                    onChange={onChange}
-                    value={value}
-                    error={!!errors.story_description?.message}
-                    helperText={
-                      errors.story_description?.message
-                        ? errors.story_description?.message
-                        : null
-                    }
-                  />
-                )}
-              />
-
-              <Controller
-                name={"story_source"}
-                control={control}
-                rules={{
-                  required: "Không được để trống",
-                }}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    sx={{
-                      mb: 1,
-                    }}
-                    fullWidth
-                    type="text"
-                    label={"Nguồn"}
-                    onChange={onChange}
-                    value={value}
-                    error={!!errors.story_source?.message}
-                    helperText={
-                      errors.story_source?.message
-                        ? errors.story_source?.message
-                        : null
-                    }
-                  />
-                )}
-              />
-
-              <Root>
-                <InputWrapper className={focused ? "focused" : ""}>
-                  {value.map((option: CategoryInterface, index: number) => (
-                    <StyledTag
-                      label={option.cate_title}
-                      {...getTagProps({ index })}
+          <form onSubmit={handleSubmit(newStorySubmitHandle)}>
+            <Stack
+              flexDirection={"row"}
+              alignItems={"center"}
+              flexWrap={"wrap"}
+            >
+              <Box width={"20%"} display={"flex"} alignItems={"center"}>
+                Tiêu đề
+              </Box>
+              <Box width={"80%"}>
+                <Controller
+                  name={"story_title"}
+                  control={control}
+                  rules={{
+                    required: "Không được để trống",
+                  }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      sx={{
+                        mb: 1,
+                      }}
+                      fullWidth
+                      type="text"
+                      label={"Tiêu đề truyện"}
+                      onChange={onChange}
+                      value={value}
+                      error={!!errors.story_title?.message}
+                      helperText={
+                        errors.story_title?.message
+                          ? errors.story_title?.message
+                          : null
+                      }
                     />
-                  ))}
-                  <input {...getInputProps()} />
-                </InputWrapper>
-                {groupedOptions.length > 0 ? (
-                  <Listbox {...getListboxProps()}>
-                    {(groupedOptions as typeof categoriesList).map(
-                      (option: CategoryInterface, index: number) => (
-                        <li {...getOptionProps({ option, index })}>
-                          <span>{option.cate_title}</span>
-                          <CheckIcon fontSize="small" />
-                        </li>
-                      )
-                    )}
-                  </Listbox>
-                ) : null}
-              </Root>
+                  )}
+                />
+              </Box>
 
-              <Stack flexDirection={"row"} justifyContent={"flex-end"}>
-                <Button type="submit" variant="contained">
-                  Đăng
-                </Button>
-              </Stack>
-            </form>
-          </Box>
+              <Box width={"20%"} display={"flex"} alignItems={"center"}>
+                Tác giả
+              </Box>
+
+              <Box width={"80%"}>
+                <Controller
+                  name={"story_author"}
+                  control={control}
+                  rules={{
+                    required: "Không được để trống",
+                  }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      sx={{
+                        mb: 1,
+                      }}
+                      fullWidth
+                      type="text"
+                      label={"Tác giả"}
+                      onChange={onChange}
+                      value={value}
+                      error={!!errors.story_author?.message}
+                      helperText={
+                        errors.story_author?.message
+                          ? errors.story_author?.message
+                          : null
+                      }
+                    />
+                  )}
+                />
+              </Box>
+
+              <Box width={"20%"} display={"flex"} alignItems={"center"}>
+                Mô tả
+              </Box>
+              <Box width={"80%"}>
+                <Controller
+                  name={"story_description"}
+                  control={control}
+                  rules={{
+                    required: "Không được để trống",
+                  }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      sx={{
+                        mb: 1,
+                      }}
+                      multiline
+                      rows={4}
+                      fullWidth
+                      type="text"
+                      label={"Mô tả ngắn"}
+                      onChange={onChange}
+                      value={value}
+                      error={!!errors.story_description?.message}
+                      helperText={
+                        errors.story_description?.message
+                          ? errors.story_description?.message
+                          : null
+                      }
+                    />
+                  )}
+                />
+              </Box>
+
+              <Box width={"20%"} display={"flex"} alignItems={"center"}>
+                Nguồn
+              </Box>
+              <Box width={"80%"}>
+                <Controller
+                  name={"story_source"}
+                  control={control}
+                  rules={{
+                    required: "Không được để trống",
+                  }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      sx={{
+                        mb: 1,
+                      }}
+                      fullWidth
+                      type="text"
+                      label={"Nguồn"}
+                      onChange={onChange}
+                      value={value}
+                      error={!!errors.story_source?.message}
+                      helperText={
+                        errors.story_source?.message
+                          ? errors.story_source?.message
+                          : null
+                      }
+                    />
+                  )}
+                />
+              </Box>
+
+              <Box width={"20%"} display={"flex"} alignItems={"center"}>
+                Thể loại
+              </Box>
+              <Box width={"80%"}>
+                <Root>
+                  <InputWrapper className={focused ? "focused" : ""}>
+                    {value.map((option: CategoryInterface, index: number) => (
+                      <StyledTag
+                        label={option.cate_title}
+                        {...getTagProps({ index })}
+                      />
+                    ))}
+                    <input {...getInputProps()} />
+                  </InputWrapper>
+                  {groupedOptions.length > 0 ? (
+                    <Listbox {...getListboxProps()}>
+                      {(groupedOptions as typeof categoriesList).map(
+                        (option: CategoryInterface, index: number) => (
+                          <li {...getOptionProps({ option, index })}>
+                            <span>{option.cate_title}</span>
+                            <CheckIcon fontSize="small" />
+                          </li>
+                        )
+                      )}
+                    </Listbox>
+                  ) : null}
+                </Root>
+              </Box>
+
+              <Box width={"20%"} display={"flex"} alignItems={"center"}>
+                Thể loại
+              </Box>
+              <Box width={"80%"}>
+                <Controller
+                  name="cover_img"
+                  control={control}
+                  render={({ field: { onChange } }) => (
+                    <TextField
+                      type="file"
+                      onChange={({ currentTarget }) => {
+                        const file = (currentTarget as HTMLInputElement)
+                          .files![0];
+                        if (file && file.size > 2000000)
+                          setError("cover_img", {
+                            message: "Dung lượng vượt quá 2Mb",
+                          });
+                        else clearErrors("cover_img");
+                        onChange(file);
+                      }}
+                      fullWidth
+                      error={!!errors.cover_img?.message}
+                      helperText={
+                        errors.cover_img?.message
+                          ? errors.cover_img?.message?.toString()
+                          : null
+                      }
+                    />
+                  )}
+                />
+              </Box>
+            </Stack>
+            <Stack flexDirection={"row"} justifyContent={"flex-end"} mt={1}>
+              <Button type="submit" variant="contained">
+                Đăng
+              </Button>
+            </Stack>
+          </form>
+
           <Box
             sx={{
               mt: 4,
@@ -286,6 +358,7 @@ const AdminNewStories = (props: Props) => {
               <Table>
                 <TableHead>
                   <TableRow>
+                    <TableCell width={"50px"}>Cover</TableCell>
                     <TableCell>Tên truyện</TableCell>
                     <TableCell width={"20%"}>Tác giả</TableCell>
                     <TableCell width={"10%"}>Xóa</TableCell>
@@ -295,6 +368,16 @@ const AdminNewStories = (props: Props) => {
                   {storiesList?.result.map((story: any) => {
                     return (
                       <TableRow key={story.story_id}>
+                        <TableCell>
+                          <Box
+                            component={"img"}
+                            src={story.story_cover}
+                            sx={{
+                              width: "50px",
+                              height: "50px",
+                            }}
+                          />
+                        </TableCell>
                         <TableCell>{story.story_title}</TableCell>
                         <TableCell>{story.story_author}</TableCell>
                         <TableCell>

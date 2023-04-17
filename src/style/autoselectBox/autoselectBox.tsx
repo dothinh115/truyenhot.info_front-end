@@ -20,6 +20,7 @@ export const Root = styled("div")(
   ({ theme }) => `
     color: rgba(0,0,0,.85)
     font-size: 14px;
+    position: relative;
   `
 );
 
