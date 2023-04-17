@@ -97,7 +97,6 @@ const AdminNewStories = (props: Props) => {
       setSnackbar({
         message: "Thêm truyện thành công",
         open: true,
-        type: "success",
       });
     } catch (error: any) {
       setSnackbar({
@@ -115,7 +114,6 @@ const AdminNewStories = (props: Props) => {
       setSnackbar({
         message: "Xóa truyện thành công",
         open: true,
-        type: "success",
       });
     } catch (error: any) {
       setSnackbar({
@@ -353,7 +351,7 @@ const AdminNewStories = (props: Props) => {
               mt: 4,
             }}
           >
-            <Box component={"h1"}>ĐĂNG GẦN ĐÂY</Box>
+            <Box component={"h2"}>Đăng gần đây</Box>
             <TableContainer>
               <Table>
                 <TableHead>

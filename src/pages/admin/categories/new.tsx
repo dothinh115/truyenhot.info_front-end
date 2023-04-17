@@ -2,11 +2,8 @@ import { useSnackbar } from "@/hooks/snackbar";
 import { AdminLayout } from "@/layouts";
 import { API } from "@/utils/config";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-// import AlertColor from "";
 import {
-  Alert,
   Button,
-  Snackbar,
   Table,
   TableBody,
   TableCell,
@@ -14,10 +11,8 @@ import {
   TableHead,
   TableRow,
   TextField,
-  AlertColor,
 } from "@mui/material";
 import { Box, Container, Stack } from "@mui/system";
-import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
 
@@ -55,7 +50,6 @@ const NewCategory = (props: Props) => {
       setSnackbar({
         open: true,
         message: "Thêm thể loại thành công!",
-        type: "success",
       });
       reset({
         cate_title: "",
@@ -76,7 +70,6 @@ const NewCategory = (props: Props) => {
       setSnackbar({
         open: true,
         message: "Xóa thể loại thành công!",
-        type: "success",
       });
     } catch (error) {
       console.log(error);
@@ -90,13 +83,13 @@ const NewCategory = (props: Props) => {
       <Stack direction={"row"} justifyContent={"center"}>
         <Container maxWidth={"sm"}>
           <Box
-            component={"h1"}
+            component={"h2"}
             sx={{
               pb: 1,
               borderBottom: "1px solid #ccc",
             }}
           >
-            THÊM THỂ LOẠI MỚI
+            Thêm thể loại mới
           </Box>
           <Box>
             <form onSubmit={handleSubmit(submitHandle)}>
@@ -138,13 +131,13 @@ const NewCategory = (props: Props) => {
             }}
           >
             <Box
-              component={"h1"}
+              component={"h2"}
               sx={{
                 pb: 1,
                 borderBottom: "1px solid #ccc",
               }}
             >
-              THỂ LOẠI ĐÃ THÊM
+              Thể loại đã thêm
             </Box>
             <TableContainer>
               <Table>

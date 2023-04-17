@@ -5,10 +5,10 @@ export const useSnackbar = () => {
   const [snackbarOpen, setSnackbarOpen] = useState<{
     open: boolean;
     message: string;
-    type: AlertColor | undefined;
+    type?: AlertColor | undefined;
   }>({
     open: false,
-    message: "",
+    message: "success",
     type: undefined,
   });
 
@@ -22,7 +22,7 @@ export const useSnackbar = () => {
     setSnackbarOpen({
       open: false,
       message: "",
-      type: "info",
+      type: "success",
     });
   };
 
