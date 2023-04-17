@@ -45,7 +45,7 @@ const NewCategory = (props: Props) => {
 
   const submitHandle = async (data: any) => {
     try {
-      await API("/categories/new", data);
+      await API.post("/categories/new", data);
       await mutate();
       setSnackbar({
         open: true,

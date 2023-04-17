@@ -308,7 +308,7 @@ const AdminNewStories = (props: Props) => {
               </Box>
 
               <Box width={"20%"} display={"flex"} alignItems={"center"}>
-                Thể loại
+                Cover
               </Box>
               <Box width={"80%"}>
                 <Controller
@@ -320,12 +320,14 @@ const AdminNewStories = (props: Props) => {
                       onChange={({ currentTarget }) => {
                         const file = (currentTarget as HTMLInputElement)
                           .files![0];
-                        if (file && file.size > 2000000)
+                        onChange(file);
+                        if (file && file.size > 2000000) {
                           setError("cover_img", {
                             message: "Dung lượng vượt quá 2Mb",
                           });
-                        else clearErrors("cover_img");
-                        onChange(file);
+                        } else {
+                          clearErrors("cover_img");
+                        }
                       }}
                       fullWidth
                       error={!!errors.cover_img?.message}
@@ -373,6 +375,7 @@ const AdminNewStories = (props: Props) => {
                             sx={{
                               width: "50px",
                               height: "50px",
+                              objectFit: "cover",
                             }}
                           />
                         </TableCell>

@@ -12,3 +12,12 @@ API.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export const PermissionVariables = {
+  Banned: 0,
+  Members: 1,
+  Editors: 2,
+  Moderators: 3,
+  Administrators: 4,
+  Founder: 5,
+};
