@@ -14,7 +14,7 @@ export const AdminLayout = ({ children }: AdminLayoutInterface) => {
     if (
       (!isLoading && !profile) ||
       (!isLoading &&
-        profile.result.permission_rules.permission_id <
+        profile?.result.permission_rules.permission_id <
           PermissionVariables.Editors)
     )
       router.push("/login");
@@ -22,7 +22,7 @@ export const AdminLayout = ({ children }: AdminLayoutInterface) => {
 
   if (
     !firstLoading &&
-    profile.result.permission_rules.permission_id < PermissionVariables.Editors
+    profile?.result.permission_rules.permission_id < PermissionVariables.Editors
   )
     return (
       <AdminLoading

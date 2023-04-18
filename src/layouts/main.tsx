@@ -1,21 +1,13 @@
-import { FooterComponent, HeaderComponent } from "@/components";
 import { MainLayoutInterface } from "@/models";
-import { Box, Container, Stack } from "@mui/material";
-import React from "react";
+import { HeaderSection } from "@/sections";
+import { Box } from "@mui/system";
 
 export const MainLayout = ({ children }: MainLayoutInterface) => {
   //444 - 600 - 900 - 1200
   return (
-    <Box component={"section"}>
-      <Container maxWidth="md">
-        <Stack minHeight="100vh">
-          <HeaderComponent />
-          <Box paddingY={2} flexGrow={1}>
-            {children}
-          </Box>
-          <FooterComponent />
-        </Stack>
-      </Container>
-    </Box>
+    <>
+      <HeaderSection />
+      {children}
+    </>
   );
 };

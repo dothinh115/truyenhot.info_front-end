@@ -37,3 +37,11 @@ export interface NewStoryInterface {
   story_category: string;
   cover_img?: any;
 }
+
+export interface SectionInterface {
+  children: ReactNode;
+}
+
+export interface BlockInterface {
+  children: ReactNode;
+}

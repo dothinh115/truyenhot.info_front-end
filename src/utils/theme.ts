@@ -30,6 +30,12 @@ const theme = createTheme({
     MuiContainer: {
       defaultProps: {},
       styleOverrides: {
+        maxWidthMd: {
+          maxWidth: "960px",
+          "@media (min-width:900px)": {
+            maxWidth: "960px",
+          },
+        },
         root: {
           "@media (min-width: 600px)": {
             padding: "0px",

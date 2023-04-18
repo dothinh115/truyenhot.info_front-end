@@ -1,23 +1,10 @@
-import { Button } from "@mui/material";
-import { Box } from "@mui/system";
+import { HeaderSection } from "@/sections";
 import React from "react";
 
 type Props = {};
 
 const Index = (props: Props) => {
-  return (
-    <Box>
-      <Button
-        color="success"
-        variant="contained"
-        sx={{
-          color: "red",
-        }}
-      >
-        Test
-      </Button>
-    </Box>
-  );
+  return <>Trang chủ</>;
 };
 
 export default Index;
