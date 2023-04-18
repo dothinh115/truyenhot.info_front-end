@@ -1,29 +1,26 @@
+import { useSnackbar } from "@/hooks/snackbar";
 import { AdminLayout } from "@/layouts";
-import React from "react";
-import {
-  Stack,
-  Container,
-  Box,
-  TextField,
-  Button,
-  useAutocomplete,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Input,
-  FormLabel,
-} from "@mui/material";
-import { Controller, useForm } from "react-hook-form";
 import { NewStoryInterface } from "@/models";
-import CheckIcon from "@mui/icons-material/Check";
-import useSWR from "swr";
 import { InputWrapper, Listbox, Root, StyledTag } from "@/style/autoselectBox";
 import { API } from "@/utils/config";
+import CheckIcon from "@mui/icons-material/Check";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { useSnackbar } from "@/hooks/snackbar";
+import {
+  Box,
+  Button,
+  Container,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  useAutocomplete,
+} from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
+import useSWR from "swr";
 
 type Props = {};
 
