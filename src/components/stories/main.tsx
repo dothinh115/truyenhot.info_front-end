@@ -1,88 +1,165 @@
 import { Typography } from "@mui/material";
 import { Stack, Box } from "@mui/system";
 import React from "react";
-import { Block } from "../block";
-import StarIcon from "@mui/icons-material/Star";
-
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import Link from "next/link";
 type Props = {};
 
 export const StoryMain = (props: Props) => {
   return (
-    <>
-      <Block>
-        <Stack direction={"row"} spacing={2} p={1}>
-          <Stack spacing={2} width={"35%"}>
-            <Box
-              component={"img"}
-              width={"100%"}
-              src="https://img.dtruyen.com/public/images/large/vancothande1AoD5YHIGS.jpg"
-              sx={{
-                objectFit: "cover",
-              }}
-            />
-            <Typography>
-              Tác giả: <span>sidebar</span>
-            </Typography>
-            <Typography>
-              Thể loại: <span>abc</span>
-            </Typography>
-            <Typography>
-              Nguồn: <span>abc</span>
-            </Typography>
-            <Typography>
-              Trạng thái: <span>abc</span>
-            </Typography>
-          </Stack>
-          <Stack spacing={2} width={"65%"}>
-            <Box
-              component={"h1"}
-              color={"#512da8"}
-              textAlign={"center"}
-              fontSize={25}
-              my={1}
-            >
-              TIÊU ĐỀ TRUYỆN
+    <Box>
+      <Box component={"h1"} fontSize={20}>
+        THÔNG TIN TRUYỆN
+      </Box>
+      <Box className={"hr"}></Box>
+      <Box component={"h1"} textAlign={"center"}>
+        CÁ MẶN LÊN ĐỆ NHẤT THIÊN BẢNG
+      </Box>
+      <Box textAlign={"center"}>
+        <Box
+          component={"img"}
+          src={
+            "https://static.8cache.com/cover/eJzLyTDWT4lIMy9NKQuyzDX2TcqtCkv3iC8tcyxKzoi09AvJdXQqtgxJrwz0dffMMAvKryiJz3MN8PQvCa1IcjJJLMssCM9ITwuM1I2qyDDIcCxxK3Q1cLQtNzI01c0wNjICAFx4IHw=/ca-man-len-de-nhat-thien-bang.jpg"
+          }
+          width={215}
+        />
+      </Box>
+      <Stack direction={"row"} justifyContent={"center"}>
+        <FavoriteIcon
+          sx={{
+            color: "red",
+            height: "25px",
+            lineHeight: "25px",
+            fontSize: "25px",
+          }}
+        />
+        <Typography
+          sx={{
+            fontStyle: "italic",
+            fontSize: "13px",
+            height: "25px",
+            lineHeight: "25px",
+          }}
+        >
+          3000 lượt like
+        </Typography>
+      </Stack>
+      <Stack>
+        <Box
+          component={"ul"}
+          sx={{
+            listStyleType: "none",
+            pl: 0,
+            "& a ": {
+              textDecoration: "none",
+              color: "#303f9f",
+            },
+            "& > li > a, & > li > h4, & > li > p": {
+              display: "inline-block",
+              marginRight: "5px",
+              fontSize: "14px",
+            },
+            "& > li > h4": {
+              my: 0,
+            },
+            "& > li": {
+              height: "30px",
+              lineHeight: "30px",
+              "&:not(:last-child)": {
+                borderBottom: "1px dashed #ccc",
+              },
+            },
+            "& > li > ul": {
+              display: "inline-block",
+              pl: 1,
+              "& > li": {
+                listStyleType: "none",
+                display: "inline-block",
+                mr: 1,
+                "&::after": {
+                  content: '","',
+                  display: "inline-block",
+                  ml: "2px",
+                },
+              },
+            },
+          }}
+        >
+          <Box component={"li"}>
+            <Box component={"h4"}>Tác giả:</Box>
+            <Box component={Link} href={"/"}>
+              Nhất Trì Thanh Hứa
             </Box>
-            <Box
-              sx={{
-                mt: 0 + "!important",
-                textAlign: "center",
-              }}
-            >
-              <StarIcon sx={{ color: "#c0ca33" }} />
-              <StarIcon sx={{ color: "#c0ca33" }} />
-              <StarIcon sx={{ color: "#c0ca33" }} />
-              <StarIcon sx={{ color: "#c0ca33" }} />
-              <StarIcon />
+          </Box>
+          <Box component={"li"}>
+            <Box component={"h4"}>Thể loại:</Box>
+            <Box component={"ul"}>
+              <Box component={"li"}>
+                <Box component={Link} href="/">
+                  Tiên Hiệp
+                </Box>
+              </Box>
+              <Box component={"li"}>
+                <Box component={Link} href="/">
+                  Ngôn Tình
+                </Box>
+              </Box>
             </Box>
-            <Box
-              sx={{
-                mt: 0 + "!important",
-              }}
-            >
-              <Typography py={2}>
-                Bạn đang đọc truyện Vạn Cổ Thần Đế của tác giả Phi Thiên Ngư
-                diễn ra vào thời điểm 800 năm trước, Minh Đế chi tử Trương Nhược
-                Trần, bị vị hôn thê của hắn Trì Dao công chúa giết chết, thiên
-                kiêu một đời, liền như vậy ngã xuống. Tám trăm năm sau, Trương
-                Nhược Trần một lần nữa sống lại trong truyện tiên hiệp hot, lại
-                phát hiện vị hôn thê đã từng giết chết hắn, đã thống nhất Côn
-                Lôn Giới, mở ra Đệ Nhất Trung Ương đế quốc, được xưng "Trì Dao
-                Nữ Hoàng" .
-                <br />
-                <br />
-                Trì Dao Nữ Hoàng —— thống ngự thiên hạ, uy lâm bát phương; thanh
-                xuân mãi mãi, bất tử bất diệt. Trương Nhược Trần đứng ở Chư
-                Hoàng Từ Đường ở ngoài, nhìn Trì Dao Nữ Hoàng tượng thần, trong
-                lòng bốc cháy lên hừng hực cừu hận liệt diễm, "Đợi ta trùng tu
-                mười ba năm, dám gọi Nữ Hoàng dưới Hoàng Tuyền". Mời bạn cùng
-                đọc truyện và thưởng thức truyện xuyên không hay nhất khá thú vị
-                này.
-              </Typography>
+          </Box>
+          <Box component={"li"}>
+            <Box component={"h4"}>Nguồn:</Box>
+            <Typography>Sưu tầm</Typography>
+          </Box>
+          <Box component={"li"}>
+            <Box component={"h4"}>Trạng thái:</Box>
+            <Box component={Link} href={"/"}>
+              Đang update
             </Box>
-          </Stack>
-        </Stack>
-      </Block>
-    </>
+          </Box>
+        </Box>
+      </Stack>
+      <Box className={"hr"}></Box>
+      <Typography
+        sx={{
+          mt: 2,
+          fontSize: "14px",
+        }}
+      >
+        Tác giả: Nhất Trì Thanh Hứa
+        <br />
+        <br />
+        Thể loại: Xuyên Không, Hài Hước, Ngôn Tình, Truyện Nữ Cường, Cổ Đại,
+        Tiên Hiệp, Truyện Sủng, Huyền Huyễn
+        <br />
+        <br />
+        Giới thiệu:
+        <br />
+        <br />
+        Ngu Tri Dao đã xuyên qua thành đại sư tỷ của Vân Kiếm Phái, được trang
+        bị buff may mắn và có miễn phí ăn uống trong mười năm khi ở Thế giới Tu
+        Chân. Tuy nhiên, từ một thiên tài của cấp bậc trên, nàng bỗng trở thành
+        một phế cá mặn khiến cho chưởng môn trưởng lão cảm thấy tiếc nuối về sự
+        mất đi của một thiên tài.
+        <br />
+        <br />
+        Sau khi Vân Sinh tiên cảnh xuất hiện, danh sách Thiên bảng ra đời và Ngu
+        Tri Dao nhanh chóng vươn lên đứng ở hạng nhất với năm người khác. Tuy
+        nhiên, ấn tượng xấu của nàng là phế vật cá mặn vẫn bám theo nàng trong
+        suốt hành trình, khiến các sư đệ sư muội của nàng muốn thách đấu với
+        nàng và cả những đứa trẻ giữ cửa trong Vân Kiếm Phái cũng muốn đánh đổi
+        vị trí trên Thiên bảng với nàng.
+        <br />
+        <br />
+        Mặc dù cảm thấy lạc quan hơn sau khi gặp gỡ Lạc Vân Dã, một người cùng
+        khổ cực với Ngu Tri Dao khi bị đánh rơi khỏi Vân Phù Phái, hai người
+        cùng nhau trình diễn kỹ năng và tạo niềm vui cho mọi người. Trên đường
+        đi, họ đụng đến các nơi khác như Yêu sơn và Huyễn sơn, và qua đó, Ngu
+        Tri Dao đã giúp đỡ Lạc Vân Dã nhiều lần với vận may của mình.
+        <br />
+        <br />
+        Cuối cùng, Ngu Tri Dao đã đạt được cấp bậc Thiên nhân cảnh trong Tu chân
+        giới.
+      </Typography>
+    </Box>
   );
 };
