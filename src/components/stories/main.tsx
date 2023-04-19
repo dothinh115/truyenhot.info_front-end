@@ -3,6 +3,7 @@ import { Stack, Box } from "@mui/system";
 import React from "react";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Link from "next/link";
+import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 type Props = {};
 
 export const StoryMain = (props: Props) => {
@@ -162,4 +163,27 @@ export const StoryMain = (props: Props) => {
       </Typography>
     </Box>
   );
+};
+
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   const response = await fetch("http://localhost:3000/api/stories/getAll");
+//   let story = await response.json();
+//   story = story.result;
+//   console.log(story);
+//   return {
+//     paths: story,
+//     fallback: true,
+//   };
+// };
+
+export const getStaticProps: GetStaticProps<Props> = async (
+  context: GetStaticPropsContext
+) => {
+  const response = await fetch(`http://localhost:3000/api/stories/getAll`);
+  const post = await response.json();
+  console.log(post);
+  return {
+    props: {},
+    revalidate: 5,
+  };
 };

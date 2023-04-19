@@ -1,4 +1,4 @@
-import { AdminLoading } from "@/components/loading";
+import { AdminLoading } from "@/components/loading/index";
 import { useAuth } from "@/hooks/auth";
 import { LoginLayoutInterface } from "@/models";
 import { Stack } from "@mui/material";
@@ -16,15 +16,7 @@ export const LoginLayout = ({ children }: LoginLayoutInterface) => {
   }, [profile, isLoading]);
 
   if (!firstLoading && profile) {
-    return (
-      <AdminLoading
-        style={{
-          opacity: isLoading ? 1 : 0,
-          transition: "all .2s linear",
-          visibility: isLoading ? "visible" : "hidden",
-        }}
-      />
-    );
+    return <AdminLoading open={isLoading} />;
   } else {
     return (
       <Stack alignItems={"center"}>
@@ -32,6 +24,7 @@ export const LoginLayout = ({ children }: LoginLayoutInterface) => {
           <Stack minHeight={"100vh"}>
             <Stack my={3} flexGrow={1} justifyContent={"center"}>
               <Stack
+                bgcolor={"#fff"}
                 justifyContent={"center"}
                 p={2}
                 sx={{

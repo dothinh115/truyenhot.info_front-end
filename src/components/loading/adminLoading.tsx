@@ -1,10 +1,10 @@
 import React from "react";
 import { Box, Stack } from "@mui/material";
 type Props = {
-  style?: any;
+  open: boolean;
 };
 
-export const AdminLoading = ({ style }: Props) => {
+export const AdminLoading = ({ open }: Props) => {
   return (
     <Stack
       sx={{
@@ -16,7 +16,9 @@ export const AdminLoading = ({ style }: Props) => {
         textAlign: "center",
         justifyContent: "center",
         zIndex: "100",
-        ...(style && { ...style }),
+        opacity: open ? "1" : "0",
+        visibility: open ? "visible" : "hidden",
+        transition: ".5s all ease",
       }}
     >
       <Box fontSize={35}>...Loading</Box>

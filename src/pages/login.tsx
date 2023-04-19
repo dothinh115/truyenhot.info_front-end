@@ -32,7 +32,7 @@ const Login = (props: Props) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(submitHandle)}>
+    <Box component={"form"} onSubmit={handleSubmit(submitHandle)}>
       <Box
         component={"h1"}
         m={0}
@@ -89,7 +89,7 @@ const Login = (props: Props) => {
           Submit
         </Button>
       </Box>
-    </form>
+    </Box>
   );
 };
 

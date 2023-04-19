@@ -255,10 +255,12 @@ const AdminNewStories = (props: Props) => {
             <Root>
               <InputWrapper className={focused ? "focused" : ""}>
                 {value.map((option: CategoryInterface, index: number) => (
-                  <StyledTag
-                    label={option.cate_title}
-                    {...getTagProps({ index })}
-                  />
+                  <Box component={"span"} key={option.cate_id}>
+                    <StyledTag
+                      label={option.cate_title}
+                      {...getTagProps({ index })}
+                    />
+                  </Box>
                 ))}
                 <input {...getInputProps()} />
               </InputWrapper>
@@ -266,7 +268,10 @@ const AdminNewStories = (props: Props) => {
                 <Listbox {...getListboxProps()}>
                   {(groupedOptions as typeof categoriesList).map(
                     (option: CategoryInterface, index: number) => (
-                      <li {...getOptionProps({ option, index })}>
+                      <li
+                        key={option.cate_id}
+                        {...getOptionProps({ option, index })}
+                      >
                         <span>{option.cate_title}</span>
                         <CheckIcon fontSize="small" />
                       </li>
