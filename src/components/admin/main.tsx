@@ -9,28 +9,26 @@ interface AdminMainInterface {
 export const AdminMain = ({ children }: AdminMainInterface) => {
   return (
     <>
-      <Container maxWidth={false}>
-        <Stack
-          component={"div"}
-          direction={"row"}
-          justifyContent={"flex-end"}
-          alignItems={"center"}
+      <Stack
+        component={"div"}
+        direction={"row"}
+        justifyContent={"flex-end"}
+        alignItems={"center"}
+        sx={{
+          bgcolor: "#03a9f4",
+        }}
+      >
+        <Box
           sx={{
-            bgcolor: "#03a9f4",
+            p: 1,
+            pr: 2,
+            color: "primary.contrastText",
           }}
         >
-          <Box
-            sx={{
-              p: 1,
-              pr: 2,
-              color: "primary.contrastText",
-            }}
-          >
-            <Avatar>F</Avatar>
-          </Box>
-        </Stack>
-        <Box>{children}</Box>
-      </Container>
+          <Avatar>F</Avatar>
+        </Box>
+      </Stack>
+      <Box>{children}</Box>
     </>
   );
 };

@@ -59,6 +59,8 @@ export const StoryMain = ({ story }: Props) => {
             "& > li > a, & > li > h4, & > li > p": {
               display: "inline-block",
               marginRight: "5px",
+            },
+            "& p, & a": {
               fontSize: "14px",
             },
             "& > li > h4": {

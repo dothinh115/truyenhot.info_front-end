@@ -9,6 +9,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import Head from "next/head";
 import { SWRConfig } from "swr/_internal";
 import "../style/style.scss";
+import "react-quill/dist/quill.snow.css";
 
 const clientSideEmotionCache = createEmotionCache();
 

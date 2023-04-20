@@ -1,6 +1,7 @@
 import { useSnackbar } from "@/hooks/snackbar";
 import { AdminLayout } from "@/layouts";
 import { NewStoryInterface } from "@/models";
+import { CategoryInterface } from "@/models/categories";
 import { StoryInterface } from "@/models/stories";
 import { InputWrapper, Listbox, Root, StyledTag } from "@/style/autoselectBox";
 import { API } from "@/utils/config";
@@ -20,16 +21,12 @@ import {
   TextField,
   useAutocomplete,
 } from "@mui/material";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
 
 type Props = {};
-
-interface CategoryInterface {
-  cate_id: number;
-  cate_title: string;
-}
 
 const newStoryShape: NewStoryInterface = {
   story_title: "",
@@ -37,6 +34,30 @@ const newStoryShape: NewStoryInterface = {
   story_category: "",
   story_description: "",
   story_source: "",
+};
+
+const QuillNoSSRWrapper = dynamic(import("react-quill"), {
+  ssr: false,
+  loading: () => <p>Loading ...</p>,
+});
+
+const modules = {
+  toolbar: [
+    [{ header: "1" }, { header: "2" }, { font: [] }],
+    [{ size: [] }],
+    ["bold", "italic", "underline", "strike", "blockquote"],
+    [
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
+    ],
+    ["clean"],
+  ],
+  clipboard: {
+    // toggle to add extra line breaks when pasting HTML:
+    matchVisual: false,
+  },
 };
 
 const AdminNewStories = (props: Props) => {
@@ -100,6 +121,7 @@ const AdminNewStories = (props: Props) => {
         message: "Thêm truyện thành công",
         open: true,
       });
+      reset(newStoryShape);
     } catch (error: any) {
       setSnackbar({
         message: error.response?.data.message,
@@ -209,24 +231,22 @@ const AdminNewStories = (props: Props) => {
                 required: "Không được để trống",
               }}
               render={({ field: { onChange, value } }) => (
-                <TextField
-                  size="small"
-                  sx={{
-                    mb: 1,
-                  }}
-                  multiline
-                  rows={4}
-                  fullWidth
-                  type="text"
-                  label={"Mô tả ngắn"}
+                <Box
+                  component={QuillNoSSRWrapper}
+                  theme="snow"
                   onChange={onChange}
                   value={value}
-                  error={!!errors.story_description?.message}
-                  helperText={
-                    errors.story_description?.message
-                      ? errors.story_description?.message
-                      : null
-                  }
+                  modules={modules}
+                  sx={{
+                    mb: 2,
+                    borderRadius: "4px",
+                    "& > div:first-of-type": {
+                      borderRadius: "4px 4px 0 0",
+                    },
+                    "& > div:last-of-type": {
+                      borderRadius: "0 0 4px 4px",
+                    },
+                  }}
                 />
               )}
             />

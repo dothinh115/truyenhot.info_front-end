@@ -111,7 +111,7 @@ export const StyledTag = styled(Tag)<TagProps>(
   ({ theme }) => `
     display: flex;
     align-items: center;
-    height: 30px;
+    height: 25px;
     margin: 2px;
     line-height: 26px;
     background-color: #e6f7ff;

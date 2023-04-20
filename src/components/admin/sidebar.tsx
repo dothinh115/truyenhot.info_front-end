@@ -13,14 +13,7 @@ type Props = {};
 
 export const AdminSidebar = (props: Props) => {
   return (
-    <Box
-      width={"20%"}
-      minHeight={"100vh"}
-      flexGrow={1}
-      sx={{
-        backgroundColor: "#1a237e",
-      }}
-    >
+    <>
       <List
         className="admin-list-style"
         component="nav"
@@ -55,6 +48,6 @@ export const AdminSidebar = (props: Props) => {
       >
         <UsersManage />
       </List>
-    </Box>
+    </>
   );
 };

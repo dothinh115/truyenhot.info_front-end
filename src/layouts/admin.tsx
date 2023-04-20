@@ -1,7 +1,7 @@
 import { useAuth } from "@/hooks/auth";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import { Stack, Container } from "@mui/material";
+import { Stack, Container, Box } from "@mui/material";
 import { AdminMain, AdminSidebar } from "@/components/admin";
 import { AdminLoading } from "@/components/loading/index";
 import { AdminLayoutInterface } from "@/models";
@@ -31,8 +31,19 @@ export const AdminLayout = ({ children }: AdminLayoutInterface) => {
       <AdminLoading open={isLoading} />
       <Container maxWidth={false}>
         <Stack direction={"row"} bgcolor={"#fff"}>
-          <AdminSidebar />
-          <AdminMain>{children}</AdminMain>
+          <Box
+            minHeight={"100vh"}
+            flexGrow={1}
+            sx={{
+              backgroundColor: "#1a237e",
+            }}
+            minWidth={"230px"}
+          >
+            <AdminSidebar />
+          </Box>
+          <Container maxWidth={false}>
+            <AdminMain>{children}</AdminMain>
+          </Container>
         </Stack>
       </Container>
     </>
