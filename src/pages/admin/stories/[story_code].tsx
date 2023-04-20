@@ -17,6 +17,8 @@ import { useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
+import Link from "next/link";
 
 type Props = {};
 
@@ -33,8 +35,14 @@ const EditStory = (props: Props) => {
     data: storyData,
     isLoading,
     mutate,
-    error,
   } = useSWR(`/stories/getDetail/${router?.query.story_code}`);
+
+  const {
+    data: chapterData,
+    isLoading: chapterLoading,
+    mutate: chapterMutate,
+  } = useSWR(`/chapter/getChaptersByStoryCode/${router?.query.story_code}`);
+
   const { data: categoriesList } = useSWR("/categories/getAll");
   const { snackbar, setSnackbar } = useSnackbar();
 
@@ -104,6 +112,10 @@ const EditStory = (props: Props) => {
       });
   }, [storyData, isLoading]);
 
+  useEffect(() => {
+    setLoading(chapterLoading);
+  }, [chapterLoading]);
+
   const deleteHandle = async () => {
     try {
       await API.delete(`/stories/delete/${router?.query.story_code}`);
@@ -129,8 +141,6 @@ const EditStory = (props: Props) => {
         flexDirection={"row"}
         justifyContent={"center"}
         p={2}
-        maxHeight={"calc(100vh - 56px)"}
-        overflow={"auto"}
         minHeight={"100vh"}
       >
         <Container maxWidth={"md"}>
@@ -360,6 +370,48 @@ const EditStory = (props: Props) => {
               </Box>
             </Box>
           </Stack>
+
+          <Box component={"h1"} fontSize={20}>
+            DANH SÁCH CHƯƠNG
+          </Box>
+          <Box className={"hr"} />
+          <Box
+            component={"ul"}
+            sx={{
+              p: 0,
+              "& > li": {
+                listStyleType: "none",
+                width: "50%",
+                display: "inline-block",
+                "& a": {
+                  textDecoration: "none",
+                  p: 0,
+                  display: "block",
+                },
+                "& svg": {
+                  color: "#0288d1",
+                },
+              },
+            }}
+          >
+            {" "}
+            {chapterData?.result.length === 0 && "Không có chương truyện nào"}
+            {chapterData?.result.map((chapter: any) => {
+              return (
+                <Box component={"li"} key={chapter.chapter_id} pl={4}>
+                  <Stack direction={"row"}>
+                    <ArrowCircleRightIcon />
+                    <Box
+                      component={Link}
+                      href={`/story/${chapter.story_code}/${chapter.chapter_code}`}
+                    >
+                      {chapter.chapter_name}
+                    </Box>
+                  </Stack>
+                </Box>
+              );
+            })}
+          </Box>
         </Container>
       </Stack>
     </>
