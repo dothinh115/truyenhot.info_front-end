@@ -140,7 +140,7 @@ const NewCategory = (props: Props) => {
               Thể loại đã thêm
             </Box>
             <TableContainer>
-              <Table>
+              <Table size="small">
                 <TableHead>
                   <TableRow>
                     <TableCell width={"30%"}>ID</TableCell>

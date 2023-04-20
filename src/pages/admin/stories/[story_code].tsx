@@ -124,195 +124,211 @@ const EditStory = (props: Props) => {
         minHeight={"100vh"}
       >
         <Container maxWidth={"md"}>
-          <Box component={"h2"}>Chỉnh sửa truyện</Box>
+          <Box component={"h1"}>Chỉnh sửa truyện</Box>
           <Box className={"hr"} my={2} />
-          <Box
-            component={"form"}
-            onSubmit={handleSubmit(updateStorySubmitHandle)}
-          >
-            <Controller
-              name={"story_title"}
-              control={control}
-              rules={{
-                required: "Không được để trống",
+          <Stack direction={"row"} spacing={2}>
+            <Box
+              width={"30%"}
+              sx={{
+                borderRight: "3px dashed #9e9e9e",
               }}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  sx={{
-                    mb: 1,
+            >
+              <Box component={"h1"}>Ảnh bìa</Box>
+              <Box
+                component={"img"}
+                src={storyData?.result.story_cover}
+                width={"95%"}
+                mr={2}
+              />
+            </Box>
+            <Box width={"70%"}>
+              <Box
+                component={"form"}
+                onSubmit={handleSubmit(updateStorySubmitHandle)}
+              >
+                <Controller
+                  name={"story_title"}
+                  control={control}
+                  rules={{
+                    required: "Không được để trống",
                   }}
-                  fullWidth
-                  size="small"
-                  type="text"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  label={"Tiêu đề truyện"}
-                  onChange={(event) => onChange(event.target.value)}
-                  value={value}
-                  error={!!errors.story_title?.message}
-                  helperText={
-                    errors.story_title?.message
-                      ? errors.story_title?.message
-                      : null
-                  }
-                />
-              )}
-            />
-
-            <Controller
-              name={"story_author"}
-              control={control}
-              rules={{
-                required: "Không được để trống",
-              }}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  size="small"
-                  sx={{
-                    mb: 1,
-                  }}
-                  fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  type="text"
-                  label={"Tác giả"}
-                  onChange={onChange}
-                  value={value}
-                  error={!!errors.story_author?.message}
-                  helperText={
-                    errors.story_author?.message
-                      ? errors.story_author?.message
-                      : null
-                  }
-                />
-              )}
-            />
-
-            <Controller
-              name={"story_description"}
-              control={control}
-              rules={{
-                required: "Không được để trống",
-              }}
-              render={({ field: { onChange, value } }) => (
-                <Box
-                  component={QuillNoSSRWrapper}
-                  theme="snow"
-                  onChange={onChange}
-                  value={value}
-                  modules={modules}
-                  sx={{
-                    mb: 2,
-                    borderRadius: "4px",
-                    "& > div:first-of-type": {
-                      borderRadius: "4px 4px 0 0",
-                    },
-                    "& > div:last-of-type": {
-                      borderRadius: "0 0 4px 4px",
-                    },
-                  }}
-                />
-              )}
-            />
-
-            <Controller
-              name={"story_source"}
-              control={control}
-              rules={{
-                required: "Không được để trống",
-              }}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  size="small"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  sx={{
-                    mb: 1,
-                  }}
-                  fullWidth
-                  type="text"
-                  label={"Nguồn"}
-                  onChange={onChange}
-                  value={value}
-                  error={!!errors.story_source?.message}
-                  helperText={
-                    errors.story_source?.message
-                      ? errors.story_source?.message
-                      : null
-                  }
-                />
-              )}
-            />
-
-            <Controller
-              name={"story_category"}
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Autocomplete
-                  onChange={(e, data) => onChange(data)}
-                  options={categoriesList?.result || []}
-                  multiple
-                  value={value}
-                  getOptionLabel={(option) => option.cate_title}
-                  isOptionEqualToValue={(option, value) =>
-                    option.cate_id === value.cate_id
-                  }
-                  renderInput={(params) => (
-                    <TextField sx={{ mb: 1 }} {...params} label="Thể loại" />
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      sx={{
+                        mb: 1,
+                      }}
+                      fullWidth
+                      size="small"
+                      type="text"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      label={"Tiêu đề truyện"}
+                      onChange={(event) => onChange(event.target.value)}
+                      value={value}
+                      error={!!errors.story_title?.message}
+                      helperText={
+                        errors.story_title?.message
+                          ? errors.story_title?.message
+                          : null
+                      }
+                    />
                   )}
                 />
-              )}
-            />
 
-            <Controller
-              name="cover_img"
-              control={control}
-              render={({ field: { onChange } }) => (
-                <TextField
-                  size="small"
-                  type="file"
-                  onChange={({ currentTarget }) => {
-                    const file = (currentTarget as HTMLInputElement).files![0];
-                    onChange(file);
-                    if (file && file.size > 2000000) {
-                      setError("cover_img", {
-                        message: "Dung lượng vượt quá 2Mb",
-                      });
-                    } else {
-                      clearErrors("cover_img");
-                    }
+                <Controller
+                  name={"story_author"}
+                  control={control}
+                  rules={{
+                    required: "Không được để trống",
                   }}
-                  fullWidth
-                  error={!!errors.cover_img?.message}
-                  helperText={
-                    errors.cover_img?.message
-                      ? errors.cover_img?.message?.toString()
-                      : null
-                  }
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      size="small"
+                      sx={{
+                        mb: 1,
+                      }}
+                      fullWidth
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      type="text"
+                      label={"Tác giả"}
+                      onChange={onChange}
+                      value={value}
+                      error={!!errors.story_author?.message}
+                      helperText={
+                        errors.story_author?.message
+                          ? errors.story_author?.message
+                          : null
+                      }
+                    />
+                  )}
                 />
-              )}
-            />
 
-            <Stack flexDirection={"row"} justifyContent={"flex-end"} mt={1}>
-              <Button
-                type="submit"
-                variant="contained"
-                size="large"
-                disabled={timeoutSubmit ? true : false}
-              >
-                Update
-              </Button>
-            </Stack>
-          </Box>
-          <Stack direction={"row"} justifyContent={"center"}>
-            <Box
-              component={"img"}
-              src={storyData?.result.story_cover}
-              width={"300px"}
-            />
+                <Controller
+                  name={"story_description"}
+                  control={control}
+                  rules={{
+                    required: "Không được để trống",
+                  }}
+                  render={({ field: { onChange, value } }) => (
+                    <Box
+                      component={QuillNoSSRWrapper}
+                      theme="snow"
+                      onChange={onChange}
+                      value={value}
+                      modules={modules}
+                      sx={{
+                        mb: 2,
+                        borderRadius: "4px",
+                        "& > div:first-of-type": {
+                          borderRadius: "4px 4px 0 0",
+                        },
+                        "& > div:last-of-type": {
+                          borderRadius: "0 0 4px 4px",
+                        },
+                      }}
+                    />
+                  )}
+                />
+
+                <Controller
+                  name={"story_source"}
+                  control={control}
+                  rules={{
+                    required: "Không được để trống",
+                  }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      size="small"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      sx={{
+                        mb: 1,
+                      }}
+                      fullWidth
+                      type="text"
+                      label={"Nguồn"}
+                      onChange={onChange}
+                      value={value}
+                      error={!!errors.story_source?.message}
+                      helperText={
+                        errors.story_source?.message
+                          ? errors.story_source?.message
+                          : null
+                      }
+                    />
+                  )}
+                />
+
+                <Controller
+                  name={"story_category"}
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <Autocomplete
+                      onChange={(e, data) => onChange(data)}
+                      options={categoriesList?.result || []}
+                      multiple
+                      value={value}
+                      getOptionLabel={(option) => option.cate_title}
+                      isOptionEqualToValue={(option, value) =>
+                        option.cate_id === value.cate_id
+                      }
+                      renderInput={(params) => (
+                        <TextField
+                          sx={{ mb: 1 }}
+                          {...params}
+                          label="Thể loại"
+                        />
+                      )}
+                    />
+                  )}
+                />
+
+                <Controller
+                  name="cover_img"
+                  control={control}
+                  render={({ field: { onChange } }) => (
+                    <TextField
+                      size="small"
+                      type="file"
+                      onChange={({ currentTarget }) => {
+                        const file = (currentTarget as HTMLInputElement)
+                          .files![0];
+                        onChange(file);
+                        if (file && file.size > 2000000) {
+                          setError("cover_img", {
+                            message: "Dung lượng vượt quá 2Mb",
+                          });
+                        } else {
+                          clearErrors("cover_img");
+                        }
+                      }}
+                      fullWidth
+                      error={!!errors.cover_img?.message}
+                      helperText={
+                        errors.cover_img?.message
+                          ? errors.cover_img?.message?.toString()
+                          : null
+                      }
+                    />
+                  )}
+                />
+
+                <Stack flexDirection={"row"} justifyContent={"flex-end"} mt={1}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    size="large"
+                    disabled={timeoutSubmit ? true : false}
+                  >
+                    Update
+                  </Button>
+                </Stack>
+              </Box>
+            </Box>
           </Stack>
         </Container>
       </Stack>

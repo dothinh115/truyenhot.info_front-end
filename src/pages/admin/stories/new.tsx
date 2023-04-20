@@ -1,25 +1,17 @@
 import { useSnackbar } from "@/hooks/snackbar";
 import { AdminLayout, AdminLayoutContext } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
-import { NewStoryInterface, StoryInterface } from "@/models/stories";
+import { NewStoryInterface } from "@/models/stories";
 import { API, modules } from "@/utils/config";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {
   Autocomplete,
   Box,
   Button,
   Container,
   Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   TextField,
 } from "@mui/material";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
@@ -103,23 +95,6 @@ const AdminNewStories = (props: Props) => {
         open: true,
       });
       reset(newStoryShape);
-    } catch (error: any) {
-      setSnackbar({
-        message: error.response?.data.message,
-        open: true,
-        type: "error",
-      });
-    }
-  };
-
-  const deleteHandle = async (story_id: number) => {
-    try {
-      await API.delete(`/stories/delete/${story_id}`);
-      await mutate();
-      setSnackbar({
-        message: "Xóa truyện thành công",
-        open: true,
-      });
     } catch (error: any) {
       setSnackbar({
         message: error.response?.data.message,
@@ -372,62 +347,7 @@ const AdminNewStories = (props: Props) => {
             sx={{
               mt: 4,
             }}
-          >
-            <Box component={"h2"}>Đăng gần đây</Box>
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell width={"50px"}>Cover</TableCell>
-                    <TableCell>Tên truyện</TableCell>
-                    <TableCell width={"20%"}>Tác giả</TableCell>
-                    <TableCell width={"10%"}>Xóa</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {storiesList?.result.map((story: StoryInterface) => {
-                    return (
-                      <TableRow key={story.story_id}>
-                        <TableCell>
-                          <Box
-                            component={"img"}
-                            src={story.story_cover}
-                            sx={{
-                              width: "50px",
-                              height: "50px",
-                              objectFit: "cover",
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Box
-                            component={Link}
-                            href={`/admin/stories/${story.story_code}`}
-                            sx={{
-                              textDecoration: "none",
-                            }}
-                          >
-                            {story.story_title}
-                          </Box>
-                        </TableCell>
-                        <TableCell>{story.story_author}</TableCell>
-                        <TableCell>
-                          <Button
-                            color="error"
-                            variant="contained"
-                            type="button"
-                            onClick={() => deleteHandle(story.story_id)}
-                          >
-                            <DeleteForeverIcon />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Box>
+          ></Box>
         </Container>
       </Stack>
     </>

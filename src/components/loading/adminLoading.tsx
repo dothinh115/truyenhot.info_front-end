@@ -8,20 +8,23 @@ export const AdminLoading = ({ open }: Props) => {
   return (
     <Stack
       sx={{
+        position: "fixed",
         width: "100%",
         height: "100%",
-        position: "fixed",
         backgroundColor: "primary.dark",
-        color: "primary.contrastText",
-        textAlign: "center",
-        justifyContent: "center",
-        zIndex: "100",
-        opacity: open ? "1" : "0",
+        opacity: open ? ".7" : "0",
         visibility: open ? "visible" : "hidden",
         transition: ".5s all ease",
+        zIndex: "100",
       }}
+      justifyContent={"center"}
+      alignItems={"center"}
     >
-      <Box fontSize={35}>...Loading</Box>
+      <Box className="lds-facebook">
+        <Box></Box>
+        <Box></Box>
+        <Box></Box>
+      </Box>
     </Stack>
   );
 };

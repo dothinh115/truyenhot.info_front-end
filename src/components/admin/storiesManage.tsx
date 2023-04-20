@@ -9,6 +9,7 @@ import ListItemButton from "@mui/material/ListItemButton/";
 import ListItemText from "@mui/material/ListItemText/";
 import Link from "next/link";
 import { useState } from "react";
+import FolderIcon from "@mui/icons-material/Folder";
 
 type Props = {};
 
@@ -19,11 +20,18 @@ export const StoriesManage = (props: Props) => {
   };
   return (
     <>
+      <ListItemButton component={Link} href="/admin/stories">
+        <ListItemIcon>
+          <FolderIcon />
+        </ListItemIcon>
+        <ListItemText primary="Thêm gần đây" />
+      </ListItemButton>
+
       <ListItemButton onClick={handleClick}>
         <ListItemIcon>
           <MenuBookIcon />
         </ListItemIcon>
-        <ListItemText primary="Truyện" />
+        <ListItemText primary="Thêm" />
         {storiesMenuOpen ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse in={storiesMenuOpen} timeout="auto" unmountOnExit>
@@ -43,33 +51,20 @@ export const StoriesManage = (props: Props) => {
               primary="Đăng truyện mới"
             ></ListItemText>
           </ListItemButton>
-        </List>
-
-        <List component="div" disablePadding>
           <ListItemButton
             component={Link}
-            href="/admin/stories"
+            href="/admin/categories/new"
             sx={{
               pl: 4,
             }}
           >
             <ListItemIcon>
-              <ViewListIcon />
+              <AddIcon />
             </ListItemIcon>
-            <ListItemText
-              disableTypography
-              primary="Truyện đã đăng"
-            ></ListItemText>
+            <ListItemText primary="Thêm thể loại" />
           </ListItemButton>
         </List>
       </Collapse>
-
-      <ListItemButton component={Link} href="/admin/categories/new">
-        <ListItemIcon>
-          <AddIcon />
-        </ListItemIcon>
-        <ListItemText primary="Thêm thể loại" />
-      </ListItemButton>
     </>
   );
 };
