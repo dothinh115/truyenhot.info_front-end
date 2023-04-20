@@ -79,14 +79,10 @@ const EditStory = (props: Props) => {
           "Content-Type": "multipart/form-data",
         },
       });
+      await mutate();
       setSnackbar({
         message: "Update truyện thành công",
         open: true,
-      });
-      await mutate();
-      reset({
-        ...storyData?.result,
-        cover_img: "",
       });
     } catch (error: any) {
       console.log(error);
