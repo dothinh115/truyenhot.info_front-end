@@ -1,5 +1,5 @@
 import { MainLayoutInterface } from "@/models";
-import { HeaderSection } from "@/sections";
+import { FooterSection, HeaderSection } from "@/sections";
 import { Box } from "@mui/system";
 
 export const MainLayout = ({ children }: MainLayoutInterface) => {
@@ -8,6 +8,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
     <>
       <HeaderSection />
       {children}
+      <FooterSection />
     </>
   );
 };
