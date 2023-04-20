@@ -117,7 +117,7 @@ const AdminNewStories = (props: Props) => {
       const newData = {
         ...data,
         story_category: cateList.join(","),
-        story_description: data.story_description.replaceAll(/\n/g, "<br />"),
+        story_description: data.story_description,
       };
 
       const formData = new FormData();
