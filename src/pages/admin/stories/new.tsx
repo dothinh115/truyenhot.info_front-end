@@ -160,6 +160,7 @@ const AdminNewStories = (props: Props) => {
                     mb: 1,
                   }}
                   fullWidth
+                  size="small"
                   type="text"
                   label={"Tiêu đề truyện"}
                   onChange={onChange}
@@ -182,6 +183,7 @@ const AdminNewStories = (props: Props) => {
               }}
               render={({ field: { onChange, value } }) => (
                 <TextField
+                  size="small"
                   sx={{
                     mb: 1,
                   }}
@@ -208,6 +210,7 @@ const AdminNewStories = (props: Props) => {
               }}
               render={({ field: { onChange, value } }) => (
                 <TextField
+                  size="small"
                   sx={{
                     mb: 1,
                   }}
@@ -236,6 +239,7 @@ const AdminNewStories = (props: Props) => {
               }}
               render={({ field: { onChange, value } }) => (
                 <TextField
+                  size="small"
                   sx={{
                     mb: 1,
                   }}
@@ -264,7 +268,7 @@ const AdminNewStories = (props: Props) => {
                     />
                   </Box>
                 ))}
-                <input {...getInputProps()} />
+                <Box component={"input"} {...getInputProps()} />
               </InputWrapper>
               {groupedOptions.length > 0 ? (
                 <Listbox {...getListboxProps()}>
@@ -288,6 +292,7 @@ const AdminNewStories = (props: Props) => {
               control={control}
               render={({ field: { onChange } }) => (
                 <TextField
+                  size="small"
                   type="file"
                   onChange={({ currentTarget }) => {
                     const file = (currentTarget as HTMLInputElement).files![0];

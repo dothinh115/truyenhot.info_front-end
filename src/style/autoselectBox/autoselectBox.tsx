@@ -34,8 +34,7 @@ export const InputWrapper = styled("div")(
     padding: 1px;
     display: flex;
     flex-wrap: wrap;
-    height:56px;
-  
+    height: 2.5em;  
     &:hover {
       border-color: #40a9ff;
     }
@@ -51,12 +50,11 @@ export const InputWrapper = styled("div")(
       height: 3px;
       box-sizing: border-box;
       padding: 4px 6px;
-      width: 0;
-      min-width: 30px;
       flex-grow: 1;
       border: 0;
       margin: 0;
       outline: 0;
+      height: 1.4375em
     }
   `
 );
