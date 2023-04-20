@@ -1,13 +1,16 @@
 import { useAuth } from "@/hooks/auth";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { Stack, Container, Box } from "@mui/material";
 import { AdminMain, AdminSidebar } from "@/components/admin";
 import { AdminLoading } from "@/components/loading/index";
 import { AdminLayoutInterface } from "@/models";
 import { PermissionVariables } from "@/utils/config";
 
+export const AdminLayoutContext = createContext({});
+
 export const AdminLayout = ({ children }: AdminLayoutInterface) => {
+  const [loading, setLoading] = useState<boolean>(false);
   const { profile, isLoading, firstLoading } = useAuth();
   const router = useRouter();
   useEffect(() => {
@@ -18,6 +21,7 @@ export const AdminLayout = ({ children }: AdminLayoutInterface) => {
           PermissionVariables.Editors)
     )
       router.push("/login");
+    setLoading(isLoading);
   }, [profile, isLoading]);
 
   if (
@@ -27,8 +31,8 @@ export const AdminLayout = ({ children }: AdminLayoutInterface) => {
     return <AdminLoading open={isLoading} />;
 
   return (
-    <>
-      <AdminLoading open={isLoading} />
+    <AdminLayoutContext.Provider value={{ loading, setLoading }}>
+      <AdminLoading open={loading} />
       <Container maxWidth={false}>
         <Stack direction={"row"} bgcolor={"#fff"}>
           <Box
@@ -46,6 +50,6 @@ export const AdminLayout = ({ children }: AdminLayoutInterface) => {
           </Container>
         </Stack>
       </Container>
-    </>
+    </AdminLayoutContext.Provider>
   );
 };

@@ -1,5 +1,5 @@
 import { useSnackbar } from "@/hooks/snackbar";
-import { AdminLayout } from "@/layouts";
+import { AdminLayout, AdminLayoutContext } from "@/layouts";
 import { NewStoryInterface } from "@/models";
 import { CategoryInterface } from "@/models/categories";
 import { StoryInterface } from "@/models/stories";
@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
 
@@ -46,6 +47,7 @@ const QuillNoSSRWrapper = dynamic(import("react-quill"), {
 });
 
 const AdminNewStories = (props: Props) => {
+  const { setLoading } = useContext<any>(AdminLayoutContext);
   const { data: categoriesList } = useSWR("/categories/getAll");
   const { data: storiesList, mutate } = useSWR("/stories/getAll");
   const { snackbar, setSnackbar } = useSnackbar();
@@ -146,6 +148,7 @@ const AdminNewStories = (props: Props) => {
   };
 
   const newStoryByUrlSubmitHanle = async (data: any) => {
+    setLoading(true);
     try {
       await API.get(`/bot/createStoryByUrl?url=${data.url}`);
       setSnackbar({
@@ -166,6 +169,8 @@ const AdminNewStories = (props: Props) => {
         open: true,
         type: "error",
       });
+    } finally {
+      setLoading(false);
     }
   };
 

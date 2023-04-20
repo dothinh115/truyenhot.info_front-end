@@ -1,5 +1,5 @@
 import { useSnackbar } from "@/hooks/snackbar";
-import { AdminLayout } from "@/layouts";
+import { AdminLayout, AdminLayoutContext } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
 import { UpdateStoryInterface } from "@/models/stories";
 import { API, modules } from "@/utils/config";
@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
 
@@ -26,6 +26,7 @@ const QuillNoSSRWrapper = dynamic(import("react-quill"), {
 
 const EditStory = (props: Props) => {
   const [timeoutSubmit, setTimeoutSubmit] = useState<boolean>(false);
+  const { setLoading } = useContext<any>(AdminLayoutContext);
   const { query } = useRouter();
   const {
     data: storyData,
@@ -53,8 +54,8 @@ const EditStory = (props: Props) => {
       story_title: "",
     },
   });
-
   const updateStorySubmitHandle = async (data: any) => {
+    setLoading(true);
     try {
       let cateList: CategoryInterface[] = [];
       for (let cate of data.story_category) {
@@ -90,6 +91,8 @@ const EditStory = (props: Props) => {
         open: true,
         type: "error",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
