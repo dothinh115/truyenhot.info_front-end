@@ -1,12 +1,15 @@
-import { Typography } from "@mui/material";
-import { Stack, Box } from "@mui/system";
-import React from "react";
+import { CategoryInterface } from "@/models/categories";
+import { StoryInterface } from "@/models/stories";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { Typography } from "@mui/material";
+import { Box, Stack } from "@mui/system";
 import Link from "next/link";
-import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
-type Props = {};
 
-export const StoryMain = (props: Props) => {
+type Props = {
+  story: StoryInterface;
+};
+
+export const StoryMain = ({ story }: Props) => {
   return (
     <Box>
       <Box component={"h1"} fontSize={20}>
@@ -14,16 +17,10 @@ export const StoryMain = (props: Props) => {
       </Box>
       <Box className={"hr"}></Box>
       <Box component={"h1"} textAlign={"center"}>
-        CÁ MẶN LÊN ĐỆ NHẤT THIÊN BẢNG
+        {story?.story_title}
       </Box>
       <Box textAlign={"center"}>
-        <Box
-          component={"img"}
-          src={
-            "https://static.8cache.com/cover/eJzLyTDWT4lIMy9NKQuyzDX2TcqtCkv3iC8tcyxKzoi09AvJdXQqtgxJrwz0dffMMAvKryiJz3MN8PQvCa1IcjJJLMssCM9ITwuM1I2qyDDIcCxxK3Q1cLQtNzI01c0wNjICAFx4IHw=/ca-man-len-de-nhat-thien-bang.jpg"
-          }
-          width={215}
-        />
+        <Box component={"img"} src={story?.story_cover} width={215} />
       </Box>
       <Stack direction={"row"} justifyContent={"center"}>
         <FavoriteIcon
@@ -89,101 +86,46 @@ export const StoryMain = (props: Props) => {
           <Box component={"li"}>
             <Box component={"h4"}>Tác giả:</Box>
             <Box component={Link} href={"/"}>
-              Nhất Trì Thanh Hứa
+              {story?.story_author}
             </Box>
           </Box>
           <Box component={"li"}>
             <Box component={"h4"}>Thể loại:</Box>
             <Box component={"ul"}>
-              <Box component={"li"}>
-                <Box component={Link} href="/">
-                  Tiên Hiệp
-                </Box>
-              </Box>
-              <Box component={"li"}>
-                <Box component={Link} href="/">
-                  Ngôn Tình
-                </Box>
-              </Box>
+              {story?.story_category.map((cate: CategoryInterface) => {
+                return (
+                  <Box component={"li"} key={cate.cate_id}>
+                    <Box component={Link} href="/">
+                      {cate.cate_title}
+                    </Box>
+                  </Box>
+                );
+              })}
             </Box>
           </Box>
           <Box component={"li"}>
             <Box component={"h4"}>Nguồn:</Box>
-            <Typography>Sưu tầm</Typography>
+            <Typography>{story?.story_source}</Typography>
           </Box>
           <Box component={"li"}>
             <Box component={"h4"}>Trạng thái:</Box>
             <Box component={Link} href={"/"}>
-              Đang update
+              {story?.story_status}
             </Box>
           </Box>
         </Box>
       </Stack>
       <Box className={"hr"}></Box>
-      <Typography
+      <Box
         sx={{
           mt: 2,
           fontSize: "14px",
         }}
       >
-        Tác giả: Nhất Trì Thanh Hứa
-        <br />
-        <br />
-        Thể loại: Xuyên Không, Hài Hước, Ngôn Tình, Truyện Nữ Cường, Cổ Đại,
-        Tiên Hiệp, Truyện Sủng, Huyền Huyễn
-        <br />
-        <br />
-        Giới thiệu:
-        <br />
-        <br />
-        Ngu Tri Dao đã xuyên qua thành đại sư tỷ của Vân Kiếm Phái, được trang
-        bị buff may mắn và có miễn phí ăn uống trong mười năm khi ở Thế giới Tu
-        Chân. Tuy nhiên, từ một thiên tài của cấp bậc trên, nàng bỗng trở thành
-        một phế cá mặn khiến cho chưởng môn trưởng lão cảm thấy tiếc nuối về sự
-        mất đi của một thiên tài.
-        <br />
-        <br />
-        Sau khi Vân Sinh tiên cảnh xuất hiện, danh sách Thiên bảng ra đời và Ngu
-        Tri Dao nhanh chóng vươn lên đứng ở hạng nhất với năm người khác. Tuy
-        nhiên, ấn tượng xấu của nàng là phế vật cá mặn vẫn bám theo nàng trong
-        suốt hành trình, khiến các sư đệ sư muội của nàng muốn thách đấu với
-        nàng và cả những đứa trẻ giữ cửa trong Vân Kiếm Phái cũng muốn đánh đổi
-        vị trí trên Thiên bảng với nàng.
-        <br />
-        <br />
-        Mặc dù cảm thấy lạc quan hơn sau khi gặp gỡ Lạc Vân Dã, một người cùng
-        khổ cực với Ngu Tri Dao khi bị đánh rơi khỏi Vân Phù Phái, hai người
-        cùng nhau trình diễn kỹ năng và tạo niềm vui cho mọi người. Trên đường
-        đi, họ đụng đến các nơi khác như Yêu sơn và Huyễn sơn, và qua đó, Ngu
-        Tri Dao đã giúp đỡ Lạc Vân Dã nhiều lần với vận may của mình.
-        <br />
-        <br />
-        Cuối cùng, Ngu Tri Dao đã đạt được cấp bậc Thiên nhân cảnh trong Tu chân
-        giới.
-      </Typography>
+        <div
+          dangerouslySetInnerHTML={{ __html: story?.story_description }}
+        ></div>
+      </Box>
     </Box>
   );
-};
-
-// export const getStaticPaths: GetStaticPaths = async () => {
-//   const response = await fetch("http://localhost:3000/api/stories/getAll");
-//   let story = await response.json();
-//   story = story.result;
-//   console.log(story);
-//   return {
-//     paths: story,
-//     fallback: true,
-//   };
-// };
-
-export const getStaticProps: GetStaticProps<Props> = async (
-  context: GetStaticPropsContext
-) => {
-  const response = await fetch(`http://localhost:3000/api/stories/getAll`);
-  const post = await response.json();
-  console.log(post);
-  return {
-    props: {},
-    revalidate: 5,
-  };
 };

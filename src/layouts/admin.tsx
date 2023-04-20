@@ -30,7 +30,7 @@ export const AdminLayout = ({ children }: AdminLayoutInterface) => {
     <>
       <AdminLoading open={isLoading} />
       <Container maxWidth={false}>
-        <Stack direction={"row"}>
+        <Stack direction={"row"} bgcolor={"#fff"}>
           <AdminSidebar />
           <AdminMain>{children}</AdminMain>
         </Stack>

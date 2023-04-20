@@ -1,6 +1,7 @@
 import { useSnackbar } from "@/hooks/snackbar";
 import { AdminLayout } from "@/layouts";
 import { NewStoryInterface } from "@/models";
+import { StoryInterface } from "@/models/stories";
 import { InputWrapper, Listbox, Root, StyledTag } from "@/style/autoselectBox";
 import { API } from "@/utils/config";
 import CheckIcon from "@mui/icons-material/Check";
@@ -19,6 +20,7 @@ import {
   TextField,
   useAutocomplete,
 } from "@mui/material";
+import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
 
@@ -50,7 +52,6 @@ const AdminNewStories = (props: Props) => {
     groupedOptions,
     value,
     focused,
-    getInputLabelProps,
   } = useAutocomplete({
     defaultValue: [],
     multiple: true,
@@ -79,6 +80,7 @@ const AdminNewStories = (props: Props) => {
       const newData = {
         ...data,
         story_category: cateList.join(","),
+        story_description: data.story_description.replaceAll(/\n/g, "<br />"),
       };
 
       const formData = new FormData();
@@ -333,7 +335,7 @@ const AdminNewStories = (props: Props) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {storiesList?.result.map((story: any) => {
+                  {storiesList?.result.map((story: StoryInterface) => {
                     return (
                       <TableRow key={story.story_id}>
                         <TableCell>
@@ -347,7 +349,17 @@ const AdminNewStories = (props: Props) => {
                             }}
                           />
                         </TableCell>
-                        <TableCell>{story.story_title}</TableCell>
+                        <TableCell>
+                          <Box
+                            component={Link}
+                            href={`/story/${story.story_code}`}
+                            sx={{
+                              textDecoration: "none",
+                            }}
+                          >
+                            {story.story_title}
+                          </Box>
+                        </TableCell>
                         <TableCell>{story.story_author}</TableCell>
                         <TableCell>
                           <Button
