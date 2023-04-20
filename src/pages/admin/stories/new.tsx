@@ -1,13 +1,11 @@
 import { useSnackbar } from "@/hooks/snackbar";
 import { AdminLayout, AdminLayoutContext } from "@/layouts";
-import { NewStoryInterface } from "@/models";
 import { CategoryInterface } from "@/models/categories";
-import { StoryInterface } from "@/models/stories";
-import { InputWrapper, Listbox, Root, StyledTag } from "@/style/autoselectBox";
+import { NewStoryInterface, StoryInterface } from "@/models/stories";
 import { API, modules } from "@/utils/config";
-import CheckIcon from "@mui/icons-material/Check";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {
+  Autocomplete,
   Box,
   Button,
   Container,
@@ -19,7 +17,6 @@ import {
   TableHead,
   TableRow,
   TextField,
-  useAutocomplete,
 } from "@mui/material";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -36,7 +33,7 @@ interface NewStoryByUrlInterface {
 const newStoryShape: NewStoryInterface = {
   story_title: "",
   story_author: "",
-  story_category: "",
+  story_category: [],
   story_description: "",
   story_source: "",
 };
@@ -51,21 +48,6 @@ const AdminNewStories = (props: Props) => {
   const { data: categoriesList } = useSWR("/categories/getAll");
   const { data: storiesList, mutate } = useSWR("/stories/getAll");
   const { snackbar, setSnackbar } = useSnackbar();
-
-  const {
-    getInputProps,
-    getTagProps,
-    getListboxProps,
-    getOptionProps,
-    groupedOptions,
-    value,
-    focused,
-  } = useAutocomplete({
-    defaultValue: [],
-    multiple: true,
-    options: categoriesList?.result ? [...categoriesList.result] : [],
-    getOptionLabel: (option) => option.cate_title,
-  });
 
   const {
     control,
@@ -94,7 +76,7 @@ const AdminNewStories = (props: Props) => {
   const newStorySubmitHandle = async (data: any) => {
     try {
       let cateList: CategoryInterface[] = [];
-      for (let cate of value) {
+      for (let cate of data.story_category) {
         cateList = [...cateList, cate.cate_id];
       }
       const newData = {
@@ -297,34 +279,25 @@ const AdminNewStories = (props: Props) => {
               )}
             />
 
-            <Root>
-              <InputWrapper className={focused ? "focused" : ""}>
-                {value.map((option: CategoryInterface, index: number) => (
-                  <Box component={"span"} key={option.cate_id}>
-                    <StyledTag
-                      label={option.cate_title}
-                      {...getTagProps({ index })}
-                    />
-                  </Box>
-                ))}
-                <Box component={"input"} {...getInputProps()} />
-              </InputWrapper>
-              {groupedOptions.length > 0 ? (
-                <Listbox {...getListboxProps()}>
-                  {(groupedOptions as typeof categoriesList).map(
-                    (option: CategoryInterface, index: number) => (
-                      <li
-                        key={option.cate_id}
-                        {...getOptionProps({ option, index })}
-                      >
-                        <span>{option.cate_title}</span>
-                        <CheckIcon fontSize="small" />
-                      </li>
-                    )
+            <Controller
+              name={"story_category"}
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <Autocomplete
+                  onChange={(e, data) => onChange(data)}
+                  options={categoriesList?.result || []}
+                  multiple
+                  value={value}
+                  getOptionLabel={(option) => option.cate_title}
+                  isOptionEqualToValue={(option, value) =>
+                    option.cate_id === value.cate_id
+                  }
+                  renderInput={(params) => (
+                    <TextField sx={{ mb: 1 }} {...params} label="Thể loại" />
                   )}
-                </Listbox>
-              ) : null}
-            </Root>
+                />
+              )}
+            />
 
             <Controller
               name="cover_img"

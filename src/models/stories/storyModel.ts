@@ -22,3 +22,12 @@ export interface UpdateStoryInterface {
   story_source?: string;
   cover_img?: File;
 }
+
+export interface NewStoryInterface {
+  story_title: string;
+  story_description: string;
+  story_author: string;
+  story_source: string;
+  story_category: CategoryInterface[];
+  cover_img?: any;
+}

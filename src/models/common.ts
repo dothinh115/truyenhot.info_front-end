@@ -29,15 +29,6 @@ export type LoginType = {
   password: string;
 };
 
-export interface NewStoryInterface {
-  story_title: string;
-  story_description: string;
-  story_author: string;
-  story_source: string;
-  story_category: string;
-  cover_img?: any;
-}
-
 export interface SectionInterface {
   children: ReactNode;
 }
