@@ -1,4 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useSnackbar } from "@/hooks/snackbar";
+import { AdminLayout } from "@/layouts";
+import { CategoryInterface } from "@/models/categories";
+import { UpdateStoryInterface } from "@/models/stories";
+import { API, modules } from "@/utils/config";
 import {
   Autocomplete,
   Box,
@@ -6,19 +10,12 @@ import {
   Container,
   Stack,
   TextField,
-  useAutocomplete,
 } from "@mui/material";
-import { useSnackbar } from "@/hooks/snackbar";
-import { Controller, useForm } from "react-hook-form";
-import { InputWrapper, Listbox, Root, StyledTag } from "@/style/autoselectBox";
-import { CategoryInterface } from "@/models/categories";
-import CheckIcon from "@mui/icons-material/Check";
 import dynamic from "next/dynamic";
-import { UpdateStoryInterface } from "@/models/stories";
-import useSWR from "swr";
 import { useRouter } from "next/router";
-import { API, modules } from "@/utils/config";
-import { AdminLayout } from "@/layouts";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import useSWR from "swr";
 
 type Props = {};
 
@@ -28,6 +25,7 @@ const QuillNoSSRWrapper = dynamic(import("react-quill"), {
 });
 
 const EditStory = (props: Props) => {
+  const [timeoutSubmit, setTimeoutSubmit] = useState<boolean>(false);
   const { query } = useRouter();
   const {
     data: storyData,
@@ -70,7 +68,7 @@ const EditStory = (props: Props) => {
       for (let key in data) {
         formData.append(key, data[key]);
       }
-      console.log(data);
+
       await API({
         url: `/stories/update/${query.story_code}`,
         data: formData,
@@ -84,6 +82,7 @@ const EditStory = (props: Props) => {
         message: "Update truyện thành công",
         open: true,
       });
+      setTimeoutSubmit(true);
     } catch (error: any) {
       console.log(error);
       setSnackbar({
@@ -100,6 +99,14 @@ const EditStory = (props: Props) => {
         ...storyData?.result,
       });
   }, [storyData, isLoading]);
+
+  useEffect(() => {
+    if (timeoutSubmit) {
+      setTimeout(() => {
+        setTimeoutSubmit(false);
+      }, 2000);
+    }
+  }, [timeoutSubmit]);
 
   return (
     <>
@@ -287,8 +294,13 @@ const EditStory = (props: Props) => {
             />
 
             <Stack flexDirection={"row"} justifyContent={"flex-end"} mt={1}>
-              <Button type="submit" variant="contained">
-                Đăng
+              <Button
+                type="submit"
+                variant="contained"
+                size="large"
+                disabled={timeoutSubmit ? true : false}
+              >
+                Update
               </Button>
             </Stack>
           </Box>
