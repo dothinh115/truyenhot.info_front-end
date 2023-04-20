@@ -88,6 +88,7 @@ const NewCategory = (props: Props) => {
   return (
     <>
       {snackbar}
+
       <Stack direction={"row"} justifyContent={"center"}>
         <Container maxWidth={"sm"}>
           <Box component={"h2"} my={1}>

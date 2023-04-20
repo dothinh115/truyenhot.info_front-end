@@ -13,6 +13,7 @@ import {
   TableHead,
   TableRow,
   Stack,
+  Container,
 } from "@mui/material";
 import Link from "next/link";
 import useSWR from "swr";
@@ -133,7 +134,7 @@ const AdminStoryIndex = (props: Props) => {
     setPage(0);
   };
 
-  const deleteHandle = async (story_id: number) => {
+  const deleteHandle = async (story_id: string) => {
     try {
       await API.delete(`/stories/delete/${story_id}`);
       await mutate();
@@ -157,109 +158,113 @@ const AdminStoryIndex = (props: Props) => {
   return (
     <>
       {snackbar}
-      <Stack direction={"row"} justifyContent={"space-between"} m={1}>
-        <Box component={"h2"} my={1}>
-          Truyện đăng gần đây
-        </Box>
-        <Button
-          component={Link}
-          href={"/admin/stories/new"}
-          variant="contained"
-          size="small"
-        >
-          Thêm truyện mới
-        </Button>
-      </Stack>
-      <Box className={"hr"} my={3} />
-      <TableContainer>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell width={"50px"} align="center">
-                Cover
-              </TableCell>
-              <TableCell>Tên truyện</TableCell>
-              <TableCell width={"20%"} align="center">
-                Tác giả
-              </TableCell>
-              <TableCell width={"10%"} align="right">
-                Xóa
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {(rowsPerPage > 0
-              ? storiesList?.result.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
-              : storiesList?.result
-            )?.map((story: StoryInterface) => {
-              return (
-                <TableRow key={story.story_id}>
-                  <TableCell>
-                    <Box
-                      component={"img"}
-                      src={story.story_cover}
-                      sx={{
-                        width: "50px",
-                        height: "50px",
-                        objectFit: "cover",
-                      }}
-                    />
+      <Stack flexDirection={"row"} justifyContent={"center"} p={2}>
+        <Container maxWidth={"md"}>
+          <Stack direction={"row"} justifyContent={"space-between"} m={1}>
+            <Box component={"h2"} my={1}>
+              Truyện đăng gần đây
+            </Box>
+            <Button
+              component={Link}
+              href={"/admin/stories/new"}
+              variant="contained"
+              size="small"
+            >
+              Thêm truyện mới
+            </Button>
+          </Stack>
+          <Box className={"hr"} my={3} />
+          <TableContainer>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell width={"50px"} align="center">
+                    Cover
                   </TableCell>
-                  <TableCell>
-                    <Box
-                      component={Link}
-                      href={`/admin/stories/${story.story_code}`}
-                      sx={{
-                        textDecoration: "none",
-                      }}
-                    >
-                      {story.story_title}
-                    </Box>
+                  <TableCell>Tên truyện</TableCell>
+                  <TableCell width={"20%"} align="center">
+                    Tác giả
                   </TableCell>
-                  <TableCell>{story.story_author}</TableCell>
-                  <TableCell align="right">
-                    <Button
-                      color="error"
-                      variant="contained"
-                      type="button"
-                      fullWidth={false}
-                      sx={{
-                        minWidth: "unset",
-                      }}
-                      onClick={() => deleteHandle(story.story_id)}
-                    >
-                      <DeleteForeverIcon />
-                    </Button>
+                  <TableCell width={"10%"} align="right">
+                    Xóa
                   </TableCell>
                 </TableRow>
-              );
-            })}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                colSpan={4}
-                count={storiesList?.result.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    "aria-label": "rows per page",
-                  },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
+              </TableHead>
+              <TableBody>
+                {(rowsPerPage > 0
+                  ? storiesList?.result.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                  : storiesList?.result
+                )?.map((story: StoryInterface) => {
+                  return (
+                    <TableRow key={story.story_id}>
+                      <TableCell>
+                        <Box
+                          component={"img"}
+                          src={story.story_cover}
+                          sx={{
+                            width: "50px",
+                            height: "50px",
+                            objectFit: "cover",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          component={Link}
+                          href={`/admin/stories/${story.story_code}`}
+                          sx={{
+                            textDecoration: "none",
+                          }}
+                        >
+                          {story.story_title}
+                        </Box>
+                      </TableCell>
+                      <TableCell>{story.story_author}</TableCell>
+                      <TableCell align="right">
+                        <Button
+                          color="error"
+                          variant="contained"
+                          type="button"
+                          fullWidth={false}
+                          sx={{
+                            minWidth: "unset",
+                          }}
+                          onClick={() => deleteHandle(story.story_code)}
+                        >
+                          <DeleteForeverIcon />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    colSpan={4}
+                    count={storiesList?.result.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    SelectProps={{
+                      inputProps: {
+                        "aria-label": "rows per page",
+                      },
+                      native: true,
+                    }}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    ActionsComponent={TablePaginationActions}
+                  />
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </TableContainer>
+        </Container>
+      </Stack>
     </>
   );
 };

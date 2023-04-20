@@ -12,6 +12,7 @@ import {
   TextField,
 } from "@mui/material";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
@@ -139,8 +140,6 @@ const AdminNewStories = (props: Props) => {
         flexDirection={"row"}
         justifyContent={"center"}
         p={2}
-        maxHeight={"calc(100vh - 56px)"}
-        overflow={"auto"}
       >
         <Container maxWidth={"md"}>
           <Box component={"h2"}>Đăng truyện mới</Box>
