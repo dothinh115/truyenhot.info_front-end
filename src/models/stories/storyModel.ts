@@ -1,3 +1,5 @@
+import { CategoryInterface } from "../categories";
+
 export interface StoryInterface {
   story_id: number;
   story_title: string;
@@ -10,4 +12,13 @@ export interface StoryInterface {
   story_category: any;
   poster: number;
   story_code: string;
+}
+
+export interface UpdateStoryInterface {
+  story_title?: string;
+  story_description?: string;
+  story_category?: CategoryInterface[];
+  story_author?: string;
+  story_source?: string;
+  cover_img?: File;
 }

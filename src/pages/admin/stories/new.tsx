@@ -4,7 +4,7 @@ import { NewStoryInterface } from "@/models";
 import { CategoryInterface } from "@/models/categories";
 import { StoryInterface } from "@/models/stories";
 import { InputWrapper, Listbox, Root, StyledTag } from "@/style/autoselectBox";
-import { API } from "@/utils/config";
+import { API, modules } from "@/utils/config";
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {
@@ -44,25 +44,6 @@ const QuillNoSSRWrapper = dynamic(import("react-quill"), {
   ssr: false,
   loading: () => <p>Loading ...</p>,
 });
-
-const modules = {
-  toolbar: [
-    [{ header: "1" }, { header: "2" }, { font: [] }],
-    [{ size: [] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
-    [
-      { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
-    ],
-    ["clean"],
-  ],
-  clipboard: {
-    // toggle to add extra line breaks when pasting HTML:
-    matchVisual: false,
-  },
-};
 
 const AdminNewStories = (props: Props) => {
   const { data: categoriesList } = useSWR("/categories/getAll");
@@ -443,7 +424,7 @@ const AdminNewStories = (props: Props) => {
                         <TableCell>
                           <Box
                             component={Link}
-                            href={`/story/${story.story_code}`}
+                            href={`/admin/stories/${story.story_code}`}
                             sx={{
                               textDecoration: "none",
                             }}
