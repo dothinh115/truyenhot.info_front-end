@@ -28,6 +28,10 @@ import useSWR from "swr";
 
 type Props = {};
 
+interface NewStoryByUrlInterface {
+  url: string;
+}
+
 const newStoryShape: NewStoryInterface = {
   story_title: "",
   story_author: "",
@@ -92,6 +96,18 @@ const AdminNewStories = (props: Props) => {
     defaultValues: newStoryShape,
   });
 
+  const {
+    control: urlControl,
+    handleSubmit: urlHandleSubmit,
+    formState: { errors: urlErrors },
+    reset: urlReset,
+  } = useForm<NewStoryByUrlInterface>({
+    mode: "onChange",
+    defaultValues: {
+      url: "",
+    },
+  });
+
   const newStorySubmitHandle = async (data: any) => {
     try {
       let cateList: CategoryInterface[] = [];
@@ -148,6 +164,30 @@ const AdminNewStories = (props: Props) => {
     }
   };
 
+  const newStoryByUrlSubmitHanle = async (data: any) => {
+    try {
+      await API.get(`/bot/createStoryByUrl?url=${data.url}`);
+      setSnackbar({
+        message: "Thêm truyện thành công",
+        open: true,
+      });
+      urlReset({
+        url: "",
+      });
+      setSnackbar({
+        message: "Thêm truyện thành công",
+        open: true,
+      });
+      mutate();
+    } catch (error: any) {
+      setSnackbar({
+        message: error.response?.data.message,
+        open: true,
+        type: "error",
+      });
+    }
+  };
+
   return (
     <>
       {snackbar}
@@ -160,15 +200,8 @@ const AdminNewStories = (props: Props) => {
         overflow={"auto"}
       >
         <Container maxWidth={"md"}>
-          <Box
-            component={"h2"}
-            sx={{
-              borderBottom: "1px solid #ccc",
-              pb: 2,
-            }}
-          >
-            Đăng truyện mới
-          </Box>
+          <Box component={"h2"}>Đăng truyện mới</Box>
+          <Box className={"hr"} my={2} />
           <Box component={"form"} onSubmit={handleSubmit(newStorySubmitHandle)}>
             <Controller
               name={"story_title"}
@@ -342,7 +375,40 @@ const AdminNewStories = (props: Props) => {
               </Button>
             </Stack>
           </Box>
+          <Box className={"hr"} my={2} />
+          <Box
+            component={"form"}
+            onSubmit={urlHandleSubmit(newStoryByUrlSubmitHanle)}
+          >
+            <Controller
+              control={urlControl}
+              name="url"
+              rules={{
+                required: "Không được để trống",
+              }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  type="text"
+                  label={"Đăng truyện qua url truyenfull"}
+                  onChange={onChange}
+                  error={!!urlErrors.url?.message}
+                  helperText={
+                    urlErrors.url?.message
+                      ? urlErrors.url?.message?.toString()
+                      : null
+                  }
+                  value={value}
+                />
+              )}
+            />
 
+            <Stack flexDirection={"row"} justifyContent={"flex-end"} mt={1}>
+              <Button type="submit" variant="contained">
+                Đăng
+              </Button>
+            </Stack>
+          </Box>
           <Box
             sx={{
               mt: 4,

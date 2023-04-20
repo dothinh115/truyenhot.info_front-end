@@ -13,7 +13,6 @@ type Props = {
 
 export const StoryMain = ({ story }: Props) => {
   const [showMore, setShowMore] = useState<boolean>(false);
-
   return (
     <Box>
       <Box component={"h1"} fontSize={20}>
@@ -60,8 +59,8 @@ export const StoryMain = ({ story }: Props) => {
               display: "inline-block",
               marginRight: "5px",
             },
-            "& p, & a": {
-              fontSize: "14px",
+            "& p, & a, & h4": {
+              fontSize: "13px",
             },
             "& > li > h4": {
               my: 0,
@@ -123,22 +122,20 @@ export const StoryMain = ({ story }: Props) => {
       </Stack>
       <Box className={"hr"}></Box>
       <Box
+        component={"div"}
         sx={{
           my: 2,
-          fontSize: "14px",
+          fontSize: "13px",
         }}
-      >
-        <div
-          dangerouslySetInnerHTML={{
-            __html:
-              story?.story_description.length >= 400
-                ? showMore
-                  ? story?.story_description
-                  : story?.story_description.substring(0, 400) + "..."
-                : story?.story_description,
-          }}
-        ></div>
-      </Box>
+        dangerouslySetInnerHTML={{
+          __html:
+            story?.story_description.length >= 400
+              ? showMore
+                ? story?.story_description
+                : story?.story_description.substring(0, 400) + "..."
+              : story?.story_description,
+        }}
+      ></Box>
 
       <Box textAlign={"right"} my={2}>
         <Button
