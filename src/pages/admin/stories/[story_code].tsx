@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 type Props = {};
 
@@ -27,13 +28,13 @@ const QuillNoSSRWrapper = dynamic(import("react-quill"), {
 const EditStory = (props: Props) => {
   const [timeoutSubmit, setTimeoutSubmit] = useState<boolean>(false);
   const { setLoading } = useContext<any>(AdminLayoutContext);
-  const { query } = useRouter();
+  const router = useRouter();
   const {
     data: storyData,
     isLoading,
     mutate,
     error,
-  } = useSWR(`/stories/getDetail/${query.story_code}`);
+  } = useSWR(`/stories/getDetail/${router?.query.story_code}`);
   const { data: categoriesList } = useSWR("/categories/getAll");
   const { snackbar, setSnackbar } = useSnackbar();
 
@@ -71,7 +72,7 @@ const EditStory = (props: Props) => {
       }
 
       await API({
-        url: `/stories/update/${query.story_code}`,
+        url: `/stories/update/${router?.query.story_code}`,
         data: formData,
         method: "PUT",
         headers: {
@@ -103,6 +104,15 @@ const EditStory = (props: Props) => {
       });
   }, [storyData, isLoading]);
 
+  const deleteHandle = async () => {
+    try {
+      await API.delete(`/stories/delete/${router?.query.story_code}`);
+      router.push("/admin/stories");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (timeoutSubmit) {
       setTimeout(() => {
@@ -124,7 +134,27 @@ const EditStory = (props: Props) => {
         minHeight={"100vh"}
       >
         <Container maxWidth={"md"}>
-          <Box component={"h1"}>Chỉnh sửa truyện</Box>
+          <Stack
+            direction={"row"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
+            <Box component={"h2"} my={1}>
+              Chỉnh sửa truyện
+            </Box>
+            <Button
+              size="small"
+              variant="contained"
+              color="error"
+              sx={{
+                height: "30px",
+              }}
+              onClick={deleteHandle}
+            >
+              <DeleteForeverIcon />
+              Xóa truyện
+            </Button>
+          </Stack>
           <Box className={"hr"} my={2} />
           <Stack direction={"row"} spacing={2}>
             <Box

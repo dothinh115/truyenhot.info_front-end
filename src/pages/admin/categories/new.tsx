@@ -1,5 +1,5 @@
 import { useSnackbar } from "@/hooks/snackbar";
-import { AdminLayout } from "@/layouts";
+import { AdminLayout, AdminLayoutContext } from "@/layouts";
 import { API } from "@/utils/config";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {
@@ -15,7 +15,7 @@ import {
 import { Box, Container, Stack } from "@mui/system";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
-
+import React, { useContext, useEffect } from "react";
 type Props = {};
 
 interface NewCategoryInterface {
@@ -29,7 +29,12 @@ interface CategoryDataInterface {
 
 const NewCategory = (props: Props) => {
   const { snackbar, setSnackbar } = useSnackbar();
-  const { data: categoriesData, mutate } = useSWR("/categories/getAll");
+  const {
+    data: categoriesData,
+    mutate,
+    isLoading,
+  } = useSWR("/categories/getAll");
+  const { setLoading } = useContext<any>(AdminLayoutContext);
 
   const {
     control,
@@ -76,21 +81,19 @@ const NewCategory = (props: Props) => {
     }
   };
 
+  useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading]);
+
   return (
     <>
       {snackbar}
-
       <Stack direction={"row"} justifyContent={"center"}>
         <Container maxWidth={"sm"}>
-          <Box
-            component={"h2"}
-            sx={{
-              pb: 1,
-              borderBottom: "1px solid #ccc",
-            }}
-          >
+          <Box component={"h2"} my={1}>
             Thêm thể loại mới
           </Box>
+          <Box className={"hr"} />
           <Box>
             <form onSubmit={handleSubmit(submitHandle)}>
               <Controller
@@ -124,12 +127,8 @@ const NewCategory = (props: Props) => {
               </Box>
             </form>
           </Box>
-
-          <Box
-            sx={{
-              mt: 4,
-            }}
-          >
+          <Box className={"hr"} my={2} />
+          <Box>
             <Box
               component={"h2"}
               sx={{

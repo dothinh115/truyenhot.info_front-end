@@ -28,7 +28,14 @@ export const AdminMain = ({ children }: AdminMainInterface) => {
           <Avatar>F</Avatar>
         </Box>
       </Stack>
-      <Box>{children}</Box>
+      <Box
+        sx={{
+          height: "calc(100vh - 56px)",
+          overflow: "auto",
+        }}
+      >
+        {children}
+      </Box>
     </>
   );
 };

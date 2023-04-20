@@ -158,11 +158,14 @@ const AdminStoryIndex = (props: Props) => {
     <>
       {snackbar}
       <Stack direction={"row"} justifyContent={"space-between"} m={1}>
-        <Box component={"h1"}>Truyện đăng gần đây</Box>
+        <Box component={"h2"} my={1}>
+          Truyện đăng gần đây
+        </Box>
         <Button
           component={Link}
           href={"/admin/stories/new"}
           variant="contained"
+          size="small"
         >
           Thêm truyện mới
         </Button>
