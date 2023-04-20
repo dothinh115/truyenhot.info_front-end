@@ -16,12 +16,12 @@ export const StorySidebar = (props: Props) => {
   return (
     <Stack spacing={2}>
       <Box
-        bgcolor={"#f5f5f5"}
+        bgcolor={"#e8eaf669"}
         sx={{
           border: "1px solid #ccc",
         }}
       >
-        <Box component={"h1"} my={1} ml={1}>
+        <Box component={"h1"} bgcolor={"#e8eaf6"} my={0} p={1}>
           THỂ LOẠI
         </Box>
         <Box className={"sidebar-hr"}></Box>

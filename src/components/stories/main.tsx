@@ -1,21 +1,25 @@
 import { CategoryInterface } from "@/models/categories";
 import { StoryInterface } from "@/models/stories";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import Link from "next/link";
+import { useState } from "react";
+import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 
 type Props = {
   story: StoryInterface;
 };
 
 export const StoryMain = ({ story }: Props) => {
+  const [showMore, setShowMore] = useState<boolean>(false);
+
   return (
     <Box>
       <Box component={"h1"} fontSize={20}>
         THÔNG TIN TRUYỆN
       </Box>
-      <Box className={"hr"}></Box>
+      <Box className={"hr"} />
       <Box component={"h1"} textAlign={"center"}>
         {story?.story_title}
       </Box>
@@ -118,13 +122,73 @@ export const StoryMain = ({ story }: Props) => {
       <Box className={"hr"}></Box>
       <Box
         sx={{
-          mt: 2,
+          my: 2,
           fontSize: "14px",
         }}
       >
         <div
-          dangerouslySetInnerHTML={{ __html: story?.story_description }}
+          dangerouslySetInnerHTML={{
+            __html:
+              story?.story_description.length >= 400
+                ? showMore
+                  ? story?.story_description
+                  : story?.story_description.substring(0, 400) + "..."
+                : story?.story_description,
+          }}
         ></div>
+      </Box>
+
+      <Box textAlign={"right"} my={2}>
+        <Button
+          type="button"
+          variant="contained"
+          color="info"
+          onClick={() => setShowMore(!showMore)}
+          size="small"
+        >
+          {showMore ? "Rút gọn" : "Xem thêm"}
+        </Button>
+      </Box>
+
+      <Box component={"h1"} fontSize={20}>
+        DANH SÁCH CHƯƠNG
+      </Box>
+      <Box className={"hr"} />
+      <Box
+        component={"ul"}
+        sx={{
+          p: 0,
+          "& > li": {
+            listStyleType: "none",
+            width: "50%",
+            display: "inline-block",
+            "& a": {
+              textDecoration: "none",
+              p: 0,
+              display: "block",
+            },
+            "& svg": {
+              color: "#0288d1",
+            },
+          },
+        }}
+      >
+        <Box component={"li"}>
+          <Stack direction={"row"}>
+            <ArrowCircleRightIcon />
+            <Box component={Link} href={"/"}>
+              Chương 1
+            </Box>
+          </Stack>
+        </Box>
+        <Box component={"li"}>
+          <Stack direction={"row"}>
+            <ArrowCircleRightIcon />
+            <Box component={Link} href={"/"}>
+              Chương 2
+            </Box>
+          </Stack>
+        </Box>
       </Box>
     </Box>
   );

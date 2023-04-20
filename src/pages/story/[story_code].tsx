@@ -4,7 +4,6 @@ import { StorySection } from "@/sections";
 import { Container } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
-import React from "react";
 
 type Props = {
   story: StoryInterface;
@@ -52,7 +51,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps<Props> = async (
+export const getStaticProps: GetStaticProps = async (
   context: GetStaticPropsContext
 ) => {
   if (!context.params) return { notFound: true };
@@ -61,7 +60,14 @@ export const getStaticProps: GetStaticProps<Props> = async (
     `http://localhost:5000/api/stories/getDetail/${story_code}`
   );
   const story = await respone.json();
-  if (!story.result) return { notFound: true };
+  if (!story.result) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
   return {
     props: {
       story: story.result,
