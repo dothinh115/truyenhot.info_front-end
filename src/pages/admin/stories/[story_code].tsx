@@ -402,7 +402,6 @@ const EditStory = (props: Props) => {
               },
             }}
           >
-            {" "}
             {chapterListData?.result.length === 0 &&
               "Không có chương truyện nào"}
             {chapterListData?.result.map((chapter: any) => {
