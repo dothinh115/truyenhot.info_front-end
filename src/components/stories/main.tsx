@@ -6,12 +6,18 @@ import { Box, Stack } from "@mui/system";
 import Link from "next/link";
 import { useState } from "react";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 
 type Props = {
   story: StoryInterface;
 };
 
 export const StoryMain = ({ story }: Props) => {
+  const router = useRouter();
+  useEffect(() => {
+    console.log(router);
+  }, [router]);
   const [showMore, setShowMore] = useState<boolean>(false);
   return (
     <Box>

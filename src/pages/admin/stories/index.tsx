@@ -26,6 +26,7 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import { useTheme } from "@mui/material/styles";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 type Props = {};
 
@@ -185,8 +186,9 @@ const AdminStoryIndex = (props: Props) => {
                   <TableCell width={"20%"} align="center">
                     Tác giả
                   </TableCell>
-                  <TableCell width={"10%"} align="right">
-                    Xóa
+
+                  <TableCell width={"20%"} align="right">
+                    Thao tác
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -213,8 +215,9 @@ const AdminStoryIndex = (props: Props) => {
                       </TableCell>
                       <TableCell>
                         <Box
-                          component={Link}
-                          href={`/admin/stories/${story.story_code}`}
+                          component={"a"}
+                          href={`/story/${story.story_code}`}
+                          target="_blank"
                           sx={{
                             textDecoration: "none",
                           }}
@@ -224,6 +227,20 @@ const AdminStoryIndex = (props: Props) => {
                       </TableCell>
                       <TableCell>{story.story_author}</TableCell>
                       <TableCell align="right">
+                        <Button
+                          component={Link}
+                          href={`/admin/stories/${story.story_code}`}
+                          color="info"
+                          variant="contained"
+                          type="button"
+                          fullWidth={false}
+                          sx={{
+                            minWidth: "unset",
+                            mr: 1,
+                          }}
+                        >
+                          <SettingsIcon />
+                        </Button>
                         <Button
                           color="error"
                           variant="contained"

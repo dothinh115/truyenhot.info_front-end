@@ -44,7 +44,7 @@ const EditStory = (props: Props) => {
     mutate,
   } = useSWR(`/stories/getDetail/${story_code}`);
 
-  const { data: chapterData, isLoading: chapterLoading } = useSWR(
+  const { data: chapterListData, isLoading: chapterListLoading } = useSWR(
     `/chapter/getChaptersByStoryCode/${story_code}?page=${page ? page : 1}`
   );
 
@@ -116,10 +116,6 @@ const EditStory = (props: Props) => {
         ...storyData?.result,
       });
   }, [storyData, isLoading]);
-
-  useEffect(() => {
-    setLoading(chapterLoading);
-  }, [chapterLoading]);
 
   useEffect(() => {
     if (page) {
@@ -407,8 +403,9 @@ const EditStory = (props: Props) => {
             }}
           >
             {" "}
-            {chapterData?.result.length === 0 && "Không có chương truyện nào"}
-            {chapterData?.result.map((chapter: any) => {
+            {chapterListData?.result.length === 0 &&
+              "Không có chương truyện nào"}
+            {chapterListData?.result.map((chapter: any) => {
               return (
                 <Box component={"li"} key={chapter.chapter_id} pl={4}>
                   <Stack direction={"row"}>
@@ -424,10 +421,10 @@ const EditStory = (props: Props) => {
               );
             })}
           </Box>
-          {chapterData?.pagination && (
+          {chapterListData?.pagination && (
             <Stack direction={"row"} justifyContent={"center"} mt={2}>
               <Pagination
-                count={chapterData?.pagination.pages}
+                count={chapterListData?.pagination.pages}
                 page={paginationPage}
                 color="primary"
                 showFirstButton={true}
