@@ -38,7 +38,6 @@ const QuillNoSSRWrapper = dynamic(import("react-quill"), {
 const AdminNewStories = (props: Props) => {
   const { setLoading } = useContext<any>(AdminLayoutContext);
   const { data: categoriesList } = useSWR("/categories/getAll");
-  const { data: storiesList, mutate } = useSWR("/stories/getAll");
   const { snackbar, setSnackbar } = useSnackbar();
 
   const {
@@ -89,7 +88,6 @@ const AdminNewStories = (props: Props) => {
           "Content-Type": "multipart/form-data",
         },
       });
-      await mutate();
       setSnackbar({
         message: "Thêm truyện thành công",
         open: true,
@@ -119,7 +117,6 @@ const AdminNewStories = (props: Props) => {
         message: "Thêm truyện thành công",
         open: true,
       });
-      mutate();
     } catch (error: any) {
       setSnackbar({
         message: error.response?.data.message,

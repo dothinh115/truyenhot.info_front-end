@@ -3,6 +3,8 @@ import { AdminLayout, AdminLayoutContext } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
 import { UpdateStoryInterface } from "@/models/stories";
 import { API, modules } from "@/utils/config";
+import Pagination from "@mui/material/Pagination";
+
 import {
   Autocomplete,
   Box,
@@ -19,6 +21,9 @@ import useSWR from "swr";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import Link from "next/link";
+import PaginationItem from "@mui/material/PaginationItem";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 type Props = {};
 
@@ -31,17 +36,17 @@ const EditStory = (props: Props) => {
   const [timeoutSubmit, setTimeoutSubmit] = useState<boolean>(false);
   const { setLoading } = useContext<any>(AdminLayoutContext);
   const router = useRouter();
+  const { page, story_code } = router.query;
+  const [paginationPage, setPaginationPage] = useState<number>(1);
   const {
     data: storyData,
     isLoading,
     mutate,
-  } = useSWR(`/stories/getDetail/${router?.query.story_code}`);
+  } = useSWR(`/stories/getDetail/${story_code}`);
 
-  const {
-    data: chapterData,
-    isLoading: chapterLoading,
-    mutate: chapterMutate,
-  } = useSWR(`/chapter/getChaptersByStoryCode/${router?.query.story_code}`);
+  const { data: chapterData, isLoading: chapterLoading } = useSWR(
+    `/chapter/getChaptersByStoryCode/${story_code}?page=${page ? page : 1}`
+  );
 
   const { data: categoriesList } = useSWR("/categories/getAll");
   const { snackbar, setSnackbar } = useSnackbar();
@@ -80,7 +85,7 @@ const EditStory = (props: Props) => {
       }
 
       await API({
-        url: `/stories/update/${router?.query.story_code}`,
+        url: `/stories/update/${story_code}`,
         data: formData,
         method: "PUT",
         headers: {
@@ -116,9 +121,15 @@ const EditStory = (props: Props) => {
     setLoading(chapterLoading);
   }, [chapterLoading]);
 
+  useEffect(() => {
+    if (page) {
+      setPaginationPage(+page);
+    }
+  }, [page]);
+
   const deleteHandle = async () => {
     try {
-      await API.delete(`/stories/delete/${router?.query.story_code}`);
+      await API.delete(`/stories/delete/${story_code}`);
       router.push("/admin/stories");
     } catch (error) {
       console.log(error);
@@ -379,6 +390,7 @@ const EditStory = (props: Props) => {
             component={"ul"}
             sx={{
               p: 0,
+              minHeight: "290px",
               "& > li": {
                 listStyleType: "none",
                 width: "50%",
@@ -412,6 +424,27 @@ const EditStory = (props: Props) => {
               );
             })}
           </Box>
+          {chapterData?.pagination && (
+            <Stack direction={"row"} justifyContent={"center"} mt={2}>
+              <Pagination
+                count={chapterData?.pagination.pages}
+                page={paginationPage}
+                color="primary"
+                showFirstButton={true}
+                showLastButton={true}
+                siblingCount={2}
+                onChange={(e, p) =>
+                  router.push(`/admin/stories/${story_code}?page=${p}`)
+                }
+                renderItem={(item) => (
+                  <PaginationItem
+                    slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
+                    {...item}
+                  />
+                )}
+              />
+            </Stack>
+          )}
         </Container>
       </Stack>
     </>
