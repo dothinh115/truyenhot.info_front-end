@@ -6,12 +6,12 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import { ChapterDataInterface, ChapterListInterface } from "@/models/chapters";
+import Link from "next/link";
 type Props = {
   chapterData: ChapterDataInterface;
 };
 
 const ChapterDetail = ({ chapterData }: Props) => {
-  console.log(chapterData);
   return (
     <>
       <ChapterSection>
@@ -41,14 +41,29 @@ const ChapterDetail = ({ chapterData }: Props) => {
               spacing={1}
               my={2}
             >
-              <Button color="info" variant="contained">
+              <Button
+                component={Link}
+                href={`/story/${chapterData?.story_code}/${chapterData?.prevChapter}`}
+                color="info"
+                variant="contained"
+                disabled={!chapterData?.prevChapter ? true : false}
+              >
                 <ArrowBackIcon />
                 Chương trước
               </Button>
               <Button color="info" variant="contained">
                 <MenuBookIcon />
+                <Box component={"div"} sx={{}}>
+                  abc
+                </Box>
               </Button>
-              <Button color="info" variant="contained">
+              <Button
+                component={Link}
+                href={`/story/${chapterData?.story_code}/${chapterData?.nextChapter}`}
+                color="info"
+                variant="contained"
+                disabled={!chapterData?.nextChapter ? true : false}
+              >
                 Chương sau
                 <ArrowForwardIcon />
               </Button>
@@ -94,7 +109,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const data = await response.json();
   const paths = data.result.map((item: ChapterListInterface) => ({
     params: {
-      story_code: item.chapter_code,
+      story_code: item.story_code,
       chapter_code: item.chapter_code,
     },
   }));
@@ -110,7 +125,7 @@ export const getStaticProps: GetStaticProps<Props> = async (
   if (!context.params) return { notFound: true };
   const story_code = context.params.story_code;
   const chapter_code = context.params.chapter_code;
-
+  const revalidate = 60 * 60 * 24;
   const respone = await fetch(
     `http://localhost:5000/api/chapter/getChapterDataByStoryCode/${story_code}/${chapter_code}`
   );
@@ -127,7 +142,7 @@ export const getStaticProps: GetStaticProps<Props> = async (
     props: {
       chapterData: chapter.result,
     },
-    revalidate: 5,
+    revalidate,
   };
 };
 

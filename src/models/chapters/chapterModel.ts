@@ -9,6 +9,8 @@ export interface ChapterListInterface {
 export interface ChapterDataInterface extends ChapterListInterface {
   chapter_content: string;
   story: ChapterDataWithStoryTitle;
+  nextChapter: string;
+  prevChapter: string;
 }
 
 interface ChapterDataWithStoryTitle {

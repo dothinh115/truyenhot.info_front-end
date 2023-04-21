@@ -33,6 +33,10 @@ export const StoryMain = ({ story }: Props) => {
   useEffect(() => {
     setLoading(isFallback);
   }, [isFallback]);
+
+  useEffect(() => {
+    if (page) setPaginationPage(+page);
+  }, [page]);
   return (
     <>
       <Box>
@@ -219,8 +223,19 @@ export const StoryMain = ({ story }: Props) => {
               showFirstButton={true}
               showLastButton={true}
               siblingCount={2}
+              // onChange={(e, p) => router.push(`/story/${story_code}?page=${p}`)}
               onChange={(e, p) =>
-                router.push(`/admin/stories/${story_code}?page=${p}`)
+                router.push(
+                  {
+                    pathname: router.pathname,
+                    query: {
+                      story_code,
+                      page: p,
+                    },
+                  },
+                  undefined,
+                  { scroll: false }
+                )
               }
               renderItem={(item) => (
                 <PaginationItem
