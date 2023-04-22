@@ -1,19 +1,113 @@
+import { MainBreadcrumbs } from "@/components/breadcrumbs";
+import { ChapterDataInterface, ChapterListInterface } from "@/models/chapters";
 import { ChapterSection } from "@/sections";
-import React from "react";
-import { Stack, Container, Box, Typography, Button } from "@mui/material";
+import { API } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import MenuBookIcon from "@mui/icons-material/MenuBook";
+import {
+  Box,
+  Button,
+  Container,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { SelectChangeEvent } from "@mui/material/Select";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
-import { ChapterDataInterface, ChapterListInterface } from "@/models/chapters";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { ReactNode, useEffect, useState } from "react";
+import HomeIcon from "@mui/icons-material/Home";
+
 type Props = {
   chapterData: ChapterDataInterface;
 };
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+    },
+  },
+};
+
 const ChapterDetail = ({ chapterData }: Props) => {
+  const [chapterListData, setChapterListData] = useState<any>();
+
+  const router = useRouter();
+
+  const handleChange = (event: SelectChangeEvent, child?: any) => {
+    router.push({
+      pathname: router.pathname,
+      query: {
+        chapter_code: child.props.value,
+        story_code: chapterData?.story_code,
+      },
+    });
+  };
+
+  const getChapterListData = async () => {
+    try {
+      const result = await API.get(
+        `/chapter/getChapterListByStoryCode/${chapterData?.story_code}?page=all`
+      );
+      setChapterListData(result);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    getChapterListData();
+  }, []);
+
+  const breadCrumbs = [
+    <Box
+      key={1}
+      component={Link}
+      href="/"
+      display={"flex"}
+      alignItems={"center"}
+      fontSize={{
+        md: "1rem",
+        xs: ".8rem",
+      }}
+    >
+      <HomeIcon />
+    </Box>,
+    <Box
+      component={Link}
+      key="2"
+      color="inherit"
+      href={`/story/${chapterData?.story_code}`}
+      fontSize={{
+        md: "1rem",
+        xs: ".9rem",
+      }}
+      sx={{
+        textDecoration: "none",
+      }}
+    >
+      {chapterData?.story_title}
+    </Box>,
+    <Typography
+      fontSize={{
+        md: "1rem",
+        xs: ".9rem",
+      }}
+      key="3"
+    >
+      {chapterData?.chapter_name}
+    </Typography>,
+  ];
+
   return (
     <>
+      <MainBreadcrumbs links={breadCrumbs} />
       <ChapterSection>
         <Stack direction={"row"} justifyContent={"center"}>
           <Container maxWidth={"md"}>
@@ -25,7 +119,7 @@ const ChapterDetail = ({ chapterData }: Props) => {
               fontSize={40}
               my={1}
             >
-              {chapterData?.story.story_title}
+              {chapterData?.story_title}
             </Box>
             <Typography
               textAlign={"center"}
@@ -46,32 +140,69 @@ const ChapterDetail = ({ chapterData }: Props) => {
                 href={`/story/${chapterData?.story_code}/${chapterData?.prevChapter}`}
                 color="info"
                 variant="contained"
+                size="small"
                 disabled={!chapterData?.prevChapter ? true : false}
               >
                 <ArrowBackIcon />
-                Chương trước
+                <Typography
+                  display={{
+                    md: "block",
+                    xs: "none",
+                  }}
+                >
+                  Chương trước
+                </Typography>
               </Button>
-              <Button color="info" variant="contained">
-                <MenuBookIcon />
-                <Box component={"div"} sx={{}}>
-                  abc
-                </Box>
-              </Button>
+
+              <FormControl sx={{ m: 1, width: 300 }}>
+                <InputLabel>Chọn chương</InputLabel>
+                <Select
+                  value={
+                    chapterData?.chapter_code && chapterListData
+                      ? chapterData?.chapter_code
+                      : ""
+                  }
+                  onChange={(event, child) => handleChange(event, child)}
+                  input={<OutlinedInput label="Chọn chương" />}
+                  MenuProps={MenuProps}
+                >
+                  {chapterListData?.result.map((chapter: any) => (
+                    <MenuItem
+                      key={chapter.chapter_id}
+                      value={chapter.chapter_code}
+                    >
+                      {chapter.chapter_name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
               <Button
                 component={Link}
                 href={`/story/${chapterData?.story_code}/${chapterData?.nextChapter}`}
                 color="info"
                 variant="contained"
+                size="small"
                 disabled={!chapterData?.nextChapter ? true : false}
               >
-                Chương sau
+                <Typography
+                  display={{
+                    md: "block",
+                    xs: "none",
+                  }}
+                >
+                  Chương sau
+                </Typography>
                 <ArrowForwardIcon />
               </Button>
             </Stack>
             <Box className={"hr"} my={4} />
             <Box
               component={"div"}
-              fontSize={24}
+              fontSize={{
+                md: "24px",
+                xs: "20px",
+              }}
               dangerouslySetInnerHTML={{
                 __html: chapterData?.chapter_content,
               }}
@@ -83,15 +214,64 @@ const ChapterDetail = ({ chapterData }: Props) => {
               spacing={1}
               my={2}
             >
-              <Button color="info" variant="contained">
+              <Button
+                component={Link}
+                href={`/story/${chapterData?.story_code}/${chapterData?.prevChapter}`}
+                color="info"
+                variant="contained"
+                size="small"
+                disabled={!chapterData?.prevChapter ? true : false}
+              >
                 <ArrowBackIcon />
-                Chương trước
+                <Typography
+                  display={{
+                    md: "block",
+                    xs: "none",
+                  }}
+                >
+                  Chương trước
+                </Typography>
               </Button>
-              <Button color="info" variant="contained">
-                <MenuBookIcon />
-              </Button>
-              <Button color="info" variant="contained">
-                Chương sau
+
+              <FormControl sx={{ m: 1, width: 300 }}>
+                <InputLabel>Chọn chương</InputLabel>
+                <Select
+                  value={
+                    chapterData?.chapter_code && chapterListData
+                      ? chapterData?.chapter_code
+                      : ""
+                  }
+                  onChange={(event, child) => handleChange(event, child)}
+                  input={<OutlinedInput label="Chọn chương" />}
+                  MenuProps={MenuProps}
+                >
+                  {chapterListData?.result.map((chapter: any) => (
+                    <MenuItem
+                      key={chapter.chapter_id}
+                      value={chapter.chapter_code}
+                    >
+                      {chapter.chapter_name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <Button
+                component={Link}
+                href={`/story/${chapterData?.story_code}/${chapterData?.nextChapter}`}
+                color="info"
+                variant="contained"
+                size="small"
+                disabled={!chapterData?.nextChapter ? true : false}
+              >
+                <Typography
+                  display={{
+                    md: "block",
+                    xs: "none",
+                  }}
+                >
+                  Chương sau
+                </Typography>
                 <ArrowForwardIcon />
               </Button>
             </Stack>

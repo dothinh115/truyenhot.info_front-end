@@ -26,8 +26,8 @@ export const StoryMain = ({ story }: Props) => {
   const [paginationPage, setPaginationPage] = useState<number>(1);
   const { setLoading } = useContext<any>(MainLayoutContext);
 
-  const { data: chapterListData, isLoading: chapterListLoading } = useSWR(
-    `/chapter/getChaptersByStoryCode/${story_code}?page=${page ? page : 1}`
+  const { data: chapterListData } = useSWR(
+    `/chapter/getChapterListByStoryCode/${story_code}?page=${page ? page : 1}`
   );
   const [showMore, setShowMore] = useState<boolean>(false);
   useEffect(() => {

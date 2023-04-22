@@ -45,7 +45,7 @@ const EditStory = (props: Props) => {
   } = useSWR(`/stories/getDetail/${story_code}`);
 
   const { data: chapterListData, isLoading: chapterListLoading } = useSWR(
-    `/chapter/getChaptersByStoryCode/${story_code}?page=${page ? page : 1}`
+    `/chapter/getChapterListByStoryCode/${story_code}?page=${page ? page : 1}`
   );
 
   const { data: categoriesList } = useSWR("/categories/getAll");

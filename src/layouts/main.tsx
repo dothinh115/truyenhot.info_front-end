@@ -1,7 +1,6 @@
 import { MainLoading } from "@/components/loading";
 import { MainLayoutInterface } from "@/models";
 import { FooterSection, HeaderSection } from "@/sections";
-import { Box } from "@mui/system";
 import { createContext, useState } from "react";
 
 export const MainLayoutContext = createContext({});
