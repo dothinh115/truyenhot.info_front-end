@@ -182,6 +182,7 @@ export const StoryMain = ({ story }: Props) => {
           component={"ul"}
           sx={{
             p: 0,
+            minHeight: "290px",
             "& > li": {
               listStyleType: "none",
               width: "50%",
@@ -208,6 +209,7 @@ export const StoryMain = ({ story }: Props) => {
                     href={`/story/${chapter.story_code}/${chapter.chapter_code}`}
                   >
                     {chapter.chapter_name}
+                    {chapter.chapter_title ? `: ${chapter.chapter_title}` : ""}
                   </Box>
                 </Stack>
               </Box>

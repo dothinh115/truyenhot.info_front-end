@@ -20,11 +20,7 @@ export const MainLoading = ({ open }: Props) => {
       justifyContent={"center"}
       alignItems={"center"}
     >
-      <Box className="lds-facebook">
-        <Box></Box>
-        <Box></Box>
-        <Box></Box>
-      </Box>
+      <Box className="lds-dual-ring"></Box>
     </Stack>
   );
 };

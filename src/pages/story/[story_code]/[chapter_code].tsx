@@ -1,9 +1,12 @@
+import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
+import { MainLayoutContext } from "@/layouts";
 import { ChapterDataInterface, ChapterListInterface } from "@/models/chapters";
 import { ChapterSection } from "@/sections";
 import { API } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import HomeIcon from "@mui/icons-material/Home";
 import {
   Box,
   Button,
@@ -20,8 +23,7 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ReactNode, useEffect, useState } from "react";
-import HomeIcon from "@mui/icons-material/Home";
+import { useContext, useEffect, useState } from "react";
 
 type Props = {
   chapterData: ChapterDataInterface;
@@ -42,6 +44,7 @@ const ChapterDetail = ({ chapterData }: Props) => {
 
   const router = useRouter();
 
+  const { setLoading } = useContext<any>(MainLayoutContext);
   const handleChange = (event: SelectChangeEvent, child?: any) => {
     router.push({
       pathname: router.pathname,
@@ -63,7 +66,11 @@ const ChapterDetail = ({ chapterData }: Props) => {
 
   useEffect(() => {
     getChapterListData();
-  }, []);
+  }, [router.query]);
+
+  useEffect(() => {
+    setLoading(router.isFallback);
+  }, [router.isFallback]);
 
   const breadCrumbs = [
     <Box
@@ -107,6 +114,22 @@ const ChapterDetail = ({ chapterData }: Props) => {
 
   return (
     <>
+      <Seo
+        data={{
+          title: `Truyện ${chapterData?.story_title} - ${
+            chapterData?.chapter_name
+          }${
+            chapterData?.chapter_title ? `: ${chapterData?.chapter_title}` : ""
+          } || Truyện Hot || Truyenhot.info`,
+          description: `Bạn đang đọc truyện ${chapterData?.story_title} ${
+            chapterData?.chapter_name
+          }${
+            chapterData?.chapter_title ? `: ${chapterData?.chapter_title}` : ""
+          } : ${chapterData?.chapter_content}`,
+          url: `https//truyenhot.info/story/${chapterData?.story_code}/${chapterData?.chapter_code}`,
+          thumbnailUrl: ``,
+        }}
+      />
       <MainBreadcrumbs links={breadCrumbs} />
       <ChapterSection>
         <Stack direction={"row"} justifyContent={"center"}>
@@ -197,6 +220,7 @@ const ChapterDetail = ({ chapterData }: Props) => {
               </Button>
             </Stack>
             <Box className={"hr"} my={4} />
+
             <Box
               component={"div"}
               fontSize={{
