@@ -65,7 +65,7 @@ const ChapterDetail = ({ chapterData }: Props) => {
   };
 
   useEffect(() => {
-    getChapterListData();
+    if (chapterData?.story_code) getChapterListData();
   }, [router.query]);
 
   useEffect(() => {

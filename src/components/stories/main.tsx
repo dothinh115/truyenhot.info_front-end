@@ -26,8 +26,9 @@ export const StoryMain = ({ story }: Props) => {
   const [paginationPage, setPaginationPage] = useState<number>(1);
   const { setLoading } = useContext<any>(MainLayoutContext);
 
-  const { data: chapterListData } = useSWR(
-    `/chapter/getChapterListByStoryCode/${story_code}?page=${page ? page : 1}`
+  const { data: chapterListData, mutate: chapterListMutate } = useSWR(
+    `/chapter/getChapterListByStoryCode/${story_code}?page=${page ? page : 1}`,
+    { revalidateOnMount: false }
   );
   const [showMore, setShowMore] = useState<boolean>(false);
   useEffect(() => {
@@ -37,6 +38,10 @@ export const StoryMain = ({ story }: Props) => {
   useEffect(() => {
     if (page) setPaginationPage(+page);
   }, [page]);
+
+  useEffect(() => {
+    if (story_code) chapterListMutate();
+  }, [story_code]);
   return (
     <>
       <Box>
@@ -182,7 +187,7 @@ export const StoryMain = ({ story }: Props) => {
           component={"ul"}
           sx={{
             p: 0,
-            minHeight: "290px",
+            minHeight: "330px",
             "& > li": {
               listStyleType: "none",
               width: "50%",
@@ -201,7 +206,13 @@ export const StoryMain = ({ story }: Props) => {
           {chapterListData?.result.length === 0 && "Không có chương truyện nào"}
           {chapterListData?.result.map((chapter: any) => {
             return (
-              <Box component={"li"} key={chapter.chapter_id} pl={4}>
+              <Box
+                component={"li"}
+                key={chapter.chapter_id}
+                pl={0}
+                py={"2px"}
+                fontSize={"13px"}
+              >
                 <Stack direction={"row"}>
                   <ArrowCircleRightIcon />
                   <Box
@@ -225,7 +236,6 @@ export const StoryMain = ({ story }: Props) => {
               showFirstButton={true}
               showLastButton={true}
               siblingCount={2}
-              // onChange={(e, p) => router.push(`/story/${story_code}?page=${p}`)}
               onChange={(e, p) =>
                 router.push(
                   {

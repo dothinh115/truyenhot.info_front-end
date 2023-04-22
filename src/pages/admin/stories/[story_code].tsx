@@ -24,6 +24,7 @@ import Link from "next/link";
 import PaginationItem from "@mui/material/PaginationItem";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ClearIcon from "@mui/icons-material/Clear";
 
 type Props = {};
 
@@ -44,7 +45,7 @@ const EditStory = (props: Props) => {
     mutate,
   } = useSWR(`/stories/getDetail/${story_code}`);
 
-  const { data: chapterListData, isLoading: chapterListLoading } = useSWR(
+  const { data: chapterListData, mutate: chapterListMutate } = useSWR(
     `/chapter/getChapterListByStoryCode/${story_code}?page=${page ? page : 1}`
   );
 
@@ -129,6 +130,25 @@ const EditStory = (props: Props) => {
       router.push("/admin/stories");
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const chapterDelete = async (chapter_code: string, chapter_name: string) => {
+    try {
+      await API.delete(`/chapter/delete/${story_code}/${chapter_code}`);
+
+      await chapterListMutate();
+      setSnackbar({
+        message: `Xóa ${chapter_name} thành công`,
+        open: true,
+        type: "success",
+      });
+    } catch (error: any) {
+      setSnackbar({
+        message: error.response?.data.message,
+        open: true,
+        type: "error",
+      });
     }
   };
 
@@ -386,7 +406,7 @@ const EditStory = (props: Props) => {
             component={"ul"}
             sx={{
               p: 0,
-              minHeight: "290px",
+              minHeight: "330px",
               "& > li": {
                 listStyleType: "none",
                 width: "50%",
@@ -397,7 +417,10 @@ const EditStory = (props: Props) => {
                   display: "block",
                 },
                 "& svg": {
-                  color: "#0288d1",
+                  color: "red",
+                  "&:hover": {
+                    cursor: "pointer",
+                  },
                 },
               },
             }}
@@ -406,9 +429,17 @@ const EditStory = (props: Props) => {
               "Không có chương truyện nào"}
             {chapterListData?.result.map((chapter: any) => {
               return (
-                <Box component={"li"} key={chapter.chapter_id} pl={4}>
+                <Box component={"li"} key={chapter.chapter_id} pl={0}>
                   <Stack direction={"row"}>
-                    <ArrowCircleRightIcon />
+                    <Box
+                      component={ClearIcon}
+                      onClick={() =>
+                        chapterDelete(
+                          chapter.chapter_code,
+                          chapter.chapter_name
+                        )
+                      }
+                    />
                     <Box
                       component={Link}
                       href={`/story/${chapter.story_code}/${chapter.chapter_code}`}

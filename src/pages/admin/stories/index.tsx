@@ -119,7 +119,7 @@ const AdminStoryIndex = (props: Props) => {
   const { setLoading } = useContext<any>(AdminLayoutContext);
   const { snackbar, setSnackbar } = useSnackbar();
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(12);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -136,6 +136,7 @@ const AdminStoryIndex = (props: Props) => {
   };
 
   const deleteHandle = async (story_id: string) => {
+    setLoading(true);
     try {
       await API.delete(`/stories/delete/${story_id}`);
       await mutate();
@@ -149,8 +150,12 @@ const AdminStoryIndex = (props: Props) => {
         open: true,
         type: "error",
       });
+    } finally {
+      setLoading(false);
     }
   };
+
+  const reloadHandle = () => mutate();
 
   useEffect(() => {
     setLoading(isLoading);
@@ -164,6 +169,16 @@ const AdminStoryIndex = (props: Props) => {
           <Stack direction={"row"} justifyContent={"space-between"} m={1}>
             <Box component={"h2"} my={1}>
               Truyện đăng gần đây
+              <Box
+                component={Button}
+                type="button"
+                size="small"
+                variant="contained"
+                ml={1}
+                onClick={reloadHandle}
+              >
+                Reload
+              </Box>
             </Box>
             <Button
               component={Link}
