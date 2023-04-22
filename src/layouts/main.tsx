@@ -11,8 +11,8 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
   //444 - 600 - 900 - 1200
   return (
     <>
-      <MainLoading open={loading} />
       <MainLayoutContext.Provider value={{ loading, setLoading }}>
+        <MainLoading open={loading} />
         <HeaderSection />
         {children}
         <FooterSection />

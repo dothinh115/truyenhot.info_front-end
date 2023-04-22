@@ -1,19 +1,17 @@
 import { CategoryInterface } from "@/models/categories";
 import { StoryInterface } from "@/models/stories";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Button, Typography } from "@mui/material";
+import Pagination from "@mui/material/Pagination";
+import PaginationItem from "@mui/material/PaginationItem";
 import { Box, Stack } from "@mui/system";
 import Link from "next/link";
-import { useContext, useState } from "react";
-import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
-import Pagination from "@mui/material/Pagination";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import PaginationItem from "@mui/material/PaginationItem";
-import { MainLayoutContext } from "@/layouts";
 
 type Props = {
   story: StoryInterface;
@@ -21,19 +19,14 @@ type Props = {
 
 export const StoryMain = ({ story }: Props) => {
   const router = useRouter();
-  const { isFallback } = router;
   const { story_code, page } = router?.query;
   const [paginationPage, setPaginationPage] = useState<number>(1);
-  const { setLoading } = useContext<any>(MainLayoutContext);
 
   const { data: chapterListData, mutate: chapterListMutate } = useSWR(
     `/chapter/getChapterListByStoryCode/${story_code}?page=${page ? page : 1}`,
     { revalidateOnMount: false }
   );
   const [showMore, setShowMore] = useState<boolean>(false);
-  useEffect(() => {
-    setLoading(isFallback);
-  }, [isFallback]);
 
   useEffect(() => {
     if (page) setPaginationPage(+page);

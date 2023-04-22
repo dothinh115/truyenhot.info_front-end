@@ -115,7 +115,7 @@ const AdminStoryIndex = (props: Props) => {
     data: storiesList,
     mutate,
     isLoading,
-  } = useSWR("/stories/getAll?limit=50");
+  } = useSWR("/stories/getAll?limit=100");
   const { setLoading } = useContext<any>(AdminLayoutContext);
   const { snackbar, setSnackbar } = useSnackbar();
   const [page, setPage] = useState(0);

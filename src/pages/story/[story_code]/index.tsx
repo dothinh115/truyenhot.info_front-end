@@ -1,15 +1,24 @@
 import { StoryMain, StorySidebar } from "@/components/stories";
+import { MainLayoutContext } from "@/layouts";
 import { StoryInterface } from "@/models/stories";
 import { StorySection } from "@/sections";
 import { Container } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
+import { useRouter } from "next/router";
+import { useContext, useEffect } from "react";
 
 type Props = {
   story: StoryInterface;
 };
 
 const StoryDetail = ({ story }: Props) => {
+  const router = useRouter();
+  const { isFallback } = router;
+  const { setLoading } = useContext<any>(MainLayoutContext);
+  useEffect(() => {
+    setLoading(isFallback);
+  }, [isFallback]);
   return (
     <StorySection>
       <Container

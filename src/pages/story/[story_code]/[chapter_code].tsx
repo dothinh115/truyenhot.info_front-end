@@ -43,7 +43,8 @@ const ChapterDetail = ({ chapterData }: Props) => {
   const [chapterListData, setChapterListData] = useState<any>();
 
   const router = useRouter();
-
+  const { isFallback } = router;
+  console.log(isFallback);
   const { setLoading } = useContext<any>(MainLayoutContext);
   const handleChange = (event: SelectChangeEvent, child?: any) => {
     router.push({
@@ -69,8 +70,8 @@ const ChapterDetail = ({ chapterData }: Props) => {
   }, [router.query]);
 
   useEffect(() => {
-    setLoading(router.isFallback);
-  }, [router.isFallback]);
+    setLoading(isFallback);
+  }, [isFallback]);
 
   const breadCrumbs = [
     <Box
