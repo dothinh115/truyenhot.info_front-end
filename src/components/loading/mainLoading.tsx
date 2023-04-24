@@ -16,11 +16,16 @@ export const MainLoading = ({ open }: Props) => {
         opacity: open ? "1" : "0",
         visibility: open ? "visible" : "hidden",
         transition: "1s all ease",
+        zIndex: 100,
       }}
       justifyContent={"center"}
       alignItems={"center"}
     >
-      <Box className="lds-dual-ring"></Box>
+      <Box className="lds-facebook">
+        <Box></Box>
+        <Box></Box>
+        <Box></Box>
+      </Box>
     </Stack>
   );
 };

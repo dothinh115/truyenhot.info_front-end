@@ -4,15 +4,18 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Button, Typography } from "@mui/material";
+import { Button, List, Typography } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
-import { Box, Stack } from "@mui/system";
+import { Box, Stack, ListItemIcon } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
-
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import { ChapterDataInterface } from "@/models/chapters";
 type Props = {
   story: StoryInterface;
 };
@@ -35,6 +38,13 @@ export const StoryMain = ({ story }: Props) => {
   useEffect(() => {
     if (story_code) chapterListMutate();
   }, [story_code]);
+
+  useEffect(() => {
+    if (story?.story_description)
+      story.story_description = story.story_description
+        .replaceAll("<div text-align: justify; >", "")
+        .replaceAll("</div>", "");
+  }, [story?.story_description]);
   return (
     <>
       <Box>
@@ -144,21 +154,23 @@ export const StoryMain = ({ story }: Props) => {
           </Box>
         </Stack>
         <Box className={"hr"}></Box>
-        <Box
-          component={"div"}
-          sx={{
-            my: 2,
-            fontSize: "13px",
-          }}
-          dangerouslySetInnerHTML={{
-            __html:
-              story?.story_description.length >= 400
-                ? showMore
-                  ? story?.story_description
-                  : story?.story_description.substring(0, 400) + "..."
-                : story?.story_description,
-          }}
-        ></Box>
+        {story?.story_description && (
+          <Box
+            component={"div"}
+            sx={{
+              my: 2,
+              fontSize: "13px",
+            }}
+            dangerouslySetInnerHTML={{
+              __html:
+                story?.story_description.length >= 400
+                  ? showMore
+                    ? story?.story_description
+                    : story?.story_description.substring(0, 400) + "..."
+                  : story?.story_description,
+            }}
+          ></Box>
+        )}
 
         <Box textAlign={"right"} my={2}>
           <Button
@@ -171,85 +183,76 @@ export const StoryMain = ({ story }: Props) => {
             {showMore ? "Rút gọn" : "Xem thêm"}
           </Button>
         </Box>
-
         <Box component={"h1"} fontSize={20}>
           DANH SÁCH CHƯƠNG
         </Box>
         <Box className={"hr"} />
-        <Box
-          component={"ul"}
-          sx={{
-            p: 0,
-            minHeight: "330px",
-            "& > li": {
-              listStyleType: "none",
-              width: "50%",
-              display: "inline-block",
-              "& a": {
-                textDecoration: "none",
-                p: 0,
-                display: "block",
-              },
-              "& svg": {
-                color: "#0288d1",
-              },
-            },
-          }}
-        >
-          {chapterListData?.result.length === 0 && "Không có chương truyện nào"}
-          {chapterListData?.result.map((chapter: any) => {
-            return (
-              <Box
-                component={"li"}
-                key={chapter.chapter_id}
-                pl={0}
-                py={"2px"}
-                fontSize={"13px"}
-              >
-                <Stack direction={"row"}>
-                  <ArrowCircleRightIcon />
-                  <Box
-                    component={Link}
-                    href={`/story/${chapter.story_code}/${chapter.chapter_code}`}
-                  >
-                    {chapter.chapter_name}
-                    {chapter.chapter_title ? `: ${chapter.chapter_title}` : ""}
-                  </Box>
-                </Stack>
-              </Box>
-            );
-          })}
-        </Box>
         {chapterListData?.pagination && (
-          <Stack direction={"row"} justifyContent={"center"} mt={2}>
-            <Pagination
-              count={chapterListData?.pagination.pages}
-              page={paginationPage}
-              color="primary"
-              showFirstButton={true}
-              showLastButton={true}
-              siblingCount={2}
-              onChange={(e, p) =>
-                router.push(
-                  {
-                    pathname: router.pathname,
-                    query: {
-                      story_code,
-                      page: p,
+          <>
+            <Box
+              component={List}
+              height={600}
+              overflow={"auto"}
+              mt={3}
+              bgcolor={"#fff"}
+              dense={true}
+            >
+              {chapterListData?.result.map((data: ChapterDataInterface) => {
+                return (
+                  <ListItem
+                    key={data.chapter_id}
+                    sx={{
+                      borderBottom: "1px dashed #ccc",
+                    }}
+                    dense={true}
+                  >
+                    <Box component={ListItemIcon} minWidth={"25px"}>
+                      <ArrowCircleRightIcon />
+                    </Box>
+                    <ListItemButton
+                      component={Link}
+                      href={`/story/${story_code}/${data.chapter_code}`}
+                    >
+                      <ListItemText
+                        primary={`${data.chapter_name}${
+                          data.chapter_title ? ": " + data.chapter_title : ""
+                        }`}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                );
+              })}
+            </Box>
+            <Stack direction={"row"} justifyContent={"center"} mt={2}>
+              <Pagination
+                count={chapterListData?.pagination.pages}
+                page={paginationPage}
+                color="primary"
+                showFirstButton={true}
+                showLastButton={true}
+                siblingCount={2}
+                onChange={(e, p) =>
+                  router.push(
+                    {
+                      pathname: router.pathname,
+                      query: {
+                        story_code,
+                        page: p,
+                      },
                     },
-                  },
-                  undefined,
-                  { scroll: false }
-                )
-              }
-              renderItem={(item) => (
-                <PaginationItem
-                  slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
-                  {...item}
-                />
-              )}
-            />
-          </Stack>
+                    undefined,
+                    { scroll: false }
+                  )
+                }
+                renderItem={(item) => (
+                  <PaginationItem
+                    slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
+                    {...item}
+                  />
+                )}
+              />
+            </Stack>
+          </>
         )}
       </Box>
     </>

@@ -44,7 +44,6 @@ const ChapterDetail = ({ chapterData }: Props) => {
 
   const router = useRouter();
   const { isFallback } = router;
-  console.log(isFallback);
   const { setLoading } = useContext<any>(MainLayoutContext);
   const handleChange = (event: SelectChangeEvent, child?: any) => {
     router.push({
@@ -71,7 +70,8 @@ const ChapterDetail = ({ chapterData }: Props) => {
 
   useEffect(() => {
     setLoading(isFallback);
-  }, [isFallback]);
+    console.log(isFallback);
+  }, [router.query]);
 
   const breadCrumbs = [
     <Box
@@ -112,6 +112,8 @@ const ChapterDetail = ({ chapterData }: Props) => {
       {chapterData?.chapter_name}
     </Typography>,
   ];
+
+  if (router.isFallback) return "...Loading";
 
   return (
     <>

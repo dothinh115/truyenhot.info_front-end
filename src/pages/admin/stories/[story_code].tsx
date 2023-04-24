@@ -5,6 +5,10 @@ import { UpdateStoryInterface } from "@/models/stories";
 import { API, modules } from "@/utils/config";
 import Pagination from "@mui/material/Pagination";
 
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ClearIcon from "@mui/icons-material/Clear";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {
   Autocomplete,
   Box,
@@ -13,18 +17,13 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
+import PaginationItem from "@mui/material/PaginationItem";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
-import Link from "next/link";
-import PaginationItem from "@mui/material/PaginationItem";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import ClearIcon from "@mui/icons-material/Clear";
 
 type Props = {};
 
@@ -32,6 +31,10 @@ const QuillNoSSRWrapper = dynamic(import("react-quill"), {
   ssr: false,
   loading: () => <p>Loading ...</p>,
 });
+
+interface ChapterUpdateInterface {
+  value: string;
+}
 
 const EditStory = (props: Props) => {
   const [timeoutSubmit, setTimeoutSubmit] = useState<boolean>(false);
@@ -43,10 +46,13 @@ const EditStory = (props: Props) => {
     data: storyData,
     isLoading,
     mutate,
-  } = useSWR(`/stories/getDetail/${story_code}`);
+  } = useSWR(`/stories/getDetail/${story_code}`, { revalidateOnMount: false });
 
   const { data: chapterListData, mutate: chapterListMutate } = useSWR(
-    `/chapter/getChapterListByStoryCode/${story_code}?page=${page ? page : 1}`
+    `/chapter/getChapterListByStoryCode/${story_code}?page=${page ? page : 1}`,
+    {
+      revalidateOnMount: false,
+    }
   );
 
   const { data: categoriesList } = useSWR("/categories/getAll");
@@ -69,6 +75,17 @@ const EditStory = (props: Props) => {
       story_title: "",
     },
   });
+
+  const {
+    control: chapterUpdateControl,
+    handleSubmit: chapterUpdateHandleSubmit,
+  } = useForm<ChapterUpdateInterface>({
+    mode: "onChange",
+    defaultValues: {
+      value: "",
+    },
+  });
+
   const updateStorySubmitHandle = async (data: any) => {
     setLoading(true);
     try {
@@ -152,6 +169,28 @@ const EditStory = (props: Props) => {
     }
   };
 
+  const chapterUpdateSubmitHandle = async (data: any) => {
+    setLoading(true);
+    try {
+      await API.get(
+        `/chapter/getFullStoryByUrl/${story_code}?url=${data.value}`
+      );
+      setSnackbar({
+        message: `Update thành công`,
+        open: true,
+        type: "success",
+      });
+    } catch (error: any) {
+      setSnackbar({
+        message: error.response?.data.message,
+        open: true,
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (timeoutSubmit) {
       setTimeout(() => {
@@ -159,6 +198,13 @@ const EditStory = (props: Props) => {
       }, 2000);
     }
   }, [timeoutSubmit]);
+
+  useEffect(() => {
+    if (story_code) {
+      mutate();
+      chapterListMutate();
+    }
+  }, [story_code]);
 
   return (
     <>
@@ -391,6 +437,34 @@ const EditStory = (props: Props) => {
                     size="large"
                     disabled={timeoutSubmit ? true : false}
                   >
+                    Update
+                  </Button>
+                </Stack>
+              </Box>
+              <Box className={"hr"} my={2} />
+              <Box
+                component={"form"}
+                onSubmit={chapterUpdateHandleSubmit(chapterUpdateSubmitHandle)}
+              >
+                <Stack direction={"row"}>
+                  <Controller
+                    name="value"
+                    control={chapterUpdateControl}
+                    render={({ field: { onChange, value } }) => (
+                      <TextField
+                        size="small"
+                        fullWidth
+                        onChange={onChange}
+                        value={value}
+                        label={"Update chapter"}
+                        placeholder="Dán link truyenfull"
+                        sx={{
+                          mr: 1,
+                        }}
+                      />
+                    )}
+                  />
+                  <Button type="submit" variant="contained">
                     Update
                   </Button>
                 </Stack>

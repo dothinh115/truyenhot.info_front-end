@@ -1,12 +1,15 @@
+import { MainBreadcrumbs } from "@/components/breadcrumbs";
 import { StoryMain, StorySidebar } from "@/components/stories";
 import { MainLayoutContext } from "@/layouts";
 import { StoryInterface } from "@/models/stories";
 import { StorySection } from "@/sections";
 import { Container } from "@mui/material";
-import { Box, Stack } from "@mui/system";
+import { Box, Stack, Typography } from "@mui/material";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import { useRouter } from "next/router";
 import { useContext, useEffect } from "react";
+import HomeIcon from "@mui/icons-material/Home";
+import Link from "next/link";
 
 type Props = {
   story: StoryInterface;
@@ -19,30 +22,62 @@ const StoryDetail = ({ story }: Props) => {
   useEffect(() => {
     setLoading(isFallback);
   }, [isFallback]);
+
+  const breadCrumbs = [
+    <Box
+      key={1}
+      component={Link}
+      href="/"
+      display={"flex"}
+      alignItems={"center"}
+      fontSize={{
+        md: "1rem",
+        xs: ".8rem",
+      }}
+    >
+      <HomeIcon />
+    </Box>,
+    <Typography
+      key="2"
+      color="inherit"
+      fontSize={{
+        md: "1rem",
+        xs: ".9rem",
+      }}
+      sx={{
+        textDecoration: "none",
+      }}
+    >
+      {story?.story_title}
+    </Typography>,
+  ];
   return (
-    <StorySection>
-      <Container
-        maxWidth={"md"}
-        sx={{
-          m: "auto!important",
-        }}
-      >
-        <Stack
-          direction={"row"}
-          spacing={2}
+    <>
+      <MainBreadcrumbs links={breadCrumbs} />
+      <StorySection>
+        <Container
+          maxWidth={"md"}
           sx={{
             m: "auto!important",
           }}
         >
-          <Box width={"70%"}>
-            <StoryMain story={story} />
-          </Box>
-          <Box width={"30%"}>
-            <StorySidebar />
-          </Box>
-        </Stack>
-      </Container>
-    </StorySection>
+          <Stack
+            direction={"row"}
+            spacing={2}
+            sx={{
+              m: "auto!important",
+            }}
+          >
+            <Box width={"70%"}>
+              <StoryMain story={story} />
+            </Box>
+            <Box width={"30%"}>
+              <StorySidebar />
+            </Box>
+          </Stack>
+        </Container>
+      </StorySection>
+    </>
   );
 };
 
