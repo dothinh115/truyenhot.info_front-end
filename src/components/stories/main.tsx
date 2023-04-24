@@ -133,7 +133,10 @@ export const StoryMain = ({ story }: Props) => {
                 {story?.story_category.map((cate: CategoryInterface) => {
                   return (
                     <Box component={"li"} key={cate.cate_id}>
-                      <Box component={Link} href="/">
+                      <Box
+                        component={Link}
+                        href={`/categories/${cate.cate_code}`}
+                      >
                         {cate.cate_title}
                       </Box>
                     </Box>
@@ -212,6 +215,7 @@ export const StoryMain = ({ story }: Props) => {
                     <ListItemButton
                       component={Link}
                       href={`/story/${story_code}/${data.chapter_code}`}
+                      scroll={true}
                     >
                       <ListItemText
                         primary={`${data.chapter_name}${

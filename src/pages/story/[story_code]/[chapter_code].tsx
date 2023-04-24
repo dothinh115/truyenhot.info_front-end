@@ -70,7 +70,6 @@ const ChapterDetail = ({ chapterData }: Props) => {
 
   useEffect(() => {
     setLoading(isFallback);
-    console.log(isFallback);
   }, [router.query]);
 
   const breadCrumbs = [

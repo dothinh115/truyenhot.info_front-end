@@ -45,6 +45,16 @@ const theme = createTheme({
       },
       variants: [],
     },
+    MuiAutocomplete: {
+      styleOverrides: {
+        listbox: {
+          fontSize: "13px",
+        },
+        inputRoot: {
+          fontSize: "13px",
+        },
+      },
+    },
   },
 });
 

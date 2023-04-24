@@ -20,7 +20,7 @@ export const CategoriesSidebar = (props: Props) => {
           border: "1px solid #ccc",
         }}
       >
-        <Box component={"h1"} bgcolor={"#e8eaf6"} my={0} p={1}>
+        <Box component={"h3"} bgcolor={"#e8eaf6"} my={0} p={1}>
           THỂ LOẠI
         </Box>
         <Box className={"sidebar-hr"}></Box>
