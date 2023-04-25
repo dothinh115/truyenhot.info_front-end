@@ -9,19 +9,30 @@ type Props = {
 };
 
 export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
-  const { data: categoriesList } = useSWR("/categories/getAll");
+  const { data: categoriesList } = useSWR("/categories/getAll", {
+    dedupingInterval: 60 * 60 * 24,
+  });
 
   return (
     <>
       <Box
         position={"fixed"}
-        zIndex={100}
         width={"100%"}
+        height={"100%"}
+        bgcolor={"rgba(0,0,0,.65)"}
+        zIndex={50}
+        display={open ? "block" : "none"}
+        onClick={() => setMobileMenuOpen(false)}
+      ></Box>
+      <Box
+        position={"fixed"}
+        zIndex={100}
+        width={"85%"}
         height={"100%"}
         bgcolor={"#fff"}
         p={1}
         maxHeight={"100vh"}
-        left={open ? 0 : "100%"}
+        left={open ? "15%" : "100%"}
         sx={{
           transition: "left .2s ease",
         }}
@@ -45,6 +56,7 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
                   mr: 1,
                   mt: 1,
                 }}
+                onClick={() => setMobileMenuOpen(false)}
               />
             );
           })}
@@ -54,7 +66,7 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
           <Button
             type={"button"}
             color={"error"}
-            variant="outlined"
+            variant="contained"
             fullWidth
             onClick={() => setMobileMenuOpen(false)}
           >

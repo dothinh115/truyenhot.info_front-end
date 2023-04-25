@@ -1,11 +1,12 @@
+import { StoryInterface } from "@/models/stories";
 import { CategoriesSidebar, SameAuthorSidebar } from "../sidebar";
 
-type Props = {};
+type Props = { story: StoryInterface };
 
-export const StorySidebar = (props: Props) => {
+export const StorySidebar = ({ story }: Props) => {
   return (
     <>
-      <SameAuthorSidebar />
+      <SameAuthorSidebar story={story} />
       <CategoriesSidebar />
     </>
   );

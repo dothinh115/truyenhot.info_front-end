@@ -37,7 +37,7 @@ export const StoryMain = ({ story }: Props) => {
 
   useEffect(() => {
     if (story_code) chapterListMutate();
-  }, [story_code]);
+  }, []);
 
   useEffect(() => {
     if (story?.story_description)

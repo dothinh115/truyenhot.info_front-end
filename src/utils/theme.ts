@@ -1,4 +1,4 @@
-import { Noto_Sans, Roboto } from "next/font/google";
+import { Noto_Sans } from "next/font/google";
 import { createTheme } from "@mui/material/styles";
 import { red } from "@mui/material/colors";
 

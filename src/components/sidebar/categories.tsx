@@ -7,7 +7,9 @@ import { CategoryInterface } from "@/models/categories";
 
 type Props = {};
 export const CategoriesSidebar = (props: Props) => {
-  const { data: categoriesList, isLoading } = useSWR("/categories/getAll");
+  const { data: categoriesList, isLoading } = useSWR("/categories/getAll", {
+    dedupingInterval: 60 * 60 * 24,
+  });
   return (
     <Stack spacing={2}>
       <Box

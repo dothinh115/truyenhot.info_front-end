@@ -85,7 +85,7 @@ const StoryDetail = ({ story }: Props) => {
                 md: "block",
               }}
             >
-              <StorySidebar />
+              <StorySidebar story={story} />
             </Box>
           </Stack>
         </Container>

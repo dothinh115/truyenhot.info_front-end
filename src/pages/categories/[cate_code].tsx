@@ -139,11 +139,14 @@ const CategoriesDetail = ({ categoryData }: Props) => {
                             {story.story_title}
                           </Box>
                           <Typography
+                            component={Link}
+                            href={`/search/author?keywords=${story.story_author}`}
                             display={"flex"}
                             alignItems={"center"}
                             fontSize={14}
                             color={"#616161"}
                             sx={{
+                              textDecoration: "none",
                               "& svg": {
                                 mr: 1,
                                 fontSize: "20px",

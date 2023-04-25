@@ -62,6 +62,19 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+const StyledResultList = styled(List)(() => ({
+  position: "absolute",
+  top: "calc(100% + 7px)",
+  backgroundColor: "#fff",
+  width: "100%",
+  maxHeight: "200px",
+  overflow: "auto",
+  display: "none",
+  zIndex: 100,
+  border: "1px solid #ccc",
+  p: 0,
+}));
+
 export function HeaderDesktop() {
   const router = useRouter();
   const timeout = useRef<any>(null);
@@ -130,7 +143,7 @@ export function HeaderDesktop() {
           alignItems={"center"}
         >
           <Container maxWidth={"md"}>
-            <Toolbar sx={{}}>
+            <Toolbar>
               <IconButton
                 LinkComponent={Link}
                 href="/"
@@ -181,22 +194,7 @@ export function HeaderDesktop() {
                       />
                     )}
                   />
-                  <Box
-                    component={List}
-                    position={"absolute"}
-                    top={"calc(100% + 7px)"}
-                    bgcolor={"#fff"}
-                    width={"100%"}
-                    maxHeight={"200px"}
-                    overflow={"auto"}
-                    sx={{
-                      border: "1px solid #ccc",
-                      p: 0,
-                    }}
-                    display={"none"}
-                    zIndex={100}
-                    ref={resultList}
-                  >
+                  <StyledResultList ref={resultList}>
                     {searchData?.length === 0 && (
                       <ListItem
                         sx={{
@@ -232,7 +230,7 @@ export function HeaderDesktop() {
                         </ListItem>
                       );
                     })}
-                  </Box>
+                  </StyledResultList>
                 </Box>
               </Search>
 
