@@ -93,23 +93,26 @@ const ChapterDetail = ({ chapterData }: Props) => {
       href={`/story/${chapterData?.story_code}`}
       fontSize={{
         md: "1rem",
-        xs: ".9rem",
+        xs: ".8rem",
       }}
       sx={{
         textDecoration: "none",
       }}
     >
-      {chapterData?.story_title}
+      {chapterData?.story_title.length > 20
+        ? chapterData?.story_title.substring(0, 19) + "..."
+        : chapterData?.story_title}
     </Box>,
-    <Typography
+    <Box
+      component={"span"}
       fontSize={{
         md: "1rem",
-        xs: ".9rem",
+        xs: ".8rem",
       }}
       key="3"
     >
       {chapterData?.chapter_name}
-    </Typography>,
+    </Box>,
   ];
 
   if (router.isFallback) return "...Loading";
@@ -141,7 +144,10 @@ const ChapterDetail = ({ chapterData }: Props) => {
               textAlign={"center"}
               color={"#3949ab"}
               fontWeight={"light"}
-              fontSize={40}
+              fontSize={{
+                md: "40px",
+                xs: "30px",
+              }}
               my={1}
             >
               {chapterData?.story_title}

@@ -77,14 +77,18 @@ const CategoriesDetail = ({ categoryData }: Props) => {
       {cate_title}
     </Typography>,
   ];
-  if (!storiesData) return <></>;
   return (
     <>
       <MainBreadcrumbs links={breadCrumbs} />
       <Stack direction={"row"} justifyContent={"center"} mt={2}>
         <Container maxWidth={"md"}>
           <Stack direction={"row"} spacing={1}>
-            <Box width={"70%"}>
+            <Box
+              width={{
+                xs: "100%",
+                md: "70%",
+              }}
+            >
               <Box component={"h1"} m={0} fontWeight={"light"} fontSize={35}>
                 {cate_title}
               </Box>
@@ -203,7 +207,13 @@ const CategoriesDetail = ({ categoryData }: Props) => {
                 />
               </Stack>
             </Box>
-            <Box width={"30%"}>
+            <Box
+              width={"30%"}
+              display={{
+                xs: "none",
+                md: "block",
+              }}
+            >
               <CategoriesSidebar />
             </Box>
           </Stack>

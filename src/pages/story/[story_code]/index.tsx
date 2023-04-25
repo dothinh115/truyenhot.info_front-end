@@ -48,7 +48,9 @@ const StoryDetail = ({ story }: Props) => {
         textDecoration: "none",
       }}
     >
-      {story?.story_title}
+      {story?.story_title.length > 30
+        ? story?.story_title.substring(0, 29) + "..."
+        : story?.story_title}
     </Typography>,
   ];
   return (
@@ -68,10 +70,21 @@ const StoryDetail = ({ story }: Props) => {
               m: "auto!important",
             }}
           >
-            <Box width={"70%"}>
+            <Box
+              width={{
+                xs: "100%",
+                md: "70%",
+              }}
+            >
               <StoryMain story={story} />
             </Box>
-            <Box width={"30%"}>
+            <Box
+              width={"30%"}
+              display={{
+                xs: "none",
+                md: "block",
+              }}
+            >
               <StorySidebar />
             </Box>
           </Stack>

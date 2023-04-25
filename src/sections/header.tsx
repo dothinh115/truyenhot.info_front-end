@@ -6,12 +6,7 @@ type Props = {};
 export const HeaderSection = (props: Props) => {
   return (
     <>
-      <Box
-        component={"header"}
-        width={"100%"}
-        bgcolor={"#311b92"}
-        height="50px"
-      >
+      <Box component={"header"} width={"100%"}>
         <HeaderDesktop />
         <HeaderMobile />
       </Box>

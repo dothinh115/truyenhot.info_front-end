@@ -16,13 +16,13 @@ import useSWR from "swr";
 
 type Props = {};
 
-const SearchPage = (props: Props) => {
+const SearchByAuthorPage = (props: Props) => {
   const [paginationPage, setPaginationPage] = useState<number>(1);
   const router = useRouter();
   const { keywords, page } = router.query;
 
   const { data: searchData, mutate: searchMutate } = useSWR(
-    `/search/storyTitle?keywords=${keywords}${page ? `&page=${page}` : ""}`,
+    `/search/storyAuthor?keywords=${keywords}${page ? `&page=${page}` : ""}`,
     {
       revalidateOnMount: false,
     }
@@ -199,4 +199,4 @@ const SearchPage = (props: Props) => {
   );
 };
 
-export default SearchPage;
+export default SearchByAuthorPage;

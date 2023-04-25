@@ -48,7 +48,7 @@ export const StoryMain = ({ story }: Props) => {
   return (
     <>
       <Box>
-        <Box component={"h1"} fontSize={20}>
+        <Box component={"h1"} fontSize={20} mt={0}>
           THÔNG TIN TRUYỆN
         </Box>
         <Box className={"hr"} />
@@ -99,7 +99,6 @@ export const StoryMain = ({ story }: Props) => {
                 my: 0,
               },
               "& > li": {
-                height: "30px",
                 lineHeight: "30px",
                 "&:not(:last-child)": {
                   borderBottom: "1px dashed #ccc",
@@ -108,41 +107,41 @@ export const StoryMain = ({ story }: Props) => {
               "& > li > ul": {
                 display: "inline-block",
                 pl: 1,
-                "& > li": {
-                  listStyleType: "none",
+              },
+              "& span": {
+                mr: 1,
+                "&::after": {
+                  content: '","',
                   display: "inline-block",
-                  mr: 1,
-                  "&::after": {
-                    content: '","',
-                    display: "inline-block",
-                    ml: "2px",
-                  },
+                  ml: "2px",
                 },
               },
             }}
           >
             <Box component={"li"}>
               <Box component={"h4"}>Tác giả:</Box>
-              <Box component={Link} href={"/"}>
+              <Box
+                component={Link}
+                href={`/search/author?keywords=${story?.story_author}`}
+              >
                 {story?.story_author}
               </Box>
             </Box>
             <Box component={"li"}>
               <Box component={"h4"}>Thể loại:</Box>
-              <Box component={"ul"}>
-                {story?.story_category.map((cate: CategoryInterface) => {
-                  return (
-                    <Box component={"li"} key={cate.cate_id}>
-                      <Box
-                        component={Link}
-                        href={`/categories/${cate.cate_code}`}
-                      >
-                        {cate.cate_title}
-                      </Box>
+
+              {story?.story_category.map((cate: CategoryInterface) => {
+                return (
+                  <Box component={"span"} key={cate.cate_id}>
+                    <Box
+                      component={Link}
+                      href={`/categories/${cate.cate_code}`}
+                    >
+                      {cate.cate_title}
                     </Box>
-                  );
-                })}
-              </Box>
+                  </Box>
+                );
+              })}
             </Box>
             <Box component={"li"}>
               <Box component={"h4"}>Nguồn:</Box>
@@ -232,9 +231,6 @@ export const StoryMain = ({ story }: Props) => {
                 count={chapterListData?.pagination.pages}
                 page={paginationPage}
                 color="primary"
-                showFirstButton={true}
-                showLastButton={true}
-                siblingCount={2}
                 onChange={(e, p) =>
                   router.push(
                     {

@@ -3,13 +3,9 @@ import { Stack } from "@mui/material";
 import { Box } from "@mui/system";
 import Link from "next/link";
 import useSWR from "swr";
+import { CategoryInterface } from "@/models/categories";
 
 type Props = {};
-interface CategoriesType {
-  cate_id: number;
-  cate_title: string;
-  cate_code: string;
-}
 export const CategoriesSidebar = (props: Props) => {
   const { data: categoriesList, isLoading } = useSWR("/categories/getAll");
   return (
@@ -58,7 +54,7 @@ export const CategoriesSidebar = (props: Props) => {
               },
             }}
           >
-            {categoriesList?.result.map((cate: CategoriesType) => {
+            {categoriesList?.result.map((cate: CategoryInterface) => {
               return (
                 <Box key={cate.cate_id} component={"li"}>
                   <Box component={Link} href={`/categories/${cate.cate_code}`}>

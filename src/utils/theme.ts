@@ -45,13 +45,15 @@ const theme = createTheme({
       },
       variants: [],
     },
-    MuiAutocomplete: {
+    MuiToolbar: {
       styleOverrides: {
-        listbox: {
-          fontSize: "13px",
-        },
-        inputRoot: {
-          fontSize: "13px",
+        root: {
+          paddingLeft: 0,
+          paddingRight: 0,
+          "@media (min-width: 600px)": {
+            paddingLeft: 0,
+            paddingRight: 0,
+          },
         },
       },
     },
