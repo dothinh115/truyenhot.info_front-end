@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import useSWR from "swr";
 import {
-  Stack,
   Box,
   List,
   ListItem,

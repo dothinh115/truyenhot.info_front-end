@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { useContext, useEffect } from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import Link from "next/link";
+import { API } from "@/utils/config";
 
 type Props = {
   story: StoryInterface;
@@ -19,9 +20,20 @@ const StoryDetail = ({ story }: Props) => {
   const router = useRouter();
   const { isFallback } = router;
   const { setLoading } = useContext<any>(MainLayoutContext);
+
   useEffect(() => {
     setLoading(isFallback);
   }, [isFallback]);
+
+  const viewIncrease = async () => {
+    try {
+      await API.get(`/stories/viewIncrease/${story.story_code}`);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    viewIncrease();
+  }, []);
 
   const breadCrumbs = [
     <Box
