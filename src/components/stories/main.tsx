@@ -16,6 +16,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import { ChapterDataInterface } from "@/models/chapters";
+import { createDateAsUTC, timeSince } from "@/utils/function";
 type Props = {
   story: StoryInterface;
 };
@@ -34,6 +35,8 @@ export const StoryMain = ({ story }: Props) => {
   useEffect(() => {
     if (page) setPaginationPage(+page);
   }, [page]);
+
+  console.log(new Date(Date.now()));
 
   useEffect(() => {
     if (story_code) chapterListMutate();
@@ -92,7 +95,7 @@ export const StoryMain = ({ story }: Props) => {
                 display: "inline-block",
                 marginRight: "5px",
               },
-              "& p, & a, & h4": {
+              "& p, & a, & h4, & li": {
                 fontSize: "13px",
               },
               "& > li > h4": {
@@ -149,9 +152,24 @@ export const StoryMain = ({ story }: Props) => {
             </Box>
             <Box component={"li"}>
               <Box component={"h4"}>Trạng thái:</Box>
-              <Box component={Link} href={"/"}>
-                {story?.story_status}
-              </Box>
+              {story?.story_status}
+            </Box>
+            <Box component={"li"}>
+              <Box component={"h4"}>Update lần cuối:</Box>
+              {timeSince(
+                new Date(
+                  Date.now() -
+                    Math.abs(
+                      new Date().valueOf() -
+                        new Date(story?.updated_at).valueOf()
+                    )
+                )
+              )}{" "}
+              trước
+            </Box>
+            <Box component={"li"}>
+              <Box component={"h4"}>Lượt xem:</Box>
+              {story?.story_view}
             </Box>
           </Box>
         </Stack>

@@ -12,6 +12,10 @@ export interface StoryInterface {
   story_category: any;
   poster: number;
   story_code: string;
+  story_view: number;
+  story_label: string;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export interface UpdateStoryInterface {

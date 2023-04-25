@@ -4,6 +4,7 @@ export interface ChapterListInterface {
   chapter_title: string;
   chapter_code: string;
   story_code: string;
+  created_at: Date;
 }
 
 export interface ChapterDataInterface extends ChapterListInterface {
