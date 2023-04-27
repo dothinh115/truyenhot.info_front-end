@@ -11,9 +11,10 @@ export const createDateAsUTC = (date: Date): Date => {
   );
 };
 
-export const timeSince = (date: Date) => {
-  var seconds = Math.floor((new Date().valueOf() - date.valueOf()) / 1000);
+export const timeSince = (seconds: number) => {
+  seconds = Math.floor(seconds / 1000);
   var interval = seconds / 31536000;
+
   if (interval > 1) {
     return Math.floor(interval) + " năm";
   }

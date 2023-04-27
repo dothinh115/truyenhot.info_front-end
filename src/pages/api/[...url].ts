@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import httpProxy from "http-proxy";
 import Cookies from "cookies";
+import { apiURL } from "@/utils/config";
 
 export const config = {
   api: {
@@ -23,7 +24,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     req.headers.cookie = "";
 
     proxy.web(req, res, {
-      target: "http://localhost:5000",
+      target: apiURL,
       changeOrigin: true,
       selfHandleResponse: false,
     });

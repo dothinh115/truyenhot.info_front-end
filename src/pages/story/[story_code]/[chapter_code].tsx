@@ -1,9 +1,8 @@
 import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
-import { MainLayoutContext } from "@/layouts";
 import { ChapterDataInterface, ChapterListInterface } from "@/models/chapters";
 import { ChapterSection } from "@/sections";
-import { API } from "@/utils/config";
+import { API, apiURL } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import HomeIcon from "@mui/icons-material/Home";
@@ -23,18 +22,18 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   chapterData: ChapterDataInterface;
 };
 
-const ITEM_HEIGHT = 48;
+const ITEM_HEIGHT = 36;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
   PaperProps: {
     style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      maxHeight: ITEM_HEIGHT * 10 + ITEM_PADDING_TOP,
     },
   },
 };
@@ -43,8 +42,6 @@ const ChapterDetail = ({ chapterData }: Props) => {
   const [chapterListData, setChapterListData] = useState<any>();
 
   const router = useRouter();
-  const { isFallback } = router;
-  const { setLoading } = useContext<any>(MainLayoutContext);
   const handleChange = (event: SelectChangeEvent, child?: any) => {
     router.push({
       pathname: router.pathname,
@@ -66,10 +63,6 @@ const ChapterDetail = ({ chapterData }: Props) => {
 
   useEffect(() => {
     if (chapterData?.story_code) getChapterListData();
-  }, [router.query]);
-
-  useEffect(() => {
-    setLoading(isFallback);
   }, [router.query]);
 
   const breadCrumbs = [
@@ -143,23 +136,19 @@ const ChapterDetail = ({ chapterData }: Props) => {
               component={"h1"}
               textAlign={"center"}
               color={"#3949ab"}
-              fontWeight={"light"}
+              fontWeight={{
+                md: "light",
+                xs: "medium",
+              }}
               fontSize={{
                 md: "40px",
                 xs: "30px",
               }}
-              my={1}
+              mb={4}
             >
               {chapterData?.story_title}
             </Box>
-            <Typography
-              textAlign={"center"}
-              fontWeight={"light"}
-              fontSize={18}
-              fontStyle={"italic"}
-            >
-              --- {chapterData?.chapter_name} ---
-            </Typography>
+
             <Stack
               direction={"row"}
               justifyContent={"center"}
@@ -233,7 +222,14 @@ const ChapterDetail = ({ chapterData }: Props) => {
               component={"div"}
               fontSize={{
                 md: "24px",
-                xs: "20px",
+                xs: "18px",
+              }}
+              lineHeight={"2"}
+              sx={{
+                wordSpacing: ".3px",
+                "& figure": {
+                  textAlign: "center",
+                },
               }}
               dangerouslySetInnerHTML={{
                 __html: chapterData?.chapter_content,
@@ -315,11 +311,9 @@ const ChapterDetail = ({ chapterData }: Props) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const response = await fetch(
-    "http://localhost:5000/api/chapter/getAllChapterList"
-  );
+  const response = await fetch(`${apiURL}/api/chapter/getAllChapterList`);
   const data = await response.json();
-  const paths = data.result.map((item: ChapterListInterface) => ({
+  const paths = data.result?.map((item: ChapterListInterface) => ({
     params: {
       story_code: item.story_code,
       chapter_code: item.chapter_code,
@@ -339,7 +333,7 @@ export const getStaticProps: GetStaticProps<Props> = async (
   const chapter_code = context.params.chapter_code;
   const revalidate = 60 * 60 * 24;
   const respone = await fetch(
-    `http://localhost:5000/api/chapter/getChapterDataByStoryCode/${story_code}/${chapter_code}`
+    `${apiURL}/api/chapter/getChapterDataByStoryCode/${story_code}/${chapter_code}`
   );
   const chapter = await respone.json();
   if (!chapter.result) {

@@ -1,22 +1,28 @@
 import { CategoryInterface } from "@/models/categories";
+import { ChapterDataInterface } from "@/models/chapters";
 import { StoryInterface } from "@/models/stories";
+import { timeSince } from "@/utils/function";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Button, List, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  List,
+  ListItemIcon,
+  Stack,
+  Typography,
+} from "@mui/material";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
-import { Box, Stack, ListItemIcon } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import { ChapterDataInterface } from "@/models/chapters";
-import { createDateAsUTC, timeSince } from "@/utils/function";
 type Props = {
   story: StoryInterface;
 };
@@ -34,13 +40,8 @@ export const StoryMain = ({ story }: Props) => {
 
   useEffect(() => {
     if (page) setPaginationPage(+page);
-  }, [page]);
-
-  console.log(new Date(Date.now()));
-
-  useEffect(() => {
-    if (story_code) chapterListMutate();
-  }, []);
+    if (story) chapterListMutate();
+  }, [story, page]);
 
   useEffect(() => {
     if (story?.story_description)
@@ -48,6 +49,7 @@ export const StoryMain = ({ story }: Props) => {
         .replaceAll("<div text-align: justify; >", "")
         .replaceAll("</div>", "");
   }, [story?.story_description]);
+
   return (
     <>
       <Box>
@@ -156,15 +158,12 @@ export const StoryMain = ({ story }: Props) => {
             </Box>
             <Box component={"li"}>
               <Box component={"h4"}>Update lần cuối:</Box>
-              {timeSince(
-                new Date(
-                  Date.now() -
-                    Math.abs(
-                      new Date().valueOf() -
-                        new Date(story?.updated_at).valueOf()
-                    )
-                )
-              )}{" "}
+              {story?.updated_at &&
+                timeSince(
+                  Math.abs(
+                    new Date().valueOf() - new Date(story?.updated_at).valueOf()
+                  )
+                )}{" "}
               trước
             </Box>
             <Box component={"li"}>
@@ -211,7 +210,10 @@ export const StoryMain = ({ story }: Props) => {
           <>
             <Box
               component={List}
-              height={600}
+              height={{
+                md: 600,
+                xs: "100%",
+              }}
               overflow={"auto"}
               mt={3}
               bgcolor={"#fff"}

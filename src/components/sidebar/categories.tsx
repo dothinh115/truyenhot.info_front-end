@@ -7,7 +7,7 @@ import { CategoryInterface } from "@/models/categories";
 
 type Props = {};
 export const CategoriesSidebar = (props: Props) => {
-  const { data: categoriesList, isLoading } = useSWR("/categories/getAll", {
+  const { data: categoriesList, isLoading } = useSWR(`/categories/getAll`, {
     dedupingInterval: 60 * 60 * 24,
   });
   return (
@@ -19,7 +19,7 @@ export const CategoriesSidebar = (props: Props) => {
         }}
       >
         <Box component={"h3"} bgcolor={"#e8eaf6"} my={0} p={1}>
-          THỂ LOẠI
+          Thể loại
         </Box>
         <Box className={"sidebar-hr"}></Box>
         {isLoading ? (

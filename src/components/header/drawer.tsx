@@ -1,15 +1,14 @@
-import React from "react";
-import { Box, Button, Chip, Stack } from "@mui/material";
-import useSWR from "swr";
-import Link from "next/link";
 import { CategoryInterface } from "@/models/categories";
+import { Box, Button, Chip } from "@mui/material";
+import Link from "next/link";
+import useSWR from "swr";
 type Props = {
   open: boolean;
   setMobileMenuOpen: (arg0: boolean) => void;
 };
 
 export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
-  const { data: categoriesList } = useSWR("/categories/getAll", {
+  const { data: categoriesList } = useSWR(`/categories/getAll`, {
     dedupingInterval: 60 * 60 * 24,
   });
 

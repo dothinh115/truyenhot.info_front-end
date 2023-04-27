@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import httpProxy, { ProxyResCallback } from "http-proxy";
 import Cookies from "cookies";
+import { apiURL } from "@/utils/config";
 
 export const config = {
   api: {
@@ -17,7 +18,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   req.headers.cookie = "";
   new Promise((resolve) => {
     proxy.web(req, res, {
-      target: "http://localhost:5000",
+      target: apiURL,
       changeOrigin: true,
       selfHandleResponse: true,
     });
@@ -28,9 +29,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       proxyRes.on("end", async () => {
         try {
           const { accessToken } = JSON.parse(body).result;
-          const cookies = new Cookies(req, res, {
-            secure: process.env.NODE_ENV !== "development", // === false
-          });
+          const cookies = new Cookies(req, res);
           cookies.set("accessToken", accessToken, {
             httpOnly: true,
             sameSite: "lax",

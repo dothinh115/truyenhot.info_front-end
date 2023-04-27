@@ -1,10 +1,10 @@
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
 import { CategoriesSidebar } from "@/components/sidebar";
-import { MainLayoutContext } from "@/layouts";
 import {
   CategoryInterface,
   StoriesInCategoryInterface,
 } from "@/models/categories";
+import { apiURL } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CreateIcon from "@mui/icons-material/Create";
@@ -40,17 +40,12 @@ const CategoriesDetail = ({ categoryData }: Props) => {
     }
   );
 
-  const { setLoading } = useContext<any>(MainLayoutContext);
   const [paginationPage, setPaginationPage] = useState<number>(1);
 
   useEffect(() => {
     if (page) setPaginationPage(+page);
     if (cate_code) storiesMutate();
   }, [page, cate_code]);
-
-  useEffect(() => {
-    setLoading(isLoading);
-  }, [isLoading]);
 
   const breadCrumbs = [
     <Box
@@ -227,7 +222,7 @@ const CategoriesDetail = ({ categoryData }: Props) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const response = await fetch("http://localhost:5000/api/categories/getAll");
+  const response = await fetch(`${apiURL}/api/categories/getAll`);
   const data = await response.json();
   const paths = data.result.map((item: CategoryInterface) => ({
     params: {
@@ -254,7 +249,7 @@ export const getStaticProps: GetStaticProps<Props> = async (
     const cate_code = context.params.cate_code;
     const revalidate = 60 * 60 * 24;
     const respone = await fetch(
-      `http://localhost:5000/api/categories/getCategoryDetail/${cate_code}`
+      `${apiURL}/api/categories/getCategoryDetail/${cate_code}`
     );
     const category = await respone.json();
     return {

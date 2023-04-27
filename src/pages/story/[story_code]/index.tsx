@@ -1,30 +1,19 @@
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
 import { StoryMain, StorySidebar } from "@/components/stories";
-import { MainLayoutContext } from "@/layouts";
 import { StoryInterface } from "@/models/stories";
 import { StorySection } from "@/sections";
-import { Container } from "@mui/material";
-import { Box, Stack, Typography } from "@mui/material";
-import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
-import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
+import { API, apiURL } from "@/utils/config";
 import HomeIcon from "@mui/icons-material/Home";
+import { Box, Container, Stack, Typography } from "@mui/material";
+import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Link from "next/link";
-import { API } from "@/utils/config";
+import { useEffect } from "react";
 
 type Props = {
   story: StoryInterface;
 };
 
 const StoryDetail = ({ story }: Props) => {
-  const router = useRouter();
-  const { isFallback } = router;
-  const { setLoading } = useContext<any>(MainLayoutContext);
-
-  useEffect(() => {
-    setLoading(isFallback);
-  }, [isFallback]);
-
   const viewIncrease = async () => {
     try {
       await API.get(`/stories/viewIncrease/${story.story_code}`);
@@ -107,7 +96,7 @@ const StoryDetail = ({ story }: Props) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const response = await fetch("http://localhost:5000/api/stories/getAll");
+  const response = await fetch(`${apiURL}/api/stories/getAll`);
   const data = await response.json();
   const paths = data.result.map((item: StoryInterface) => ({
     params: {
@@ -125,9 +114,7 @@ export const getStaticProps: GetStaticProps = async (
 ) => {
   if (!context.params) return { notFound: true };
   const story_code = context.params.story_code;
-  const respone = await fetch(
-    `http://localhost:5000/api/stories/getDetail/${story_code}`
-  );
+  const respone = await fetch(`${apiURL}/api/stories/getDetail/${story_code}`);
   const story = await respone.json();
   if (!story.result) {
     return {

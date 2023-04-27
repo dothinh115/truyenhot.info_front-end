@@ -205,7 +205,13 @@ export function HeaderDesktop() {
                         }}
                         dense={true}
                       >
-                        <ListItemText primary={"Loading..."} />
+                        <ListItemText
+                          primary={
+                            timeout.current
+                              ? "Loading..."
+                              : "Không có kết quả nào!"
+                          }
+                        />
                       </ListItem>
                     )}
                     {searchData?.map((story: StoriesSearchResultInterface) => {

@@ -2,6 +2,7 @@ import { useSnackbar } from "@/hooks/snackbar";
 import { AdminLayout, AdminLayoutContext } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
 import { NewStoryInterface } from "@/models/stories";
+import { NProgressDone, NProgressStart } from "@/pages/_app";
 import { API, modules } from "@/utils/config";
 import {
   Autocomplete,
@@ -15,6 +16,7 @@ import dynamic from "next/dynamic";
 import { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
+import CircularProgress from "@mui/material/CircularProgress";
 
 type Props = {};
 
@@ -55,7 +57,7 @@ const AdminNewStories = (props: Props) => {
   const {
     control: urlControl,
     handleSubmit: urlHandleSubmit,
-    formState: { errors: urlErrors },
+    formState: { errors: urlErrors, isSubmitting: urlIsSubmitting },
     reset: urlReset,
   } = useForm<NewStoryByUrlInterface>({
     mode: "onChange",
@@ -103,7 +105,7 @@ const AdminNewStories = (props: Props) => {
   };
 
   const newStoryByUrlSubmitHanle = async (data: any) => {
-    setLoading(true);
+    NProgressStart();
     try {
       await API.get(`/bot/createStoryByUrl?url=${data.url}`);
       setSnackbar({
@@ -124,7 +126,7 @@ const AdminNewStories = (props: Props) => {
         type: "error",
       });
     } finally {
-      setLoading(false);
+      NProgressDone();
     }
   };
 
@@ -333,7 +335,16 @@ const AdminNewStories = (props: Props) => {
             />
 
             <Stack flexDirection={"row"} justifyContent={"flex-end"} mt={1}>
-              <Button type="submit" variant="contained">
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={urlIsSubmitting ? true : false}
+                startIcon={
+                  urlIsSubmitting && (
+                    <CircularProgress color="inherit" size={"1em"} />
+                  )
+                }
+              >
                 Đăng
               </Button>
             </Stack>
