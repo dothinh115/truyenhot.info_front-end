@@ -16,7 +16,7 @@ import PaginationItem from "@mui/material/PaginationItem";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 type Props = {
   categoryData: CategoryInterface;
@@ -44,6 +44,7 @@ const CategoriesDetail = ({ categoryData }: Props) => {
 
   useEffect(() => {
     if (page) setPaginationPage(+page);
+    else setPaginationPage(1);
     if (cate_code) storiesMutate();
   }, [page, cate_code]);
 

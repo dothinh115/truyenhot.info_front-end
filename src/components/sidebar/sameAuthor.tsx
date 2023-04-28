@@ -47,19 +47,22 @@ export const SameAuthorSidebar = ({ story }: Props) => {
           </Box>
           <Box>
             <Box component={List} py={0} dense={true}>
-              <Box component={ListItem} p={0}>
-                {newStoriesData?.map((story: StoriesSearchResultInterface) => {
-                  return (
+              {newStoriesData?.map((story: StoriesSearchResultInterface) => {
+                return (
+                  <Box
+                    component={ListItem}
+                    p={0}
+                    m={0}
+                    key={story.story_code}
+                    sx={{
+                      "&:not(:last-of-type)": {
+                        borderBottom: "1px dashed #ccc",
+                      },
+                    }}
+                  >
                     <ListItemButton
                       component={Link}
-                      key={story.story_code}
                       href={`/story/${story.story_code}`}
-                      sx={{
-                        p: 1,
-                        "&:not(:last-of-type)": {
-                          borderBottom: "1px dashed #ccc",
-                        },
-                      }}
                     >
                       <Box component={ListItemIcon} minWidth={"25px"}>
                         <ArrowForwardIosIcon sx={{ fontSize: "15px" }} />
@@ -80,9 +83,9 @@ export const SameAuthorSidebar = ({ story }: Props) => {
                         }}
                       />
                     </ListItemButton>
-                  );
-                })}
-              </Box>
+                  </Box>
+                );
+              })}
             </Box>
           </Box>
         </Box>

@@ -10,6 +10,6 @@ export interface ChapterListInterface {
 export interface ChapterDataInterface extends ChapterListInterface {
   chapter_content: string;
   story_title: string;
-  nextChapter: string;
-  prevChapter: string;
+  nextChapter?: string;
+  prevChapter?: string;
 }

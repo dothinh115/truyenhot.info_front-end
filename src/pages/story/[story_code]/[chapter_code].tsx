@@ -123,7 +123,7 @@ const ChapterDetail = ({ chapterData }: Props) => {
             chapterData?.chapter_name
           }${
             chapterData?.chapter_title ? `: ${chapterData?.chapter_title}` : ""
-          } : ${chapterData?.chapter_content}`,
+          } : ${chapterData?.chapter_content.substring(0, 320)}`,
           url: `https//truyenhot.info/story/${chapterData?.story_code}/${chapterData?.chapter_code}`,
           thumbnailUrl: ``,
         }}

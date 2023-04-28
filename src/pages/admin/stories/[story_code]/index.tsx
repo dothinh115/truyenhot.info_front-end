@@ -1,22 +1,28 @@
 import { useSnackbar } from "@/hooks/snackbar";
 import { AdminLayout, AdminLayoutContext } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
+import { ChapterDataInterface } from "@/models/chapters";
 import { UpdateStoryInterface } from "@/models/stories";
 import { API, modules } from "@/utils/config";
-import Pagination from "@mui/material/Pagination";
-
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import ClearIcon from "@mui/icons-material/Clear";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {
   Autocomplete,
   Box,
   Button,
   Container,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
   Stack,
   TextField,
+  Chip,
 } from "@mui/material";
+import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -54,6 +60,11 @@ const EditStory = (props: Props) => {
       revalidateOnMount: false,
     }
   );
+
+  const { data: noContentChaptersData, mutate: noContentChaptersMutate } =
+    useSWR(`/admin/getNoContentChapters/${story_code}`, {
+      revalidateOnMount: false,
+    });
 
   const { data: categoriesList } = useSWR("/categories/getAll");
   const { snackbar, setSnackbar } = useSnackbar();
@@ -150,25 +161,6 @@ const EditStory = (props: Props) => {
     }
   };
 
-  const chapterDelete = async (chapter_code: string, chapter_name: string) => {
-    try {
-      await API.delete(`/chapter/delete/${story_code}/${chapter_code}`);
-
-      await chapterListMutate();
-      setSnackbar({
-        message: `Xóa ${chapter_name} thành công`,
-        open: true,
-        type: "success",
-      });
-    } catch (error: any) {
-      setSnackbar({
-        message: error.response?.data.message,
-        open: true,
-        type: "error",
-      });
-    }
-  };
-
   const chapterUpdateSubmitHandle = async (data: any) => {
     setLoading(true);
     try {
@@ -203,8 +195,9 @@ const EditStory = (props: Props) => {
     if (story_code) {
       mutate();
       chapterListMutate();
+      noContentChaptersMutate();
     }
-  }, [story_code]);
+  }, []);
 
   return (
     <>
@@ -471,80 +464,121 @@ const EditStory = (props: Props) => {
               </Box>
             </Box>
           </Stack>
+          {noContentChaptersData?.result.length !== 0 && (
+            <>
+              <Box component={"h1"} fontSize={20}>
+                DANH SÁCH CHƯƠNG BỊ TRỐNG
+              </Box>
+              <Box className={"hr"} mb={2} />
+              {noContentChaptersData?.result.map(
+                (chapter: ChapterDataInterface) => {
+                  return (
+                    <Chip
+                      key={chapter.chapter_code}
+                      label={chapter.chapter_name}
+                      onClick={() =>
+                        router.push({
+                          pathname:
+                            "/admin/stories/[story_code]/[chapter_code]",
+                          query: {
+                            story_code,
+                            chapter_code: chapter.chapter_code,
+                          },
+                        })
+                      }
+                      sx={{
+                        mb: 1,
+                        mr: 1,
+                      }}
+                    />
+                  );
+                }
+              )}
+            </>
+          )}
 
           <Box component={"h1"} fontSize={20}>
             DANH SÁCH CHƯƠNG
           </Box>
           <Box className={"hr"} />
-          <Box
-            component={"ul"}
-            sx={{
-              p: 0,
-              minHeight: "330px",
-              "& > li": {
-                listStyleType: "none",
-                width: "50%",
-                display: "inline-block",
-                "& a": {
-                  textDecoration: "none",
-                  p: 0,
-                  display: "block",
-                },
-                "& svg": {
-                  color: "red",
-                  "&:hover": {
-                    cursor: "pointer",
-                  },
-                },
-              },
-            }}
-          >
-            {chapterListData?.result.length === 0 &&
-              "Không có chương truyện nào"}
-            {chapterListData?.result.map((chapter: any) => {
-              return (
-                <Box component={"li"} key={chapter.chapter_id} pl={0}>
-                  <Stack direction={"row"}>
-                    <Box
-                      component={ClearIcon}
-                      onClick={() =>
-                        chapterDelete(
-                          chapter.chapter_code,
-                          chapter.chapter_name
-                        )
-                      }
-                    />
-                    <Box
-                      component={Link}
-                      href={`/story/${chapter.story_code}/${chapter.chapter_code}`}
-                    >
-                      {chapter.chapter_name}
-                    </Box>
-                  </Stack>
-                </Box>
-              );
-            })}
-          </Box>
           {chapterListData?.pagination && (
-            <Stack direction={"row"} justifyContent={"center"} mt={2}>
-              <Pagination
-                count={chapterListData?.pagination.pages}
-                page={paginationPage}
-                color="primary"
-                showFirstButton={true}
-                showLastButton={true}
-                siblingCount={2}
-                onChange={(e, p) =>
-                  router.push(`/admin/stories/${story_code}?page=${p}`)
-                }
-                renderItem={(item) => (
-                  <PaginationItem
-                    slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
-                    {...item}
-                  />
-                )}
-              />
-            </Stack>
+            <>
+              <Box
+                component={List}
+                maxHeight={{
+                  md: 600,
+                  xs: "100%",
+                }}
+                overflow={"auto"}
+                mt={3}
+                bgcolor={"#fff"}
+                dense={true}
+              >
+                {chapterListData?.result.map((data: ChapterDataInterface) => {
+                  return (
+                    <ListItem
+                      key={data.chapter_id}
+                      sx={{
+                        borderBottom: "1px dashed #ccc",
+                      }}
+                      dense={true}
+                    >
+                      <Box component={ListItemIcon} minWidth={"25px"}>
+                        <ArrowCircleRightIcon />
+                      </Box>
+                      <ListItemButton
+                        onClick={() => {
+                          router.push({
+                            pathname:
+                              "/admin/stories/[story_code]/[chapter_code]",
+                            query: {
+                              story_code,
+                              chapter_code: data.chapter_code,
+                              goAround: true,
+                            },
+                          });
+                        }}
+                      >
+                        <ListItemText
+                          primary={`${data.chapter_name}${
+                            data.chapter_title ? ": " + data.chapter_title : ""
+                          }`}
+                        />
+                      </ListItemButton>
+                    </ListItem>
+                  );
+                })}
+              </Box>
+              <Stack direction={"row"} justifyContent={"center"} mt={2}>
+                <Pagination
+                  count={chapterListData?.pagination.pages}
+                  page={paginationPage}
+                  color="primary"
+                  onChange={(e, p) =>
+                    router.push(
+                      {
+                        pathname: router.pathname,
+                        query: {
+                          story_code,
+                          page: p,
+                        },
+                      },
+                      undefined,
+                      { scroll: false }
+                    )
+                  }
+                  renderItem={(item) => (
+                    <PaginationItem
+                      slots={{
+                        previous: ArrowBackIcon,
+                        next: ArrowForwardIcon,
+                      }}
+                      {...item}
+                    />
+                  )}
+                />
+              </Stack>
+            </>
           )}
         </Container>
       </Stack>

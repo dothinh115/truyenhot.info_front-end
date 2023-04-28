@@ -210,7 +210,7 @@ export const StoryMain = ({ story }: Props) => {
           <>
             <Box
               component={List}
-              height={{
+              maxHeight={{
                 md: 600,
                 xs: "100%",
               }}
