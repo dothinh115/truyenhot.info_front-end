@@ -9,7 +9,7 @@ export interface StoryInterface {
   story_status: string;
   story_source: string;
   story_cover: string;
-  story_category: any;
+  story_category: CategoryInterface[];
   poster: number;
   story_code: string;
   story_view: number;

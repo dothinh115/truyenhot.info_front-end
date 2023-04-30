@@ -18,6 +18,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
+import CircularProgress from "@mui/material/CircularProgress";
+import { Seo } from "@/components";
+
 type Props = {
   categoryData: CategoryInterface;
 };
@@ -30,7 +33,7 @@ const CategoriesDetail = ({ categoryData }: Props) => {
   const {
     data: storiesData,
     mutate: storiesMutate,
-    isLoading,
+    isValidating: storiesIsValidating,
   } = useSWR(
     `/categories/getStoriesByCategory/${cate_code}${
       page ? `?page=${page}` : ""
@@ -75,6 +78,14 @@ const CategoriesDetail = ({ categoryData }: Props) => {
   ];
   return (
     <>
+      <Seo
+        data={{
+          title: `Truyện ${cate_title} - truyenhot.info`,
+          description: `Truyện ${cate_title} - Đọc truyện online, đọc truyện chữ, truyện hay, truyện hot. Luôn cập nhật truyện nhanh nhất.`,
+          url: `https//truyenhot.info/categories/${cate_code}`,
+          thumbnailUrl: `${apiURL}/api/public/images/thumnail/thumbnail.jpg`,
+        }}
+      />
       <MainBreadcrumbs links={breadCrumbs} />
       <Stack direction={"row"} justifyContent={"center"} mt={2}>
         <Container maxWidth={"md"}>
@@ -89,6 +100,17 @@ const CategoriesDetail = ({ categoryData }: Props) => {
                 {cate_title}
               </Box>
               <Box className={"hr"} my={2} />
+              {storiesIsValidating && !storiesData?.result && (
+                <Stack
+                  direction={"row"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  gap={"5px"}
+                >
+                  <CircularProgress size={"3em"} color="primary" />{" "}
+                  <Typography>...Đang lấy dữ liệu</Typography>
+                </Stack>
+              )}
               <Box component={"ul"} m={0} p={0}>
                 {storiesData?.result.map(
                   (story: StoriesInCategoryInterface) => {

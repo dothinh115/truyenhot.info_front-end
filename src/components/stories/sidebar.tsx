@@ -1,13 +1,7 @@
-import { StoryInterface } from "@/models/stories";
-import { CategoriesSidebar, SameAuthorSidebar } from "../sidebar";
+import { ReactNode } from "react";
 
-type Props = { story: StoryInterface };
+type Props = { children: ReactNode };
 
-export const StorySidebar = ({ story }: Props) => {
-  return (
-    <>
-      <SameAuthorSidebar story={story} />
-      <CategoriesSidebar />
-    </>
-  );
+export const StorySidebar = ({ children }: Props) => {
+  return <>{children}</>;
 };

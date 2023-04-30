@@ -1,29 +1,22 @@
+import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
+import { CategoriesSidebar, SameAuthorSidebar } from "@/components/sidebar";
 import { StoryMain, StorySidebar } from "@/components/stories";
+import { StoriesSearchResultInterface } from "@/models/search";
 import { StoryInterface } from "@/models/stories";
 import { StorySection } from "@/sections";
-import { API, apiURL } from "@/utils/config";
+import { apiURL } from "@/utils/config";
 import HomeIcon from "@mui/icons-material/Home";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Link from "next/link";
-import { useEffect } from "react";
 
 type Props = {
   story: StoryInterface;
+  storiesSameAuthor: StoriesSearchResultInterface[];
 };
 
-const StoryDetail = ({ story }: Props) => {
-  const viewIncrease = async () => {
-    try {
-      await API.get(`/stories/viewIncrease/${story.story_code}`);
-    } catch (error) {}
-  };
-
-  useEffect(() => {
-    viewIncrease();
-  }, []);
-
+const StoryDetail = ({ story, storiesSameAuthor }: Props) => {
   const breadCrumbs = [
     <Box
       key={1}
@@ -56,6 +49,14 @@ const StoryDetail = ({ story }: Props) => {
   ];
   return (
     <>
+      <Seo
+        data={{
+          title: `${story?.story_title} - truyenhot.info`,
+          description: `${story?.story_title} - Đọc truyện online, đọc truyện chữ, truyện hay, truyện hot. Luôn cập nhật truyện nhanh nhất.`,
+          url: `https//truyenhot.info/story/${story?.story_code}`,
+          thumbnailUrl: `${apiURL}/api/public/images/thumnail/thumbnail.jpg`,
+        }}
+      />
       <MainBreadcrumbs links={breadCrumbs} />
       <StorySection>
         <Container
@@ -65,7 +66,10 @@ const StoryDetail = ({ story }: Props) => {
           }}
         >
           <Stack
-            direction={"row"}
+            direction={{
+              md: "row",
+              xs: "column",
+            }}
             spacing={2}
             sx={{
               m: "auto!important",
@@ -79,6 +83,16 @@ const StoryDetail = ({ story }: Props) => {
             >
               <StoryMain story={story} />
             </Box>
+
+            <Box
+              display={{
+                xs: "block",
+                md: "none",
+              }}
+            >
+              <Box className={"hr"} width={"100%"} my={3} />
+              <SameAuthorSidebar storiesSameAuthor={storiesSameAuthor} />
+            </Box>
             <Box
               width={"30%"}
               display={{
@@ -86,7 +100,10 @@ const StoryDetail = ({ story }: Props) => {
                 md: "block",
               }}
             >
-              <StorySidebar story={story} />
+              <StorySidebar>
+                <SameAuthorSidebar storiesSameAuthor={storiesSameAuthor} />
+                <CategoriesSidebar />
+              </StorySidebar>
             </Box>
           </Stack>
         </Container>
@@ -115,7 +132,18 @@ export const getStaticProps: GetStaticProps = async (
   if (!context.params) return { notFound: true };
   const story_code = context.params.story_code;
   const respone = await fetch(`${apiURL}/api/stories/getDetail/${story_code}`);
-  const story = await respone.json();
+  const story: { result: StoryInterface } = await respone.json();
+  const story_author = story.result.story_author;
+
+  const respone_2 = await fetch(
+    `${apiURL}/api/search/storyAuthor?keywords=${story_author}`
+  );
+  const storiesSameAuthorJson = await respone_2.json();
+  const storiesSameAuthor: StoriesSearchResultInterface[] =
+    storiesSameAuthorJson.result.filter(
+      (item: StoriesSearchResultInterface) =>
+        item.story_code !== story.result.story_code
+    );
   if (!story.result) {
     return {
       redirect: {
@@ -127,6 +155,7 @@ export const getStaticProps: GetStaticProps = async (
   return {
     props: {
       story: story.result,
+      storiesSameAuthor,
     },
     revalidate: 5,
   };

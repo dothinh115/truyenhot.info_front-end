@@ -23,6 +23,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
+import CircularProgress from "@mui/material/CircularProgress";
+
 type Props = {
   story: StoryInterface;
 };
@@ -32,7 +34,11 @@ export const StoryMain = ({ story }: Props) => {
   const { story_code, page } = router?.query;
   const [paginationPage, setPaginationPage] = useState<number>(1);
 
-  const { data: chapterListData, mutate: chapterListMutate } = useSWR(
+  const {
+    data: chapterListData,
+    mutate: chapterListMutate,
+    isValidating: chapterListIsValidating,
+  } = useSWR(
     `/chapter/getChapterListByStoryCode/${story_code}?page=${page ? page : 1}`,
     { revalidateOnMount: false }
   );
@@ -49,7 +55,6 @@ export const StoryMain = ({ story }: Props) => {
         .replaceAll("<div text-align: justify; >", "")
         .replaceAll("</div>", "");
   }, [story?.story_description]);
-
   return (
     <>
       <Box>
@@ -202,78 +207,118 @@ export const StoryMain = ({ story }: Props) => {
             {showMore ? "Rút gọn" : "Xem thêm"}
           </Button>
         </Box>
-        <Box component={"h1"} fontSize={20}>
+        <Stack
+          component={"h1"}
+          fontSize={20}
+          direction={"row"}
+          gap={"5px"}
+          alignItems={"center"}
+        >
           DANH SÁCH CHƯƠNG
-        </Box>
+          {chapterListIsValidating && (
+            <CircularProgress size={"1em"} color="primary" />
+          )}
+        </Stack>
         <Box className={"hr"} />
-        {chapterListData?.pagination && (
-          <>
-            <Box
-              component={List}
-              maxHeight={{
-                md: 600,
-                xs: "100%",
-              }}
-              overflow={"auto"}
-              mt={3}
-              bgcolor={"#fff"}
-              dense={true}
-            >
-              {chapterListData?.result.map((data: ChapterDataInterface) => {
-                return (
-                  <ListItem
-                    key={data.chapter_id}
-                    sx={{
-                      borderBottom: "1px dashed #ccc",
-                    }}
-                    dense={true}
-                  >
-                    <Box component={ListItemIcon} minWidth={"25px"}>
-                      <ArrowCircleRightIcon />
-                    </Box>
-                    <ListItemButton
-                      component={Link}
-                      href={`/story/${story_code}/${data.chapter_code}`}
-                      scroll={true}
-                    >
-                      <ListItemText
-                        primary={`${data.chapter_name}${
-                          data.chapter_title ? ": " + data.chapter_title : ""
-                        }`}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                );
-              })}
-            </Box>
-            <Stack direction={"row"} justifyContent={"center"} mt={2}>
-              <Pagination
-                count={chapterListData?.pagination.pages}
-                page={paginationPage}
-                color="primary"
-                onChange={(e, p) =>
-                  router.push(
-                    {
-                      pathname: router.pathname,
-                      query: {
-                        story_code,
-                        page: p,
-                      },
-                    },
-                    undefined,
-                    { scroll: false }
-                  )
-                }
-                renderItem={(item) => (
-                  <PaginationItem
-                    slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
-                    {...item}
-                  />
-                )}
+        <Stack
+          display={{
+            xs: "flex",
+            md: "none",
+          }}
+          direction={"row"}
+          justifyContent={"center"}
+          mt={2}
+        >
+          <Pagination
+            count={chapterListData?.pagination.pages}
+            page={paginationPage}
+            color="primary"
+            onChange={(e, p) =>
+              router.push(
+                {
+                  pathname: router.pathname,
+                  query: {
+                    story_code,
+                    page: p,
+                  },
+                },
+                undefined,
+                { scroll: false }
+              )
+            }
+            renderItem={(item) => (
+              <PaginationItem
+                slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
+                {...item}
               />
-            </Stack>
-          </>
-        )}
+            )}
+          />
+        </Stack>
+
+        <Box
+          component={List}
+          maxHeight={{
+            md: 600,
+            xs: "100%",
+          }}
+          overflow={"auto"}
+          mt={3}
+          bgcolor={"#fff"}
+          dense={true}
+        >
+          {chapterListData?.result.map((data: ChapterDataInterface) => {
+            return (
+              <ListItem
+                key={data.chapter_id}
+                sx={{
+                  borderBottom: "1px dashed #ccc",
+                }}
+                dense={true}
+              >
+                <Box component={ListItemIcon} minWidth={"25px"}>
+                  <ArrowCircleRightIcon />
+                </Box>
+                <ListItemButton
+                  component={Link}
+                  href={`/story/${story_code}/${data.chapter_code}`}
+                  scroll={true}
+                >
+                  <ListItemText
+                    primary={`${data.chapter_name}${
+                      data.chapter_title ? ": " + data.chapter_title : ""
+                    }`}
+                  />
+                </ListItemButton>
+              </ListItem>
+            );
+          })}
+        </Box>
+        <Stack direction={"row"} justifyContent={"center"} mt={2}>
+          <Pagination
+            count={chapterListData?.pagination.pages}
+            page={paginationPage}
+            color="primary"
+            onChange={(e, p) =>
+              router.push(
+                {
+                  pathname: router.pathname,
+                  query: {
+                    story_code,
+                    page: p,
+                  },
+                },
+                undefined,
+                { scroll: false }
+              )
+            }
+            renderItem={(item) => (
+              <PaginationItem
+                slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
+                {...item}
+              />
+            )}
+          />
+        </Stack>
       </Box>
     </>
   );

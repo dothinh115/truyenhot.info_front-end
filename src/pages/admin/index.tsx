@@ -17,18 +17,17 @@ import useSWR from "swr";
 type Props = {};
 
 const AdminIndex = (props: Props) => {
-  const {
-    data: dataStatsData,
-    mutate: dataStatsMutate,
-    isValidating: dataStatsIsValidating,
-    isLoading: dataStatsIsLoading,
-  } = useSWR(`/admin/getDataStats`);
+  // const {
+  //   data: dataStatsData,
+  //   mutate: dataStatsMutate,
+  //   isValidating: dataStatsIsValidating,
+  //   isLoading: dataStatsIsLoading,
+  // } = useSWR(`/admin/getDataStats`);
 
   const {
     data: notCompletedStoriesData,
     mutate: notCompletedStoriesMutate,
     isValidating: notCompletedStoriesIsValidating,
-    isLoading: notCompletedStoriesIsLoading,
   } = useSWR(`/admin/getNotCompletedStories`, { dedupingInterval: 60 * 60 });
 
   return (
@@ -45,7 +44,7 @@ const AdminIndex = (props: Props) => {
             },
           }}
         >
-          <Box width={"50%"}>
+          {/* <Box width={"50%"}>
             <TableContainer component={Paper}>
               <Table size="small" aria-label="a dense table">
                 <TableHead>
@@ -143,7 +142,7 @@ const AdminIndex = (props: Props) => {
                 </TableBody>
               </Table>
             </TableContainer>
-          </Box>
+          </Box> */}
 
           <Box width={"50%"}>
             <TableContainer
@@ -172,8 +171,7 @@ const AdminIndex = (props: Props) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {!notCompletedStoriesIsValidating ||
-                  !notCompletedStoriesIsLoading ? (
+                  {!notCompletedStoriesIsValidating ? (
                     notCompletedStoriesData?.result.map(
                       (story: StoryInterface) => {
                         return (

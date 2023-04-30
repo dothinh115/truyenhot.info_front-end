@@ -23,6 +23,7 @@ import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 
 type Props = {
   chapterData: ChapterDataInterface;
@@ -108,8 +109,6 @@ const ChapterDetail = ({ chapterData }: Props) => {
     </Box>,
   ];
 
-  if (router.isFallback) return "...Loading";
-
   return (
     <>
       <Seo
@@ -118,14 +117,14 @@ const ChapterDetail = ({ chapterData }: Props) => {
             chapterData?.chapter_name
           }${
             chapterData?.chapter_title ? `: ${chapterData?.chapter_title}` : ""
-          } || Truyện Hot || Truyenhot.info`,
+          } || Truyện Hot || truyenhot.info`,
           description: `Bạn đang đọc truyện ${chapterData?.story_title} ${
             chapterData?.chapter_name
           }${
             chapterData?.chapter_title ? `: ${chapterData?.chapter_title}` : ""
           } : ${chapterData?.chapter_content.substring(0, 320)}`,
           url: `https//truyenhot.info/story/${chapterData?.story_code}/${chapterData?.chapter_code}`,
-          thumbnailUrl: ``,
+          thumbnailUrl: `${apiURL}/api/public/images/thumnail/thumbnail.jpg`,
         }}
       />
       <MainBreadcrumbs links={breadCrumbs} />
@@ -173,29 +172,35 @@ const ChapterDetail = ({ chapterData }: Props) => {
                   Chương trước
                 </Typography>
               </Button>
-
-              <FormControl sx={{ m: 1, width: 300 }}>
-                <InputLabel>Chọn chương</InputLabel>
-                <Select
-                  value={
-                    chapterData?.chapter_code && chapterListData
-                      ? chapterData?.chapter_code
-                      : ""
-                  }
-                  onChange={(event, child) => handleChange(event, child)}
-                  input={<OutlinedInput label="Chọn chương" />}
-                  MenuProps={MenuProps}
-                >
-                  {chapterListData?.result.map((chapter: any) => (
-                    <MenuItem
-                      key={chapter.chapter_id}
-                      value={chapter.chapter_code}
-                    >
-                      {chapter.chapter_name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              {!chapterListData?.result ? (
+                <>
+                  <CircularProgress size={"2em"} color="primary" />{" "}
+                  <Typography>...Đang lấy dữ liệu</Typography>
+                </>
+              ) : (
+                <FormControl sx={{ m: 1, width: 300 }}>
+                  <InputLabel>Chọn chương</InputLabel>
+                  <Select
+                    value={
+                      chapterData?.chapter_code && chapterListData
+                        ? chapterData?.chapter_code
+                        : ""
+                    }
+                    onChange={(event, child) => handleChange(event, child)}
+                    input={<OutlinedInput label="Chọn chương" />}
+                    MenuProps={MenuProps}
+                  >
+                    {chapterListData?.result.map((chapter: any) => (
+                      <MenuItem
+                        key={chapter.chapter_id}
+                        value={chapter.chapter_code}
+                      >
+                        {chapter.chapter_name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
 
               <Button
                 component={Link}
@@ -230,6 +235,9 @@ const ChapterDetail = ({ chapterData }: Props) => {
                 "& figure": {
                   textAlign: "center",
                 },
+                "& img": {
+                  maxWidth: "100%",
+                },
               }}
               dangerouslySetInnerHTML={{
                 __html: chapterData?.chapter_content,
@@ -261,28 +269,35 @@ const ChapterDetail = ({ chapterData }: Props) => {
                 </Typography>
               </Button>
 
-              <FormControl sx={{ m: 1, width: 300 }}>
-                <InputLabel>Chọn chương</InputLabel>
-                <Select
-                  value={
-                    chapterData?.chapter_code && chapterListData
-                      ? chapterData?.chapter_code
-                      : ""
-                  }
-                  onChange={(event, child) => handleChange(event, child)}
-                  input={<OutlinedInput label="Chọn chương" />}
-                  MenuProps={MenuProps}
-                >
-                  {chapterListData?.result.map((chapter: any) => (
-                    <MenuItem
-                      key={chapter.chapter_id}
-                      value={chapter.chapter_code}
-                    >
-                      {chapter.chapter_name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              {!chapterListData?.result ? (
+                <>
+                  <CircularProgress size={"2em"} color="primary" />{" "}
+                  <Typography>...Đang lấy dữ liệu</Typography>
+                </>
+              ) : (
+                <FormControl sx={{ m: 1, width: 300 }}>
+                  <InputLabel>Chọn chương</InputLabel>
+                  <Select
+                    value={
+                      chapterData?.chapter_code && chapterListData
+                        ? chapterData?.chapter_code
+                        : ""
+                    }
+                    onChange={(event, child) => handleChange(event, child)}
+                    input={<OutlinedInput label="Chọn chương" />}
+                    MenuProps={MenuProps}
+                  >
+                    {chapterListData?.result.map((chapter: any) => (
+                      <MenuItem
+                        key={chapter.chapter_id}
+                        value={chapter.chapter_code}
+                      >
+                        {chapter.chapter_name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
 
               <Button
                 component={Link}
@@ -331,7 +346,7 @@ export const getStaticProps: GetStaticProps<Props> = async (
   if (!context.params) return { notFound: true };
   const story_code = context.params.story_code;
   const chapter_code = context.params.chapter_code;
-  const revalidate = 60 * 60 * 24;
+  const revalidate = 5;
   const respone = await fetch(
     `${apiURL}/api/chapter/getChapterDataByStoryCode/${story_code}/${chapter_code}`
   );

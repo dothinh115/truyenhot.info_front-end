@@ -1,34 +1,97 @@
 import { useSnackbar } from "@/hooks/snackbar";
-import { AdminLayout, AdminLayoutContext } from "@/layouts";
+import { AdminLayout } from "@/layouts";
 import { StoryInterface } from "@/models/stories";
 import { API } from "@/utils/config";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import FirstPageIcon from "@mui/icons-material/FirstPage";
+import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import LastPageIcon from "@mui/icons-material/LastPage";
+import SettingsIcon from "@mui/icons-material/Settings";
 import {
   Box,
   Button,
+  Container,
+  Stack,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Stack,
-  Container,
+  CircularProgress,
 } from "@mui/material";
-import Link from "next/link";
-import useSWR from "swr";
-import React, { useState, useContext, useEffect } from "react";
+import IconButton from "@mui/material/IconButton";
 import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
-import IconButton from "@mui/material/IconButton";
-import FirstPageIcon from "@mui/icons-material/FirstPage";
-import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-import LastPageIcon from "@mui/icons-material/LastPage";
 import { useTheme } from "@mui/material/styles";
-import SettingsIcon from "@mui/icons-material/Settings";
+import Link from "next/link";
+import React, { useState, useRef, useEffect } from "react";
+import useSWR from "swr";
+import { styled, alpha } from "@mui/material/styles";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import InputBase from "@mui/material/InputBase";
+import SearchIcon from "@mui/icons-material/Search";
+import { StoriesSearchResultInterface } from "@/models/search";
+import { timeSince } from "@/utils/function";
 
 type Props = {};
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  "&:hover": {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginLeft: 0,
+  width: "100%",
+  [theme.breakpoints.up("sm")]: {
+    marginLeft: theme.spacing(1),
+    width: "auto",
+  },
+}));
+
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: "inherit",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create("width"),
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
+      },
+    },
+  },
+}));
+
+const StyledResultList = styled(List)(() => ({
+  position: "absolute",
+  top: "calc(100% + 7px)",
+  backgroundColor: "#fff",
+  width: "100%",
+  maxHeight: "200px",
+  overflow: "auto",
+  display: "none",
+  zIndex: 100,
+  border: "1px solid #ccc",
+  p: 0,
+}));
 
 interface TablePaginationActionsProps {
   count: number;
@@ -113,13 +176,18 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
 const AdminStoryIndex = (props: Props) => {
   const {
     data: storiesList,
-    mutate,
-    isLoading,
-  } = useSWR("/stories/getAll?limit=10000");
-  const { setLoading } = useContext<any>(AdminLayoutContext);
+    mutate: storiesListMutate,
+    isValidating: storiesValidating,
+  } = useSWR("/stories/getRecentUpdate?limit=20");
   const { snackbar, setSnackbar } = useSnackbar();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [searchData, setSearchData] = useState<StoriesSearchResultInterface[]>(
+    []
+  );
+  const resultList = useRef<HTMLUListElement>(null);
+  const timeout = useRef<any>(null);
+  const inputElement = useRef(null);
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -136,10 +204,9 @@ const AdminStoryIndex = (props: Props) => {
   };
 
   const deleteHandle = async (story_id: string) => {
-    setLoading(true);
     try {
       await API.delete(`/stories/delete/${story_id}`);
-      await mutate();
+      await storiesListMutate();
       setSnackbar({
         message: "Xóa truyện thành công",
         open: true,
@@ -150,16 +217,48 @@ const AdminStoryIndex = (props: Props) => {
         open: true,
         type: "error",
       });
-    } finally {
-      setLoading(false);
     }
   };
 
-  const reloadHandle = () => mutate();
+  const onChangeHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.currentTarget as HTMLInputElement;
+    if (value === "") {
+      setSearchData([]);
+      if (resultList.current) resultList.current.style.display = "none";
+    }
+    clearTimeout(timeout.current);
+
+    timeout.current = setTimeout(async () => {
+      if (value) {
+        const result: any = await API.get(
+          `/search/storyTitle?keywords=${value}`
+        );
+        setSearchData(result.result);
+      }
+      if (searchData && resultList.current)
+        resultList.current.style.display = "block";
+    }, 500);
+  };
+
+  const reloadHandle = () => storiesListMutate();
+
+  const dropDownList = (event: any) => {
+    if (event.target.parentNode.parentNode.parentNode === resultList.current) {
+      if (resultList.current) resultList.current.style.display = "none";
+    } else if (event.target.parentNode.parentNode === inputElement.current) {
+      if (searchData && resultList.current)
+        resultList.current.style.display = "block";
+    } else {
+      if (resultList.current) resultList.current.style.display = "none";
+    }
+  };
 
   useEffect(() => {
-    setLoading(isLoading);
-  }, [isLoading]);
+    document.addEventListener("click", dropDownList);
+    return () => {
+      document.removeEventListener("click", dropDownList);
+    };
+  }, []);
 
   return (
     <>
@@ -176,6 +275,12 @@ const AdminStoryIndex = (props: Props) => {
                 variant="contained"
                 ml={1}
                 onClick={reloadHandle}
+                disabled={storiesValidating ? true : false}
+                startIcon={
+                  storiesValidating && (
+                    <CircularProgress color="inherit" size={"1em"} />
+                  )
+                }
               >
                 Reload
               </Box>
@@ -197,10 +302,69 @@ const AdminStoryIndex = (props: Props) => {
                   <TableCell width={"50px"} align="center">
                     Cover
                   </TableCell>
-                  <TableCell>Tên truyện</TableCell>
-                  <TableCell width={"20%"} align="center">
-                    Tác giả
+                  <TableCell>
+                    <Search>
+                      <SearchIconWrapper>
+                        <SearchIcon />
+                      </SearchIconWrapper>
+
+                      <StyledInputBase
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          onChangeHandle(e);
+                        }}
+                        placeholder="Tìm kiếm"
+                        size="small"
+                        ref={inputElement}
+                        autoComplete={"off"}
+                      />
+                      <StyledResultList ref={resultList}>
+                        {searchData?.length === 0 && (
+                          <ListItem
+                            sx={{
+                              borderBottom: "1px dashed #ccc",
+                              p: 1,
+                              m: 0,
+                              color: "#000",
+                            }}
+                            dense={true}
+                          >
+                            <ListItemText
+                              primary={
+                                timeout.current
+                                  ? "Loading..."
+                                  : "Không có kết quả nào!"
+                              }
+                            />
+                          </ListItem>
+                        )}
+                        {searchData?.map(
+                          (story: StoriesSearchResultInterface) => {
+                            return (
+                              <ListItem
+                                sx={{
+                                  borderBottom: "1px dashed #ccc",
+                                  p: 0,
+                                  m: 0,
+                                  color: "#000",
+                                }}
+                                dense={true}
+                                key={story.story_code}
+                              >
+                                <ListItemButton
+                                  component={Link}
+                                  href={`/admin/stories/${story.story_code}`}
+                                  scroll={true}
+                                >
+                                  <ListItemText primary={story.story_title} />
+                                </ListItemButton>
+                              </ListItem>
+                            );
+                          }
+                        )}
+                      </StyledResultList>
+                    </Search>
                   </TableCell>
+                  <TableCell width={"20%"}>Update lần cuối</TableCell>
 
                   <TableCell width={"20%"} align="right">
                     Thao tác
@@ -240,7 +404,16 @@ const AdminStoryIndex = (props: Props) => {
                           {story.story_title}
                         </Box>
                       </TableCell>
-                      <TableCell>{story.story_author}</TableCell>
+                      <TableCell>
+                        {story?.updated_at &&
+                          timeSince(
+                            Math.abs(
+                              new Date().valueOf() -
+                                new Date(story?.updated_at).valueOf()
+                            )
+                          )}{" "}
+                        trước
+                      </TableCell>
                       <TableCell align="right">
                         <Button
                           component={Link}

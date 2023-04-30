@@ -1,40 +1,22 @@
-import React, { useEffect } from "react";
-import useSWR from "swr";
+import { StoriesSearchResultInterface } from "@/models/search";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import {
   Box,
   List,
   ListItem,
-  ListItemText,
   ListItemButton,
   ListItemIcon,
+  ListItemText,
 } from "@mui/material";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { StoriesSearchResultInterface } from "@/models/search";
 import Link from "next/link";
-import { StoryInterface } from "@/models/stories";
 type Props = {
-  story: StoryInterface;
+  storiesSameAuthor: StoriesSearchResultInterface[];
 };
 
-export const SameAuthorSidebar = ({ story }: Props) => {
-  const { data: storiesData, mutate: storiesMutate } = useSWR(
-    `/search/storyAuthor?keywords=${story?.story_author}`,
-    {
-      revalidateOnMount: false,
-    }
-  );
-
-  useEffect(() => {
-    if (story?.story_author) storiesMutate();
-  }, []);
-
-  const newStoriesData = storiesData?.result.filter(
-    (item: StoriesSearchResultInterface) => item.story_code !== story.story_code
-  );
-
-  return (
-    <>
-      {newStoriesData?.length !== 0 && (
+export const SameAuthorSidebar = ({ storiesSameAuthor }: Props) => {
+  if (storiesSameAuthor?.length !== 0)
+    return (
+      <>
         <Box border={"1px solid #ccc"} mb={1}>
           <Box
             component={"h3"}
@@ -47,7 +29,7 @@ export const SameAuthorSidebar = ({ story }: Props) => {
           </Box>
           <Box>
             <Box component={List} py={0} dense={true}>
-              {newStoriesData?.map((story: StoriesSearchResultInterface) => {
+              {storiesSameAuthor?.map((story: StoriesSearchResultInterface) => {
                 return (
                   <Box
                     component={ListItem}
@@ -89,7 +71,7 @@ export const SameAuthorSidebar = ({ story }: Props) => {
             </Box>
           </Box>
         </Box>
-      )}
-    </>
-  );
+      </>
+    );
+  else return null;
 };

@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
+import CircularProgress from "@mui/material/CircularProgress";
 
 type Props = {};
 
@@ -21,7 +22,11 @@ const SearchByTitlePage = (props: Props) => {
   const router = useRouter();
   const { keywords, page } = router.query;
 
-  const { data: searchData, mutate: searchMutate } = useSWR(
+  const {
+    data: searchData,
+    mutate: searchMutate,
+    isValidating: searchIsValidating,
+  } = useSWR(
     `/search/storyTitle?keywords=${keywords}${page ? `&page=${page}` : ""}`,
     {
       revalidateOnMount: false,
@@ -70,11 +75,27 @@ const SearchByTitlePage = (props: Props) => {
       <Stack direction={"row"} justifyContent={"center"} mt={2}>
         <Container maxWidth={"md"}>
           <Stack direction={"row"} spacing={1}>
-            <Box width={"70%"}>
+            <Box
+              width={{
+                md: "70%",
+                xs: "100%",
+              }}
+            >
               <Box component={"h1"} m={0} fontWeight={"light"} fontSize={30}>
                 Kết quả tìm kiếm từ khóa: {keywords}
               </Box>
               <Box className={"hr"} my={2} />
+              {searchIsValidating && !searchData?.result && (
+                <Stack
+                  direction={"row"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  gap={"5px"}
+                >
+                  <CircularProgress size={"3em"} color="primary" />{" "}
+                  <Typography>...Đang lấy dữ liệu</Typography>
+                </Stack>
+              )}
               <Box component={"ul"} m={0} p={0}>
                 {searchData?.result.length === 0 && "Không có kết quả nào."}
                 {searchData?.result.map((story: StoriesInCategoryInterface) => {
@@ -189,7 +210,13 @@ const SearchByTitlePage = (props: Props) => {
                 />
               </Stack>
             </Box>
-            <Box width={"30%"}>
+            <Box
+              width={"30%"}
+              display={{
+                md: "block",
+                xs: "none",
+              }}
+            >
               <CategoriesSidebar />
             </Box>
           </Stack>
