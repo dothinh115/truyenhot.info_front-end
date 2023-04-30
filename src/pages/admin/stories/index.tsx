@@ -37,6 +37,7 @@ import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import { StoriesSearchResultInterface } from "@/models/search";
 import { timeSince } from "@/utils/function";
+import { useRouter } from "next/router";
 
 type Props = {};
 const Search = styled("div")(({ theme }) => ({
@@ -185,6 +186,7 @@ const AdminStoryIndex = (props: Props) => {
   const [searchData, setSearchData] = useState<StoriesSearchResultInterface[]>(
     []
   );
+  const router = useRouter();
   const resultList = useRef<HTMLUListElement>(null);
   const timeout = useRef<any>(null);
   const inputElement = useRef(null);
@@ -351,9 +353,15 @@ const AdminStoryIndex = (props: Props) => {
                                 key={story.story_code}
                               >
                                 <ListItemButton
-                                  component={Link}
-                                  href={`/admin/stories/${story.story_code}`}
-                                  scroll={true}
+                                  onClick={() =>
+                                    router.push({
+                                      pathname: "/admin/stories/[story_code]",
+                                      query: {
+                                        story_code: story.story_code,
+                                        goAround: true,
+                                      },
+                                    })
+                                  }
                                 >
                                   <ListItemText primary={story.story_title} />
                                 </ListItemButton>

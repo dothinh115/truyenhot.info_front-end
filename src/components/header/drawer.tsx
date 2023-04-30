@@ -1,13 +1,17 @@
 import { CategoryInterface } from "@/models/categories";
-import { Box, Button, Chip } from "@mui/material";
+import { Box, Button, Chip, Stack } from "@mui/material";
 import Link from "next/link";
 import useSWR from "swr";
+import { useState } from "react";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 type Props = {
   open: boolean;
   setMobileMenuOpen: (arg0: boolean) => void;
 };
 
 export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
+  const [cateShow, setCateShow] = useState<boolean>(false);
   const { data: categoriesList } = useSWR(`/categories/getAll`, {
     dedupingInterval: 60 * 60 * 24,
   });
@@ -31,6 +35,7 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
         bgcolor={"#fff"}
         p={1}
         maxHeight={"100vh"}
+        overflow={"auto"}
         left={open ? "15%" : "100%"}
         sx={{
           transition: "left .2s ease",
@@ -42,7 +47,11 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
 
         <Box component={"h3"}>Thể loại</Box>
         <Box className={"hr"} my={2} />
-        <Box my={2}>
+        <Box
+          my={2}
+          maxHeight={cateShow ? "unset" : "80px"}
+          overflow={cateShow ? "unset" : "hidden"}
+        >
           {categoriesList?.result.map((cate: CategoryInterface) => {
             return (
               <Chip
@@ -54,12 +63,22 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
                 sx={{
                   mr: 1,
                   mt: 1,
+                  fontSize: "13px",
                 }}
                 onClick={() => setMobileMenuOpen(false)}
               />
             );
           })}
         </Box>
+        <Stack
+          direction={"row"}
+          justifyContent={"center"}
+          alignItems={"center"}
+        >
+          <Button type="button" onClick={() => setCateShow(!cateShow)}>
+            {cateShow ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+          </Button>
+        </Stack>
         <Box className={"hr"} my={2} />
         <Box>
           <Button

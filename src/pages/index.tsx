@@ -1,7 +1,7 @@
 import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
 import { CategoriesSidebar } from "@/components/sidebar";
-import { RecentStoriesInterface } from "@/models/categories";
+import { CategoryInterface, RecentStoriesInterface } from "@/models/categories";
 import { apiURL } from "@/utils/config";
 import { timeSince } from "@/utils/function";
 import HomeIcon from "@mui/icons-material/Home";
@@ -16,18 +16,67 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  OutlinedInput,
+  MenuItem,
 } from "@mui/material";
 import Link from "next/link";
 import useSWR from "swr";
+import CircularProgress from "@mui/material/CircularProgress";
+import CachedIcon from "@mui/icons-material/Cached";
+import { SelectChangeEvent } from "@mui/material/Select";
+import { useState } from "react";
+
+const ITEM_HEIGHT = 36;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 10 + ITEM_PADDING_TOP,
+    },
+  },
+};
 
 type Props = {};
 
 const Index = (props: Props) => {
+  const [cateValue, setCateValue] = useState<
+    | {
+        value: string;
+        children: string;
+      }
+    | null
+    | undefined
+  >(null);
   const {
     data: recentUpdateStoriesList,
     mutate: recenUpdatetStoriesListMutate,
     isValidating: recentUpdateStoriesValidating,
-  } = useSWR("/stories/getRecentUpdate");
+  } = useSWR(
+    `/stories/getRecentUpdate${
+      cateValue ? "?category=" + cateValue.value : ""
+    }`,
+    {
+      keepPreviousData: true,
+    }
+  );
+
+  const { data: categoriesData, isLoading: categoriesIsLoading } = useSWR(
+    `/categories/getAll`,
+    {
+      dedupingInterval: 60 * 60 * 24,
+    }
+  );
+
+  const handleChange = (
+    event: SelectChangeEvent,
+    child?: { props: { value: string; children: string } }
+  ) => {
+    setCateValue(child?.props);
+  };
 
   const breadCrumbs = [
     <Box
@@ -72,9 +121,74 @@ const Index = (props: Props) => {
                 xs: "100%",
               }}
             >
-              <Box component={"h2"} m={0}>
-                Truyện mới cập nhật
-              </Box>
+              <Stack
+                direction={{
+                  md: "row",
+                  xs: "column",
+                }}
+                alignItems={{
+                  md: "center",
+                  xs: "flex-start",
+                }}
+                gap={"10px"}
+                justifyContent={"space-between"}
+              >
+                <Box component={"h2"} m={0}>
+                  Truyện mới cập nhật
+                  <Box
+                    component={Button}
+                    size={"small"}
+                    type={"button"}
+                    variant={"contained"}
+                    ml={1}
+                    onClick={() =>
+                      recenUpdatetStoriesListMutate(recentUpdateStoriesList)
+                    }
+                    disabled={recentUpdateStoriesValidating ? true : false}
+                  >
+                    {recentUpdateStoriesValidating ? (
+                      <CircularProgress size={"1.5em"} color="inherit" />
+                    ) : (
+                      <CachedIcon />
+                    )}
+                  </Box>
+                </Box>
+                <Box
+                  component={FormControl}
+                  width={{
+                    md: "200px",
+                    xs: "100%",
+                  }}
+                >
+                  <InputLabel size="small">Tất cả</InputLabel>
+                  <Select
+                    size="small"
+                    value={cateValue ? cateValue.value : ""}
+                    onChange={(event: SelectChangeEvent, child: any) =>
+                      handleChange(event, child)
+                    }
+                    input={
+                      <OutlinedInput
+                        sx={{
+                          bgcolor: "#fff",
+                        }}
+                        size="small"
+                        label="Tất cả"
+                      />
+                    }
+                    MenuProps={MenuProps}
+                  >
+                    <MenuItem key={"aqq1234"} value={""}>
+                      Tất cả
+                    </MenuItem>
+                    {categoriesData?.result.map((cate: CategoryInterface) => (
+                      <MenuItem key={cate.cate_code} value={cate.cate_code}>
+                        {cate.cate_title}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Box>
+              </Stack>
               <Box className={"hr"} my={2} />
               <TableContainer component={Paper}>
                 <Table
@@ -105,7 +219,7 @@ const Index = (props: Props) => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {recentUpdateStoriesList?.result.map(
+                    {recentUpdateStoriesList?.result?.map(
                       (story: RecentStoriesInterface) => {
                         return (
                           <TableRow
@@ -134,7 +248,7 @@ const Index = (props: Props) => {
                                 href={`/story/${story.story_code}`}
                               >
                                 {story.story_title.length > 40
-                                  ? story.story_title.substring(0, 39) + "..."
+                                  ? story.story_title.substring(0, 39) + " ..."
                                   : story.story_title}
                               </Box>
 
@@ -146,8 +260,8 @@ const Index = (props: Props) => {
                                 component={Link}
                                 href={`/story/${story.story_code}`}
                               >
-                                {story.story_title.length > 22
-                                  ? story.story_title.substring(0, 21) + "..."
+                                {story.story_title.length > 20
+                                  ? story.story_title.substring(0, 19) + "..."
                                   : story.story_title}
                               </Box>
                             </TableCell>
@@ -156,11 +270,11 @@ const Index = (props: Props) => {
                                 component={Link}
                                 href={`/story/${story.story_code}/${story.lastChapter?.chapter_code}`}
                               >
-                                {story.lastChapter?.chapter_name.length > 20
+                                {story.lastChapter?.chapter_name.length > 18
                                   ? story.lastChapter?.chapter_name.substring(
                                       0,
-                                      19
-                                    ) + "..."
+                                      17
+                                    ) + " ..."
                                   : story.lastChapter?.chapter_name}
                               </Box>
                             </TableCell>

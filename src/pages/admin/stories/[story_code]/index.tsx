@@ -1,5 +1,5 @@
 import { useSnackbar } from "@/hooks/snackbar";
-import { AdminLayout, AdminLayoutContext } from "@/layouts";
+import { AdminLayout } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
 import { ChapterDataInterface } from "@/models/chapters";
 import { UpdateStoryInterface } from "@/models/stories";
@@ -12,6 +12,7 @@ import {
   Autocomplete,
   Box,
   Button,
+  Chip,
   Container,
   List,
   ListItem,
@@ -20,14 +21,14 @@ import {
   ListItemText,
   Stack,
   TextField,
-  Chip,
 } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
 
@@ -38,13 +39,7 @@ const QuillNoSSRWrapper = dynamic(import("react-quill"), {
   loading: () => <p>Loading ...</p>,
 });
 
-interface ChapterUpdateInterface {
-  value: string;
-}
-
 const EditStory = (props: Props) => {
-  const [timeoutSubmit, setTimeoutSubmit] = useState<boolean>(false);
-  const { setLoading } = useContext<any>(AdminLayoutContext);
   const router = useRouter();
   const { page, story_code } = router.query;
   const [paginationPage, setPaginationPage] = useState<number>(1);
@@ -73,7 +68,7 @@ const EditStory = (props: Props) => {
     control,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     clearErrors,
     setError,
   } = useForm<UpdateStoryInterface>({
@@ -87,18 +82,7 @@ const EditStory = (props: Props) => {
     },
   });
 
-  const {
-    control: chapterUpdateControl,
-    handleSubmit: chapterUpdateHandleSubmit,
-  } = useForm<ChapterUpdateInterface>({
-    mode: "onChange",
-    defaultValues: {
-      value: "",
-    },
-  });
-
   const updateStorySubmitHandle = async (data: any) => {
-    setLoading(true);
     try {
       let cateList: CategoryInterface[] = [];
       for (let cate of data.story_category) {
@@ -126,7 +110,6 @@ const EditStory = (props: Props) => {
         message: "Update truyện thành công",
         open: true,
       });
-      setTimeoutSubmit(true);
     } catch (error: any) {
       console.log(error);
       setSnackbar({
@@ -134,8 +117,6 @@ const EditStory = (props: Props) => {
         open: true,
         type: "error",
       });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -160,36 +141,6 @@ const EditStory = (props: Props) => {
       console.log(error);
     }
   };
-
-  const chapterUpdateSubmitHandle = async (data: any) => {
-    setLoading(true);
-    try {
-      await API.get(
-        `/chapter/getFullStoryByUrl/${story_code}?url=${data.value}`
-      );
-      setSnackbar({
-        message: `Update thành công`,
-        open: true,
-        type: "success",
-      });
-    } catch (error: any) {
-      setSnackbar({
-        message: error.response?.data.message,
-        open: true,
-        type: "error",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (timeoutSubmit) {
-      setTimeout(() => {
-        setTimeoutSubmit(false);
-      }, 2000);
-    }
-  }, [timeoutSubmit]);
 
   useEffect(() => {
     if (story_code) {
@@ -216,7 +167,35 @@ const EditStory = (props: Props) => {
             alignItems={"center"}
           >
             <Box component={"h2"} my={1}>
-              Chỉnh sửa truyện
+              <Button
+                size="small"
+                variant="contained"
+                onClick={() => {
+                  if (router.query.goAround) router.back();
+                  else
+                    router.push({
+                      pathname: "/admin/stories",
+                      query: {
+                        story_code,
+                      },
+                    });
+                }}
+                sx={{
+                  mr: 1,
+                }}
+              >
+                <ArrowBackIcon />
+              </Button>
+              <Button
+                LinkComponent={Link}
+                href={`/story/${story_code}`}
+                variant="contained"
+                color="success"
+                size="small"
+                target="_blank"
+              >
+                Xem ở trang chính
+              </Button>
             </Box>
             <Button
               size="small"
@@ -428,42 +407,21 @@ const EditStory = (props: Props) => {
                     type="submit"
                     variant="contained"
                     size="large"
-                    disabled={timeoutSubmit ? true : false}
+                    disabled={isSubmitting ? true : false}
+                    startIcon={
+                      isSubmitting ? (
+                        <CircularProgress size={"1em"} color="inherit" />
+                      ) : null
+                    }
                   >
-                    Update
-                  </Button>
-                </Stack>
-              </Box>
-              <Box className={"hr"} my={2} />
-              <Box
-                component={"form"}
-                onSubmit={chapterUpdateHandleSubmit(chapterUpdateSubmitHandle)}
-              >
-                <Stack direction={"row"}>
-                  <Controller
-                    name="value"
-                    control={chapterUpdateControl}
-                    render={({ field: { onChange, value } }) => (
-                      <TextField
-                        size="small"
-                        fullWidth
-                        onChange={onChange}
-                        value={value}
-                        label={"Update chapter"}
-                        placeholder="Dán link truyenfull"
-                        sx={{
-                          mr: 1,
-                        }}
-                      />
-                    )}
-                  />
-                  <Button type="submit" variant="contained">
                     Update
                   </Button>
                 </Stack>
               </Box>
             </Box>
           </Stack>
+
+          <Box component={"form"}></Box>
           {noContentChaptersData?.result.length !== 0 && (
             <>
               <Box component={"h1"} fontSize={20}>
@@ -483,6 +441,7 @@ const EditStory = (props: Props) => {
                           query: {
                             story_code,
                             chapter_code: chapter.chapter_code,
+                            goAround: true,
                           },
                         })
                       }
@@ -496,10 +455,25 @@ const EditStory = (props: Props) => {
               )}
             </>
           )}
+          <Stack
+            direction={"row"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
+            <Box component={"h1"} fontSize={20}>
+              DANH SÁCH CHƯƠNG
+            </Box>
+            <Button
+              variant="contained"
+              type="button"
+              color="secondary"
+              LinkComponent={Link}
+              href={`/admin/stories/${story_code}/new`}
+            >
+              Tạo chap mới
+            </Button>
+          </Stack>
 
-          <Box component={"h1"} fontSize={20}>
-            DANH SÁCH CHƯƠNG
-          </Box>
           <Box className={"hr"} />
           {chapterListData?.pagination && (
             <>

@@ -116,9 +116,11 @@ export function HeaderDesktop() {
   };
 
   const dropDownList = (event: any) => {
-    if (event.target.parentNode.parentNode.parentNode === resultList.current) {
+    if (
+      event.target?.parentNode?.parentNode?.parentNode === resultList.current
+    ) {
       if (resultList.current) resultList.current.style.display = "none";
-    } else if (event.target.parentNode.parentNode === inputElement.current) {
+    } else if (event.target?.parentNode?.parentNode === inputElement.current) {
       if (searchData && resultList.current)
         resultList.current.style.display = "block";
     } else {
@@ -132,6 +134,16 @@ export function HeaderDesktop() {
       document.removeEventListener("click", dropDownList);
     };
   }, []);
+
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.setAttribute("scroll", "no");
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.removeAttribute("scroll");
+      document.body.style.overflow = "auto";
+    }
+  }, [mobileMenuOpen]);
 
   return (
     <Box>

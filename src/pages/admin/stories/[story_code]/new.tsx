@@ -1,81 +1,73 @@
 import { useSnackbar } from "@/hooks/snackbar";
-import { AdminLayout } from "@/layouts";
-import { ChapterDataInterface } from "@/models/chapters";
 import { API, modules } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Box, Button, Container, Stack, TextField } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
 
 type Props = {};
-
+interface ChapterCreateInterface {
+  chapter_name: string;
+  chapter_content: string;
+  chapter_title: string;
+  chapter_code: string;
+}
+interface CreateByUrlInterface {
+  url: string;
+}
 const QuillNoSSRWrapper = dynamic(import("react-quill"), {
   ssr: false,
   loading: () => <p>Loading ...</p>,
 });
-
-interface ChapterUpdateInterface {
-  chapter_name: string;
-  chapter_content: string;
-  chapter_title: string;
-}
-
-interface UpdateByUrlInterface {
-  url: string;
-}
-
-const EditChapter = (props: Props) => {
-  const router = useRouter();
-  const { story_code, chapter_code } = router.query;
-  const { data: chapterData, mutate: chapterMutate } = useSWR<{
-    result: ChapterDataInterface;
-  }>(`/chapter/getChapterDataByStoryCode/${story_code}/${chapter_code}`, {
-    revalidateOnMount: false,
-  });
+const AdminNewChapter = (props: Props) => {
   const { setSnackbar, snackbar } = useSnackbar();
+
+  const router = useRouter();
+  const { story_code } = router.query;
+  const {
+    data: storyData,
+    isLoading,
+    mutate,
+  } = useSWR(`/stories/getDetail/${story_code}`, { revalidateOnMount: false });
   const {
     control,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<ChapterUpdateInterface>({
+  } = useForm<ChapterCreateInterface>({
     mode: "onChange",
     defaultValues: {
       chapter_content: "",
       chapter_title: "",
       chapter_name: "",
+      chapter_code: "",
     },
   });
 
   const {
-    control: updateByUrlControl,
-    handleSubmit: updateByUrlHandleSubmit,
-    reset: updateByUrlReset,
+    control: createByUrlControl,
+    handleSubmit: createByUrlHandleSubmit,
+    reset: createByUrlReset,
     formState: {
-      errors: updateByUrlErrors,
-      isSubmitting: updateByUrlIsSubmitting,
+      errors: createByUrlErrors,
+      isSubmitting: createByUrlIsSubmitting,
     },
-  } = useForm<UpdateByUrlInterface>({
+  } = useForm<CreateByUrlInterface>({
     mode: "onChange",
     defaultValues: {
       url: "",
     },
   });
 
-  const updateChapterSubmitHandle = async (data: any) => {
+  const createChapterSubmitHandle = async (data: any) => {
     try {
-      await API.put(
-        `/chapter/updateChapter/${story_code}/${chapter_code}`,
-        data
-      );
-      await chapterMutate();
+      const respone = await API.post(`/chapter/new/${story_code}`, data);
       setSnackbar({
         open: true,
-        message: "Update thành công!",
+        message: "Tạo chương mới thành công!",
       });
     } catch (error: any) {
       setSnackbar({
@@ -86,7 +78,7 @@ const EditChapter = (props: Props) => {
     }
   };
 
-  const updateByUrlSubmitHandle = async (data: any) => {
+  const createByUrlSubmitHandle = async (data: any) => {
     try {
       const response: any = await API.get(
         `/bot/updateSingleChapterByUrl?url=${data.url}`
@@ -95,48 +87,12 @@ const EditChapter = (props: Props) => {
         chapter_title: response.result.chapter_title,
         chapter_content: response.result.chapter_content,
         chapter_name: response.result.chapter_name,
+        chapter_code: response.result.chapter_code,
       });
     } catch (error) {
       console.log(error);
     }
   };
-
-  const deleteChapterHandle = async () => {
-    try {
-      await API.delete(`/chapter/delete/${story_code}/${chapter_code}`);
-      setSnackbar({
-        open: true,
-        message: "Xóa chap thành công!",
-      });
-    } catch (error: any) {
-      setSnackbar({
-        open: true,
-        message: error.response?.data.message,
-        type: "error",
-      });
-    } finally {
-      router.push({
-        pathname: "/admin/stories/[story_code]",
-        query: {
-          story_code,
-        },
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (story_code && chapter_code) chapterMutate();
-  }, []);
-
-  useEffect(() => {
-    if (chapterData?.result)
-      reset({
-        chapter_content: chapterData?.result.chapter_content,
-        chapter_title: chapterData?.result.chapter_title,
-        chapter_name: chapterData?.result.chapter_name,
-      });
-  }, [chapterData]);
-
   return (
     <>
       {snackbar}
@@ -162,18 +118,12 @@ const EditChapter = (props: Props) => {
             >
               <ArrowBackIcon />
             </Button>
-
-            {"[" + chapterData?.result.chapter_name}
-            {chapterData?.result.chapter_title
-              ? ": " + chapterData?.result.chapter_title
-              : ""}
-            {"] - ["}
-            {chapterData?.result.story_title + "]"}
+            Tạo chương mới {`[${storyData?.result.story_title}]`}
           </Box>
           <Box className={"hr"} my={2} />
           <Box
             component={"form"}
-            onSubmit={handleSubmit(updateChapterSubmitHandle)}
+            onSubmit={handleSubmit(createChapterSubmitHandle)}
           >
             <Controller
               name={"chapter_name"}
@@ -204,37 +154,37 @@ const EditChapter = (props: Props) => {
                 />
               )}
             />
-            {chapterData?.result.chapter_title && (
-              <Controller
-                name={"chapter_title"}
-                control={control}
-                rules={{
-                  required: "Không được để trống",
-                }}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    sx={{
-                      mb: 1,
-                    }}
-                    fullWidth
-                    size="small"
-                    type="text"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    label={"Tiêu đề chương"}
-                    onChange={(event) => onChange(event.target.value)}
-                    value={value}
-                    error={!!errors.chapter_title?.message}
-                    helperText={
-                      errors.chapter_title?.message
-                        ? errors.chapter_title?.message
-                        : null
-                    }
-                  />
-                )}
-              />
-            )}
+
+            <Controller
+              name={"chapter_title"}
+              control={control}
+              rules={{
+                required: "Không được để trống",
+              }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  sx={{
+                    mb: 1,
+                  }}
+                  fullWidth
+                  size="small"
+                  type="text"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  label={"Tiêu đề chương"}
+                  onChange={(event) => onChange(event.target.value)}
+                  value={value}
+                  error={!!errors.chapter_title?.message}
+                  helperText={
+                    errors.chapter_title?.message
+                      ? errors.chapter_title?.message
+                      : null
+                  }
+                />
+              )}
+            />
+
             <Controller
               name={"chapter_content"}
               control={control}
@@ -276,19 +226,19 @@ const EditChapter = (props: Props) => {
                 }
                 disabled={isSubmitting ? true : false}
               >
-                Update
+                Tạo
               </Button>
             </Box>
           </Box>
-          <Box component={"h2"}>Update chapter bằng url truyenfull</Box>
+          <Box component={"h2"}>Lấy data bằng url truyenfull</Box>
           <Box className={"hr"} my={2} />
           <Box
             component={"form"}
-            onSubmit={updateByUrlHandleSubmit(updateByUrlSubmitHandle)}
+            onSubmit={createByUrlHandleSubmit(createByUrlSubmitHandle)}
           >
             <Controller
               name={"url"}
-              control={updateByUrlControl}
+              control={createByUrlControl}
               render={({ field: { onChange, value } }) => (
                 <TextField
                   sx={{
@@ -303,9 +253,9 @@ const EditChapter = (props: Props) => {
                   label={"Link chương truyện"}
                   onChange={(event) => onChange(event.target.value)}
                   value={value}
-                  error={!!updateByUrlErrors.url?.message}
+                  error={!!createByUrlErrors.url?.message}
                   helperText={
-                    updateByUrlErrors.url?.message
+                    createByUrlErrors.url?.message
                       ? errors.chapter_title?.message
                       : null
                   }
@@ -318,25 +268,13 @@ const EditChapter = (props: Props) => {
                 variant="contained"
                 color="info"
                 startIcon={
-                  updateByUrlIsSubmitting ? (
+                  createByUrlIsSubmitting ? (
                     <CircularProgress size={"1em"} color="inherit" />
                   ) : null
                 }
-                disabled={updateByUrlIsSubmitting ? true : false}
+                disabled={createByUrlIsSubmitting ? true : false}
               >
                 Update
-              </Button>
-            </Box>
-            <Box className={"hr"} my={2} />
-            <Box textAlign={"right"}>
-              <Button
-                variant="contained"
-                type="button"
-                onClick={deleteChapterHandle}
-                size="small"
-                color="error"
-              >
-                Xóa chap
               </Button>
             </Box>
           </Box>
@@ -346,6 +284,4 @@ const EditChapter = (props: Props) => {
   );
 };
 
-EditChapter.Layout = AdminLayout;
-
-export default EditChapter;
+export default AdminNewChapter;

@@ -43,6 +43,7 @@ const ChapterDetail = ({ chapterData }: Props) => {
   const [chapterListData, setChapterListData] = useState<any>();
 
   const router = useRouter();
+
   const handleChange = (event: SelectChangeEvent, child?: any) => {
     router.push({
       pathname: router.pathname,
