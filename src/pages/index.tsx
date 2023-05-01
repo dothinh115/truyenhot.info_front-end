@@ -1,14 +1,23 @@
 import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
+import { BaseStats } from "@/components/home";
 import { CategoriesSidebar } from "@/components/sidebar";
 import { CategoryInterface, RecentStoriesInterface } from "@/models/categories";
 import { apiURL } from "@/utils/config";
 import { timeSince } from "@/utils/function";
+import CachedIcon from "@mui/icons-material/Cached";
 import HomeIcon from "@mui/icons-material/Home";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import {
   Box,
+  Button,
   Container,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
   Paper,
+  Select,
   Stack,
   Table,
   TableBody,
@@ -16,19 +25,12 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Button,
-  FormControl,
-  InputLabel,
-  Select,
-  OutlinedInput,
-  MenuItem,
 } from "@mui/material";
-import Link from "next/link";
-import useSWR from "swr";
 import CircularProgress from "@mui/material/CircularProgress";
-import CachedIcon from "@mui/icons-material/Cached";
 import { SelectChangeEvent } from "@mui/material/Select";
+import Link from "next/link";
 import { useState } from "react";
+import useSWR from "swr";
 
 const ITEM_HEIGHT = 36;
 const ITEM_PADDING_TOP = 8;
@@ -55,6 +57,7 @@ const Index = (props: Props) => {
     data: recentUpdateStoriesList,
     mutate: recenUpdatetStoriesListMutate,
     isValidating: recentUpdateStoriesValidating,
+    isLoading: recentUpdateStoriesIsLoading,
   } = useSWR(
     `/stories/getRecentUpdate${
       cateValue ? "?category=" + cateValue.value : ""
@@ -64,18 +67,52 @@ const Index = (props: Props) => {
     }
   );
 
-  const { data: categoriesData, isLoading: categoriesIsLoading } = useSWR(
-    `/categories/getAll`,
-    {
-      dedupingInterval: 60 * 60 * 24,
-    }
-  );
+  const { data: categoriesData } = useSWR(`/categories/getAll`, {
+    dedupingInterval: 60 * 60 * 24,
+  });
 
   const handleChange = (
     event: SelectChangeEvent,
     child?: { props: { value: string; children: string } }
   ) => {
     setCateValue(child?.props);
+  };
+
+  const preDataRender = () => {
+    let result = [];
+    for (let i = 0; i < 25; i++) {
+      result.push(
+        <TableRow
+          sx={{
+            "&:last-child td, &:last-child th": { border: 0 },
+            "& td": { p: "6px" },
+            "& td span": {
+              display: "inline-block",
+              maxHeight: "24px!important",
+            },
+          }}
+          key={i}
+        >
+          <TableCell scope="row" colSpan={3} height={"37px"}>
+            <Stack direction={"row"} alignItems={"center"}>
+              <Box
+                component={"span"}
+                color={
+                  (i + 1 === 1 && "error.main") ||
+                  (i + 1 === 2 && "success.main") ||
+                  (i + 1 === 3 && "info.main") ||
+                  "#ccc"
+                }
+              >
+                <KeyboardArrowRightIcon />
+              </Box>
+              <CircularProgress size={"1em"} />
+            </Stack>
+          </TableCell>
+        </TableRow>
+      );
+    }
+    return result;
   };
 
   const breadCrumbs = [
@@ -137,9 +174,9 @@ const Index = (props: Props) => {
                   Truyện mới cập nhật
                   <Box
                     component={Button}
-                    size={"small"}
+                    p={".5px"}
+                    minWidth={"unset"}
                     type={"button"}
-                    variant={"contained"}
                     ml={1}
                     onClick={() =>
                       recenUpdatetStoriesListMutate(recentUpdateStoriesList)
@@ -197,13 +234,36 @@ const Index = (props: Props) => {
                     "& th": {
                       fontWeight: "bold",
                       textTransform: "uppercase",
+                      bgcolor: "primary.main",
+                      color: "primary.contrastText",
                     },
                   }}
                 >
                   <TableHead>
                     <TableRow>
                       <TableCell>Tên truyện</TableCell>
-                      <TableCell align="right">Chương cuối</TableCell>
+                      <TableCell align="right">
+                        C
+                        <Box
+                          display={{
+                            md: "inline",
+                            xs: "none",
+                          }}
+                          component={"span"}
+                        >
+                          hương
+                        </Box>
+                        <Box
+                          display={{
+                            md: "none",
+                            xs: "inline",
+                          }}
+                          component={"span"}
+                        >
+                          .
+                        </Box>{" "}
+                        cuối
+                      </TableCell>
                       <Box
                         component={TableCell}
                         align="right"
@@ -219,8 +279,15 @@ const Index = (props: Props) => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
+                    {recentUpdateStoriesIsLoading && preDataRender()}
                     {recentUpdateStoriesList?.result?.map(
-                      (story: RecentStoriesInterface) => {
+                      (story: RecentStoriesInterface, index: number) => {
+                        if (story.lastChapter)
+                          story.lastChapter.chapter_name =
+                            story.lastChapter?.chapter_name
+                              .replaceAll("Chương ", "C")
+                              .replaceAll("Quyển ", "Q")
+                              .replaceAll(" - ", "-");
                         return (
                           <TableRow
                             sx={{
@@ -235,18 +302,38 @@ const Index = (props: Props) => {
                                   content: '", "',
                                 },
                               },
+                              "& td span": {
+                                display: "inline-block",
+                                maxHeight: "24px!important",
+                              },
+
+                              "& td": {
+                                p: "6px",
+                              },
                             }}
                             key={story.story_id}
                           >
                             <TableCell scope="row">
                               <Box
                                 display={{
-                                  md: "inline-block",
+                                  md: "flex",
                                   xs: "none",
                                 }}
+                                alignItems={"center"}
                                 component={Link}
                                 href={`/story/${story.story_code}`}
                               >
+                                <Box
+                                  component={"span"}
+                                  color={
+                                    (index + 1 === 1 && "error.main") ||
+                                    (index + 1 === 2 && "success.main") ||
+                                    (index + 1 === 3 && "info.main") ||
+                                    "#ccc"
+                                  }
+                                >
+                                  <KeyboardArrowRightIcon />
+                                </Box>
                                 {story.story_title.length > 40
                                   ? story.story_title.substring(0, 39) + " ..."
                                   : story.story_title}
@@ -255,11 +342,23 @@ const Index = (props: Props) => {
                               <Box
                                 display={{
                                   md: "none",
-                                  xs: "inline-block",
+                                  xs: "inline-flex",
                                 }}
                                 component={Link}
+                                alignItems={"center"}
                                 href={`/story/${story.story_code}`}
                               >
+                                <Box
+                                  component={"span"}
+                                  color={
+                                    (index + 1 === 1 && "error.main") ||
+                                    (index + 1 === 2 && "success.main") ||
+                                    (index + 1 === 3 && "info.main") ||
+                                    "#ccc"
+                                  }
+                                >
+                                  <KeyboardArrowRightIcon />
+                                </Box>
                                 {story.story_title.length > 20
                                   ? story.story_title.substring(0, 19) + "..."
                                   : story.story_title}
@@ -310,6 +409,7 @@ const Index = (props: Props) => {
               }}
             >
               <CategoriesSidebar />
+              <BaseStats />
             </Box>
           </Stack>
         </Container>

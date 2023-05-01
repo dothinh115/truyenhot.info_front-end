@@ -13,15 +13,21 @@ export const CategoriesSidebar = (props: Props) => {
   return (
     <Stack spacing={2}>
       <Box
-        bgcolor={"#e8eaf669"}
-        sx={{
-          border: "1px solid #ccc",
-        }}
+        bgcolor={"#fff"}
+        borderRadius={"6px"}
+        overflow={"hidden"}
+        border={"1px solid rgb(224 224 224)"}
+        mb={2}
       >
-        <Box component={"h3"} bgcolor={"#e8eaf6"} my={0} p={1}>
+        <Box
+          component={"h4"}
+          bgcolor={"primary.main"}
+          my={0}
+          p={"5px 12px"}
+          color={"primary.contrastText"}
+        >
           Thể loại
         </Box>
-        <Box className={"sidebar-hr"}></Box>
         {isLoading ? (
           <Box textAlign={"center"}>Loading...</Box>
         ) : (
@@ -37,7 +43,7 @@ export const CategoriesSidebar = (props: Props) => {
                 width: "50%",
                 pl: 1,
                 m: 0,
-                borderBottom: "1px dashed #ccc",
+                borderBottom: "1px dashed #e0e0e0",
                 height: "30px",
                 "&:hover": {
                   backgroundColor: "#e0e0e0",
@@ -51,7 +57,7 @@ export const CategoriesSidebar = (props: Props) => {
                   textAlign: "center",
                 },
                 "&:nth-of-type(odd)": {
-                  borderRight: "1px dashed #ccc",
+                  borderRight: "1px dashed #e0e0e0",
                 },
               },
             }}

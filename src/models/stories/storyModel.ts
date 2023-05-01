@@ -24,6 +24,7 @@ export interface UpdateStoryInterface {
   story_category?: CategoryInterface[];
   story_author?: string;
   story_source?: string;
+  story_status?: string;
   cover_img?: File;
 }
 

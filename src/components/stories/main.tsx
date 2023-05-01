@@ -40,7 +40,7 @@ export const StoryMain = ({ story }: Props) => {
     isValidating: chapterListIsValidating,
   } = useSWR(
     `/chapter/getChapterListByStoryCode/${story_code}?page=${page ? page : 1}`,
-    { revalidateOnMount: false }
+    { revalidateOnMount: false, keepPreviousData: true }
   );
   const [showMore, setShowMore] = useState<boolean>(false);
 

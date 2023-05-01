@@ -3,7 +3,7 @@ import { AdminLayout } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
 import { ChapterDataInterface } from "@/models/chapters";
 import { UpdateStoryInterface } from "@/models/stories";
-import { API, modules } from "@/utils/config";
+import { API, localAPI, modules } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -38,6 +38,10 @@ const QuillNoSSRWrapper = dynamic(import("react-quill"), {
   ssr: false,
   loading: () => <p>Loading ...</p>,
 });
+
+interface CreateByUrlInterface {
+  url: string;
+}
 
 const EditStory = (props: Props) => {
   const router = useRouter();
@@ -79,6 +83,22 @@ const EditStory = (props: Props) => {
       story_description: "",
       story_source: "",
       story_title: "",
+      story_status: "",
+    },
+  });
+
+  const {
+    control: createByUrlControl,
+    handleSubmit: createByUrlHandleSubmit,
+    reset: createByUrlReset,
+    formState: {
+      errors: createByUrlErrors,
+      isSubmitting: createByUrlIsSubmitting,
+    },
+  } = useForm<CreateByUrlInterface>({
+    mode: "onChange",
+    defaultValues: {
+      url: "",
     },
   });
 
@@ -137,6 +157,26 @@ const EditStory = (props: Props) => {
     try {
       await API.delete(`/stories/delete/${story_code}`);
       router.push("/admin/stories");
+    } catch (error: any) {
+      console.log(error);
+      setSnackbar({
+        message: error.response?.data.message,
+        open: true,
+        type: "error",
+      });
+    }
+  };
+
+  const createByUrlSubmitHandle = async (data: any) => {
+    try {
+      const response: any = await localAPI.get(
+        `/bot/updateAllSingleStory/${story_code}?url=${data.url}`
+      );
+      setSnackbar({
+        message: response.result,
+        open: true,
+      });
+      chapterListMutate();
     } catch (error) {
       console.log(error);
     }
@@ -349,6 +389,36 @@ const EditStory = (props: Props) => {
                 />
 
                 <Controller
+                  name={"story_status"}
+                  control={control}
+                  rules={{
+                    required: "Không được để trống",
+                  }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      size="small"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      sx={{
+                        mb: 1,
+                      }}
+                      fullWidth
+                      type="text"
+                      label={"Trạng thái"}
+                      onChange={onChange}
+                      value={value}
+                      error={!!errors.story_status?.message}
+                      helperText={
+                        errors.story_status?.message
+                          ? errors.story_status?.message
+                          : null
+                      }
+                    />
+                  )}
+                />
+
+                <Controller
                   name={"story_category"}
                   control={control}
                   render={({ field: { onChange, value } }) => (
@@ -420,8 +490,55 @@ const EditStory = (props: Props) => {
               </Box>
             </Box>
           </Stack>
+          <Box className={"hr"} my={2} />
+          <Box component={"h2"}>Dán URL truyện</Box>
+          <Box
+            component={"form"}
+            onSubmit={createByUrlHandleSubmit(createByUrlSubmitHandle)}
+          >
+            <Controller
+              name={"url"}
+              control={createByUrlControl}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  sx={{
+                    mb: 1,
+                  }}
+                  fullWidth
+                  size="small"
+                  type="text"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  label={"Link trang truyện"}
+                  onChange={(event) => onChange(event.target.value)}
+                  value={value}
+                  error={!!createByUrlErrors.url?.message}
+                  helperText={
+                    createByUrlErrors.url?.message
+                      ? createByUrlErrors.url?.message
+                      : null
+                  }
+                />
+              )}
+            />
+            <Box textAlign={"right"}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="info"
+                startIcon={
+                  createByUrlIsSubmitting ? (
+                    <CircularProgress size={"1em"} color="inherit" />
+                  ) : null
+                }
+                disabled={createByUrlIsSubmitting ? true : false}
+              >
+                Update
+              </Button>
+            </Box>
+          </Box>
 
-          <Box component={"form"}></Box>
           {noContentChaptersData?.result.length !== 0 && (
             <>
               <Box component={"h1"} fontSize={20}>

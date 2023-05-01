@@ -47,6 +47,7 @@ export default function App({
           value={{
             shouldRetryOnError: false,
             revalidateOnFocus: false,
+            keepPreviousData: true,
             fetcher: (url) => API.get(url),
           }}
         >

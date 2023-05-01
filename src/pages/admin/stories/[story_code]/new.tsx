@@ -1,5 +1,5 @@
 import { useSnackbar } from "@/hooks/snackbar";
-import { API, modules } from "@/utils/config";
+import { API, localAPI, modules } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Box, Button, Container, Stack, TextField } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
+import { useRef } from "react";
 
 type Props = {};
 interface ChapterCreateInterface {
@@ -27,6 +28,7 @@ const AdminNewChapter = (props: Props) => {
 
   const router = useRouter();
   const { story_code } = router.query;
+  const button = useRef<HTMLButtonElement | null>(null);
   const {
     data: storyData,
     isLoading,
@@ -64,7 +66,7 @@ const AdminNewChapter = (props: Props) => {
 
   const createChapterSubmitHandle = async (data: any) => {
     try {
-      const respone = await API.post(`/chapter/new/${story_code}`, data);
+      await API.post(`/chapter/new/${story_code}`, data);
       setSnackbar({
         open: true,
         message: "Tạo chương mới thành công!",
@@ -75,22 +77,38 @@ const AdminNewChapter = (props: Props) => {
         message: error.response?.data.message,
         type: "error",
       });
+    } finally {
+      await reset({
+        chapter_title: "",
+        chapter_content: "",
+        chapter_name: "",
+        chapter_code: "",
+      });
+      createByUrlReset({
+        url: "",
+      });
     }
   };
 
   const createByUrlSubmitHandle = async (data: any) => {
     try {
-      const response: any = await API.get(
+      const response: any = await localAPI.get(
         `/bot/updateSingleChapterByUrl?url=${data.url}`
       );
-      await reset({
-        chapter_title: response.result.chapter_title,
-        chapter_content: response.result.chapter_content,
-        chapter_name: response.result.chapter_name,
-        chapter_code: response.result.chapter_code,
+      await API.post(`/chapter/new/${story_code}`, response.result);
+      createByUrlReset({
+        url: "",
       });
-    } catch (error) {
-      console.log(error);
+      setSnackbar({
+        open: true,
+        message: "Tạo chương mới thành công!",
+      });
+    } catch (error: any) {
+      setSnackbar({
+        open: true,
+        message: error.response?.data.message,
+        type: "error",
+      });
     }
   };
   return (
@@ -158,9 +176,6 @@ const AdminNewChapter = (props: Props) => {
             <Controller
               name={"chapter_title"}
               control={control}
-              rules={{
-                required: "Không được để trống",
-              }}
               render={({ field: { onChange, value } }) => (
                 <TextField
                   sx={{
@@ -175,12 +190,27 @@ const AdminNewChapter = (props: Props) => {
                   label={"Tiêu đề chương"}
                   onChange={(event) => onChange(event.target.value)}
                   value={value}
-                  error={!!errors.chapter_title?.message}
-                  helperText={
-                    errors.chapter_title?.message
-                      ? errors.chapter_title?.message
-                      : null
-                  }
+                />
+              )}
+            />
+
+            <Controller
+              name={"chapter_code"}
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  sx={{
+                    mb: 1,
+                  }}
+                  fullWidth
+                  size="small"
+                  type="text"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  label={"Code chương"}
+                  onChange={(event) => onChange(event.target.value)}
+                  value={value}
                 />
               )}
             />
@@ -225,6 +255,7 @@ const AdminNewChapter = (props: Props) => {
                   ) : null
                 }
                 disabled={isSubmitting ? true : false}
+                ref={button}
               >
                 Tạo
               </Button>

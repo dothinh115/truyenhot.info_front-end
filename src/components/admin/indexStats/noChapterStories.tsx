@@ -1,13 +1,7 @@
-import React from "react";
-import {
-  AdminBaseStats,
-  AdminNotCompletedStories,
-} from "@/components/admin/indexStats";
-import { AdminLayout } from "@/layouts";
 import { StoryInterface } from "@/models/stories";
 import CachedIcon from "@mui/icons-material/Cached";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { Box, Button, Container, Stack } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";

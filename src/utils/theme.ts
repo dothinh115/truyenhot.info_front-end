@@ -13,14 +13,25 @@ export const noto = Noto_Sans({
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#556cd6",
+      main: "#7986cb",
       dark: "#1565c0",
+      light: "#fff",
+      contrastText: "#fff",
     },
     secondary: {
       main: "#081627",
     },
     error: {
-      main: red.A400,
+      main: "#e57373",
+      contrastText: "#fff",
+    },
+    success: {
+      main: "#00c853",
+      contrastText: "#fff",
+    },
+    info: {
+      main: "#0091ea",
+      contrastText: "#fff",
     },
   },
   typography: {

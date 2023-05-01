@@ -1,7 +1,7 @@
 import { useSnackbar } from "@/hooks/snackbar";
 import { AdminLayout } from "@/layouts";
 import { ChapterDataInterface } from "@/models/chapters";
-import { API, modules } from "@/utils/config";
+import { API, localAPI, modules } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Box, Button, Container, Stack, TextField } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -87,8 +87,9 @@ const EditChapter = (props: Props) => {
   };
 
   const updateByUrlSubmitHandle = async (data: any) => {
+    console.log(document.cookie);
     try {
-      const response: any = await API.get(
+      const response: any = await localAPI.get(
         `/bot/updateSingleChapterByUrl?url=${data.url}`
       );
       await reset({
@@ -115,12 +116,7 @@ const EditChapter = (props: Props) => {
         type: "error",
       });
     } finally {
-      router.push({
-        pathname: "/admin/stories/[story_code]",
-        query: {
-          story_code,
-        },
-      });
+      router.back();
     }
   };
 
@@ -195,10 +191,10 @@ const EditChapter = (props: Props) => {
                   label={"Số chương"}
                   onChange={(event) => onChange(event.target.value)}
                   value={value}
-                  error={!!errors.chapter_title?.message}
+                  error={!!errors.chapter_name?.message}
                   helperText={
-                    errors.chapter_title?.message
-                      ? errors.chapter_title?.message
+                    errors.chapter_name?.message
+                      ? errors.chapter_name?.message
                       : null
                   }
                 />

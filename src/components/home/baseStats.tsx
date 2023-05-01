@@ -1,9 +1,3 @@
-import React from "react";
-import { AdminLayout } from "@/layouts";
-import { StoryInterface } from "@/models/stories";
-import CachedIcon from "@mui/icons-material/Cached";
-import SettingsIcon from "@mui/icons-material/Settings";
-import { Box, Button, Container, Stack } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -12,44 +6,54 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Link from "next/link";
 import useSWR from "swr";
 type Props = {};
 
-export const AdminBaseStats = (props: Props) => {
+export const BaseStats = (props: Props) => {
   const {
     data: dataStatsData,
     mutate: dataStatsMutate,
     isValidating: dataStatsIsValidating,
-    isLoading: dataStatsIsLoading,
-  } = useSWR(`/admin/getDataStats`);
+  } = useSWR(`/stats/getBaseStats`, {
+    dedupingInterval: 1000 * 60 * 60,
+  });
   return (
     <>
       <TableContainer component={Paper}>
         <Table size="small" aria-label="a dense table">
-          <TableHead>
+          <TableHead
+            sx={{
+              bgcolor: "primary.main",
+              "& th": {
+                color: "primary.contrastText",
+              },
+            }}
+          >
             <TableRow>
-              <TableCell>Thông tin cơ bản</TableCell>
+              <TableCell>Thống kê</TableCell>
               <TableCell align="right"></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell scope="row">Tổng số truyện</TableCell>
+              <TableCell scope="row">Tổng số truyện:</TableCell>
               <TableCell align="right">
                 {dataStatsData?.result.totalStories}
+                {dataStatsIsValidating && <CircularProgress size={"1em"} />}
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell scope="row">Tổng số chương truyện</TableCell>
+              <TableCell scope="row">Tổng số chương truyện:</TableCell>
               <TableCell align="right">
                 {dataStatsData?.result.totalChapters}
+                {dataStatsIsValidating && <CircularProgress size={"1em"} />}
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell scope="row">Tổng số lượt xem</TableCell>
+              <TableCell scope="row">Tổng số lượt xem:</TableCell>
               <TableCell align="right">
                 {dataStatsData?.result.totalViews}
+                {dataStatsIsValidating && <CircularProgress size={"1em"} />}
               </TableCell>
             </TableRow>
           </TableBody>

@@ -40,6 +40,7 @@ const CategoriesDetail = ({ categoryData }: Props) => {
     }`,
     {
       revalidateOnMount: false,
+      keepPreviousData: true,
     }
   );
 
@@ -200,9 +201,6 @@ const CategoriesDetail = ({ categoryData }: Props) => {
                   count={storiesData?.pagination.pages}
                   page={paginationPage}
                   color="primary"
-                  showFirstButton={true}
-                  showLastButton={true}
-                  siblingCount={2}
                   onChange={(e, p) =>
                     router.push(
                       {

@@ -1,8 +1,8 @@
 import {
-  AdminBaseStats,
   AdminNoChapterStories,
   AdminNotCompletedStories,
 } from "@/components/admin/indexStats";
+import { BaseStats } from "@/components/home/";
 import { AdminLayout } from "@/layouts";
 import { Box, Container, Stack } from "@mui/material";
 type Props = {};
@@ -23,7 +23,7 @@ const AdminIndex = (props: Props) => {
           }}
         >
           <Stack width={"50%"} gap={2}>
-            <AdminBaseStats />
+            <BaseStats />
             <AdminNotCompletedStories />
           </Stack>
 
