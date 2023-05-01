@@ -1,5 +1,6 @@
 import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
+import { MainLayoutContext } from "@/layouts";
 import { ChapterDataInterface, ChapterListInterface } from "@/models/chapters";
 import { ChapterSection } from "@/sections";
 import { apiURL } from "@/utils/config";
@@ -22,6 +23,7 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useContext, useEffect } from "react";
 
 type Props = {
   chapterData: ChapterDataInterface;
@@ -40,7 +42,8 @@ const MenuProps = {
 
 const ChapterDetail = ({ chapterData, chapterListData }: Props) => {
   const router = useRouter();
-
+  const { isFallback } = router;
+  const { setLoading } = useContext<any>(MainLayoutContext);
   const handleChange = (event: SelectChangeEvent, child?: any) => {
     router.push({
       pathname: router.pathname,
@@ -50,6 +53,10 @@ const ChapterDetail = ({ chapterData, chapterListData }: Props) => {
       },
     });
   };
+
+  useEffect(() => {
+    setLoading(isFallback);
+  }, [isFallback]);
 
   const breadCrumbs = [
     <Box

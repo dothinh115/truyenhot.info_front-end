@@ -14,18 +14,20 @@ import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import useSWR from "swr";
 import CircularProgress from "@mui/material/CircularProgress";
 import { GetStaticProps } from "next";
 import { apiURL } from "@/utils/config";
+import { MainLayoutContext } from "@/layouts";
 
 type Props = { categories: CategoryInterface[] };
 
 const SearchByAuthorPage = ({ categories }: Props) => {
   const [paginationPage, setPaginationPage] = useState<number>(1);
   const router = useRouter();
-  const { keywords, page } = router.query;
+  const { keywords, page, isFallback } = router.query;
+  const { setLoading } = useContext<any>(MainLayoutContext);
 
   const {
     data: searchData,
@@ -37,6 +39,10 @@ const SearchByAuthorPage = ({ categories }: Props) => {
       revalidateOnMount: false,
     }
   );
+
+  useEffect(() => {
+    setLoading(isFallback);
+  }, [isFallback]);
 
   useEffect(() => {
     if (keywords) searchMutate();

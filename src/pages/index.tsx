@@ -2,6 +2,7 @@ import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
 import { BaseStats } from "@/components/home";
 import { CategoriesSidebar } from "@/components/sidebar";
+import { MainLayoutContext } from "@/layouts";
 import { CategoryInterface, RecentStoriesInterface } from "@/models/categories";
 import { apiURL } from "@/utils/config";
 import { timeSince } from "@/utils/function";
@@ -30,7 +31,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { GetStaticProps } from "next";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useState, useContext, useEffect } from "react";
 import useSWR from "swr";
 
 const ITEM_HEIGHT = 36;
@@ -63,6 +65,10 @@ const Index = ({ stats, categories }: Props) => {
     | null
     | undefined
   >(null);
+
+  const router = useRouter();
+  const { isFallback } = router;
+  const { setLoading } = useContext<any>(MainLayoutContext);
   const {
     data: recentUpdateStoriesList,
     mutate: recenUpdatetStoriesListMutate,
@@ -138,6 +144,10 @@ const Index = ({ stats, categories }: Props) => {
       <HomeIcon />
     </Box>,
   ];
+
+  useEffect(() => {
+    setLoading(isFallback);
+  }, [isFallback]);
   return (
     <>
       <Seo

@@ -2,6 +2,7 @@ import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
 import { CategoriesSidebar, SameAuthorSidebar } from "@/components/sidebar";
 import { StoryMain, StorySidebar } from "@/components/stories";
+import { MainLayoutContext } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
 import { StoriesSearchResultInterface } from "@/models/search";
 import { StoryInterface } from "@/models/stories";
@@ -11,7 +12,8 @@ import HomeIcon from "@mui/icons-material/Home";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Link from "next/link";
-
+import { useRouter } from "next/router";
+import { useContext, useEffect } from "react";
 type Props = {
   story: StoryInterface;
   storiesSameAuthor: StoriesSearchResultInterface[];
@@ -19,6 +21,12 @@ type Props = {
 };
 
 const StoryDetail = ({ story, storiesSameAuthor, categories }: Props) => {
+  const router = useRouter();
+  const { isFallback } = router;
+  const { setLoading } = useContext<any>(MainLayoutContext);
+  useEffect(() => {
+    setLoading(isFallback);
+  }, [isFallback]);
   const breadCrumbs = [
     <Box
       key={1}
@@ -128,10 +136,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = async (
+export const getStaticProps: GetStaticProps<Props> = async (
   context: GetStaticPropsContext
 ) => {
-  const revalidate = 1 * 60 * 60;
   if (!context.params) return { notFound: true };
   const story_code = context.params.story_code;
   const storyRespone = await fetch(
@@ -140,10 +147,10 @@ export const getStaticProps: GetStaticProps = async (
   const story: { result: StoryInterface } = await storyRespone.json();
   const story_author = story.result.story_author;
 
-  const storySearchRespone = await fetch(
+  const respone_2 = await fetch(
     `${apiURL}/api/search/storyAuthor?keywords=${story_author}`
   );
-  const storiesSameAuthorJson = await storySearchRespone.json();
+  const storiesSameAuthorJson = await respone_2.json();
   const storiesSameAuthor: StoriesSearchResultInterface[] =
     storiesSameAuthorJson.result.filter(
       (item: StoriesSearchResultInterface) =>
@@ -166,7 +173,7 @@ export const getStaticProps: GetStaticProps = async (
       storiesSameAuthor,
       categories: categories.result,
     },
-    revalidate,
+    revalidate: 5,
   };
 };
 
