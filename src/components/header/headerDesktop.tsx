@@ -81,6 +81,7 @@ export function HeaderDesktop() {
   const [searchData, setSearchData] = useState<StoriesSearchResultInterface[]>(
     []
   );
+  const [resultMess, setResultMess] = useState<string>("Loading...");
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const resultList = useRef<HTMLUListElement>(null);
   const inputElement = useRef(null);
@@ -100,7 +101,12 @@ export function HeaderDesktop() {
     if (value === "") {
       setSearchData([]);
       if (resultList.current) resultList.current.style.display = "none";
+    } else {
+      if (searchData && resultList.current)
+        resultList.current.style.display = "block";
+      setResultMess("Loading...");
     }
+
     clearTimeout(timeout.current);
 
     timeout.current = setTimeout(async () => {
@@ -109,9 +115,8 @@ export function HeaderDesktop() {
           `/search/storyTitle?keywords=${value}`
         );
         setSearchData(result.result);
+        if (searchData.length === 0) setResultMess("Không có kết quả nào!");
       }
-      if (searchData && resultList.current)
-        resultList.current.style.display = "block";
     }, 500);
   };
 
@@ -217,13 +222,7 @@ export function HeaderDesktop() {
                         }}
                         dense={true}
                       >
-                        <ListItemText
-                          primary={
-                            timeout.current
-                              ? "Loading..."
-                              : "Không có kết quả nào!"
-                          }
-                        />
+                        <ListItemText primary={resultMess} />
                       </ListItem>
                     )}
                     {searchData?.map((story: StoriesSearchResultInterface) => {

@@ -7,16 +7,25 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import useSWR from "swr";
-type Props = {};
 
-export const BaseStats = (props: Props) => {
-  const {
-    data: dataStatsData,
-    mutate: dataStatsMutate,
-    isValidating: dataStatsIsValidating,
-  } = useSWR(`/stats/getBaseStats`, {
-    dedupingInterval: 1000 * 60 * 60,
-  });
+type Props = {
+  stats?: StatsType;
+};
+
+type StatsType = {
+  totalStories: number;
+  totalViews: number;
+  totalChapters: number;
+};
+
+export const BaseStats = ({ stats }: Props) => {
+  const { data: dataStatsData, isValidating: dataStatsIsValidating } = useSWR(
+    `/stats/getBaseStats`,
+    {
+      dedupingInterval: 1000 * 60 * 60,
+      revalidateOnMount: stats ? false : true,
+    }
+  );
   return (
     <>
       <TableContainer component={Paper}>
@@ -38,22 +47,40 @@ export const BaseStats = (props: Props) => {
             <TableRow>
               <TableCell scope="row">Tổng số truyện:</TableCell>
               <TableCell align="right">
-                {dataStatsData?.result.totalStories}
-                {dataStatsIsValidating && <CircularProgress size={"1em"} />}
+                {stats ? (
+                  stats?.totalStories
+                ) : (
+                  <>
+                    {dataStatsData?.result.totalStories}
+                    {dataStatsIsValidating && <CircularProgress size={"1em"} />}
+                  </>
+                )}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell scope="row">Tổng số chương truyện:</TableCell>
               <TableCell align="right">
-                {dataStatsData?.result.totalChapters}
-                {dataStatsIsValidating && <CircularProgress size={"1em"} />}
+                {stats ? (
+                  stats?.totalChapters
+                ) : (
+                  <>
+                    {dataStatsData?.result.totalChapters}
+                    {dataStatsIsValidating && <CircularProgress size={"1em"} />}
+                  </>
+                )}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell scope="row">Tổng số lượt xem:</TableCell>
               <TableCell align="right">
-                {dataStatsData?.result.totalViews}
-                {dataStatsIsValidating && <CircularProgress size={"1em"} />}
+                {stats ? (
+                  stats?.totalViews
+                ) : (
+                  <>
+                    {dataStatsData?.result.totalViews}
+                    {dataStatsIsValidating && <CircularProgress size={"1em"} />}
+                  </>
+                )}
               </TableCell>
             </TableRow>
           </TableBody>

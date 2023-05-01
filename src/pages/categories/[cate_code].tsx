@@ -23,9 +23,10 @@ import { Seo } from "@/components";
 
 type Props = {
   categoryData: CategoryInterface;
+  categories: CategoryInterface[];
 };
 
-const CategoriesDetail = ({ categoryData }: Props) => {
+const CategoriesDetail = ({ categoryData, categories }: Props) => {
   const router = useRouter();
   const { page } = router.query;
   const cate_code = categoryData?.cate_code;
@@ -233,7 +234,7 @@ const CategoriesDetail = ({ categoryData }: Props) => {
                 md: "block",
               }}
             >
-              <CategoriesSidebar />
+              <CategoriesSidebar categories={categories} />
             </Box>
           </Stack>
         </Container>
@@ -269,13 +270,16 @@ export const getStaticProps: GetStaticProps<Props> = async (
   try {
     const cate_code = context.params.cate_code;
     const revalidate = 60 * 60 * 24;
-    const respone = await fetch(
+    const cateDetailResponse = await fetch(
       `${apiURL}/api/categories/getCategoryDetail/${cate_code}`
     );
-    const category = await respone.json();
+    const category = await cateDetailResponse.json();
+    const categoriesResponse = await fetch(`${apiURL}/api/categories/getAll`);
+    const categories = await categoriesResponse.json();
     return {
       props: {
         categoryData: category.result,
+        categories: categories.result,
       },
       revalidate,
     };

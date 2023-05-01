@@ -2,6 +2,7 @@ import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
 import { CategoriesSidebar, SameAuthorSidebar } from "@/components/sidebar";
 import { StoryMain, StorySidebar } from "@/components/stories";
+import { CategoryInterface } from "@/models/categories";
 import { StoriesSearchResultInterface } from "@/models/search";
 import { StoryInterface } from "@/models/stories";
 import { StorySection } from "@/sections";
@@ -14,9 +15,10 @@ import Link from "next/link";
 type Props = {
   story: StoryInterface;
   storiesSameAuthor: StoriesSearchResultInterface[];
+  categories: CategoryInterface[];
 };
 
-const StoryDetail = ({ story, storiesSameAuthor }: Props) => {
+const StoryDetail = ({ story, storiesSameAuthor, categories }: Props) => {
   const breadCrumbs = [
     <Box
       key={1}
@@ -102,7 +104,7 @@ const StoryDetail = ({ story, storiesSameAuthor }: Props) => {
             >
               <StorySidebar>
                 <SameAuthorSidebar storiesSameAuthor={storiesSameAuthor} />
-                <CategoriesSidebar />
+                <CategoriesSidebar categories={categories} />
               </StorySidebar>
             </Box>
           </Stack>
@@ -129,21 +131,27 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (
   context: GetStaticPropsContext
 ) => {
+  const revalidate = 1 * 60 * 60;
   if (!context.params) return { notFound: true };
   const story_code = context.params.story_code;
-  const respone = await fetch(`${apiURL}/api/stories/getDetail/${story_code}`);
-  const story: { result: StoryInterface } = await respone.json();
+  const storyRespone = await fetch(
+    `${apiURL}/api/stories/getDetail/${story_code}`
+  );
+  const story: { result: StoryInterface } = await storyRespone.json();
   const story_author = story.result.story_author;
 
-  const respone_2 = await fetch(
+  const storySearchRespone = await fetch(
     `${apiURL}/api/search/storyAuthor?keywords=${story_author}`
   );
-  const storiesSameAuthorJson = await respone_2.json();
+  const storiesSameAuthorJson = await storySearchRespone.json();
   const storiesSameAuthor: StoriesSearchResultInterface[] =
     storiesSameAuthorJson.result.filter(
       (item: StoriesSearchResultInterface) =>
         item.story_code !== story.result.story_code
     );
+  const categoriesResponse = await fetch(`${apiURL}/api/categories/getAll`);
+  const categories = await categoriesResponse.json();
+
   if (!story.result) {
     return {
       redirect: {
@@ -156,8 +164,9 @@ export const getStaticProps: GetStaticProps = async (
     props: {
       story: story.result,
       storiesSameAuthor,
+      categories: categories.result,
     },
-    revalidate: 5,
+    revalidate,
   };
 };
 

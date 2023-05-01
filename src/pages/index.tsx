@@ -28,6 +28,7 @@ import {
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { SelectChangeEvent } from "@mui/material/Select";
+import { GetStaticProps } from "next";
 import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
@@ -42,9 +43,18 @@ const MenuProps = {
   },
 };
 
-type Props = {};
+type Props = {
+  stats: StatsType;
+  categories: CategoryInterface[];
+};
 
-const Index = (props: Props) => {
+type StatsType = {
+  totalStories: number;
+  totalViews: number;
+  totalChapters: number;
+};
+
+const Index = ({ stats, categories }: Props) => {
   const [cateValue, setCateValue] = useState<
     | {
         value: string;
@@ -64,12 +74,9 @@ const Index = (props: Props) => {
     }`,
     {
       keepPreviousData: true,
+      refreshInterval: 10000,
     }
   );
-
-  const { data: categoriesData } = useSWR(`/categories/getAll`, {
-    dedupingInterval: 60 * 60 * 24,
-  });
 
   const handleChange = (
     event: SelectChangeEvent,
@@ -218,7 +225,7 @@ const Index = (props: Props) => {
                     <MenuItem key={"aqq1234"} value={""}>
                       Tất cả
                     </MenuItem>
-                    {categoriesData?.result.map((cate: CategoryInterface) => (
+                    {categories?.map((cate: CategoryInterface) => (
                       <MenuItem key={cate.cate_code} value={cate.cate_code}>
                         {cate.cate_title}
                       </MenuItem>
@@ -408,14 +415,30 @@ const Index = (props: Props) => {
                 xs: "100%",
               }}
             >
-              <CategoriesSidebar />
-              <BaseStats />
+              <CategoriesSidebar categories={categories} />
+              <BaseStats stats={stats} />
             </Box>
           </Stack>
         </Container>
       </Stack>
     </>
   );
+};
+
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const revalidate = 1 * 60 * 60;
+  const baseStatsResponse = await fetch(`${apiURL}/api/stats/getBaseStats`);
+  const categoriesResponse = await fetch(`${apiURL}/api/categories/getAll`);
+  const baseStats = await baseStatsResponse.json();
+  const categories = await categoriesResponse.json();
+
+  return {
+    props: {
+      stats: baseStats.result,
+      categories: categories.result,
+    },
+    revalidate,
+  };
 };
 
 export default Index;

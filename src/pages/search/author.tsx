@@ -1,6 +1,9 @@
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
 import { CategoriesSidebar } from "@/components/sidebar";
-import { StoriesInCategoryInterface } from "@/models/categories";
+import {
+  CategoryInterface,
+  StoriesInCategoryInterface,
+} from "@/models/categories";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CreateIcon from "@mui/icons-material/Create";
@@ -14,10 +17,12 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import CircularProgress from "@mui/material/CircularProgress";
+import { GetStaticProps } from "next";
+import { apiURL } from "@/utils/config";
 
-type Props = {};
+type Props = { categories: CategoryInterface[] };
 
-const SearchByAuthorPage = (props: Props) => {
+const SearchByAuthorPage = ({ categories }: Props) => {
   const [paginationPage, setPaginationPage] = useState<number>(1);
   const router = useRouter();
   const { keywords, page } = router.query;
@@ -218,13 +223,26 @@ const SearchByAuthorPage = (props: Props) => {
                 xs: "none",
               }}
             >
-              <CategoriesSidebar />
+              <CategoriesSidebar categories={categories} />
             </Box>
           </Stack>
         </Container>
       </Stack>
     </>
   );
+};
+
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const revalidate = 1 * 60 * 60;
+  const categoriesResponse = await fetch(`${apiURL}/api/categories/getAll`);
+  const categories = await categoriesResponse.json();
+
+  return {
+    props: {
+      categories: categories.result,
+    },
+    revalidate,
+  };
 };
 
 export default SearchByAuthorPage;
