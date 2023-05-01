@@ -68,6 +68,13 @@ const theme = createTheme({
         },
       },
     },
+    MuiPaginationItem: {
+      styleOverrides: {
+        root: {
+          margin: "unset",
+        },
+      },
+    },
   },
 });
 

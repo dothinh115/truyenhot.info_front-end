@@ -213,6 +213,7 @@ export const StoryMain = ({ story }: Props) => {
           direction={"row"}
           gap={"5px"}
           alignItems={"center"}
+          id="chapter-list"
         >
           DANH SÁCH CHƯƠNG
           {chapterListIsValidating && (
@@ -298,19 +299,14 @@ export const StoryMain = ({ story }: Props) => {
             count={chapterListData?.pagination.pages}
             page={paginationPage}
             color="primary"
-            onChange={(e, p) =>
-              router.push(
-                {
-                  pathname: router.pathname,
-                  query: {
-                    story_code,
-                    page: p,
-                  },
-                },
-                undefined,
-                { scroll: false }
-              )
-            }
+            sx={{
+              "& button": {
+                m: "unset",
+              },
+            }}
+            onChange={(e, p) => {
+              router.push(`/story/${story_code}?page=${p}#chapter-list`);
+            }}
             renderItem={(item) => (
               <PaginationItem
                 slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
