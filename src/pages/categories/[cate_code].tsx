@@ -18,9 +18,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState, useContext } from "react";
 import useSWR from "swr";
-import CircularProgress from "@mui/material/CircularProgress";
 import { Seo } from "@/components";
 import { MainLayoutContext } from "@/layouts";
+import { StoryListLoading } from "@/components/loading";
 
 type Props = {
   categoryData: CategoryInterface;
@@ -48,6 +48,14 @@ const CategoriesDetail = ({ categoryData, categories }: Props) => {
   const { setLoading } = useContext<any>(MainLayoutContext);
 
   const [paginationPage, setPaginationPage] = useState<number>(1);
+
+  const cateListPreRender = () => {
+    const result = [];
+    for (let i = 0; i < 2; i++) {
+      result.push(<StoryListLoading key={i} />);
+    }
+    return result;
+  };
 
   useEffect(() => {
     if (page) setPaginationPage(+page);
@@ -108,130 +116,125 @@ const CategoriesDetail = ({ categoryData, categories }: Props) => {
                 {cate_title}
               </Box>
               <Box className={"hr"} my={2} />
-              {storiesIsValidating && !storiesData?.result && (
-                <Stack
-                  direction={"row"}
-                  justifyContent={"center"}
-                  alignItems={"center"}
-                  gap={"5px"}
-                >
-                  <CircularProgress size={"3em"} color="primary" />{" "}
-                  <Typography>...Đang lấy dữ liệu</Typography>
-                </Stack>
-              )}
-              <Box component={"ul"} m={0} p={0}>
-                {storiesData?.result.map(
-                  (story: StoriesInCategoryInterface) => {
-                    return (
-                      <Stack
-                        component={"li"}
-                        bgcolor={"#fff"}
-                        p={1}
-                        sx={{
-                          border: "1px dashed #ccc",
-                        }}
-                        direction={"row"}
-                        spacing={2}
-                        alignItems={"center"}
-                        mb={1}
-                        key={story.story_code}
-                      >
-                        <Stack
-                          width={"20%"}
-                          direction={"row"}
-                          alignItems={"center"}
-                        >
-                          <Box
-                            component={"img"}
-                            src={story.story_cover}
-                            width={"100%"}
-                            maxHeight={"70px"}
+              {storiesIsValidating ? (
+                cateListPreRender()
+              ) : (
+                <>
+                  <Box component={"ul"} m={0} p={0}>
+                    {storiesData?.result.map(
+                      (story: StoriesInCategoryInterface) => {
+                        return (
+                          <Stack
+                            component={"li"}
+                            bgcolor={"#fff"}
+                            p={1}
                             sx={{
-                              objectFit: "cover",
+                              border: "1px dashed #ccc",
                             }}
-                          />
-                        </Stack>
-                        <Box width={"80%"}>
-                          <Box
-                            component={Link}
-                            href={`/story/${story.story_code}`}
-                            fontSize={18}
-                            color={"#283593"}
-                            sx={{
-                              textDecoration: "none",
-                            }}
-                            fontWeight={"bold"}
-                          >
-                            {story.story_title}
-                          </Box>
-                          <Typography
-                            component={Link}
-                            href={`/search/author?keywords=${story.story_author}`}
-                            display={"flex"}
+                            direction={"row"}
+                            spacing={2}
                             alignItems={"center"}
-                            fontSize={14}
-                            color={"#616161"}
-                            sx={{
-                              textDecoration: "none",
-                              "& svg": {
-                                mr: 1,
-                                fontSize: "20px",
-                              },
-                            }}
+                            mb={1}
+                            key={story.story_code}
                           >
-                            <CreateIcon />
-                            {story.story_author}
-                          </Typography>
-                          <Typography
-                            display={"flex"}
-                            alignItems={"center"}
-                            fontSize={14}
-                            color={"#616161"}
-                            sx={{
-                              "& svg": {
-                                mr: 1,
-                                fontSize: "20px",
-                              },
-                            }}
-                          >
-                            <FormatListBulletedIcon />
-                            {story._count.chapter + " chương"}
-                          </Typography>
-                        </Box>
-                      </Stack>
-                    );
-                  }
-                )}
-              </Box>
-              <Stack direction={"row"} justifyContent={"center"} mt={2}>
-                <Pagination
-                  count={storiesData?.pagination.pages}
-                  page={paginationPage}
-                  color="primary"
-                  onChange={(e, p) =>
-                    router.push(
-                      {
-                        pathname: router.pathname,
-                        query: {
-                          cate_code,
-                          page: p,
-                        },
-                      },
-                      undefined,
-                      { scroll: true }
-                    )
-                  }
-                  renderItem={(item) => (
-                    <PaginationItem
-                      slots={{
-                        previous: ArrowBackIcon,
-                        next: ArrowForwardIcon,
-                      }}
-                      {...item}
+                            <Stack
+                              width={"20%"}
+                              direction={"row"}
+                              alignItems={"center"}
+                            >
+                              <Box
+                                component={"img"}
+                                src={story.story_cover}
+                                width={"100%"}
+                                maxHeight={"70px"}
+                                sx={{
+                                  objectFit: "cover",
+                                }}
+                              />
+                            </Stack>
+                            <Box width={"80%"}>
+                              <Box
+                                component={Link}
+                                href={`/story/${story.story_code}`}
+                                fontSize={18}
+                                color={"#283593"}
+                                sx={{
+                                  textDecoration: "none",
+                                }}
+                                fontWeight={"bold"}
+                              >
+                                {story.story_title}
+                              </Box>
+                              <Typography
+                                component={Link}
+                                href={`/search/author?keywords=${story.story_author}`}
+                                display={"flex"}
+                                alignItems={"center"}
+                                fontSize={14}
+                                color={"#616161"}
+                                sx={{
+                                  textDecoration: "none",
+                                  "& svg": {
+                                    mr: 1,
+                                    fontSize: "20px",
+                                  },
+                                }}
+                              >
+                                <CreateIcon />
+                                {story.story_author}
+                              </Typography>
+                              <Typography
+                                display={"flex"}
+                                alignItems={"center"}
+                                fontSize={14}
+                                color={"#616161"}
+                                sx={{
+                                  "& svg": {
+                                    mr: 1,
+                                    fontSize: "20px",
+                                  },
+                                }}
+                              >
+                                <FormatListBulletedIcon />
+                                {story._count.chapter + " chương"}
+                              </Typography>
+                            </Box>
+                          </Stack>
+                        );
+                      }
+                    )}
+                  </Box>
+                  <Stack direction={"row"} justifyContent={"center"} mt={2}>
+                    <Pagination
+                      count={storiesData?.pagination.pages}
+                      page={paginationPage}
+                      color="primary"
+                      onChange={(e, p) =>
+                        router.push(
+                          {
+                            pathname: router.pathname,
+                            query: {
+                              cate_code,
+                              page: p,
+                            },
+                          },
+                          undefined,
+                          { scroll: true }
+                        )
+                      }
+                      renderItem={(item) => (
+                        <PaginationItem
+                          slots={{
+                            previous: ArrowBackIcon,
+                            next: ArrowForwardIcon,
+                          }}
+                          {...item}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </Stack>
+                  </Stack>
+                </>
+              )}
             </Box>
             <Box
               width={"30%"}
