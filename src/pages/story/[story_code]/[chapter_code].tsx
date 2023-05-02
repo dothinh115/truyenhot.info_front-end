@@ -1,8 +1,9 @@
 import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
+import { MainLayoutContext } from "@/layouts";
 import { ChapterDataInterface, ChapterListInterface } from "@/models/chapters";
 import { ChapterSection } from "@/sections";
-import { API, apiURL } from "@/utils/config";
+import { apiURL } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import HomeIcon from "@mui/icons-material/Home";
@@ -22,12 +23,11 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState, useContext } from "react";
-import CircularProgress from "@mui/material/CircularProgress";
-import { MainLayoutContext } from "@/layouts";
+import { useContext, useEffect } from "react";
 
 type Props = {
   chapterData: ChapterDataInterface;
+  chapterListData: ChapterListInterface[];
 };
 
 const ITEM_HEIGHT = 36;
@@ -40,13 +40,9 @@ const MenuProps = {
   },
 };
 
-const ChapterDetail = ({ chapterData }: Props) => {
-  const [chapterListData, setChapterListData] = useState<{
-    result: ChapterListInterface[];
-  }>();
-
+const ChapterDetail = ({ chapterData, chapterListData }: Props) => {
   const router = useRouter();
-  const { story_code, page, isFallback } = router?.query;
+  const { isFallback } = router;
   const { setLoading } = useContext<any>(MainLayoutContext);
   const handleChange = (event: SelectChangeEvent, child?: any) => {
     router.push({
@@ -57,19 +53,6 @@ const ChapterDetail = ({ chapterData }: Props) => {
       },
     });
   };
-
-  const getChapterListData = async () => {
-    try {
-      const result: { result: ChapterListInterface[] } = await API.get(
-        `/chapter/getChapterListByStoryCode/${chapterData?.story_code}?page=all`
-      );
-      setChapterListData(result);
-    } catch (error) {}
-  };
-
-  useEffect(() => {
-    if (chapterData?.story_code) getChapterListData();
-  }, [router.query]);
 
   useEffect(() => {
     setLoading(isFallback);
@@ -181,35 +164,29 @@ const ChapterDetail = ({ chapterData }: Props) => {
                   Chương trước
                 </Typography>
               </Button>
-              {!chapterListData?.result ? (
-                <>
-                  <CircularProgress size={"2em"} color="primary" />{" "}
-                  <Typography>...Đang lấy dữ liệu</Typography>
-                </>
-              ) : (
-                <FormControl sx={{ m: 1, width: 300 }}>
-                  <InputLabel>Chọn chương</InputLabel>
-                  <Select
-                    value={
-                      chapterData?.chapter_code && chapterListData
-                        ? chapterData?.chapter_code
-                        : ""
-                    }
-                    onChange={(event, child) => handleChange(event, child)}
-                    input={<OutlinedInput label="Chọn chương" />}
-                    MenuProps={MenuProps}
-                  >
-                    {chapterListData?.result.map((chapter: any) => (
-                      <MenuItem
-                        key={chapter.chapter_id}
-                        value={chapter.chapter_code}
-                      >
-                        {chapter.chapter_name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
+
+              <FormControl sx={{ m: 1, width: 300 }}>
+                <InputLabel>Chọn chương</InputLabel>
+                <Select
+                  value={
+                    chapterData?.chapter_code && chapterListData
+                      ? chapterData?.chapter_code
+                      : ""
+                  }
+                  onChange={(event, child) => handleChange(event, child)}
+                  input={<OutlinedInput label="Chọn chương" />}
+                  MenuProps={MenuProps}
+                >
+                  {chapterListData?.map((chapter: any) => (
+                    <MenuItem
+                      key={chapter.chapter_id}
+                      value={chapter.chapter_code}
+                    >
+                      {chapter.chapter_name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
 
               <Button
                 component={Link}
@@ -278,35 +255,28 @@ const ChapterDetail = ({ chapterData }: Props) => {
                 </Typography>
               </Button>
 
-              {!chapterListData?.result ? (
-                <>
-                  <CircularProgress size={"2em"} color="primary" />{" "}
-                  <Typography>...Đang lấy dữ liệu</Typography>
-                </>
-              ) : (
-                <FormControl sx={{ m: 1, width: 300 }}>
-                  <InputLabel>Chọn chương</InputLabel>
-                  <Select
-                    value={
-                      chapterData?.chapter_code && chapterListData
-                        ? chapterData?.chapter_code
-                        : ""
-                    }
-                    onChange={(event, child) => handleChange(event, child)}
-                    input={<OutlinedInput label="Chọn chương" />}
-                    MenuProps={MenuProps}
-                  >
-                    {chapterListData?.result.map((chapter: any) => (
-                      <MenuItem
-                        key={chapter.chapter_id}
-                        value={chapter.chapter_code}
-                      >
-                        {chapter.chapter_name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
+              <FormControl sx={{ m: 1, width: 300 }}>
+                <InputLabel>Chọn chương</InputLabel>
+                <Select
+                  value={
+                    chapterData?.chapter_code && chapterListData
+                      ? chapterData?.chapter_code
+                      : ""
+                  }
+                  onChange={(event, child) => handleChange(event, child)}
+                  input={<OutlinedInput label="Chọn chương" />}
+                  MenuProps={MenuProps}
+                >
+                  {chapterListData?.map((chapter: any) => (
+                    <MenuItem
+                      key={chapter.chapter_id}
+                      value={chapter.chapter_code}
+                    >
+                      {chapter.chapter_name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
 
               <Button
                 component={Link}
@@ -356,10 +326,14 @@ export const getStaticProps: GetStaticProps<Props> = async (
   const story_code = context.params.story_code;
   const chapter_code = context.params.chapter_code;
   const revalidate = 5;
-  const respone = await fetch(
+  const chapterResponse = await fetch(
     `${apiURL}/api/chapter/getChapterDataByStoryCode/${story_code}/${chapter_code}`
   );
-  const chapter = await respone.json();
+  const chapter = await chapterResponse.json();
+  const chapterListResponse = await fetch(
+    `${apiURL}/api/chapter/getChapterListByStoryCode/${story_code}?page=all`
+  );
+  const chapterList = await chapterListResponse.json();
   if (!chapter.result) {
     return {
       redirect: {
@@ -371,6 +345,7 @@ export const getStaticProps: GetStaticProps<Props> = async (
   return {
     props: {
       chapterData: chapter.result,
+      chapterListData: chapterList.result,
     },
     revalidate,
   };

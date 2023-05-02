@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosResponse } from "axios";
 
 export const apiURL =
   process.env.NODE_ENV === "production"
-    ? "https://api.truyenhot.info"
+    ? "http://api.truyenhot.info"
     : "http://localhost:5000";
 
 export const API: AxiosInstance = axios.create({
