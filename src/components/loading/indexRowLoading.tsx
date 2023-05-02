@@ -65,7 +65,10 @@ export const IndexRowLoading = (props: Props) => {
             sx={{
               height: "calc(100% - 10px - 10px)",
               top: "10px",
-              width: "50px",
+              width: {
+                md: "50px",
+                xs: 0,
+              },
               right: 0,
             }}
           ></Box>
@@ -77,6 +80,10 @@ export const IndexRowLoading = (props: Props) => {
             "& > div ": {
               background: "#fff",
               position: "absolute",
+            },
+            display: {
+              md: "table-cell",
+              xs: "none",
             },
           }}
         >
@@ -118,6 +125,18 @@ export const IndexRowLoading = (props: Props) => {
               top: "10px",
               width: "30px",
               left: 0,
+            }}
+          ></Box>
+          <Box
+            sx={{
+              height: "calc(100% - 10px - 10px)",
+              top: "10px",
+              width: "60px",
+              left: 0,
+              display: {
+                md: "none",
+                xs: "table-cell",
+              },
             }}
           ></Box>
         </TableCell>
