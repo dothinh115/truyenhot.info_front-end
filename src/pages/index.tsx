@@ -328,16 +328,15 @@ const Index = ({ stats, categories }: Props) => {
 
                               "& td": {
                                 p: "6px",
+                                lineHeight: "unset",
+                                maxHeight: "37px",
                               },
                             }}
                             key={story.story_id}
                           >
                             <TableCell scope="row">
                               <Box
-                                display={{
-                                  md: "flex",
-                                  xs: "none",
-                                }}
+                                display={"flex"}
                                 alignItems={"center"}
                                 component={Link}
                                 href={`/story/${story.story_code}`}
@@ -353,34 +352,27 @@ const Index = ({ stats, categories }: Props) => {
                                 >
                                   <KeyboardArrowRightIcon />
                                 </Box>
-                                {story.story_title.length > 40
-                                  ? story.story_title.substring(0, 39) + " ..."
-                                  : story.story_title}
-                              </Box>
-
-                              <Box
-                                display={{
-                                  md: "none",
-                                  xs: "inline-flex",
-                                }}
-                                component={Link}
-                                alignItems={"center"}
-                                href={`/story/${story.story_code}`}
-                              >
                                 <Box
-                                  component={"span"}
-                                  color={
-                                    (index + 1 === 1 && "error.main") ||
-                                    (index + 1 === 2 && "success.main") ||
-                                    (index + 1 === 3 && "info.main") ||
-                                    "#ccc"
-                                  }
+                                  display={{
+                                    md: "inline-block",
+                                    xs: "none",
+                                  }}
                                 >
-                                  <KeyboardArrowRightIcon />
+                                  {story.story_title.length > 40
+                                    ? story.story_title.substring(0, 39) +
+                                      " ..."
+                                    : story.story_title}
                                 </Box>
-                                {story.story_title.length > 20
-                                  ? story.story_title.substring(0, 19) + "..."
-                                  : story.story_title}
+                                <Box
+                                  display={{
+                                    md: "none",
+                                    xs: "inline-block",
+                                  }}
+                                >
+                                  {story.story_title.length > 20
+                                    ? story.story_title.substring(0, 19) + "..."
+                                    : story.story_title}
+                                </Box>
                               </Box>
                             </TableCell>
                             <TableCell align="right">
