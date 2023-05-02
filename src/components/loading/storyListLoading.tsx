@@ -1,7 +1,4 @@
-import React from "react";
-import { Box, Container, Stack, Typography } from "@mui/material";
-import CreateIcon from "@mui/icons-material/Create";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import { Box } from "@mui/material";
 type Props = {};
 
 export const StoryListLoading = (props: Props) => {

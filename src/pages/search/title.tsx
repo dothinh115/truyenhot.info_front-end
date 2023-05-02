@@ -1,9 +1,12 @@
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
+import { StoryListLoading } from "@/components/loading";
 import { CategoriesSidebar } from "@/components/sidebar";
+import { MainLayoutContext } from "@/layouts";
 import {
   CategoryInterface,
   StoriesInCategoryInterface,
 } from "@/models/categories";
+import { apiURL } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CreateIcon from "@mui/icons-material/Create";
@@ -12,15 +15,11 @@ import HomeIcon from "@mui/icons-material/Home";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
+import { GetStaticProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState, useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
-import CircularProgress from "@mui/material/CircularProgress";
-import { GetStaticProps } from "next";
-import { apiURL } from "@/utils/config";
-import { MainLayoutContext } from "@/layouts";
-import { StoryListLoading } from "@/components/loading";
 
 type Props = { categories: CategoryInterface[] };
 

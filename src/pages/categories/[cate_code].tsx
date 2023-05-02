@@ -1,5 +1,8 @@
+import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
+import { StoryListLoading } from "@/components/loading";
 import { CategoriesSidebar } from "@/components/sidebar";
+import { MainLayoutContext } from "@/layouts";
 import {
   CategoryInterface,
   StoriesInCategoryInterface,
@@ -16,11 +19,8 @@ import PaginationItem from "@mui/material/PaginationItem";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState, useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
-import { Seo } from "@/components";
-import { MainLayoutContext } from "@/layouts";
-import { StoryListLoading } from "@/components/loading";
 
 type Props = {
   categoryData: CategoryInterface;

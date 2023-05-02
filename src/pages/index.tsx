@@ -298,116 +298,124 @@ const Index = ({ stats, categories }: Props) => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {recentUpdateStoriesValidating && preDataRender()}
-                    {recentUpdateStoriesList?.result?.map(
-                      (story: RecentStoriesInterface, index: number) => {
-                        if (story.lastChapter)
-                          story.lastChapter.chapter_name =
-                            story.lastChapter?.chapter_name
-                              .replaceAll("Chương ", "C")
-                              .replaceAll("Quyển ", "Q")
-                              .replaceAll(" - ", "-");
-                        return (
-                          <TableRow
-                            sx={{
-                              "&:last-child td, &:last-child th": { border: 0 },
-                              "& td a": {
-                                textDecoration: "none",
-                                fontSize: "14px",
-                              },
-                              "& td.cate-table a": {
-                                mr: "2px",
-                                "&:not(:last-of-type)::after": {
-                                  content: '", "',
-                                },
-                              },
-                              "& td span": {
-                                display: "inline-block",
-                                maxHeight: "24px!important",
-                              },
+                    {recentUpdateStoriesValidating ? (
+                      preDataRender()
+                    ) : (
+                      <>
+                        {recentUpdateStoriesList?.result?.map(
+                          (story: RecentStoriesInterface, index: number) => {
+                            if (story.lastChapter)
+                              story.lastChapter.chapter_name =
+                                story.lastChapter?.chapter_name
+                                  .replaceAll("Chương ", "C")
+                                  .replaceAll("Quyển ", "Q")
+                                  .replaceAll(" - ", "-");
+                            return (
+                              <TableRow
+                                sx={{
+                                  "&:last-child td, &:last-child th": {
+                                    border: 0,
+                                  },
+                                  "& td a": {
+                                    textDecoration: "none",
+                                    fontSize: "14px",
+                                  },
+                                  "& td.cate-table a": {
+                                    mr: "2px",
+                                    "&:not(:last-of-type)::after": {
+                                      content: '", "',
+                                    },
+                                  },
+                                  "& td span": {
+                                    display: "inline-block",
+                                    maxHeight: "24px!important",
+                                  },
 
-                              "& td": {
-                                p: "6px",
-                                lineHeight: "unset",
-                                maxHeight: "37px",
-                              },
-                            }}
-                            key={story.story_id}
-                          >
-                            <TableCell scope="row">
-                              <Box
-                                display={"flex"}
-                                alignItems={"center"}
-                                component={Link}
-                                href={`/story/${story.story_code}`}
+                                  "& td": {
+                                    p: "6px",
+                                    lineHeight: "unset",
+                                    maxHeight: "37px",
+                                  },
+                                }}
+                                key={story.story_id}
                               >
+                                <TableCell scope="row">
+                                  <Box
+                                    display={"flex"}
+                                    alignItems={"center"}
+                                    component={Link}
+                                    href={`/story/${story.story_code}`}
+                                  >
+                                    <Box
+                                      component={"span"}
+                                      color={
+                                        (index + 1 === 1 && "error.main") ||
+                                        (index + 1 === 2 && "success.main") ||
+                                        (index + 1 === 3 && "info.main") ||
+                                        "#ccc"
+                                      }
+                                    >
+                                      <KeyboardArrowRightIcon />
+                                    </Box>
+                                    <Box
+                                      display={{
+                                        md: "inline-block",
+                                        xs: "none",
+                                      }}
+                                    >
+                                      {story.story_title.length > 40
+                                        ? story.story_title.substring(0, 39) +
+                                          " ..."
+                                        : story.story_title}
+                                    </Box>
+                                    <Box
+                                      display={{
+                                        md: "none",
+                                        xs: "inline-block",
+                                      }}
+                                    >
+                                      {story.story_title.length > 20
+                                        ? story.story_title.substring(0, 19) +
+                                          "..."
+                                        : story.story_title}
+                                    </Box>
+                                  </Box>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Box
+                                    component={Link}
+                                    href={`/story/${story.story_code}/${story.lastChapter?.chapter_code}`}
+                                  >
+                                    {story.lastChapter?.chapter_name.length > 18
+                                      ? story.lastChapter?.chapter_name.substring(
+                                          0,
+                                          17
+                                        ) + " ..."
+                                      : story.lastChapter?.chapter_name}
+                                  </Box>
+                                </TableCell>
+
                                 <Box
-                                  component={"span"}
-                                  color={
-                                    (index + 1 === 1 && "error.main") ||
-                                    (index + 1 === 2 && "success.main") ||
-                                    (index + 1 === 3 && "info.main") ||
-                                    "#ccc"
-                                  }
-                                >
-                                  <KeyboardArrowRightIcon />
-                                </Box>
-                                <Box
+                                  component={TableCell}
+                                  align="right"
                                   display={{
-                                    md: "inline-block",
+                                    md: "table-cell",
                                     xs: "none",
                                   }}
                                 >
-                                  {story.story_title.length > 40
-                                    ? story.story_title.substring(0, 39) +
-                                      " ..."
-                                    : story.story_title}
+                                  {timeSince(
+                                    Math.abs(
+                                      new Date().valueOf() -
+                                        new Date(story?.updated_at).valueOf()
+                                    )
+                                  )}{" "}
+                                  trước
                                 </Box>
-                                <Box
-                                  display={{
-                                    md: "none",
-                                    xs: "inline-block",
-                                  }}
-                                >
-                                  {story.story_title.length > 20
-                                    ? story.story_title.substring(0, 19) + "..."
-                                    : story.story_title}
-                                </Box>
-                              </Box>
-                            </TableCell>
-                            <TableCell align="right">
-                              <Box
-                                component={Link}
-                                href={`/story/${story.story_code}/${story.lastChapter?.chapter_code}`}
-                              >
-                                {story.lastChapter?.chapter_name.length > 18
-                                  ? story.lastChapter?.chapter_name.substring(
-                                      0,
-                                      17
-                                    ) + " ..."
-                                  : story.lastChapter?.chapter_name}
-                              </Box>
-                            </TableCell>
-
-                            <Box
-                              component={TableCell}
-                              align="right"
-                              display={{
-                                md: "table-cell",
-                                xs: "none",
-                              }}
-                            >
-                              {timeSince(
-                                Math.abs(
-                                  new Date().valueOf() -
-                                    new Date(story?.updated_at).valueOf()
-                                )
-                              )}{" "}
-                              trước
-                            </Box>
-                          </TableRow>
-                        );
-                      }
+                              </TableRow>
+                            );
+                          }
+                        )}
+                      </>
                     )}
                   </TableBody>
                 </Table>
