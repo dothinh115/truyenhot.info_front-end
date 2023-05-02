@@ -190,41 +190,40 @@ const SearchByAuthorPage = ({ categories }: Props) => {
                       }
                     )}
                   </Box>
-
-                  <Stack direction={"row"} justifyContent={"center"} mt={2}>
-                    <Pagination
-                      count={searchData?.pagination.pages}
-                      page={paginationPage}
-                      color="primary"
-                      showFirstButton={true}
-                      showLastButton={true}
-                      siblingCount={2}
-                      onChange={(e, p) =>
-                        router.push(
-                          {
-                            pathname: router.pathname,
-                            query: {
-                              keywords,
-                              page: p,
-                            },
-                          },
-                          undefined,
-                          { scroll: true }
-                        )
-                      }
-                      renderItem={(item) => (
-                        <PaginationItem
-                          slots={{
-                            previous: ArrowBackIcon,
-                            next: ArrowForwardIcon,
-                          }}
-                          {...item}
-                        />
-                      )}
-                    />
-                  </Stack>
                 </>
               )}
+              <Stack direction={"row"} justifyContent={"center"} mt={2}>
+                <Pagination
+                  count={searchData?.pagination.pages}
+                  page={paginationPage}
+                  color="primary"
+                  showFirstButton={true}
+                  showLastButton={true}
+                  siblingCount={2}
+                  onChange={(e, p) =>
+                    router.push(
+                      {
+                        pathname: router.pathname,
+                        query: {
+                          keywords,
+                          page: p,
+                        },
+                      },
+                      undefined,
+                      { scroll: true }
+                    )
+                  }
+                  renderItem={(item) => (
+                    <PaginationItem
+                      slots={{
+                        previous: ArrowBackIcon,
+                        next: ArrowForwardIcon,
+                      }}
+                      {...item}
+                    />
+                  )}
+                />
+              </Stack>
             </Box>
             <Box
               width={"30%"}

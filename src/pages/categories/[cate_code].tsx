@@ -204,37 +204,37 @@ const CategoriesDetail = ({ categoryData, categories }: Props) => {
                       }
                     )}
                   </Box>
-                  <Stack direction={"row"} justifyContent={"center"} mt={2}>
-                    <Pagination
-                      count={storiesData?.pagination.pages}
-                      page={paginationPage}
-                      color="primary"
-                      onChange={(e, p) =>
-                        router.push(
-                          {
-                            pathname: router.pathname,
-                            query: {
-                              cate_code,
-                              page: p,
-                            },
-                          },
-                          undefined,
-                          { scroll: true }
-                        )
-                      }
-                      renderItem={(item) => (
-                        <PaginationItem
-                          slots={{
-                            previous: ArrowBackIcon,
-                            next: ArrowForwardIcon,
-                          }}
-                          {...item}
-                        />
-                      )}
-                    />
-                  </Stack>
                 </>
               )}
+              <Stack direction={"row"} justifyContent={"center"} mt={2}>
+                <Pagination
+                  count={storiesData?.pagination.pages}
+                  page={paginationPage}
+                  color="primary"
+                  onChange={(e, p) =>
+                    router.push(
+                      {
+                        pathname: router.pathname,
+                        query: {
+                          cate_code,
+                          page: p,
+                        },
+                      },
+                      undefined,
+                      { scroll: true }
+                    )
+                  }
+                  renderItem={(item) => (
+                    <PaginationItem
+                      slots={{
+                        previous: ArrowBackIcon,
+                        next: ArrowForwardIcon,
+                      }}
+                      {...item}
+                    />
+                  )}
+                />
+              </Stack>
             </Box>
             <Box
               width={"30%"}
