@@ -1,6 +1,7 @@
 import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
 import { BaseStats } from "@/components/home";
+import { RowLoading } from "@/components/loading";
 import { CategoriesSidebar } from "@/components/sidebar";
 import { MainLayoutContext } from "@/layouts";
 import { CategoryInterface, RecentStoriesInterface } from "@/models/categories";
@@ -73,7 +74,6 @@ const Index = ({ stats, categories }: Props) => {
     data: recentUpdateStoriesList,
     mutate: recenUpdatetStoriesListMutate,
     isValidating: recentUpdateStoriesValidating,
-    isLoading: recentUpdateStoriesIsLoading,
   } = useSWR(
     `/stories/getRecentUpdate${
       cateValue ? "?category=" + cateValue.value : ""
@@ -119,7 +119,9 @@ const Index = ({ stats, categories }: Props) => {
               >
                 <KeyboardArrowRightIcon />
               </Box>
-              <CircularProgress size={"1em"} />
+              <Box width={"100%"}>
+                <RowLoading />
+              </Box>
             </Stack>
           </TableCell>
         </TableRow>
@@ -296,7 +298,7 @@ const Index = ({ stats, categories }: Props) => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {recentUpdateStoriesIsLoading && preDataRender()}
+                    {recentUpdateStoriesValidating && preDataRender()}
                     {recentUpdateStoriesList?.result?.map(
                       (story: RecentStoriesInterface, index: number) => {
                         if (story.lastChapter)
