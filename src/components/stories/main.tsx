@@ -262,10 +262,6 @@ export const StoryMain = ({ story }: Props) => {
             md: 600,
             xs: "100%",
           }}
-          height={{
-            md: 600,
-            xs: "100%",
-          }}
           overflow={"auto"}
           mt={3}
           bgcolor={"#fff"}
