@@ -51,23 +51,7 @@ export const StoryMain = ({ story }: Props) => {
   const paginationRowLoading = () => {
     let result = [];
     for (let i = 0; i < 15; i++) {
-      result.push(
-        <ListItem
-          key={i}
-          sx={{
-            borderBottom: "1px dashed #ccc",
-            height: "45px",
-          }}
-          dense={true}
-        >
-          <Box component={ListItemIcon} minWidth={"25px"}>
-            <ArrowCircleRightIcon />
-          </Box>
-          <Stack ml={2} width={"100%"} direction={"row"} alignItems={"center"}>
-            <RowLoading />
-          </Stack>
-        </ListItem>
-      );
+      result.push(<RowLoading key={i} />);
     }
     return result;
   };

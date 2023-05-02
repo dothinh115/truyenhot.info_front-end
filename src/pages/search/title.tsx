@@ -26,8 +26,11 @@ type Props = { categories: CategoryInterface[] };
 const SearchByTitlePage = ({ categories }: Props) => {
   const [paginationPage, setPaginationPage] = useState<number>(1);
   const router = useRouter();
+
   const { keywords, page, isFallback } = router.query;
+
   const { setLoading } = useContext<any>(MainLayoutContext);
+
   useEffect(() => {
     setLoading(isFallback);
   }, [isFallback]);

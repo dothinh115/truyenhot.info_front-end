@@ -1,7 +1,7 @@
 import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
 import { BaseStats } from "@/components/home";
-import { RowLoading } from "@/components/loading";
+import { IndexRowLoading } from "@/components/loading";
 import { CategoriesSidebar } from "@/components/sidebar";
 import { MainLayoutContext } from "@/layouts";
 import { CategoryInterface, RecentStoriesInterface } from "@/models/categories";
@@ -33,7 +33,7 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { GetStaticProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 
 const ITEM_HEIGHT = 36;
@@ -80,7 +80,7 @@ const Index = ({ stats, categories }: Props) => {
     }`,
     {
       keepPreviousData: true,
-      refreshInterval: 10000,
+      // refreshInterval: 10000,
     }
   );
 
@@ -94,38 +94,7 @@ const Index = ({ stats, categories }: Props) => {
   const preDataRender = () => {
     let result = [];
     for (let i = 0; i < 25; i++) {
-      result.push(
-        <TableRow
-          sx={{
-            "&:last-child td, &:last-child th": { border: 0 },
-            "& td": { p: "6px" },
-            "& td span": {
-              display: "inline-block",
-              maxHeight: "24px!important",
-            },
-          }}
-          key={i}
-        >
-          <TableCell scope="row" colSpan={3} height={"37px"}>
-            <Stack direction={"row"} alignItems={"center"}>
-              <Box
-                component={"span"}
-                color={
-                  (i + 1 === 1 && "error.main") ||
-                  (i + 1 === 2 && "success.main") ||
-                  (i + 1 === 3 && "info.main") ||
-                  "#ccc"
-                }
-              >
-                <KeyboardArrowRightIcon />
-              </Box>
-              <Box width={"100%"}>
-                <RowLoading />
-              </Box>
-            </Stack>
-          </TableCell>
-        </TableRow>
-      );
+      result.push(<IndexRowLoading key={i} />);
     }
     return result;
   };
