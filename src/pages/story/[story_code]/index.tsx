@@ -148,7 +148,7 @@ export const getStaticProps: GetStaticProps<Props> = async (
   const story_author = story.result?.story_author;
 
   const respone_2 = await fetch(
-    `${apiURL}/api/search/storyAuthor?keywords=${story_author}`
+    `${apiURL}/api/search/storyAuthor?keywords=${story_author}&exact=true`
   );
   const storiesSameAuthorJson = await respone_2.json();
   const storiesSameAuthor: StoriesSearchResultInterface[] =
