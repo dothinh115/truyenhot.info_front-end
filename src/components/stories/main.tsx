@@ -284,6 +284,7 @@ export const StoryMain = ({ story }: Props) => {
                     key={data.chapter_id}
                     sx={{
                       borderBottom: "1px dashed #ccc",
+                      px: 1,
                     }}
                     dense={true}
                   >
@@ -293,9 +294,19 @@ export const StoryMain = ({ story }: Props) => {
                     <ListItemButton
                       component={Link}
                       href={`/story/${story_code}/${data.chapter_code}`}
-                      scroll={true}
+                      sx={{
+                        px: 1,
+                      }}
                     >
                       <ListItemText
+                        sx={{
+                          "& > span": {
+                            fontSize: {
+                              md: "1em",
+                              xs: ".9em",
+                            },
+                          },
+                        }}
                         primary={`${data.chapter_name}${
                           data.chapter_title ? ": " + data.chapter_title : ""
                         }`}

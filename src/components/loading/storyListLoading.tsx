@@ -13,7 +13,10 @@ export const StoryListLoading = (props: Props) => {
       >
         <Box
           sx={{
-            animationDuration: "1s",
+            animationDuration: {
+              md: "1s",
+              xs: "2s",
+            },
             animationFillMode: "forwards",
             animationIterationCount: "infinite",
             animationName: "story-list-loading",
@@ -39,7 +42,10 @@ export const StoryListLoading = (props: Props) => {
               width: "20px",
               height: "calc(100% - 20px)",
               top: "10px",
-              left: "20%",
+              left: {
+                md: "20%",
+                xs: "30%",
+              },
             }}
           ></Box>
           <Box
@@ -48,47 +54,75 @@ export const StoryListLoading = (props: Props) => {
               top: "10px",
               left: "80%",
               width: "20%",
+              display: {
+                md: "block",
+                xs: "none",
+              },
             }}
           ></Box>
           <Box
             sx={{
               top: "calc(10px + 24px)",
               bottom: "10px",
-              left: "20%",
+              left: {
+                md: "20%",
+                xs: "30%",
+              },
               height: "10px",
-              width: "calc(100% - 20%)",
+              width: {
+                md: "calc(100% - 20%)",
+                xs: "calc(100% - 30%)",
+              },
             }}
           ></Box>
           <Box
             sx={{
               height: "12px",
               top: "calc(10px + 24px + 10px)",
-              left: "50%",
-              width: "50%",
+              left: {
+                md: "50%",
+                xs: "70%",
+              },
+              width: {
+                md: "50%",
+                xs: "30%",
+              },
             }}
           ></Box>
           <Box
             sx={{
               height: "10px",
               top: "calc(10px + 24px + 10px + 12px)",
-              left: "20%",
-              width: "80%",
+              left: {
+                md: "20%",
+                xs: "30%",
+              },
+              width: "70%",
             }}
           ></Box>
           <Box
             sx={{
               height: "12px",
               top: "calc(10px + 24px + 10px + 12px + 10px)",
-              left: "40%",
-              width: "60%",
+              left: {
+                md: "40%",
+                xs: "50%",
+              },
+              width: {
+                md: "60%",
+                xs: "50%",
+              },
             }}
           ></Box>
           <Box
             sx={{
               height: "10px",
               top: "calc(10px + 24px + 10px + 12px + 10px + 12px)",
-              left: "20%",
-              width: "80%",
+              left: {
+                md: "20%",
+                xs: "30%",
+              },
+              width: "70%",
             }}
           ></Box>
         </Box>

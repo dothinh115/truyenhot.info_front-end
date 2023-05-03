@@ -224,13 +224,27 @@ const Index = ({ stats, categories }: Props) => {
                       textTransform: "uppercase",
                       bgcolor: "primary.main",
                       color: "primary.contrastText",
+                      fontSize: {
+                        xs: "0.775rem",
+                      },
                     },
                   }}
                 >
                   <TableHead>
                     <TableRow>
-                      <TableCell>Tên truyện</TableCell>
-                      <TableCell align="right">
+                      <TableCell sx={{ p: "6px 6px 6px 16px" }}>
+                        Tên truyện
+                      </TableCell>
+                      <TableCell
+                        align="right"
+                        sx={{
+                          width: {
+                            md: "100px",
+                            xs: "60px",
+                          },
+                          p: "6px 6px 6px 0",
+                        }}
+                      >
                         C
                         <Box
                           display={{
@@ -332,8 +346,8 @@ const Index = ({ stats, categories }: Props) => {
                                         xs: "none",
                                       }}
                                     >
-                                      {story.story_title.length > 40
-                                        ? story.story_title.substring(0, 39) +
+                                      {story.story_title.length > 55
+                                        ? story.story_title.substring(0, 54) +
                                           " ..."
                                         : story.story_title}
                                     </Box>
@@ -343,8 +357,8 @@ const Index = ({ stats, categories }: Props) => {
                                         xs: "inline-block",
                                       }}
                                     >
-                                      {story.story_title.length > 20
-                                        ? story.story_title.substring(0, 19) +
+                                      {story.story_title.length > 25
+                                        ? story.story_title.substring(0, 24) +
                                           "..."
                                         : story.story_title}
                                     </Box>
@@ -355,10 +369,10 @@ const Index = ({ stats, categories }: Props) => {
                                     component={Link}
                                     href={`/story/${story.story_code}/${story.lastChapter?.chapter_code}`}
                                   >
-                                    {story.lastChapter?.chapter_name.length > 18
+                                    {story.lastChapter?.chapter_name.length > 22
                                       ? story.lastChapter?.chapter_name.substring(
                                           0,
-                                          17
+                                          21
                                         ) + " ..."
                                       : story.lastChapter?.chapter_name}
                                   </Box>

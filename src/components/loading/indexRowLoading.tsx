@@ -1,22 +1,4 @@
-import React from "react";
-import {
-  Box,
-  Button,
-  Container,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Paper,
-  Select,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
+import { Box, TableCell, TableRow } from "@mui/material";
 type Props = {};
 
 export const IndexRowLoading = (props: Props) => {
@@ -26,7 +8,10 @@ export const IndexRowLoading = (props: Props) => {
         sx={{
           "&:last-child td, &:last-child th": { border: 0 },
           "& td": { p: "6px" },
-          animationDuration: "1s",
+          animationDuration: {
+            md: "1s",
+            xs: "2s",
+          },
           animationFillMode: "forwards",
           animationIterationCount: "infinite",
           animationName: "story-list-loading",

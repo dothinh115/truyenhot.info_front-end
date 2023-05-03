@@ -10,7 +10,10 @@ export const RowLoading = (props: Props) => {
         borderBottom: "1px dashed #ccc",
         height: "45px",
         p: 0,
-        animationDuration: "1s",
+        animationDuration: {
+          md: "1s",
+          xs: "2s",
+        },
         animationFillMode: "forwards",
         animationIterationCount: "infinite",
         animationName: "story-list-loading",

@@ -1,17 +1,13 @@
 import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
+import { RowStory } from "@/components/categories";
 import { StoryListLoading } from "@/components/loading";
 import { CategoriesSidebar } from "@/components/sidebar";
 import { MainLayoutContext } from "@/layouts";
-import {
-  CategoryInterface,
-  StoriesInCategoryInterface,
-} from "@/models/categories";
+import { CategoryInterface } from "@/models/categories";
 import { apiURL } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import CreateIcon from "@mui/icons-material/Create";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import HomeIcon from "@mui/icons-material/Home";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
@@ -51,7 +47,7 @@ const CategoriesDetail = ({ categoryData, categories }: Props) => {
 
   const cateListPreRender = () => {
     const result = [];
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 4; i++) {
       result.push(<StoryListLoading key={i} />);
     }
     return result;
@@ -119,92 +115,7 @@ const CategoriesDetail = ({ categoryData, categories }: Props) => {
               {storiesIsValidating ? (
                 cateListPreRender()
               ) : (
-                <>
-                  <Box component={"ul"} m={0} p={0}>
-                    {storiesData?.result.map(
-                      (story: StoriesInCategoryInterface) => {
-                        return (
-                          <Stack
-                            component={"li"}
-                            bgcolor={"#fff"}
-                            p={1}
-                            sx={{
-                              border: "1px dashed #ccc",
-                            }}
-                            direction={"row"}
-                            spacing={2}
-                            alignItems={"center"}
-                            mb={1}
-                            key={story.story_code}
-                          >
-                            <Stack
-                              width={"20%"}
-                              direction={"row"}
-                              alignItems={"center"}
-                            >
-                              <Box
-                                component={"img"}
-                                src={story.story_cover}
-                                width={"100%"}
-                                maxHeight={"70px"}
-                                sx={{
-                                  objectFit: "cover",
-                                }}
-                              />
-                            </Stack>
-                            <Box width={"80%"}>
-                              <Box
-                                component={Link}
-                                href={`/story/${story.story_code}`}
-                                fontSize={18}
-                                color={"#283593"}
-                                sx={{
-                                  textDecoration: "none",
-                                }}
-                                fontWeight={"bold"}
-                              >
-                                {story.story_title}
-                              </Box>
-                              <Typography
-                                component={Link}
-                                href={`/search/author?keywords=${story.story_author}`}
-                                display={"flex"}
-                                alignItems={"center"}
-                                fontSize={14}
-                                color={"#616161"}
-                                sx={{
-                                  textDecoration: "none",
-                                  "& svg": {
-                                    mr: 1,
-                                    fontSize: "20px",
-                                  },
-                                }}
-                              >
-                                <CreateIcon />
-                                {story.story_author}
-                              </Typography>
-                              <Typography
-                                display={"flex"}
-                                alignItems={"center"}
-                                fontSize={14}
-                                color={"#616161"}
-                                sx={{
-                                  "& svg": {
-                                    mr: 1,
-                                    fontSize: "20px",
-                                  },
-                                }}
-                              >
-                                <FormatListBulletedIcon />
-                                {story._count.chapter + " chương"}
-                              </Typography>
-                            </Box>
-                          </Stack>
-                        );
-                      }
-                    )}
-                  </Box>
-                </>
+                <RowStory storiesData={storiesData} />
               )}
               <Stack direction={"row"} justifyContent={"center"} mt={2}>
                 <Pagination
