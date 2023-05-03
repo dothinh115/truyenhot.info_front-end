@@ -86,7 +86,7 @@ export function HeaderDesktop() {
   const resultList = useRef<HTMLUListElement>(null);
   const inputElement = useRef(null);
 
-  const { control, handleSubmit } = useForm<{ keywords: string }>({
+  const { control, handleSubmit, reset } = useForm<{ keywords: string }>({
     mode: "onChange",
     defaultValues: {
       keywords: "",
@@ -95,6 +95,9 @@ export function HeaderDesktop() {
 
   const submitHandle = (data: any) => {
     router.push(`/search/title?keywords=${data.keywords}`);
+    reset({
+      keywords: "",
+    });
   };
 
   const onChangeHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -248,6 +251,11 @@ export function HeaderDesktop() {
                             component={Link}
                             href={`/story/${story.story_code}`}
                             scroll={true}
+                            onClick={() =>
+                              reset({
+                                keywords: "",
+                              })
+                            }
                           >
                             <ListItemText primary={story.story_title} />
                           </ListItemButton>
