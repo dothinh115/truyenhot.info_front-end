@@ -242,7 +242,7 @@ const Index = ({ stats, categories }: Props) => {
                         sx={{
                           width: {
                             md: "100px",
-                            xs: "60px",
+                            xs: "75px",
                           },
                           p: "6px 6px 6px 0",
                         }}
@@ -364,8 +364,8 @@ const Index = ({ stats, categories }: Props) => {
                                         xs: "inline-block",
                                       }}
                                     >
-                                      {story.story_title.length > 34
-                                        ? story.story_title.substring(0, 33) +
+                                      {story.story_title.length > 30
+                                        ? story.story_title.substring(0, 27) +
                                           "..."
                                         : story.story_title}
                                     </Box>
