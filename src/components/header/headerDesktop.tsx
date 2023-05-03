@@ -92,6 +92,7 @@ export function HeaderDesktop() {
       keywords: "",
     },
   });
+
   const submitHandle = (data: any) => {
     router.push(`/search/title?keywords=${data.keywords}`);
   };
@@ -115,6 +116,12 @@ export function HeaderDesktop() {
           `/search/storyTitle?keywords=${value}`
         );
         setSearchData(result.result);
+        if (result.result.length === 0) {
+          const result: any = await API.get(
+            `/search/storyAuthor?keywords=${value}`
+          );
+          setSearchData(result.result);
+        }
         if (searchData.length === 0) setResultMess("Không có kết quả nào!");
       }
     }, 500);
