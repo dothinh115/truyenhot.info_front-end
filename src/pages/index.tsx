@@ -80,7 +80,7 @@ const Index = ({ stats, categories }: Props) => {
     }`,
     {
       keepPreviousData: true,
-      refreshInterval: 10000,
+      // refreshInterval: 10000,
     }
   );
 
@@ -232,7 +232,9 @@ const Index = ({ stats, categories }: Props) => {
                 >
                   <TableHead>
                     <TableRow>
-                      <TableCell sx={{ p: "6px 6px 6px 16px" }}>
+                      <TableCell
+                        sx={{ p: { md: "6px 6px 6px 16px", xs: "6px" } }}
+                      >
                         Tên truyện
                       </TableCell>
                       <TableCell
@@ -322,7 +324,12 @@ const Index = ({ stats, categories }: Props) => {
                                 }}
                                 key={story.story_id}
                               >
-                                <TableCell scope="row">
+                                <TableCell
+                                  scope="row"
+                                  sx={{
+                                    pl: "0!important",
+                                  }}
+                                >
                                   <Box
                                     display={"flex"}
                                     alignItems={"center"}
@@ -357,8 +364,8 @@ const Index = ({ stats, categories }: Props) => {
                                         xs: "inline-block",
                                       }}
                                     >
-                                      {story.story_title.length > 25
-                                        ? story.story_title.substring(0, 24) +
+                                      {story.story_title.length > 34
+                                        ? story.story_title.substring(0, 33) +
                                           "..."
                                         : story.story_title}
                                     </Box>
