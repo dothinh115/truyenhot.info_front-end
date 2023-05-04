@@ -168,32 +168,13 @@ export const IndexRecentStories = ({ categories }: Props) => {
                 align="right"
                 sx={{
                   width: {
-                    md: "100px",
+                    md: "80px",
                     xs: "75px",
                   },
                   p: "6px 6px 6px 0",
                 }}
               >
-                C
-                <Box
-                  display={{
-                    md: "inline",
-                    xs: "none",
-                  }}
-                  component={"span"}
-                >
-                  hương
-                </Box>
-                <Box
-                  display={{
-                    md: "none",
-                    xs: "inline",
-                  }}
-                  component={"span"}
-                >
-                  .
-                </Box>{" "}
-                cuối
+                C. cuối
               </TableCell>
               <Box
                 component={TableCell}
@@ -202,6 +183,10 @@ export const IndexRecentStories = ({ categories }: Props) => {
                   display: {
                     md: "table-cell",
                     xs: "none",
+                  },
+                  width: {
+                    md: "90px",
+                    xs: "75px",
                   },
                   p: "6px",
                 }}
@@ -282,8 +267,8 @@ export const IndexRecentStories = ({ categories }: Props) => {
                                 xs: "none",
                               }}
                             >
-                              {story.story_title.length > 55
-                                ? story.story_title.substring(0, 54) + " ..."
+                              {story.story_title.length > 51
+                                ? story.story_title.substring(0, 48) + " ..."
                                 : story.story_title}
                             </Box>
                             <Box
