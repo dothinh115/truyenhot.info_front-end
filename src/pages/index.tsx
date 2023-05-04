@@ -55,7 +55,7 @@ const Index = ({ stats, categories }: Props) => {
       <MainBreadcrumbs links={breadCrumbs} />
       <Stack direction={"row"} justifyContent={"center"} mt={4}>
         <Container maxWidth={"md"}>
-          <IndexCarousel />
+          <IndexCarousel categories={categories} />
           <Stack
             direction={"row"}
             gap={"15px"}

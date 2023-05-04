@@ -6,12 +6,12 @@ import { CategoryInterface } from "@/models/categories";
 import { StoriesSearchResultInterface } from "@/models/search";
 import { StoryInterface } from "@/models/stories";
 import { StorySection } from "@/sections";
-import { apiURL } from "@/utils/config";
+import { API, apiURL } from "@/utils/config";
 import HomeIcon from "@mui/icons-material/Home";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useEffect } from "react";
 type Props = {
   story: StoryInterface;
   storiesSameAuthor: StoriesSearchResultInterface[];
@@ -19,6 +19,13 @@ type Props = {
 };
 
 const StoryDetail = ({ story, storiesSameAuthor, categories }: Props) => {
+  useEffect(() => {
+    if (story) {
+      try {
+        API.get(`/stories/viewIncrease/${story?.story_code}`);
+      } catch (error) {}
+    }
+  }, [story]);
   const breadCrumbs = [
     <Box
       key={1}

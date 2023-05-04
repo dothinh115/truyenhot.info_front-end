@@ -99,9 +99,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
             minWidth={"unset"}
             type={"button"}
             ml={1}
-            onClick={() =>
-              recenUpdatetStoriesListMutate(recentUpdateStoriesList)
-            }
+            onClick={() => recenUpdatetStoriesListMutate()}
             disabled={recentUpdateStoriesValidating ? true : false}
           >
             {recentUpdateStoriesValidating ? (
