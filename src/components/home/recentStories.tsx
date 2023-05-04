@@ -59,7 +59,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
     }`,
     {
       keepPreviousData: true,
-      refreshInterval: 10000,
+      // refreshInterval: 10000,
     }
   );
   const handleChange = (
@@ -163,9 +163,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
         >
           <TableHead>
             <TableRow>
-              <TableCell sx={{ p: { md: "6px 6px 6px 16px", xs: "6px" } }}>
-                Tên truyện
-              </TableCell>
+              <TableCell sx={{ p: "6px" }}>Tên truyện</TableCell>
               <TableCell
                 align="right"
                 sx={{
@@ -205,6 +203,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
                     md: "table-cell",
                     xs: "none",
                   },
+                  p: "6px",
                 }}
               >
                 Thời gian
@@ -247,8 +246,9 @@ export const IndexRecentStories = ({ categories }: Props) => {
 
                           "& td": {
                             p: "6px",
-                            lineHeight: "unset",
+                            lineHeight: "24px",
                             maxHeight: "37px",
+                            wordSpacing: "-1px",
                           },
                         }}
                         key={story.story_id}
@@ -319,6 +319,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
                             md: "table-cell",
                             xs: "none",
                           }}
+                          fontSize={".9em"}
                         >
                           {timeSince(
                             Math.abs(
