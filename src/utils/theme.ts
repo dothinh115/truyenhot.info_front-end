@@ -1,6 +1,5 @@
 import { Noto_Sans } from "next/font/google";
 import { createTheme } from "@mui/material/styles";
-import { red } from "@mui/material/colors";
 
 export const noto = Noto_Sans({
   weight: ["300", "400", "500", "700"],
@@ -47,26 +46,8 @@ const theme = createTheme({
             maxWidth: "960px",
           },
         },
-        root: {
-          "@media (min-width: 600px)": {
-            padding: "0px",
-            margin: "0px",
-          },
-        },
       },
       variants: [],
-    },
-    MuiToolbar: {
-      styleOverrides: {
-        root: {
-          paddingLeft: 0,
-          paddingRight: 0,
-          "@media (min-width: 600px)": {
-            paddingLeft: 0,
-            paddingRight: 0,
-          },
-        },
-      },
     },
     MuiPaginationItem: {
       styleOverrides: {

@@ -97,7 +97,10 @@ export const StoryListLoading = (props: Props) => {
                 md: "20%",
                 xs: "30%",
               },
-              width: "70%",
+              width: {
+                md: "80%",
+                xs: "70%",
+              },
             }}
           ></Box>
           <Box
@@ -122,7 +125,10 @@ export const StoryListLoading = (props: Props) => {
                 md: "20%",
                 xs: "30%",
               },
-              width: "70%",
+              width: {
+                md: "80%",
+                xs: "70%",
+              },
             }}
           ></Box>
         </Box>

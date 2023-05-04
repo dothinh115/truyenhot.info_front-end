@@ -18,7 +18,9 @@ export const CategoriesSidebar = ({ categories }: Props) => {
       >
         <Box
           component={"h4"}
-          bgcolor={"primary.main"}
+          sx={{
+            bgcolor: "primary.main",
+          }}
           my={0}
           p={"5px 12px"}
           color={"primary.contrastText"}

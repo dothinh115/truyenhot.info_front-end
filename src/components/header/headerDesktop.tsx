@@ -170,7 +170,14 @@ export function HeaderDesktop() {
           alignItems={"center"}
         >
           <Container maxWidth={"md"}>
-            <Toolbar>
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              minHeight={"64px"}
+              sx={{
+                p: 0,
+              }}
+            >
               <IconButton
                 LinkComponent={Link}
                 href="/"
@@ -280,7 +287,7 @@ export function HeaderDesktop() {
               >
                 <MenuIcon />
               </IconButton>
-            </Toolbar>
+            </Stack>
           </Container>
         </Stack>
       </AppBar>
