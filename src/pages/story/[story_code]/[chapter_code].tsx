@@ -24,7 +24,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState, useContext } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
-import { MainLayoutContext } from "@/layouts";
 
 type Props = {
   chapterData: ChapterDataInterface;
@@ -46,8 +45,6 @@ const ChapterDetail = ({ chapterData }: Props) => {
   }>();
 
   const router = useRouter();
-  const { story_code, page, isFallback } = router?.query;
-  const { setLoading } = useContext<any>(MainLayoutContext);
   const handleChange = (event: SelectChangeEvent, child?: any) => {
     router.push({
       pathname: router.pathname,
@@ -70,10 +67,6 @@ const ChapterDetail = ({ chapterData }: Props) => {
   useEffect(() => {
     if (chapterData?.story_code) getChapterListData();
   }, [router.query]);
-
-  useEffect(() => {
-    setLoading(isFallback);
-  }, [isFallback]);
 
   const breadCrumbs = [
     <Box

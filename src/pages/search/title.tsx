@@ -2,16 +2,10 @@ import { MainBreadcrumbs } from "@/components/breadcrumbs";
 import { RowStory } from "@/components/categories";
 import { StoryListLoading } from "@/components/loading";
 import { CategoriesSidebar } from "@/components/sidebar";
-import { MainLayoutContext } from "@/layouts";
-import {
-  CategoryInterface,
-  StoriesInCategoryInterface,
-} from "@/models/categories";
+import { CategoryInterface } from "@/models/categories";
 import { apiURL } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import CreateIcon from "@mui/icons-material/Create";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import HomeIcon from "@mui/icons-material/Home";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
@@ -19,7 +13,7 @@ import PaginationItem from "@mui/material/PaginationItem";
 import { GetStaticProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 
 type Props = { categories: CategoryInterface[] };
@@ -28,13 +22,7 @@ const SearchByTitlePage = ({ categories }: Props) => {
   const [paginationPage, setPaginationPage] = useState<number>(1);
   const router = useRouter();
 
-  const { keywords, page, isFallback } = router.query;
-
-  const { setLoading } = useContext<any>(MainLayoutContext);
-
-  useEffect(() => {
-    setLoading(isFallback);
-  }, [isFallback]);
+  const { keywords, page } = router.query;
 
   const {
     data: searchData,

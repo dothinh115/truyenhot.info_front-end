@@ -2,7 +2,6 @@ import { MainBreadcrumbs } from "@/components/breadcrumbs";
 import { RowStory } from "@/components/categories";
 import { StoryListLoading } from "@/components/loading";
 import { CategoriesSidebar } from "@/components/sidebar";
-import { MainLayoutContext } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
 import { apiURL } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -23,7 +22,6 @@ const SearchByAuthorPage = ({ categories }: Props) => {
   const [paginationPage, setPaginationPage] = useState<number>(1);
   const router = useRouter();
   const { keywords, page, isFallback } = router.query;
-  const { setLoading } = useContext<any>(MainLayoutContext);
 
   const {
     data: searchData,
@@ -43,10 +41,6 @@ const SearchByAuthorPage = ({ categories }: Props) => {
     }
     return result;
   };
-
-  useEffect(() => {
-    setLoading(isFallback);
-  }, [isFallback]);
 
   useEffect(() => {
     if (keywords) searchMutate();

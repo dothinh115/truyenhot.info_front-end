@@ -2,7 +2,6 @@ import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
 import { CategoriesSidebar, SameAuthorSidebar } from "@/components/sidebar";
 import { StoryMain, StorySidebar } from "@/components/stories";
-import { MainLayoutContext } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
 import { StoriesSearchResultInterface } from "@/models/search";
 import { StoryInterface } from "@/models/stories";
@@ -13,7 +12,6 @@ import { Box, Container, Stack, Typography } from "@mui/material";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
 type Props = {
   story: StoryInterface;
   storiesSameAuthor: StoriesSearchResultInterface[];
@@ -21,12 +19,6 @@ type Props = {
 };
 
 const StoryDetail = ({ story, storiesSameAuthor, categories }: Props) => {
-  const router = useRouter();
-  const { isFallback } = router;
-  const { setLoading } = useContext<any>(MainLayoutContext);
-  useEffect(() => {
-    setLoading(isFallback);
-  }, [isFallback]);
   const breadCrumbs = [
     <Box
       key={1}

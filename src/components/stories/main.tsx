@@ -26,7 +26,6 @@ import { useRouter } from "next/router";
 import { useEffect, useState, useContext } from "react";
 import useSWR from "swr";
 import CircularProgress from "@mui/material/CircularProgress";
-import { MainLayoutContext } from "@/layouts";
 import { RowLoading } from "../loading";
 
 type Props = {
@@ -37,7 +36,6 @@ export const StoryMain = ({ story }: Props) => {
   const router = useRouter();
   const { story_code, page, isFallback } = router?.query;
   const [paginationPage, setPaginationPage] = useState<number>(1);
-  const { setLoading } = useContext<any>(MainLayoutContext);
   const {
     data: chapterListData,
     mutate: chapterListMutate,
@@ -69,8 +67,12 @@ export const StoryMain = ({ story }: Props) => {
   }, [story?.story_description]);
 
   useEffect(() => {
-    setLoading(isFallback);
-  }, [isFallback]);
+    if (story?.updated_at) {
+      story.updated_at = timeSince(
+        Math.abs(new Date().valueOf() - new Date(story?.updated_at).valueOf())
+      );
+    }
+  }, [story]);
   return (
     <>
       <Box>
@@ -82,7 +84,12 @@ export const StoryMain = ({ story }: Props) => {
           {story?.story_title}
         </Box>
         <Box textAlign={"center"}>
-          <Box component={"img"} src={story?.story_cover} width={215} />
+          <Box
+            component={"img"}
+            src={story?.story_cover}
+            width={215}
+            alt={story?.story_title}
+          />
         </Box>
         <Stack direction={"row"} justifyContent={"center"}>
           <FavoriteIcon
@@ -179,13 +186,7 @@ export const StoryMain = ({ story }: Props) => {
             </Box>
             <Box component={"li"}>
               <Box component={"h4"}>Update lần cuối:</Box>
-              {story?.updated_at &&
-                timeSince(
-                  Math.abs(
-                    new Date().valueOf() - new Date(story?.updated_at).valueOf()
-                  )
-                )}{" "}
-              trước
+              {story?.updated_at && <>{`${story?.updated_at} trước`}</>}
             </Box>
             <Box component={"li"}>
               <Box component={"h4"}>Lượt xem:</Box>

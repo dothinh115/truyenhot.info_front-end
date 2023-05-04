@@ -3,7 +3,6 @@ import { MainBreadcrumbs } from "@/components/breadcrumbs";
 import { RowStory } from "@/components/categories";
 import { StoryListLoading } from "@/components/loading";
 import { CategoriesSidebar } from "@/components/sidebar";
-import { MainLayoutContext } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
 import { apiURL } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -15,7 +14,7 @@ import PaginationItem from "@mui/material/PaginationItem";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 
 type Props = {
@@ -25,7 +24,7 @@ type Props = {
 
 const CategoriesDetail = ({ categoryData, categories }: Props) => {
   const router = useRouter();
-  const { page, isFallback } = router.query;
+  const { page } = router.query;
   const cate_code = categoryData?.cate_code;
   const cate_title = categoryData?.cate_title;
   const {
@@ -41,7 +40,6 @@ const CategoriesDetail = ({ categoryData, categories }: Props) => {
       keepPreviousData: true,
     }
   );
-  const { setLoading } = useContext<any>(MainLayoutContext);
 
   const [paginationPage, setPaginationPage] = useState<number>(1);
 
@@ -85,9 +83,6 @@ const CategoriesDetail = ({ categoryData, categories }: Props) => {
     </Typography>,
   ];
 
-  useEffect(() => {
-    setLoading(isFallback);
-  }, [isFallback]);
   return (
     <>
       <Seo

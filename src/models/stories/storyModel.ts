@@ -15,7 +15,7 @@ export interface StoryInterface {
   story_view: number;
   story_label: string;
   created_at: Date;
-  updated_at: Date;
+  updated_at: Date | string;
 }
 
 export interface UpdateStoryInterface {
