@@ -185,7 +185,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
                     xs: "none",
                   },
                   width: {
-                    md: "90px",
+                    md: "100px",
                     xs: "75px",
                   },
                   p: "6px",
