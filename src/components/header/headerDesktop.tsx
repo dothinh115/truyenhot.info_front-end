@@ -65,7 +65,7 @@ export function HeaderDesktop() {
               >
                 TRUYENHOT.INFO
               </Typography>
-
+              <SearchBar position="header" />
               <IconButton
                 size="large"
                 edge="end"
@@ -80,7 +80,6 @@ export function HeaderDesktop() {
               >
                 <MenuIcon />
               </IconButton>
-              <SearchBar position="header" />
             </Stack>
           </Container>
         </Stack>
