@@ -58,7 +58,7 @@ export const BaseStats = ({ stats }: Props) => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell scope="row">Tổng số chương truyện:</TableCell>
+              <TableCell scope="row">Số chương truyện:</TableCell>
               <TableCell align="right">
                 {stats ? (
                   stats?.totalChapters
@@ -71,7 +71,7 @@ export const BaseStats = ({ stats }: Props) => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell scope="row">Tổng số lượt xem:</TableCell>
+              <TableCell scope="row">Số lượt xem:</TableCell>
               <TableCell align="right">
                 {stats ? (
                   stats?.totalViews
