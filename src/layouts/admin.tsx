@@ -37,21 +37,37 @@ export const AdminLayout = ({ children }: AdminLayoutInterface) => {
       <Container maxWidth={false} sx={{ p: "0!important" }}>
         <Stack direction={"row"} bgcolor={"#fff"}>
           <Box
+            onClick={() => setOpen(false)}
+            bgcolor={{
+              xs: "rgba(0, 0, 0, .85)",
+              md: "transparent",
+            }}
+            position={"fixed"}
+            width={"100%"}
+            height={"100%"}
+            zIndex={50}
+            visibility={open ? "visible" : "hidden"}
+          ></Box>
+          <Box
             minHeight={"100vh"}
             flexGrow={1}
             sx={{
               backgroundColor: "#1a237e",
+              transition: ".5s ease 0s",
             }}
             width={{
-              md: "230px",
-              xs: open ? "100%" : 0,
+              md: "280px",
+              xs: open ? "85%" : 0,
             }}
             zIndex={100}
-            display={{
-              md: "block",
-              xs: open ? "block" : "none",
+            display={"block"}
+            position={{
+              xs: "fixed",
+              md: "static",
             }}
-            position={open ? "fixed" : "static"}
+            left={{
+              xs: open ? 0 : "-100%",
+            }}
           >
             <AdminSidebar />
           </Box>

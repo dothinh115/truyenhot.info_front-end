@@ -27,7 +27,11 @@ export const AdminSidebar = (props: Props) => {
         }
       >
         <ListItem disablePadding>
-          <ListItemButton component={Link} href="/admin">
+          <ListItemButton
+            component={Link}
+            href="/admin"
+            onClick={() => setOpen(false)}
+          >
             <ListItemIcon>
               <HomeIcon />
             </ListItemIcon>

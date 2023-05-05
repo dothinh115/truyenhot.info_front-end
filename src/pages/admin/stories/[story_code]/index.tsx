@@ -252,7 +252,6 @@ const EditStory = (props: Props) => {
           <Box className={"hr"} my={2} />
           <Stack
             direction={"row"}
-            spacing={2}
             flexWrap={"wrap"}
             justifyContent={{
               md: "flex-start",
@@ -267,12 +266,6 @@ const EditStory = (props: Props) => {
               width={{
                 md: "30%",
                 xs: "100%",
-              }}
-              sx={{
-                borderRight: {
-                  md: "3px dashed #9e9e9e",
-                  xs: "none",
-                },
               }}
               textAlign={{
                 md: "left",
@@ -303,7 +296,6 @@ const EditStory = (props: Props) => {
                 md: "70%",
                 xs: "100%",
               }}
-              ml={"0!important"}
             >
               <Box
                 component={"form"}
