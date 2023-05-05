@@ -72,6 +72,7 @@ export const StoryMain = ({ story }: Props) => {
         Math.abs(new Date().valueOf() - new Date(story?.updated_at).valueOf())
       );
     }
+    console.log(story?.story_cover);
   }, [story]);
   return (
     <>

@@ -159,6 +159,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
                 xs: "0.775rem",
               },
             },
+            overflow: "hidden",
           }}
         >
           <TableHead>
