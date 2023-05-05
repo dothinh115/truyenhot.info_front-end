@@ -11,6 +11,7 @@ export const AdminLayoutContext = createContext({});
 
 export const AdminLayout = ({ children }: AdminLayoutInterface) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
   const { profile, isLoading, firstLoading } = useAuth();
   const router = useRouter();
   useEffect(() => {
@@ -31,9 +32,9 @@ export const AdminLayout = ({ children }: AdminLayoutInterface) => {
     return <AdminLoading open={isLoading} />;
 
   return (
-    <AdminLayoutContext.Provider value={{ loading, setLoading }}>
+    <AdminLayoutContext.Provider value={{ loading, setLoading, setOpen }}>
       <AdminLoading open={loading} />
-      <Container maxWidth={false}>
+      <Container maxWidth={false} sx={{ p: "0!important" }}>
         <Stack direction={"row"} bgcolor={"#fff"}>
           <Box
             minHeight={"100vh"}
@@ -41,11 +42,20 @@ export const AdminLayout = ({ children }: AdminLayoutInterface) => {
             sx={{
               backgroundColor: "#1a237e",
             }}
-            minWidth={"230px"}
+            width={{
+              md: "230px",
+              xs: open ? "100%" : 0,
+            }}
+            zIndex={100}
+            display={{
+              md: "block",
+              xs: open ? "block" : "none",
+            }}
+            position={open ? "fixed" : "static"}
           >
             <AdminSidebar />
           </Box>
-          <Container maxWidth={false}>
+          <Container maxWidth={false} sx={{ p: "0!important" }}>
             <AdminMain>{children}</AdminMain>
           </Container>
         </Stack>

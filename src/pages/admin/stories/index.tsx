@@ -1,7 +1,9 @@
+import { SearchBar } from "@/components/header";
 import { useSnackbar } from "@/hooks/snackbar";
 import { AdminLayout } from "@/layouts";
 import { StoryInterface } from "@/models/stories";
 import { API } from "@/utils/config";
+import { timeSince } from "@/utils/function";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
@@ -11,6 +13,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import {
   Box,
   Button,
+  CircularProgress,
   Container,
   Stack,
   Table,
@@ -19,80 +22,17 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  CircularProgress,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 import { useTheme } from "@mui/material/styles";
 import Link from "next/link";
-import React, { useState, useRef, useEffect } from "react";
-import useSWR from "swr";
-import { styled, alpha } from "@mui/material/styles";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import InputBase from "@mui/material/InputBase";
-import SearchIcon from "@mui/icons-material/Search";
-import { StoriesSearchResultInterface } from "@/models/search";
-import { timeSince } from "@/utils/function";
 import { useRouter } from "next/router";
+import React, { useState } from "react";
+import useSWR from "swr";
 
 type Props = {};
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(1),
-    width: "auto",
-  },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
-    },
-  },
-}));
-
-const StyledResultList = styled(List)(() => ({
-  position: "absolute",
-  top: "calc(100% + 7px)",
-  backgroundColor: "#fff",
-  width: "100%",
-  maxHeight: "200px",
-  overflow: "auto",
-  display: "none",
-  zIndex: 100,
-  border: "1px solid #ccc",
-  p: 0,
-}));
 
 interface TablePaginationActionsProps {
   count: number;
@@ -179,18 +119,12 @@ const AdminStoryIndex = (props: Props) => {
     data: storiesList,
     mutate: storiesListMutate,
     isValidating: storiesValidating,
-  } = useSWR("/stories/getRecentUpdate?limit=20");
+  } = useSWR("/stories/getRecentUpdate?limit=50");
   const { snackbar, setSnackbar } = useSnackbar();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [searchData, setSearchData] = useState<StoriesSearchResultInterface[]>(
-    []
-  );
-  const router = useRouter();
-  const resultList = useRef<HTMLUListElement>(null);
-  const timeout = useRef<any>(null);
-  const inputElement = useRef(null);
 
+  const router = useRouter();
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
@@ -222,54 +156,26 @@ const AdminStoryIndex = (props: Props) => {
     }
   };
 
-  const onChangeHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.currentTarget as HTMLInputElement;
-    if (value === "") {
-      setSearchData([]);
-      if (resultList.current) resultList.current.style.display = "none";
-    }
-    clearTimeout(timeout.current);
-
-    timeout.current = setTimeout(async () => {
-      if (value) {
-        const result: any = await API.get(
-          `/search/storyTitle?keywords=${value}`
-        );
-        setSearchData(result.result);
-      }
-      if (searchData && resultList.current)
-        resultList.current.style.display = "block";
-    }, 500);
-  };
-
   const reloadHandle = () => storiesListMutate();
-
-  const dropDownList = (event: any) => {
-    if (event.target.parentNode.parentNode.parentNode === resultList.current) {
-      if (resultList.current) resultList.current.style.display = "none";
-    } else if (event.target.parentNode.parentNode === inputElement.current) {
-      if (searchData && resultList.current)
-        resultList.current.style.display = "block";
-    } else {
-      if (resultList.current) resultList.current.style.display = "none";
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("click", dropDownList);
-    return () => {
-      document.removeEventListener("click", dropDownList);
-    };
-  }, []);
 
   return (
     <>
       {snackbar}
-      <Stack flexDirection={"row"} justifyContent={"center"} p={2}>
+      <Stack
+        flexDirection={"row"}
+        justifyContent={"center"}
+        p={{ md: 2, xs: 0 }}
+      >
         <Container maxWidth={"md"}>
-          <Stack direction={"row"} justifyContent={"space-between"} m={1}>
+          <Stack
+            direction={"row"}
+            justifyContent={"space-between"}
+            m={{ md: 1, xs: 0 }}
+          >
             <Box component={"h2"} my={1}>
-              Truyện đăng gần đây
+              <Box component={"span"} display={{ md: "inline", xs: "none" }}>
+                Truyện đăng gần đây
+              </Box>
               <Box
                 component={Button}
                 type="button"
@@ -287,92 +193,38 @@ const AdminStoryIndex = (props: Props) => {
                 Reload
               </Box>
             </Box>
-            <Button
-              component={Link}
-              href={"/admin/stories/new"}
-              variant="contained"
-              size="small"
-            >
-              Thêm truyện mới
-            </Button>
+            <Stack direction={"row"} alignItems={"center"}>
+              <Box
+                component={Button}
+                variant="contained"
+                size="small"
+                onClick={() => router.push("/admin/stories/new")}
+              >
+                Thêm truyện mới
+              </Box>
+            </Stack>
           </Stack>
           <Box className={"hr"} my={3} />
           <TableContainer>
             <Table size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell width={"50px"} align="center">
+                  <TableCell
+                    width={"50px"}
+                    align="center"
+                    sx={{
+                      display: {
+                        md: "table-cell",
+                        xs: "none",
+                      },
+                    }}
+                  >
                     Cover
                   </TableCell>
                   <TableCell>
-                    <Search>
-                      <SearchIconWrapper>
-                        <SearchIcon />
-                      </SearchIconWrapper>
-
-                      <StyledInputBase
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                          onChangeHandle(e);
-                        }}
-                        placeholder="Tìm kiếm"
-                        size="small"
-                        ref={inputElement}
-                        autoComplete={"off"}
-                      />
-                      <StyledResultList ref={resultList}>
-                        {searchData?.length === 0 && (
-                          <ListItem
-                            sx={{
-                              borderBottom: "1px dashed #ccc",
-                              p: 1,
-                              m: 0,
-                              color: "#000",
-                            }}
-                            dense={true}
-                          >
-                            <ListItemText
-                              primary={
-                                timeout.current
-                                  ? "Loading..."
-                                  : "Không có kết quả nào!"
-                              }
-                            />
-                          </ListItem>
-                        )}
-                        {searchData?.map(
-                          (story: StoriesSearchResultInterface) => {
-                            return (
-                              <ListItem
-                                sx={{
-                                  borderBottom: "1px dashed #ccc",
-                                  p: 0,
-                                  m: 0,
-                                  color: "#000",
-                                }}
-                                dense={true}
-                                key={story.story_code}
-                              >
-                                <ListItemButton
-                                  onClick={() =>
-                                    router.push({
-                                      pathname: "/admin/stories/[story_code]",
-                                      query: {
-                                        story_code: story.story_code,
-                                        goAround: true,
-                                      },
-                                    })
-                                  }
-                                >
-                                  <ListItemText primary={story.story_title} />
-                                </ListItemButton>
-                              </ListItem>
-                            );
-                          }
-                        )}
-                      </StyledResultList>
-                    </Search>
+                    <SearchBar position="adminPage" />
                   </TableCell>
-                  <TableCell width={"20%"}>Update lần cuối</TableCell>
+                  <TableCell width={"20%"}>Update</TableCell>
 
                   <TableCell width={"20%"} align="right">
                     Thao tác
@@ -389,7 +241,14 @@ const AdminStoryIndex = (props: Props) => {
                 )?.map((story: StoryInterface) => {
                   return (
                     <TableRow key={story.story_id}>
-                      <TableCell>
+                      <TableCell
+                        sx={{
+                          display: {
+                            md: "table-cell",
+                            xs: "none",
+                          },
+                        }}
+                      >
                         <Box
                           component={"img"}
                           src={story.story_cover}
@@ -398,6 +257,7 @@ const AdminStoryIndex = (props: Props) => {
                             height: "50px",
                             objectFit: "cover",
                           }}
+                          alt={story.story_code}
                         />
                       </TableCell>
                       <TableCell>
@@ -419,8 +279,7 @@ const AdminStoryIndex = (props: Props) => {
                               new Date().valueOf() -
                                 new Date(story?.updated_at).valueOf()
                             )
-                          )}{" "}
-                        trước
+                          )}
                       </TableCell>
                       <TableCell align="right">
                         <Button
@@ -436,18 +295,6 @@ const AdminStoryIndex = (props: Props) => {
                           }}
                         >
                           <SettingsIcon />
-                        </Button>
-                        <Button
-                          color="error"
-                          variant="contained"
-                          type="button"
-                          fullWidth={false}
-                          sx={{
-                            minWidth: "unset",
-                          }}
-                          onClick={() => deleteHandle(story.story_code)}
-                        >
-                          <DeleteForeverIcon />
                         </Button>
                       </TableCell>
                     </TableRow>

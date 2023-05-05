@@ -1,17 +1,22 @@
+import { AdminLayoutContext } from "@/layouts";
+import CloseIcon from "@mui/icons-material/Close";
 import HomeIcon from "@mui/icons-material/Home";
-import { Box, ListItemIcon } from "@mui/material";
+import { ListItemIcon } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton/";
 import ListItemText from "@mui/material/ListItemText/";
 import ListSubheader from "@mui/material/ListSubheader";
 import Link from "next/link";
+import { useContext } from "react";
 import { StoriesManage } from "./storiesManage";
 import { UsersManage } from "./usersManage";
 
 type Props = {};
 
 export const AdminSidebar = (props: Props) => {
+  const { setOpen } = useContext<any>(AdminLayoutContext);
+
   return (
     <>
       <List
@@ -47,6 +52,26 @@ export const AdminSidebar = (props: Props) => {
         }
       >
         <UsersManage />
+      </List>
+      <List
+        sx={{
+          display: {
+            md: "none",
+            xs: "block",
+          },
+        }}
+      >
+        <ListItem>
+          <ListItemButton
+            onClick={() => setOpen(false)}
+            sx={{
+              justifyContent: "center",
+              color: "#fff",
+            }}
+          >
+            <CloseIcon />
+          </ListItemButton>
+        </ListItem>
       </List>
     </>
   );

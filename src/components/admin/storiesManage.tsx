@@ -8,19 +8,25 @@ import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton/";
 import ListItemText from "@mui/material/ListItemText/";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import FolderIcon from "@mui/icons-material/Folder";
+import { AdminLayoutContext } from "@/layouts";
 
 type Props = {};
 
 export const StoriesManage = (props: Props) => {
+  const { setOpen } = useContext<any>(AdminLayoutContext);
   const [storiesMenuOpen, setStoriesMenuOpen] = useState(false);
   const handleClick = () => {
     setStoriesMenuOpen(!storiesMenuOpen);
   };
   return (
     <>
-      <ListItemButton component={Link} href="/admin/stories">
+      <ListItemButton
+        component={Link}
+        href="/admin/stories"
+        onClick={() => setOpen(false)}
+      >
         <ListItemIcon>
           <FolderIcon />
         </ListItemIcon>
@@ -42,6 +48,7 @@ export const StoriesManage = (props: Props) => {
             sx={{
               pl: 4,
             }}
+            onClick={() => setOpen(false)}
           >
             <ListItemIcon>
               <AddIcon />
@@ -57,6 +64,7 @@ export const StoriesManage = (props: Props) => {
             sx={{
               pl: 4,
             }}
+            onClick={() => setOpen(false)}
           >
             <ListItemIcon>
               <AddIcon />

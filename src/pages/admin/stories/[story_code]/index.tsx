@@ -247,26 +247,64 @@ const EditStory = (props: Props) => {
               onClick={deleteHandle}
             >
               <DeleteForeverIcon />
-              Xóa truyện
             </Button>
           </Stack>
           <Box className={"hr"} my={2} />
-          <Stack direction={"row"} spacing={2}>
+          <Stack
+            direction={"row"}
+            spacing={2}
+            flexWrap={"wrap"}
+            justifyContent={{
+              md: "flex-start",
+              xs: "center",
+            }}
+            gap={{
+              md: 0,
+              xs: "15px",
+            }}
+          >
             <Box
-              width={"30%"}
+              width={{
+                md: "30%",
+                xs: "100%",
+              }}
               sx={{
-                borderRight: "3px dashed #9e9e9e",
+                borderRight: {
+                  md: "3px dashed #9e9e9e",
+                  xs: "none",
+                },
+              }}
+              textAlign={{
+                md: "left",
+                xs: "center",
               }}
             >
-              <Box component={"h1"}>Ảnh bìa</Box>
+              <Box
+                component={"h1"}
+                display={{
+                  md: "block",
+                  xs: "none",
+                }}
+              >
+                Ảnh bìa
+              </Box>
               <Box
                 component={"img"}
                 src={storyData?.result.story_cover}
-                width={"95%"}
-                mr={2}
+                width={{
+                  md: "95%",
+                  xs: "50%",
+                }}
+                mr={{ md: 2, xs: 0 }}
               />
             </Box>
-            <Box width={"70%"}>
+            <Box
+              width={{
+                md: "70%",
+                xs: "100%",
+              }}
+              ml={"0!important"}
+            >
               <Box
                 component={"form"}
                 onSubmit={handleSubmit(updateStorySubmitHandle)}
@@ -453,9 +491,9 @@ const EditStory = (props: Props) => {
                         const file = (currentTarget as HTMLInputElement)
                           .files![0];
                         onChange(file);
-                        if (file && file.size > 2000000) {
+                        if (file && file.size > 1000000) {
                           setError("cover_img", {
-                            message: "Dung lượng vượt quá 2Mb",
+                            message: "Dung lượng vượt quá 1Mb",
                           });
                         } else {
                           clearErrors("cover_img");
@@ -476,7 +514,7 @@ const EditStory = (props: Props) => {
                   <Button
                     type="submit"
                     variant="contained"
-                    size="large"
+                    size="small"
                     disabled={isSubmitting ? true : false}
                     startIcon={
                       isSubmitting ? (

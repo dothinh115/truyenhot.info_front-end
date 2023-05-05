@@ -65,15 +65,6 @@ export const StoryMain = ({ story }: Props) => {
         .replaceAll("<div text-align: justify; >", "")
         .replaceAll("</div>", "");
   }, [story?.story_description]);
-
-  useEffect(() => {
-    if (story?.updated_at) {
-      story.updated_at = timeSince(
-        Math.abs(new Date().valueOf() - new Date(story?.updated_at).valueOf())
-      );
-    }
-    console.log(story?.story_cover);
-  }, [story]);
   return (
     <>
       <Box>
@@ -187,7 +178,13 @@ export const StoryMain = ({ story }: Props) => {
             </Box>
             <Box component={"li"}>
               <Box component={"h4"}>Update lần cuối:</Box>
-              {story?.updated_at && <>{`${story?.updated_at} trước`}</>}
+              {story?.updated_at && (
+                <>{`${timeSince(
+                  Math.abs(
+                    new Date().valueOf() - new Date(story?.updated_at).valueOf()
+                  )
+                )} trước`}</>
+              )}
             </Box>
             <Box component={"li"}>
               <Box component={"h4"}>Lượt xem:</Box>
