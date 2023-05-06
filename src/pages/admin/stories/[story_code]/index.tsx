@@ -31,6 +31,9 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
+import { FileUploader } from "react-drag-drop-files";
+
+const fileTypes = ["JPG", "PNG", "GIF", "JEPG"];
 
 type Props = {};
 
@@ -44,6 +47,8 @@ interface CreateByUrlInterface {
 }
 
 const EditStory = (props: Props) => {
+  const [file, setFile] = useState(null);
+
   const router = useRouter();
   const { page, story_code } = router.query;
   const [paginationPage, setPaginationPage] = useState<number>(1);
@@ -102,6 +107,10 @@ const EditStory = (props: Props) => {
     },
   });
 
+  const handleChange = (file: any) => {
+    setFile(file);
+  };
+
   const updateStorySubmitHandle = async (data: any) => {
     try {
       let cateList: CategoryInterface[] = [];
@@ -112,6 +121,12 @@ const EditStory = (props: Props) => {
         ...data,
         story_category: cateList.join(","),
       };
+      if (file) {
+        data = {
+          ...data,
+          cover_img: file,
+        };
+      }
       const formData = new FormData();
       for (let key in data) {
         formData.append(key, data[key]);
@@ -271,6 +286,7 @@ const EditStory = (props: Props) => {
                 md: "left",
                 xs: "center",
               }}
+              pr={1}
             >
               <Box
                 component={"h1"}
@@ -285,12 +301,17 @@ const EditStory = (props: Props) => {
                 component={"img"}
                 src={storyData?.result.story_cover}
                 width={{
-                  md: "95%",
+                  md: "100%",
                   xs: "50%",
                 }}
-                mr={{ md: 2, xs: 0 }}
+              />
+              <FileUploader
+                handleChange={handleChange}
+                name="file"
+                types={fileTypes}
               />
             </Box>
+
             <Box
               width={{
                 md: "70%",
@@ -382,6 +403,10 @@ const EditStory = (props: Props) => {
                         },
                         "& > div:last-of-type": {
                           borderRadius: "0 0 4px 4px",
+                        },
+                        "& > div ": {
+                          maxHeight: "250px",
+                          overflow: "auto",
                         },
                       }}
                     />
