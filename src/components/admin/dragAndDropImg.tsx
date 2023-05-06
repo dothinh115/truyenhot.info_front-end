@@ -59,7 +59,13 @@ export const DragAndDropImg = ({ onChange }: Props) => {
       >
         {image ? (
           <>
-            <Box component={"img"} maxHeight={"100px"} src={image} />
+            <Box
+              component={"img"}
+              height={"80px"}
+              width={"80px"}
+              sx={{ objectFit: "cover" }}
+              src={image}
+            />
             <Button
               type="button"
               color="error"
