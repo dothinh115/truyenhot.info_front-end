@@ -1,3 +1,4 @@
+import { DragAndDropImg } from "@/components/admin";
 import { useSnackbar } from "@/hooks/snackbar";
 import { AdminLayout } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
@@ -31,9 +32,6 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
-import { FileUploader } from "react-drag-drop-files";
-
-const fileTypes = ["JPG", "PNG", "GIF", "JEPG"];
 
 type Props = {};
 
@@ -47,8 +45,6 @@ interface CreateByUrlInterface {
 }
 
 const EditStory = (props: Props) => {
-  const [file, setFile] = useState(null);
-
   const router = useRouter();
   const { page, story_code } = router.query;
   const [paginationPage, setPaginationPage] = useState<number>(1);
@@ -80,6 +76,7 @@ const EditStory = (props: Props) => {
     formState: { errors, isSubmitting },
     clearErrors,
     setError,
+    getValues,
   } = useForm<UpdateStoryInterface>({
     mode: "onChange",
     defaultValues: {
@@ -107,8 +104,11 @@ const EditStory = (props: Props) => {
     },
   });
 
-  const handleChange = (file: any) => {
-    setFile(file);
+  const handleChange = (file: File | null) => {
+    reset({
+      ...getValues(),
+      cover_img: file,
+    });
   };
 
   const updateStorySubmitHandle = async (data: any) => {
@@ -121,12 +121,7 @@ const EditStory = (props: Props) => {
         ...data,
         story_category: cateList.join(","),
       };
-      if (file) {
-        data = {
-          ...data,
-          cover_img: file,
-        };
-      }
+
       const formData = new FormData();
       for (let key in data) {
         formData.append(key, data[key]);
@@ -297,6 +292,7 @@ const EditStory = (props: Props) => {
               >
                 Ảnh bìa
               </Box>
+              <DragAndDropImg onChange={handleChange} />
               <Box
                 component={"img"}
                 src={storyData?.result.story_cover}
@@ -304,11 +300,6 @@ const EditStory = (props: Props) => {
                   md: "100%",
                   xs: "50%",
                 }}
-              />
-              <FileUploader
-                handleChange={handleChange}
-                name="file"
-                types={fileTypes}
               />
             </Box>
 

@@ -25,7 +25,7 @@ export interface UpdateStoryInterface {
   story_author?: string;
   story_source?: string;
   story_status?: string;
-  cover_img?: File;
+  cover_img?: File | null;
 }
 
 export interface NewStoryInterface {
