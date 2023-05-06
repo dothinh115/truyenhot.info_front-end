@@ -12,24 +12,24 @@ export const AdminLayoutContext = createContext({});
 export const AdminLayout = ({ children }: AdminLayoutInterface) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
-  const { profile, isLoading, firstLoading } = useAuth();
+  const { profile, isValidating, firstLoading } = useAuth();
   const router = useRouter();
   useEffect(() => {
     if (
-      (!isLoading && !profile) ||
-      (!isLoading &&
+      (!isValidating && !profile) ||
+      (!isValidating &&
         profile?.result.permission_rules.permission_id <
           PermissionVariables.Editors)
     )
       router.push("/login");
-    setLoading(isLoading);
-  }, [profile, isLoading]);
+    setLoading(isValidating);
+  }, [profile, isValidating]);
 
   if (
     !firstLoading &&
     profile?.result.permission_rules.permission_id < PermissionVariables.Editors
   )
-    return <AdminLoading open={isLoading} />;
+    return <AdminLoading open={isValidating} />;
 
   return (
     <AdminLayoutContext.Provider value={{ loading, setLoading, setOpen }}>

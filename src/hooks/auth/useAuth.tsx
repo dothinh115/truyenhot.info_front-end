@@ -6,7 +6,7 @@ export const useAuth = (option?: SWRConfiguration) => {
   const {
     data: profile,
     error,
-    isLoading,
+    isValidating,
     mutate,
   } = useSWR("/users/profile", {
     revalidateOnFocus: false,
@@ -29,7 +29,7 @@ export const useAuth = (option?: SWRConfiguration) => {
   return {
     profile,
     error,
-    isLoading,
+    isValidating,
     mutate,
     login,
     logout,

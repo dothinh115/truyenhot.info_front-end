@@ -208,7 +208,9 @@ export const IndexRecentStories = ({ categories }: Props) => {
                         story.lastChapter?.chapter_name
                           .replaceAll("Chương ", "C")
                           .replaceAll("Quyển ", "Q")
-                          .replaceAll(" - ", "-");
+                          .replaceAll(" - ", "-")
+                          .replaceAll("CHƯƠNG ", "C")
+                          .replaceAll("QUYỂN ", "Q");
                     return (
                       <TableRow
                         sx={{

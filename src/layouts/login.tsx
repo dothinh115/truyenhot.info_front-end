@@ -1,22 +1,30 @@
 import { AdminLoading } from "@/components/loading/index";
 import { useAuth } from "@/hooks/auth";
 import { LoginLayoutInterface } from "@/models";
+import { PermissionVariables } from "@/utils/config";
 import { Stack } from "@mui/material";
 import { Container } from "@mui/system";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 export const LoginLayout = ({ children }: LoginLayoutInterface) => {
-  const { profile, isLoading, firstLoading } = useAuth();
+  const { profile, isValidating, firstLoading } = useAuth();
 
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && profile) router.push("/");
-  }, [profile, isLoading]);
+    if (
+      !isValidating &&
+      profile &&
+      profile?.result.permission_rules.permission_id >
+        PermissionVariables.Editors
+    )
+      router.push("/admin");
+    else if (!isValidating && profile) router.push("/");
+  }, [profile, isValidating]);
 
   if (!firstLoading && profile) {
-    return <AdminLoading open={isLoading} />;
+    return <AdminLoading open={isValidating} />;
   } else {
     return (
       <Stack alignItems={"center"}>

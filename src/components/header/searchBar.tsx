@@ -107,12 +107,12 @@ export const SearchBar = ({ position }: Props) => {
     timeout.current = setTimeout(async () => {
       if (value) {
         const result: any = await API.get(
-          `/search/storyTitle?keywords=${value}`
+          `/search/quickSearchByTitle?keywords=${value}`
         );
         setSearchData(result.result);
         if (result.result.length === 0) {
           const result: any = await API.get(
-            `/search/storyAuthor?keywords=${value}`
+            `/search/quickSearchByAuthor?keywords=${value}`
           );
           setSearchData(result.result);
         }
