@@ -84,6 +84,8 @@ export const SearchBar = ({ position }: Props) => {
     reset({
       keywords: "",
     });
+    if (resultList.current) resultList.current.style.display = "none";
+    setSearchData([]);
   };
   const onChangeHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.currentTarget as HTMLInputElement;
