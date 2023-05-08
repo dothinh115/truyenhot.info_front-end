@@ -18,17 +18,13 @@ export const AdminLayout = ({ children }: AdminLayoutInterface) => {
     if (
       (!isValidating && !profile) ||
       (!isValidating &&
-        profile?.result.permission_rules.permission_id <
-          PermissionVariables.Editors)
+        profile?.result.permission < PermissionVariables.Editors)
     )
       router.push("/login");
     setLoading(isValidating);
   }, [profile, isValidating]);
 
-  if (
-    !firstLoading &&
-    profile?.result.permission_rules.permission_id < PermissionVariables.Editors
-  )
+  if (!firstLoading && profile?.result.permission < PermissionVariables.Editors)
     return <AdminLoading open={isValidating} />;
 
   return (

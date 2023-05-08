@@ -6,6 +6,7 @@ type Props = {
   onChange: (file: File | null) => void;
 };
 const filetypes = /jpeg|jpg|png|gif/;
+
 export const DragAndDropImg = ({ onChange }: Props) => {
   const [image, setImage] = useState<string | null>();
   const { setSnackbar, snackbar } = useSnackbar();

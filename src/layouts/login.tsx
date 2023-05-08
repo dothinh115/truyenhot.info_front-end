@@ -16,8 +16,7 @@ export const LoginLayout = ({ children }: LoginLayoutInterface) => {
     if (
       !isValidating &&
       profile &&
-      profile?.result.permission_rules.permission_id >
-        PermissionVariables.Editors
+      profile?.result.permission > PermissionVariables.Editors
     )
       router.push("/admin");
     else if (!isValidating && profile) router.push("/");

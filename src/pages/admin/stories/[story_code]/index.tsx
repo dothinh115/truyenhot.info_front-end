@@ -289,10 +289,14 @@ const EditStory = (props: Props) => {
                   md: "block",
                   xs: "none",
                 }}
+                m={0}
+                p={0}
               >
                 Ảnh bìa
               </Box>
+
               <DragAndDropImg onChange={handleChange} />
+              
               <Box
                 component={"img"}
                 src={storyData?.result.story_cover}

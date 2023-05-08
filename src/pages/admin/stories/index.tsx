@@ -1,10 +1,7 @@
 import { SearchBar } from "@/components/header";
-import { useSnackbar } from "@/hooks/snackbar";
 import { AdminLayout } from "@/layouts";
 import { StoryInterface } from "@/models/stories";
-import { API } from "@/utils/config";
 import { timeSince } from "@/utils/function";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
@@ -120,7 +117,6 @@ const AdminStoryIndex = (props: Props) => {
     mutate: storiesListMutate,
     isValidating: storiesValidating,
   } = useSWR("/stories/getRecentUpdate?limit=50");
-  const { snackbar, setSnackbar } = useSnackbar();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -139,28 +135,10 @@ const AdminStoryIndex = (props: Props) => {
     setPage(0);
   };
 
-  const deleteHandle = async (story_id: string) => {
-    try {
-      await API.delete(`/stories/delete/${story_id}`);
-      await storiesListMutate();
-      setSnackbar({
-        message: "Xóa truyện thành công",
-        open: true,
-      });
-    } catch (error: any) {
-      setSnackbar({
-        message: error.response?.data.message,
-        open: true,
-        type: "error",
-      });
-    }
-  };
-
   const reloadHandle = () => storiesListMutate();
 
   return (
     <>
-      {snackbar}
       <Stack
         flexDirection={"row"}
         justifyContent={"center"}
