@@ -10,6 +10,6 @@ COPY next.config.js ./next.config.js
 
 COPY . .
 
-RUN cd /app &&  npm run build
+RUN cd /app &&  npm run build && npm prune --production
 CMD [ "npm", "start" ]
 EXPOSE 3000
