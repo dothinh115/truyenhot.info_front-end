@@ -143,6 +143,7 @@ export const getStaticProps: GetStaticProps<Props> = async (
     `${apiURL}/api/stories/getDetail/${story_code}`
   );
   const story: { result: StoryInterface } = await storyRespone.json();
+  const story_author = story.result?.story_author;
 
   const categoriesResponse = await fetch(`${apiURL}/api/categories/getAll`);
   const categories = await categoriesResponse.json();
