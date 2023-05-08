@@ -14,11 +14,10 @@ import Link from "next/link";
 import { useEffect } from "react";
 type Props = {
   story: StoryInterface;
-  storiesSameAuthor: StoriesSearchResultInterface[];
   categories: CategoryInterface[];
 };
 
-const StoryDetail = ({ story, storiesSameAuthor, categories }: Props) => {
+const StoryDetail = ({ story, categories }: Props) => {
   useEffect(() => {
     if (story) {
       try {
@@ -100,7 +99,7 @@ const StoryDetail = ({ story, storiesSameAuthor, categories }: Props) => {
               }}
             >
               <Box className={"hr"} width={"100%"} my={3} />
-              <SameAuthorSidebar storiesSameAuthor={storiesSameAuthor} />
+              <SameAuthorSidebar author={story?.story_author} />
             </Box>
             <Box
               width={"30%"}
@@ -110,7 +109,7 @@ const StoryDetail = ({ story, storiesSameAuthor, categories }: Props) => {
               }}
             >
               <StorySidebar>
-                <SameAuthorSidebar storiesSameAuthor={storiesSameAuthor} />
+                <SameAuthorSidebar author={story?.story_author} />
                 <CategoriesSidebar categories={categories} />
               </StorySidebar>
             </Box>
@@ -146,15 +145,6 @@ export const getStaticProps: GetStaticProps<Props> = async (
   const story: { result: StoryInterface } = await storyRespone.json();
   const story_author = story.result?.story_author;
 
-  const respone_2 = await fetch(
-    `${apiURL}/api/search/storyAuthor?keywords=${story_author}&exact=true`
-  );
-  const storiesSameAuthorJson = await respone_2.json();
-  const storiesSameAuthor: StoriesSearchResultInterface[] =
-    storiesSameAuthorJson.result.filter(
-      (item: StoriesSearchResultInterface) =>
-        item.story_code !== story.result.story_code
-    );
   const categoriesResponse = await fetch(`${apiURL}/api/categories/getAll`);
   const categories = await categoriesResponse.json();
 
@@ -169,7 +159,6 @@ export const getStaticProps: GetStaticProps<Props> = async (
   return {
     props: {
       story: story.result,
-      storiesSameAuthor,
       categories: categories.result,
     },
     revalidate: 5,
