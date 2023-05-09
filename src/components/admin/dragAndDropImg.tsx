@@ -40,7 +40,7 @@ export const DragAndDropImg = ({ onChange }: Props) => {
     onChange(null);
   };
 
-  const onClick = async (e: any) => {
+  const onClick = async () => {
     const clipboardContents = await navigator.clipboard.read();
     for (const item of clipboardContents) {
       if (!item.types.includes("image/png")) {
@@ -57,16 +57,6 @@ export const DragAndDropImg = ({ onChange }: Props) => {
       const file = new File([img], "my-image.png", {
         lastModified: Date.now(),
       });
-
-      const fileTypeCheck = filetypes.test(file?.name);
-      if (!fileTypeCheck) {
-        setSnackbar({
-          message: "Chỉ hỗ trợ đuôi jpeg|jpg|png|gif",
-          open: true,
-          type: "error",
-        });
-        return;
-      }
       //hiện hình
       const fileReader: FileReader = new FileReader();
       fileReader.readAsDataURL(file);
