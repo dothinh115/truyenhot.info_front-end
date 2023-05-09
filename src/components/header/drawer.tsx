@@ -39,6 +39,7 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
         left={open ? "15%" : "100%"}
         sx={{
           transition: "left .2s ease",
+          pb: "56px",
         }}
       >
         <Box component={"h2"} m={0} color={"rgba(0, 0, 0, 0.6)"}>

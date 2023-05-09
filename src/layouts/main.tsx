@@ -20,10 +20,10 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
     if (typeof window !== "undefined") {
       if (window.scrollY > lastScollY.current) {
         navigationBar.current!.style.bottom = "-100%";
-        navigationBar.current!.style.transition = "0.5s";
+        navigationBar.current!.style.transition = "0.3s";
       } else {
         navigationBar.current!.style.bottom = "0px";
-        navigationBar.current!.style.transition = "0.5s";
+        navigationBar.current!.style.transition = "0.3s";
       }
       setTimeout(() => {
         lastScollY.current = window.pageYOffset;
