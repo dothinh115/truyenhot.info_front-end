@@ -11,6 +11,7 @@ const filetypes = /jpeg|jpg|png|gif/;
 export const DragAndDropImg = ({ onChange }: Props) => {
   const [image, setImage] = useState<string | null>();
   const { setSnackbar, snackbar } = useSnackbar();
+
   const onDragHandle = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     if (event.dataTransfer.files) {
@@ -32,6 +33,7 @@ export const DragAndDropImg = ({ onChange }: Props) => {
         setImage(img);
       };
       onChange(file);
+      event.currentTarget.blur();
     }
   };
 
@@ -126,7 +128,6 @@ export const DragAndDropImg = ({ onChange }: Props) => {
         size="small"
         placeholder="Dán ảnh vào đây"
         onPaste={onPaste}
-        inputMode="none"
       />
     </>
   );
