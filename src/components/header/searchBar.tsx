@@ -176,7 +176,7 @@ export const SearchBar = ({ position }: Props) => {
                 ref={inputElement}
                 autoComplete={"off"}
                 sx={{
-                  width: "calc(100% - (6 * 8px))",
+                  width: "calc(100% - (5 * 8px))",
                 }}
               />
             )}
