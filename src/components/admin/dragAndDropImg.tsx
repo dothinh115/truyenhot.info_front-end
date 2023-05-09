@@ -1,6 +1,6 @@
 import { useSnackbar } from "@/hooks/snackbar";
 import { Stack, Box, Button, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 type Props = {
   onChange: (file: File | null) => void;
@@ -11,6 +11,7 @@ const filetypes = /jpeg|jpg|png|gif/;
 export const DragAndDropImg = ({ onChange }: Props) => {
   const [image, setImage] = useState<string | null>();
   const { setSnackbar, snackbar } = useSnackbar();
+  const input = useRef<HTMLInputElement | null>(null);
 
   const onDragHandle = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -33,8 +34,6 @@ export const DragAndDropImg = ({ onChange }: Props) => {
         setImage(img);
       };
       onChange(file);
-      const enter = new KeyboardEvent("keydown", { key: "enter", keyCode: 13 });
-      event.currentTarget.dispatchEvent(enter);
     }
   };
 
@@ -65,6 +64,8 @@ export const DragAndDropImg = ({ onChange }: Props) => {
         setImage(img);
       };
       onChange(file);
+      input.current?.blur();
+      e.currentTarget.blur();
     } else {
       e.preventDefault();
       setSnackbar({
@@ -129,6 +130,7 @@ export const DragAndDropImg = ({ onChange }: Props) => {
         size="small"
         placeholder="Dán ảnh vào đây"
         onPaste={onPaste}
+        ref={input}
       />
     </>
   );
