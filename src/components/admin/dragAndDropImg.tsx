@@ -33,7 +33,8 @@ export const DragAndDropImg = ({ onChange }: Props) => {
         setImage(img);
       };
       onChange(file);
-      event.currentTarget.blur();
+      const enter = new KeyboardEvent("keydown", { key: "enter", keyCode: 13 });
+      event.currentTarget.dispatchEvent(enter);
     }
   };
 
