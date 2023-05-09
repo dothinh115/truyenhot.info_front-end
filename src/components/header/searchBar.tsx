@@ -176,22 +176,13 @@ export const SearchBar = ({ position }: Props) => {
                 ref={inputElement}
                 autoComplete={"off"}
                 sx={{
-                  width: "calc(100% - (5 * 8px))",
+                  width: "calc(100% - (6 * 8px))",
+                  maxHeight: "40px",
                 }}
               />
             )}
           />
-          <IconButton
-            sx={{
-              "& svg": {
-                color: "white",
-              },
-              visibility: getValues("keywords") ? "visible" : "hidden",
-            }}
-            onClick={() => reset({ keywords: "" })}
-          >
-            <ClearIcon />
-          </IconButton>
+
           <StyledResultList ref={resultList}>
             {searchData?.length === 0 && (
               <ListItem
@@ -237,6 +228,17 @@ export const SearchBar = ({ position }: Props) => {
               );
             })}
           </StyledResultList>
+          <IconButton
+            sx={{
+              "& svg": {
+                color: "white",
+              },
+              visibility: getValues("keywords") ? "visible" : "hidden",
+            }}
+            onClick={() => reset({ keywords: "" })}
+          >
+            <ClearIcon />
+          </IconButton>
         </Box>
       </Search>
     </>

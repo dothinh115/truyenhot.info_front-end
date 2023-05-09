@@ -40,13 +40,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
         <BottomNavigationAction
           label="Tìm kiếm"
           onClick={() => {
-            scroll({
-              top: 0,
-              behavior: "smooth",
-            });
-            setTimeout(() => {
-              if (searchBarFocus) searchBarFocus.click();
-            }, 500);
+            if (searchBarFocus) searchBarFocus.click();
           }}
           icon={<SearchSharpIcon />}
         />
