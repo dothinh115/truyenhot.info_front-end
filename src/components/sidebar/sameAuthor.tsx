@@ -15,7 +15,7 @@ export const SameAuthorSidebar = ({ sameAuthor }: Props) => {
   if (sameAuthor?.length !== 0)
     return (
       <>
-        <Box mb={1}>
+        <Box>
           <Box component={"h3"} p={1} my={0} borderBottom={"1px dashed #ccc"}>
             Truyện cùng tác giả
           </Box>
@@ -77,6 +77,7 @@ export const SameAuthorSidebar = ({ sameAuthor }: Props) => {
             </Box>
           </Box>
         </Box>
+        <Box className={"hr"} my={2} />
       </>
     );
   else return null;

@@ -111,7 +111,7 @@ const StoryDetail = ({ story, categories, sameAuthor }: Props) => {
             >
               <StorySidebar>
                 <SameAuthorSidebar sameAuthor={sameAuthor} />
-                <Box className={"hr"} mb={2} />
+
                 <CategoriesSidebar categories={categories} />
               </StorySidebar>
             </Box>
