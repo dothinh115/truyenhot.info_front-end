@@ -32,9 +32,12 @@ export const SameAuthorSidebar = ({ author }: Props) => {
           </Box>
           <Box>
             <Box component={List} py={0} dense={true}>
-              {storiesSameAuthor?.result.map(
-                (story: StoriesSearchResultInterface) => {
-                  if (story.story_author === author) return null;
+              {storiesSameAuthor?.result
+                .filter(
+                  (story: StoriesSearchResultInterface) =>
+                    story.story_author !== author
+                )
+                .map((story: StoriesSearchResultInterface) => {
                   return (
                     <Box
                       component={ListItem}
@@ -72,8 +75,7 @@ export const SameAuthorSidebar = ({ author }: Props) => {
                       </ListItemButton>
                     </Box>
                   );
-                }
-              )}
+                })}
             </Box>
           </Box>
         </Box>
