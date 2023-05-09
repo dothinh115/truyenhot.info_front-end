@@ -46,6 +46,8 @@ interface CreateByUrlInterface {
 
 const EditStory = (props: Props) => {
   const router = useRouter();
+  const [updateButtonDisplay, setUpdateButtonDisplay] =
+    useState<boolean>(false);
   const { page, story_code } = router.query;
   const [paginationPage, setPaginationPage] = useState<number>(1);
   const {
@@ -109,6 +111,7 @@ const EditStory = (props: Props) => {
       ...getValues(),
       cover_img: file,
     });
+    setUpdateButtonDisplay(true);
   };
 
   const updateStorySubmitHandle = async (data: any) => {
@@ -203,6 +206,7 @@ const EditStory = (props: Props) => {
   return (
     <>
       {snackbar}
+
       <Stack
         component={"div"}
         flexDirection={"row"}
@@ -296,7 +300,7 @@ const EditStory = (props: Props) => {
               </Box>
 
               <DragAndDropImg onChange={handleChange} />
-              
+
               <Box
                 component={"img"}
                 src={storyData?.result.story_cover}
@@ -537,6 +541,29 @@ const EditStory = (props: Props) => {
                     Update
                   </Button>
                 </Stack>
+                <Box
+                  component={Button}
+                  type="submit"
+                  variant="contained"
+                  disabled={isSubmitting ? true : false}
+                  startIcon={
+                    isSubmitting ? (
+                      <CircularProgress size={"1em"} color="inherit" />
+                    ) : null
+                  }
+                  display={{
+                    sx: "block",
+                    md: "none",
+                  }}
+                  position={"fixed"}
+                  bottom={updateButtonDisplay ? "2%" : "100%"}
+                  width={"96%"}
+                  left={"2%"}
+                  right={"2%"}
+                  zIndex={100}
+                >
+                  Update
+                </Box>
               </Box>
             </Box>
           </Stack>
