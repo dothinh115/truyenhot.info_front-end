@@ -116,7 +116,7 @@ const AdminStoryIndex = (props: Props) => {
     data: storiesList,
     mutate: storiesListMutate,
     isValidating: storiesValidating,
-  } = useSWR("/stories/getRecentUpdate?limit=50");
+  } = useSWR("/admin/getNoCoverStories");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
