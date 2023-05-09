@@ -15,9 +15,10 @@ import { useEffect } from "react";
 type Props = {
   story: StoryInterface;
   categories: CategoryInterface[];
+  sameAuthor: StoriesSearchResultInterface[];
 };
 
-const StoryDetail = ({ story, categories }: Props) => {
+const StoryDetail = ({ story, categories, sameAuthor }: Props) => {
   useEffect(() => {
     if (story) {
       try {
@@ -99,7 +100,7 @@ const StoryDetail = ({ story, categories }: Props) => {
               }}
             >
               <Box className={"hr"} width={"100%"} my={3} />
-              <SameAuthorSidebar story={story} />
+              <SameAuthorSidebar sameAuthor={sameAuthor} />
             </Box>
             <Box
               width={"30%"}
@@ -109,7 +110,8 @@ const StoryDetail = ({ story, categories }: Props) => {
               }}
             >
               <StorySidebar>
-                <SameAuthorSidebar story={story} />
+                <SameAuthorSidebar sameAuthor={sameAuthor} />
+                <Box className={"hr"} mb={2} />
                 <CategoriesSidebar categories={categories} />
               </StorySidebar>
             </Box>
@@ -144,6 +146,13 @@ export const getStaticProps: GetStaticProps<Props> = async (
   );
   const story: { result: StoryInterface } = await storyRespone.json();
 
+  const sameAuthorStoriesResponse = await fetch(
+    `${apiURL}/api/search/storyAuthor?keywords=${story?.result.story_author}&exact=true`
+  );
+  let sameAuthorStories = await sameAuthorStoriesResponse.json();
+  sameAuthorStories = sameAuthorStories.result.filter(
+    (item: StoriesSearchResultInterface) => item.story_code !== story_code
+  );
   const categoriesResponse = await fetch(`${apiURL}/api/categories/getAll`);
   const categories = await categoriesResponse.json();
 
@@ -159,8 +168,9 @@ export const getStaticProps: GetStaticProps<Props> = async (
     props: {
       story: story.result,
       categories: categories.result,
+      sameAuthor: sameAuthorStories,
     },
-    revalidate: 5,
+    revalidate: 60,
   };
 };
 

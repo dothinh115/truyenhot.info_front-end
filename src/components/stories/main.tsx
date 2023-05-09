@@ -27,7 +27,12 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { RowLoading } from "../loading";
-
+import PersonIcon from "@mui/icons-material/Person";
+import FolderIcon from "@mui/icons-material/Folder";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import UpdateIcon from "@mui/icons-material/Update";
+import StarIcon from "@mui/icons-material/Star";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 type Props = {
   story: StoryInterface;
 };
@@ -128,6 +133,19 @@ export const StoryMain = ({ story }: Props) => {
                 "&:not(:last-child)": {
                   borderBottom: "1px dashed #ccc",
                 },
+                display: "flex",
+                alignItems: "center",
+                "& h4": {
+                  display: "inline-flex",
+                  alignItems: "center",
+                  color: "rgba(0, 0, 0, .85)",
+                  "& svg": {
+                    color: "rgba(0, 0, 0, .45)",
+                    width: "20px",
+                    height: "20px",
+                    mr: 1,
+                  },
+                },
               },
               "& > li > ul": {
                 display: "inline-block",
@@ -144,7 +162,10 @@ export const StoryMain = ({ story }: Props) => {
             }}
           >
             <Box component={"li"}>
-              <Box component={"h4"}>Tác giả:</Box>
+              <Box component={"h4"}>
+                <PersonIcon />
+                Tác giả:
+              </Box>
               <Box
                 component={Link}
                 href={`/search/author?keywords=${story?.story_author}`}
@@ -153,7 +174,10 @@ export const StoryMain = ({ story }: Props) => {
               </Box>
             </Box>
             <Box component={"li"}>
-              <Box component={"h4"}>Thể loại:</Box>
+              <Box component={"h4"}>
+                <FolderIcon />
+                Thể loại:
+              </Box>
 
               {story?.story_category.map((cate: CategoryInterface) => {
                 return (
@@ -169,15 +193,24 @@ export const StoryMain = ({ story }: Props) => {
               })}
             </Box>
             <Box component={"li"}>
-              <Box component={"h4"}>Nguồn:</Box>
+              <Box component={"h4"}>
+                <ArrowForwardIosIcon />
+                Nguồn:
+              </Box>
               <Typography>{story?.story_source}</Typography>
             </Box>
             <Box component={"li"}>
-              <Box component={"h4"}>Trạng thái:</Box>
+              <Box component={"h4"}>
+                <StarIcon />
+                Trạng thái:
+              </Box>
               {story?.story_status}
             </Box>
             <Box component={"li"}>
-              <Box component={"h4"}>Update lần cuối:</Box>
+              <Box component={"h4"}>
+                <UpdateIcon />
+                Update lần cuối:
+              </Box>
               {story?.updated_at && (
                 <>{`${timeSince(
                   Math.abs(
@@ -187,7 +220,10 @@ export const StoryMain = ({ story }: Props) => {
               )}
             </Box>
             <Box component={"li"}>
-              <Box component={"h4"}>Lượt xem:</Box>
+              <Box component={"h4"}>
+                <RemoveRedEyeIcon />
+                Lượt xem:
+              </Box>
               {story?.story_view}
             </Box>
           </Box>

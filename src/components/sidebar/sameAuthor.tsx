@@ -1,5 +1,4 @@
 import { StoriesSearchResultInterface } from "@/models/search";
-import { StoryInterface } from "@/models/stories";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import {
   Box,
@@ -10,28 +9,10 @@ import {
   ListItemText,
 } from "@mui/material";
 import Link from "next/link";
-import useSWR from "swr";
-import { useEffect } from "react";
-type Props = { story: StoryInterface };
+type Props = { sameAuthor: StoriesSearchResultInterface[] };
 
-export const SameAuthorSidebar = ({ story }: Props) => {
-  const {
-    data: storiesSameAuthor,
-    isValidating,
-    mutate,
-  } = useSWR(`/search/storyAuthor?keywords=${story?.story_author}&exact=true`, {
-    revalidateOnMount: false,
-  });
-  useEffect(() => {
-    if (story) mutate();
-  }, [story]);
-  if (isValidating || !story) return <></>;
-  if (
-    storiesSameAuthor?.result.filter(
-      (item: StoriesSearchResultInterface) =>
-        story.story_code !== item.story_code
-    ).length !== 0
-  )
+export const SameAuthorSidebar = ({ sameAuthor }: Props) => {
+  if (sameAuthor)
     return (
       <>
         <Box mb={1}>
@@ -40,12 +21,8 @@ export const SameAuthorSidebar = ({ story }: Props) => {
           </Box>
           <Box>
             <Box component={List} py={0} dense={true}>
-              {storiesSameAuthor?.result
-                .filter(
-                  (item: StoriesSearchResultInterface) =>
-                    story.story_code !== item.story_code
-                )
-                .map((story: StoriesSearchResultInterface, index: number) => {
+              {sameAuthor?.map(
+                (story: StoriesSearchResultInterface, index: number) => {
                   return (
                     <Box
                       component={ListItem}
@@ -95,7 +72,8 @@ export const SameAuthorSidebar = ({ story }: Props) => {
                       </ListItemButton>
                     </Box>
                   );
-                })}
+                }
+              )}
             </Box>
           </Box>
         </Box>
