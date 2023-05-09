@@ -125,7 +125,7 @@ export const DragAndDropImg = ({ onChange }: Props) => {
         size="small"
         placeholder="Dán ảnh vào đây"
         onPaste={onPaste}
-        type="text"
+        inputMode="none"
       />
     </>
   );
