@@ -1,6 +1,6 @@
 import { useAuth } from "@/hooks/auth";
 import { LoginLayout } from "@/layouts";
-import { LoginType } from "@/models";
+import { LoginPayloadInterface } from "@/models/auth";
 import { Box, Button, TextField } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 
@@ -15,7 +15,7 @@ const Login = (props: Props) => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<LoginType>({
+  } = useForm<LoginPayloadInterface>({
     mode: "onChange",
     defaultValues: {
       email: "",
