@@ -16,17 +16,9 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { IconButton, Stack, Box } from "@mui/material";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
+
   marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(1),
-    width: "100%",
-  },
+  width: "25%",
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -140,102 +132,109 @@ export const SearchBar = ({ position }: Props) => {
   });
   return (
     <>
-      <Search>
-        <Stack
-          component={"form"}
-          onSubmit={handleSubmit(submitHandle)}
-          position={"relative"}
-          direction={"row"}
+      <Stack
+        component={"form"}
+        onSubmit={handleSubmit(submitHandle)}
+        position={"relative"}
+        direction={"row"}
+        width={{
+          md: "25%",
+          xs: "100%",
+          borderRadius: "5px",
+          backgroundColor: "rgba(255,255,255,.15)",
+        }}
+      >
+        <IconButton
+          sx={{
+            "& svg": {
+              color: "white",
+            },
+          }}
         >
-          <IconButton
-            sx={{
-              "& svg": {
-                color: "white",
-              },
-            }}
-          >
-            <SearchIcon />
-          </IconButton>
-          <Controller
-            name={"keywords"}
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <StyledInputBase
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  onChange(e);
-                  onChangeHandle(e);
-                }}
-                value={value}
-                placeholder="Tìm kiếm"
-                size="small"
-                ref={inputElement}
-                autoComplete={"off"}
-                sx={{
-                  maxHeight: "40px",
-                  flexGrow: 1,
-                }}
-              />
-            )}
-          />
+          <SearchIcon />
+        </IconButton>
+        <Controller
+          name={"keywords"}
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <StyledInputBase
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                onChange(e);
+                onChangeHandle(e);
+              }}
+              value={value}
+              placeholder="Tìm kiếm"
+              size="small"
+              ref={inputElement}
+              autoComplete={"off"}
+              sx={{
+                maxHeight: "40px",
+                flexGrow: {
+                  md: 0,
+                  xs: 1,
+                },
+              }}
+            />
+          )}
+        />
 
-          <StyledResultList ref={resultList}>
-            {searchData?.length === 0 && (
+        <StyledResultList ref={resultList}>
+          {searchData?.length === 0 && (
+            <ListItem
+              sx={{
+                borderBottom: "1px dashed #ccc",
+                p: 1,
+                m: 0,
+                color: "#000",
+              }}
+              dense={true}
+            >
+              <ListItemText primary={resultMess} />
+            </ListItem>
+          )}
+          {searchData?.map((story: StoriesSearchResultInterface) => {
+            return (
               <ListItem
                 sx={{
                   borderBottom: "1px dashed #ccc",
-                  p: 1,
+                  p: 0,
                   m: 0,
                   color: "#000",
                 }}
                 dense={true}
+                key={story.story_code}
               >
-                <ListItemText primary={resultMess} />
-              </ListItem>
-            )}
-            {searchData?.map((story: StoriesSearchResultInterface) => {
-              return (
-                <ListItem
-                  sx={{
-                    borderBottom: "1px dashed #ccc",
-                    p: 0,
-                    m: 0,
-                    color: "#000",
-                  }}
-                  dense={true}
-                  key={story.story_code}
+                <ListItemButton
+                  component={Link}
+                  href={`/${
+                    (position === "header" && "story") ||
+                    (position === "adminPage" && "admin/stories")
+                  }/${story.story_code}`}
+                  scroll={true}
+                  onClick={() =>
+                    reset({
+                      keywords: "",
+                    })
+                  }
                 >
-                  <ListItemButton
-                    component={Link}
-                    href={`/${
-                      (position === "header" && "story") ||
-                      (position === "adminPage" && "admin/stories")
-                    }/${story.story_code}`}
-                    scroll={true}
-                    onClick={() =>
-                      reset({
-                        keywords: "",
-                      })
-                    }
-                  >
-                    <ListItemText primary={story.story_title} />
-                  </ListItemButton>
-                </ListItem>
-              );
-            })}
-          </StyledResultList>
-          <IconButton
-            sx={{
-              "& svg": {
-                color: "white",
-              },
-              visibility: getValues("keywords") ? "visible" : "hidden",
-            }}
-            onClick={() => reset({ keywords: "" })}
-          >
-            <ClearIcon />
-          </IconButton>
-        </Stack>
-      </Search>
+                  <ListItemText primary={story.story_title} />
+                </ListItemButton>
+              </ListItem>
+            );
+          })}
+        </StyledResultList>
+        <IconButton
+          sx={{
+            "& svg": {
+              color: "white",
+            },
+            visibility: getValues("keywords") ? "visible" : "hidden",
+          }}
+          onClick={() => reset({ keywords: "" })}
+        >
+          <ClearIcon />
+        </IconButton>
+      </Stack>
     </>
   );
 };
