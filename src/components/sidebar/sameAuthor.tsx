@@ -12,7 +12,7 @@ import Link from "next/link";
 type Props = { sameAuthor: StoriesSearchResultInterface[] };
 
 export const SameAuthorSidebar = ({ sameAuthor }: Props) => {
-  if (sameAuthor.length !== 0)
+  if (sameAuthor?.length !== 0)
     return (
       <>
         <Box mb={1}>
