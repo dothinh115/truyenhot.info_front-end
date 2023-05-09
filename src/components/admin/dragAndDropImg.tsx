@@ -1,6 +1,6 @@
 import { useSnackbar } from "@/hooks/snackbar";
 import { Stack, Box, Button, TextField } from "@mui/material";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 type Props = {
   onChange: (file: File | null) => void;
@@ -44,7 +44,7 @@ export const DragAndDropImg = ({ onChange }: Props) => {
 
   const onPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     let item = e.clipboardData.files[0];
-
+    e.preventDefault();
     if (item) {
       const file = item;
       const fileTypeCheck = filetypes.test(file?.name);
@@ -64,10 +64,7 @@ export const DragAndDropImg = ({ onChange }: Props) => {
         setImage(img);
       };
       onChange(file);
-      input.current?.blur();
-      e.currentTarget.blur();
     } else {
-      e.preventDefault();
       setSnackbar({
         message: "Chỉ được dán hình!",
         open: true,
@@ -76,6 +73,9 @@ export const DragAndDropImg = ({ onChange }: Props) => {
     }
   };
 
+  useEffect(() => {
+    if (image) input.current?.blur();
+  }, [image]);
   return (
     <>
       {snackbar}
