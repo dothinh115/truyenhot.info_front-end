@@ -34,6 +34,7 @@ export const SameAuthorSidebar = ({ author }: Props) => {
             <Box component={List} py={0} dense={true}>
               {storiesSameAuthor?.result.map(
                 (story: StoriesSearchResultInterface) => {
+                  if (story.story_author === author) return null;
                   return (
                     <Box
                       component={ListItem}

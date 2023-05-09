@@ -15,6 +15,7 @@ import Link from "next/link";
 
 type Props = {
   categories: CategoryInterface[];
+  stats: StatsType;
 };
 
 type StatsType = {
@@ -23,7 +24,7 @@ type StatsType = {
   totalChapters: number;
 };
 
-const Index = ({ categories }: Props) => {
+const Index = ({ categories, stats }: Props) => {
   const breadCrumbs = [
     <Box
       key={1}
@@ -79,7 +80,7 @@ const Index = ({ categories }: Props) => {
               }}
             >
               <CategoriesSidebar categories={categories} />
-              {/* <BaseStats stats={stats} /> */}
+              <BaseStats stats={stats} />
             </Box>
           </Stack>
         </Container>
@@ -90,15 +91,16 @@ const Index = ({ categories }: Props) => {
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const revalidate = 1 * 60 * 60;
-  // const baseStatsResponse = await fetch(`${apiURL}/api/stats/getBaseStats`);
+  const baseStatsResponse = await fetch(`${apiURL}/api/stats/getBaseStats`);
   const categoriesResponse = await fetch(`${apiURL}/api/categories/getAll`);
-  // const baseStats = await baseStatsResponse.json();
+  const baseStats = await baseStatsResponse.json();
 
   const categories = await categoriesResponse.json();
 
   return {
     props: {
       categories: categories.result,
+      stats: baseStats.result,
     },
     revalidate,
   };
