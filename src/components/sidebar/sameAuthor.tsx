@@ -17,7 +17,11 @@ export const SameAuthorSidebar = ({ author }: Props) => {
     `/search/storyAuthor?keywords=${author}`
   );
   if (isValidating) return <></>;
-  if (storiesSameAuthor?.result.length !== 0)
+  if (
+    storiesSameAuthor?.result.filter(
+      (story: StoriesSearchResultInterface) => story.story_author !== author
+    ).length !== 0
+  )
     return (
       <>
         <Box border={"1px solid #ccc"} mb={1}>
@@ -32,12 +36,8 @@ export const SameAuthorSidebar = ({ author }: Props) => {
           </Box>
           <Box>
             <Box component={List} py={0} dense={true}>
-              {storiesSameAuthor?.result
-                .filter(
-                  (story: StoriesSearchResultInterface) =>
-                    story.story_author !== author
-                )
-                .map((story: StoriesSearchResultInterface) => {
+              {storiesSameAuthor?.result.map(
+                (story: StoriesSearchResultInterface) => {
                   return (
                     <Box
                       component={ListItem}
@@ -75,7 +75,8 @@ export const SameAuthorSidebar = ({ author }: Props) => {
                       </ListItemButton>
                     </Box>
                   );
-                })}
+                }
+              )}
             </Box>
           </Box>
         </Box>
