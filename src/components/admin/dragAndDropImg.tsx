@@ -40,11 +40,24 @@ export const DragAndDropImg = ({ onChange }: Props) => {
     onChange(null);
   };
 
-  const onPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    let item = e.clipboardData.files[0];
+  const onClick = async (e: any) => {
+    const clipboardContents = await navigator.clipboard.read();
+    for (const item of clipboardContents) {
+      if (!item.types.includes("image/png")) {
+        setSnackbar({
+          message: "Chỉ được dán hình!",
+          open: true,
+          type: "error",
+        });
+        return;
+      }
 
-    if (item) {
-      const file = item;
+      let img = await item.getType("image/png");
+
+      const file = new File([img], "my-image.png", {
+        lastModified: Date.now(),
+      });
+
       const fileTypeCheck = filetypes.test(file?.name);
       if (!fileTypeCheck) {
         setSnackbar({
@@ -62,13 +75,6 @@ export const DragAndDropImg = ({ onChange }: Props) => {
         setImage(img);
       };
       onChange(file);
-    } else {
-      e.preventDefault();
-      setSnackbar({
-        message: "Chỉ được dán hình!",
-        open: true,
-        type: "error",
-      });
     }
   };
 
@@ -119,14 +125,9 @@ export const DragAndDropImg = ({ onChange }: Props) => {
           "Kéo thả ảnh vào đây"
         )}
       </Stack>
-      <TextField
-        fullWidth
-        sx={{ mb: 1 }}
-        size="small"
-        placeholder="Dán ảnh vào đây"
-        onPaste={onPaste}
-        inputMode="none"
-      />
+      <Button sx={{ mb: 1 }} variant="contained" fullWidth onClick={onClick}>
+        Dán ảnh
+      </Button>
     </>
   );
 };
