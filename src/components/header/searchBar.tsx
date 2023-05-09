@@ -2,7 +2,6 @@ import { MainLayoutContext } from "@/layouts";
 import { StoriesSearchResultInterface } from "@/models/search";
 import { API } from "@/utils/config";
 import SearchIcon from "@mui/icons-material/Search";
-import Box from "@mui/material/Box";
 import InputBase from "@mui/material/InputBase";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -14,7 +13,7 @@ import { useRouter } from "next/router";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import ClearIcon from "@mui/icons-material/Clear";
-import { IconButton } from "@mui/material";
+import { IconButton, Stack, Box } from "@mui/material";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -30,22 +29,11 @@ const Search = styled("div")(({ theme }) => ({
   },
 }));
 
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     width: "100%",
   },
 }));
@@ -153,14 +141,21 @@ export const SearchBar = ({ position }: Props) => {
   return (
     <>
       <Search>
-        <SearchIconWrapper>
-          <SearchIcon />
-        </SearchIconWrapper>
-        <Box
+        <Stack
           component={"form"}
           onSubmit={handleSubmit(submitHandle)}
           position={"relative"}
+          direction={"row"}
         >
+          <IconButton
+            sx={{
+              "& svg": {
+                color: "white",
+              },
+            }}
+          >
+            <SearchIcon />
+          </IconButton>
           <Controller
             name={"keywords"}
             control={control}
@@ -176,8 +171,8 @@ export const SearchBar = ({ position }: Props) => {
                 ref={inputElement}
                 autoComplete={"off"}
                 sx={{
-                  width: "calc(100% - (6 * 8px))",
                   maxHeight: "40px",
+                  flexGrow: 1,
                 }}
               />
             )}
@@ -239,7 +234,7 @@ export const SearchBar = ({ position }: Props) => {
           >
             <ClearIcon />
           </IconButton>
-        </Box>
+        </Stack>
       </Search>
     </>
   );
