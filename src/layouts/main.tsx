@@ -1,7 +1,7 @@
 import { MainLayoutInterface } from "@/models";
 import { FooterSection, HeaderSection } from "@/sections";
 import { Box, Stack } from "@mui/material";
-import { createContext, useState } from "react";
+import { createContext, useState, useRef, useEffect } from "react";
 export const MainLayoutContext = createContext({});
 import HomeSharpIcon from "@mui/icons-material/HomeSharp";
 import MenuSharpIcon from "@mui/icons-material/MenuSharp";
@@ -14,7 +14,29 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
   const [searchBarFocus, setSearchBarFocus] = useState<HTMLInputElement | null>(
     null
   );
+  const navigationBar = useRef<HTMLDivElement | null>(null);
+  const lastScollY = useRef<number>(0);
+  const controlNavigationBar = () => {
+    if (typeof window !== "undefined") {
+      if (window.scrollY > lastScollY.current) {
+        navigationBar.current!.style.bottom = "-100%";
+        navigationBar.current!.style.transition = "0.5s";
+      } else {
+        navigationBar.current!.style.bottom = "0px";
+        navigationBar.current!.style.transition = "0.5s";
+      }
+      setTimeout(() => {
+        lastScollY.current = window.pageYOffset;
+      }, 300);
+    }
+  };
 
+  useEffect(() => {
+    window.addEventListener("scroll", controlNavigationBar);
+    return () => {
+      window.removeEventListener("scroll", controlNavigationBar);
+    };
+  }, []);
   return (
     <>
       <Box
@@ -30,6 +52,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
           zIndex: 100,
         }}
         showLabels
+        ref={navigationBar}
       >
         <BottomNavigationAction
           label="Trang chủ"
