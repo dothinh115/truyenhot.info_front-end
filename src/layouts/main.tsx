@@ -19,8 +19,8 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
   const controlNavigationBar = () => {
     if (typeof window !== "undefined") {
       if (window.scrollY > lastScollY.current && lastScollY.current > 300) {
+        navigationBar.current!.style.transition = "0s";
         navigationBar.current!.style.bottom = "-100%";
-        navigationBar.current!.style.transition = "0.3s";
       } else {
         navigationBar.current!.style.bottom = "0px";
         navigationBar.current!.style.transition = "0.3s";
