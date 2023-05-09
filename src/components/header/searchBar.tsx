@@ -1,3 +1,4 @@
+import { MainLayoutContext } from "@/layouts";
 import { StoriesSearchResultInterface } from "@/models/search";
 import { API } from "@/utils/config";
 import SearchIcon from "@mui/icons-material/Search";
@@ -10,8 +11,10 @@ import ListItemText from "@mui/material/ListItemText";
 import { alpha, styled } from "@mui/material/styles";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import ClearIcon from "@mui/icons-material/Clear";
+import { IconButton } from "@mui/material";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -23,7 +26,7 @@ const Search = styled("div")(({ theme }) => ({
   width: "100%",
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(1),
-    width: "auto",
+    width: "100%",
   },
 }));
 
@@ -43,7 +46,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    width: "15ch",
+    width: "100%",
   },
 }));
 
@@ -65,8 +68,11 @@ type Props = {
 };
 
 export const SearchBar = ({ position }: Props) => {
+  const { setSearchBarFocus } = useContext<any>(MainLayoutContext);
   const [resultMess, setResultMess] = useState<string>("Loading...");
-  const { control, handleSubmit, reset } = useForm<{ keywords: string }>({
+  const { control, handleSubmit, reset, getValues } = useForm<{
+    keywords: string;
+  }>({
     mode: "onChange",
     defaultValues: {
       keywords: "",
@@ -78,6 +84,7 @@ export const SearchBar = ({ position }: Props) => {
   const resultList = useRef<HTMLUListElement>(null);
   const router = useRouter();
   const timeout = useRef<any>(null);
+  const inputElement = useRef<HTMLInputElement>(null);
 
   const submitHandle = (data: any) => {
     router.push(`/search/title?keywords=${data.keywords}`);
@@ -92,6 +99,7 @@ export const SearchBar = ({ position }: Props) => {
     const { value } = e.currentTarget as HTMLInputElement;
     if (value === "") {
       setSearchData([]);
+
       if (resultList.current) resultList.current.style.display = "none";
     } else {
       if (searchData && resultList.current)
@@ -130,14 +138,18 @@ export const SearchBar = ({ position }: Props) => {
       if (resultList.current) resultList.current.style.display = "none";
     }
   };
-  const inputElement = useRef(null);
 
   useEffect(() => {
     document.addEventListener("click", dropDownList);
+
     return () => {
       document.removeEventListener("click", dropDownList);
     };
   }, []);
+
+  useEffect(() => {
+    setSearchBarFocus(inputElement.current);
+  });
   return (
     <>
       <Search>
@@ -163,9 +175,23 @@ export const SearchBar = ({ position }: Props) => {
                 size="small"
                 ref={inputElement}
                 autoComplete={"off"}
+                sx={{
+                  width: "calc(100% - (6 * 8px))",
+                }}
               />
             )}
           />
+          <IconButton
+            sx={{
+              "& svg": {
+                color: "white",
+              },
+              visibility: getValues("keywords") ? "visible" : "hidden",
+            }}
+            onClick={() => reset({ keywords: "" })}
+          >
+            <ClearIcon />
+          </IconButton>
           <StyledResultList ref={resultList}>
             {searchData?.length === 0 && (
               <ListItem

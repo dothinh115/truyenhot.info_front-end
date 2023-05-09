@@ -29,7 +29,7 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
       ></Box>
       <Box
         position={"fixed"}
-        zIndex={100}
+        zIndex={50}
         width={"85%"}
         height={"100%"}
         bgcolor={"#fff"}
@@ -80,17 +80,6 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
           </Button>
         </Stack>
         <Box className={"hr"} my={2} />
-        <Box>
-          <Button
-            type={"button"}
-            color={"error"}
-            variant="contained"
-            fullWidth
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            Đóng
-          </Button>
-        </Box>
       </Box>
     </>
   );
