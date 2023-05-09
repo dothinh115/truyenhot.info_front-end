@@ -99,7 +99,7 @@ const StoryDetail = ({ story, categories }: Props) => {
               }}
             >
               <Box className={"hr"} width={"100%"} my={3} />
-              <SameAuthorSidebar author={story?.story_author} />
+              <SameAuthorSidebar story={story} />
             </Box>
             <Box
               width={"30%"}
@@ -109,7 +109,7 @@ const StoryDetail = ({ story, categories }: Props) => {
               }}
             >
               <StorySidebar>
-                <SameAuthorSidebar author={story?.story_author} />
+                <SameAuthorSidebar story={story} />
                 <CategoriesSidebar categories={categories} />
               </StorySidebar>
             </Box>

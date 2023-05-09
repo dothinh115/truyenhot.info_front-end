@@ -1,6 +1,6 @@
 import { useSnackbar } from "@/hooks/snackbar";
 import { Stack, Box, Button, TextField } from "@mui/material";
-import React, { useState, SyntheticEvent } from "react";
+import React, { useState } from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 type Props = {
   onChange: (file: File | null) => void;
@@ -125,6 +125,7 @@ export const DragAndDropImg = ({ onChange }: Props) => {
         size="small"
         placeholder="Dán ảnh vào đây"
         onPaste={onPaste}
+        type="text"
       />
     </>
   );

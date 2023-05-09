@@ -1,4 +1,5 @@
 import { StoriesSearchResultInterface } from "@/models/search";
+import { StoryInterface } from "@/models/stories";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import {
   Box,
@@ -10,34 +11,41 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import useSWR from "swr";
-type Props = { author: string };
+import { useEffect } from "react";
+type Props = { story: StoryInterface };
 
-export const SameAuthorSidebar = ({ author }: Props) => {
-  const { data: storiesSameAuthor, isValidating } = useSWR(
-    `/search/storyAuthor?keywords=${author}`
-  );
-  if (isValidating) return <></>;
+export const SameAuthorSidebar = ({ story }: Props) => {
+  const {
+    data: storiesSameAuthor,
+    isValidating,
+    mutate,
+  } = useSWR(`/search/storyAuthor?keywords=${story?.story_author}`, {
+    revalidateOnMount: false,
+  });
+  useEffect(() => {
+    if (story) mutate();
+  }, [story]);
+  if (isValidating || !story) return <></>;
   if (
     storiesSameAuthor?.result.filter(
-      (story: StoriesSearchResultInterface) => story.story_author !== author
+      (item: StoriesSearchResultInterface) =>
+        story.story_code !== item.story_code
     ).length !== 0
   )
     return (
       <>
-        <Box border={"1px solid #ccc"} mb={1}>
-          <Box
-            component={"h3"}
-            p={1}
-            my={0}
-            bgcolor={"#e8eaf6"}
-            borderBottom={"1px dashed #ccc"}
-          >
+        <Box mb={1}>
+          <Box component={"h3"} p={1} my={0} borderBottom={"1px dashed #ccc"}>
             Truyện cùng tác giả
           </Box>
           <Box>
             <Box component={List} py={0} dense={true}>
-              {storiesSameAuthor?.result.map(
-                (story: StoriesSearchResultInterface) => {
+              {storiesSameAuthor?.result
+                .filter(
+                  (item: StoriesSearchResultInterface) =>
+                    story.story_code !== item.story_code
+                )
+                .map((story: StoriesSearchResultInterface, index: number) => {
                   return (
                     <Box
                       component={ListItem}
@@ -53,9 +61,21 @@ export const SameAuthorSidebar = ({ author }: Props) => {
                       <ListItemButton
                         component={Link}
                         href={`/story/${story.story_code}`}
+                        sx={{
+                          px: 0,
+                        }}
                       >
                         <Box component={ListItemIcon} minWidth={"25px"}>
-                          <ArrowForwardIosIcon sx={{ fontSize: "15px" }} />
+                          <ArrowForwardIosIcon
+                            sx={{
+                              fontSize: "15px",
+                              color:
+                                (index + 1 === 1 && "error.main") ||
+                                (index + 1 === 2 && "success.main") ||
+                                (index + 1 === 3 && "info.main") ||
+                                "#ccc",
+                            }}
+                          />
                         </Box>
 
                         <Box
@@ -75,8 +95,7 @@ export const SameAuthorSidebar = ({ author }: Props) => {
                       </ListItemButton>
                     </Box>
                   );
-                }
-              )}
+                })}
             </Box>
           </Box>
         </Box>

@@ -14,6 +14,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
@@ -23,9 +24,8 @@ import Pagination, {
 import PaginationItem from "@mui/material/PaginationItem";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
-import CircularProgress from "@mui/material/CircularProgress";
 import { RowLoading } from "../loading";
 
 type Props = {
@@ -34,7 +34,7 @@ type Props = {
 
 export const StoryMain = ({ story }: Props) => {
   const router = useRouter();
-  const { story_code, page, isFallback } = router?.query;
+  const { story_code, page } = router?.query;
   const [paginationPage, setPaginationPage] = useState<number>(1);
   const {
     data: chapterListData,
