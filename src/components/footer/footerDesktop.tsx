@@ -5,12 +5,7 @@ type Props = {};
 
 export const FooterDesktop = (props: Props) => {
   return (
-    <Box
-      display={{
-        md: "block",
-        sm: "none",
-      }}
-    >
+    <Box>
       <Stack
         direction={"row"}
         justifyContent={"center"}

@@ -1,4 +1,5 @@
-import { CategoryInterface, RecentStoriesInterface } from "@/models/categories";
+import { CategoryInterface } from "@/models/categories";
+import { HotStoriesInterface } from "@/models/home";
 import CachedIcon from "@mui/icons-material/Cached";
 import {
   Box,
@@ -16,7 +17,7 @@ import Carousel from "better-react-carousel";
 import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
-import { IndexStoryCarouselLoading } from "../loading"; 
+import { IndexStoryCarouselLoading } from "../loading";
 
 const ITEM_HEIGHT = 36;
 const ITEM_PADDING_TOP = 8;
@@ -170,9 +171,9 @@ export const IndexCarousel = ({ categories }: Props) => {
       >
         {hotStoriesValidating
           ? carouselPreRender()
-          : hotStoriesList?.result.map((story: RecentStoriesInterface) => {
+          : hotStoriesList?.result.map((story: HotStoriesInterface) => {
               return (
-                <Carousel.Item key={story.story_id}>
+                <Carousel.Item key={story._id}>
                   <Box
                     component={Link}
                     href={`/story/${story.story_code}`}

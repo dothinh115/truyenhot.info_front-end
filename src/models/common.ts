@@ -24,11 +24,6 @@ export interface AdminLayoutInterface {
   children: ReactNode;
 }
 
-export type LoginType = {
-  email: string;
-  password: string;
-};
-
 export interface SectionInterface {
   children: ReactNode;
 }

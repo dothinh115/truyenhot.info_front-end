@@ -1,4 +1,4 @@
-import { LoginType } from "@/models";
+import { LoginPayloadInterface } from "@/models/auth";
 import { API } from "@/utils/config";
 import useSWR, { SWRConfiguration } from "swr";
 
@@ -16,9 +16,10 @@ export const useAuth = (option?: SWRConfiguration) => {
 
   const firstLoading = profile === undefined && error === undefined;
 
-  const login = async (payload: LoginType) => {
-    await API.post("/signIn", payload);
+  const login = async (payload: LoginPayloadInterface) => {
+    const a = await API.post("/signIn", payload);
     mutate();
+    console.log(a);
   };
 
   const logout = async () => {

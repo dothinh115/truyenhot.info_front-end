@@ -1,5 +1,6 @@
 import { IndexRowLoading } from "@/components/loading";
-import { CategoryInterface, RecentStoriesInterface } from "@/models/categories";
+import { CategoryInterface } from "@/models/categories";
+import { RecentStoriesInterface } from "@/models/home";
 import { timeSince } from "@/utils/function";
 import CachedIcon from "@mui/icons-material/Cached";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -239,7 +240,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
                             wordSpacing: "-1px",
                           },
                         }}
-                        key={story.story_id}
+                        key={story._id}
                       >
                         <TableCell
                           scope="row"

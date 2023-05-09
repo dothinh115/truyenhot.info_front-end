@@ -8,7 +8,6 @@ export const FooterSection = (props: Props) => {
     <>
       <Box component={"footer"} mt={4}>
         <FooterDesktop />
-        <FooterMobile />
       </Box>
     </>
   );

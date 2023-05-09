@@ -1,4 +1,5 @@
 export interface ChapterListInterface {
+  _id: string;
   chapter_id: number;
   chapter_name: string;
   chapter_title: string;

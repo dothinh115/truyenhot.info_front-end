@@ -1,9 +1,8 @@
-import React from "react";
-import { Box, Container, Stack, Typography } from "@mui/material";
 import { StoriesInCategoryInterface } from "@/models/categories";
-import Link from "next/link";
 import CreateIcon from "@mui/icons-material/Create";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import { Box, Stack, Typography } from "@mui/material";
+import Link from "next/link";
 
 type Props = {
   storiesData: {
