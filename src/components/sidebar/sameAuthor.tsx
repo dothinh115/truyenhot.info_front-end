@@ -19,7 +19,7 @@ export const SameAuthorSidebar = ({ story }: Props) => {
     data: storiesSameAuthor,
     isValidating,
     mutate,
-  } = useSWR(`/search/storyAuthor?keywords=${story?.story_author}`, {
+  } = useSWR(`/search/storyAuthor?keywords=${story?.story_author}&exact=true`, {
     revalidateOnMount: false,
   });
   useEffect(() => {

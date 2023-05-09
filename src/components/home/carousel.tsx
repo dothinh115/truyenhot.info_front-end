@@ -16,7 +16,7 @@ import Carousel from "better-react-carousel";
 import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
-import { IndexStoryCarouselLoading } from "../loading";
+import { IndexStoryCarouselLoading } from "../loading"; 
 
 const ITEM_HEIGHT = 36;
 const ITEM_PADDING_TOP = 8;
