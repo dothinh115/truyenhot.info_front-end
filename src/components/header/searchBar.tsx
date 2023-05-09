@@ -7,19 +7,13 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import { alpha, styled } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import ClearIcon from "@mui/icons-material/Clear";
-import { IconButton, Stack, Box } from "@mui/material";
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-
-  marginLeft: 0,
-  width: "25%",
-}));
+import { IconButton, Stack } from "@mui/material";
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
