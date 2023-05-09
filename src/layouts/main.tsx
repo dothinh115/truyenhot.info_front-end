@@ -18,7 +18,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
   const lastScollY = useRef<number>(0);
   const controlNavigationBar = () => {
     if (typeof window !== "undefined") {
-      if (window.scrollY > lastScollY.current) {
+      if (window.scrollY > lastScollY.current && lastScollY.current > 300) {
         navigationBar.current!.style.bottom = "-100%";
         navigationBar.current!.style.transition = "0.3s";
       } else {
@@ -50,6 +50,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
           position: "fixed",
           bottom: 0,
           zIndex: 100,
+          boxShadow: "1px 1px 10px rgba(0, 0, 0, .15)",
         }}
         showLabels
         ref={navigationBar}
