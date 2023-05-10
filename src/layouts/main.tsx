@@ -41,12 +41,6 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
     };
   }, []);
 
-  useEffect(() => {
-    if (mobileMenuOpen) setNavitionValue("menu");
-    else if (router.pathname === "/") setNavitionValue("home");
-    else setNavitionValue("");
-  }, [navigationValue]);
-
   return (
     <>
       <Box
@@ -73,7 +67,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
           icon={<HomeSharpIcon />}
           onClick={() => {
             setMobileMenuOpen(false);
-            setNavitionValue("home");
+            setNavitionValue("");
           }}
           value={"home"}
         />
@@ -81,9 +75,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
           label="Tìm kiếm"
           onClick={() => {
             if (searchBarFocus) searchBarFocus.click();
-            setMobileMenuOpen(false);
-            if (router.pathname === "/") setNavitionValue("home");
-            else setNavitionValue("");
+            setNavitionValue("");
           }}
           icon={<SearchSharpIcon />}
         />
