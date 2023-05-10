@@ -2,7 +2,7 @@ import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
 import { RowStory } from "@/components/categories";
 import { StoryListLoading } from "@/components/loading";
-import { CategoriesSidebar } from "@/components/sidebar";
+import { CategoriesSidebar, HotStoriesInCate } from "@/components/sidebar";
 import { CategoryInterface } from "@/models/categories";
 import { apiURL } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -45,7 +45,7 @@ const CategoriesDetail = ({ categoryData, categories }: Props) => {
 
   const cateListPreRender = () => {
     const result = [];
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 8; i++) {
       result.push(<StoryListLoading key={i} />);
     }
     return result;
@@ -96,11 +96,11 @@ const CategoriesDetail = ({ categoryData, categories }: Props) => {
       <MainBreadcrumbs links={breadCrumbs} />
       <Stack direction={"row"} justifyContent={"center"} mt={2}>
         <Container maxWidth={"md"}>
-          <Stack direction={"row"} spacing={1}>
+          <Stack direction={"row"} flexWrap={"wrap"} gap={1} width={"100%"}>
             <Box
               width={{
                 xs: "100%",
-                md: "70%",
+                md: "68%",
               }}
             >
               <Box component={"h1"} m={0} fontWeight={"light"} fontSize={35}>
@@ -148,9 +148,21 @@ const CategoriesDetail = ({ categoryData, categories }: Props) => {
                 xs: "none",
                 md: "block",
               }}
+              m={"0!important"}
             >
               <CategoriesSidebar categories={categories} />
+              <HotStoriesInCate category={categoryData} />
             </Box>
+            <Stack
+              display={{
+                xs: "block",
+                md: "none",
+                width: "100%",
+              }}
+            >
+              <Box className={"hr"} my={2} />
+              <HotStoriesInCate category={categoryData} />
+            </Stack>
           </Stack>
         </Container>
       </Stack>

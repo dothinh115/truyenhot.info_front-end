@@ -326,7 +326,7 @@ export const StoryMain = ({ story }: Props) => {
             : chapterListData?.result.map((data: ChapterDataInterface) => {
                 return (
                   <ListItem
-                    key={data.chapter_id}
+                    key={data._id}
                     sx={{
                       borderBottom: "1px dashed #ccc",
                       px: 1,

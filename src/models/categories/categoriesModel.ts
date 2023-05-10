@@ -21,6 +21,6 @@ export interface StoriesInCategoryInterface {
   updated_at: Date;
 }
 
-interface _Count {
+export interface _Count {
   chapter: number;
 }

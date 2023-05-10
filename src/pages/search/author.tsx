@@ -21,7 +21,7 @@ type Props = { categories: CategoryInterface[] };
 const SearchByAuthorPage = ({ categories }: Props) => {
   const [paginationPage, setPaginationPage] = useState<number>(1);
   const router = useRouter();
-  const { keywords, page, isFallback } = router.query;
+  const { keywords, page } = router.query;
 
   const {
     data: searchData,

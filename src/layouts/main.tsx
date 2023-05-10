@@ -72,7 +72,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
           setNavitionValue,
         }}
       >
-        <Stack minHeight={"100vh"} pb={7}>
+        <Stack minHeight={"100vh"} pb={{ md: 0, xs: 7 }}>
           <HeaderSection />
           <Box flexGrow={1}>{children}</Box>
           <FooterSection />

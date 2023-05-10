@@ -22,7 +22,7 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 
 type Props = {
@@ -193,10 +193,7 @@ const ChapterDetail = ({ chapterData }: Props) => {
                     MenuProps={MenuProps}
                   >
                     {chapterListData?.result.map((chapter: any) => (
-                      <MenuItem
-                        key={chapter.chapter_id}
-                        value={chapter.chapter_code}
-                      >
+                      <MenuItem key={chapter._id} value={chapter.chapter_code}>
                         {chapter.chapter_name}
                       </MenuItem>
                     ))}
@@ -290,10 +287,7 @@ const ChapterDetail = ({ chapterData }: Props) => {
                     MenuProps={MenuProps}
                   >
                     {chapterListData?.result.map((chapter: any) => (
-                      <MenuItem
-                        key={chapter.chapter_id}
-                        value={chapter.chapter_code}
-                      >
+                      <MenuItem key={chapter._id} value={chapter.chapter_code}>
                         {chapter.chapter_name}
                       </MenuItem>
                     ))}

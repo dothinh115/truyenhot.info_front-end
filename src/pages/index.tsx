@@ -2,27 +2,24 @@ import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
 import {
   BaseStats,
+  HomeFullStories,
   IndexCarousel,
   IndexRecentStories,
 } from "@/components/home";
 import { CategoriesSidebar } from "@/components/sidebar";
 import { MainLayoutContext } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
+import { BaseStatsInterface } from "@/models/home";
 import { apiURL } from "@/utils/config";
 import HomeIcon from "@mui/icons-material/Home";
 import { Box, Container, Stack } from "@mui/material";
 import { GetStaticProps } from "next";
 import Link from "next/link";
 import { useContext } from "react";
+
 type Props = {
   categories: CategoryInterface[];
-  stats: StatsType;
-};
-
-type StatsType = {
-  totalStories: number;
-  totalViews: number;
-  totalChapters: number;
+  stats: BaseStatsInterface;
 };
 
 const Index = ({ categories, stats }: Props) => {
@@ -85,6 +82,8 @@ const Index = ({ categories, stats }: Props) => {
               <BaseStats stats={stats} />
             </Box>
           </Stack>
+
+          <HomeFullStories categories={categories} />
         </Container>
       </Stack>
     </>

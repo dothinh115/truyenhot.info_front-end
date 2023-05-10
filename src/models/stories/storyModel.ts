@@ -1,7 +1,7 @@
 import { CategoryInterface } from "../categories";
 
 export interface StoryInterface {
-  story_id: number;
+  _id: string;
   story_title: string;
   story_rating: number;
   story_description?: string;
@@ -10,12 +10,10 @@ export interface StoryInterface {
   story_source: string;
   story_cover: string;
   story_category: CategoryInterface[];
-  poster: number;
   story_code: string;
   story_view: number;
   story_label: string;
-  created_at: Date;
-  updated_at: Date | string;
+  updated_at: Date;
 }
 
 export interface UpdateStoryInterface {

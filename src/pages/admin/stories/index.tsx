@@ -219,7 +219,7 @@ const AdminStoryIndex = (props: Props) => {
                   : storiesList?.result
                 )?.map((story: StoryInterface) => {
                   return (
-                    <TableRow key={story.story_id}>
+                    <TableRow key={story._id}>
                       <TableCell
                         sx={{
                           display: {
