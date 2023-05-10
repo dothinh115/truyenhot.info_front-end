@@ -1,3 +1,4 @@
+import { AdminSearchBar } from "@/components/admin";
 import { SearchBar } from "@/components/header";
 import { AdminLayout } from "@/layouts";
 import { StoryInterface } from "@/models/stories";
@@ -200,7 +201,7 @@ const AdminStoryIndex = (props: Props) => {
                     Cover
                   </TableCell>
                   <TableCell>
-                    <SearchBar position="adminPage" />
+                    <AdminSearchBar />
                   </TableCell>
                   <TableCell width={"20%"}>Update</TableCell>
 

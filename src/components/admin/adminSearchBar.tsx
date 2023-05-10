@@ -1,7 +1,7 @@
-import { MainLayoutContext } from "@/layouts";
 import { StoriesSearchResultInterface } from "@/models/search";
 import { API } from "@/utils/config";
-import SearchIcon from "@mui/icons-material/Search";
+import ClearIcon from "@mui/icons-material/Clear";
+import { IconButton, Stack } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -9,11 +9,8 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import ClearIcon from "@mui/icons-material/Clear";
-import { IconButton, Stack } from "@mui/material";
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
@@ -39,10 +36,9 @@ const StyledResultList = styled(List)(() => ({
 
 type Props = {};
 
-export const SearchBar = (props: Props) => {
-  const { setSearchBarFocus } = useContext<any>(MainLayoutContext);
+export const AdminSearchBar = (props: Props) => {
   const [resultMess, setResultMess] = useState<string>("Loading...");
-  const { control, handleSubmit, reset, getValues } = useForm<{
+  const { control, reset, getValues } = useForm<{
     keywords: string;
   }>({
     mode: "onChange",
@@ -54,18 +50,8 @@ export const SearchBar = (props: Props) => {
     []
   );
   const resultList = useRef<HTMLUListElement>(null);
-  const router = useRouter();
   const timeout = useRef<any>(null);
   const inputElement = useRef<HTMLInputElement>(null);
-
-  const submitHandle = (data: any) => {
-    router.push(`/search/title?keywords=${data.keywords}`);
-    reset({
-      keywords: "",
-    });
-    if (resultList.current) resultList.current.style.display = "none";
-    setSearchData([]);
-  };
 
   const onChangeHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.currentTarget as HTMLInputElement;
@@ -119,35 +105,17 @@ export const SearchBar = (props: Props) => {
     };
   }, []);
 
-  useEffect(() => {
-    setSearchBarFocus(inputElement.current);
-  });
   return (
     <>
       <Stack
-        component={"form"}
-        onSubmit={handleSubmit(submitHandle)}
         position={"relative"}
         direction={"row"}
         sx={{
-          width: {
-            md: "25%",
-            xs: "100%",
-          },
-
+          width: "100%",
           borderRadius: "5px",
           backgroundColor: "rgba(255,255,255,.15)",
         }}
       >
-        <IconButton
-          sx={{
-            "& svg": {
-              color: "white",
-            },
-          }}
-        >
-          <SearchIcon />
-        </IconButton>
         <Controller
           name={"keywords"}
           control={control}
@@ -160,6 +128,7 @@ export const SearchBar = (props: Props) => {
               value={value}
               placeholder="Tìm kiếm"
               size="small"
+              fullWidth
               ref={inputElement}
               autoComplete={"off"}
               sx={{
@@ -201,7 +170,7 @@ export const SearchBar = (props: Props) => {
               >
                 <ListItemButton
                   component={Link}
-                  href={`/story/${story.story_code}`}
+                  href={`/admin/stories/${story.story_code}`}
                   scroll={true}
                   onClick={() =>
                     reset({
@@ -217,9 +186,6 @@ export const SearchBar = (props: Props) => {
         </StyledResultList>
         <IconButton
           sx={{
-            "& svg": {
-              color: "white",
-            },
             visibility: getValues("keywords") ? "visible" : "hidden",
           }}
           onClick={() => reset({ keywords: "" })}

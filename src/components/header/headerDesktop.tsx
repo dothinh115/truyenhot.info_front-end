@@ -46,7 +46,7 @@ export function HeaderDesktop() {
               >
                 TRUYENHOT.INFO
               </Typography>
-              <SearchBar position="header" />
+              <SearchBar />
             </Stack>
           </Container>
         </Stack>

@@ -1,15 +1,14 @@
 import { MainLayoutInterface } from "@/models";
 import { FooterSection, HeaderSection } from "@/sections";
-import { Box, Stack } from "@mui/material";
-import { createContext, useState, useRef, useEffect } from "react";
-export const MainLayoutContext = createContext({});
 import HomeSharpIcon from "@mui/icons-material/HomeSharp";
 import MenuSharpIcon from "@mui/icons-material/MenuSharp";
 import SearchSharpIcon from "@mui/icons-material/SearchSharp";
+import { Box, Stack } from "@mui/material";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { createContext, useState } from "react";
+export const MainLayoutContext = createContext({});
 export const MainLayout = ({ children }: MainLayoutInterface) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [searchBarFocus, setSearchBarFocus] = useState<HTMLInputElement | null>(
