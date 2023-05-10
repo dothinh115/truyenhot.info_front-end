@@ -16,29 +16,6 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
     null
   );
   const [navigationValue, setNavitionValue] = useState<string>("home");
-  const navigationBar = useRef<HTMLDivElement | null>(null);
-  const lastScollY = useRef<number>(0);
-  const controlNavigationBar = () => {
-    if (typeof window !== "undefined") {
-      if (window.scrollY > lastScollY.current && lastScollY.current > 250) {
-        navigationBar.current!.style.transition = "bottom 0s";
-        navigationBar.current!.style.bottom = "-100%";
-      } else {
-        navigationBar.current!.style.transition = "bottom 0.3s";
-        navigationBar.current!.style.bottom = "0px";
-      }
-      setTimeout(() => {
-        lastScollY.current = window.pageYOffset;
-      }, 500);
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", controlNavigationBar);
-    return () => {
-      window.removeEventListener("scroll", controlNavigationBar);
-    };
-  }, []);
 
   return (
     <>
@@ -56,7 +33,6 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
           boxShadow: "1px 1px 10px rgba(0, 0, 0, .15)",
         }}
         showLabels
-        ref={navigationBar}
         value={navigationValue}
       >
         <BottomNavigationAction
@@ -97,7 +73,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
           setNavitionValue,
         }}
       >
-        <Stack minHeight={"100vh"} pb={mobileMenuOpen ? "56px" : 0}>
+        <Stack minHeight={"100vh"} pb={7}>
           <HeaderSection />
           <Box flexGrow={1}>{children}</Box>
           <FooterSection />
