@@ -18,7 +18,6 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
   const [navigationValue, setNavitionValue] = useState<string>("home");
   const navigationBar = useRef<HTMLDivElement | null>(null);
   const lastScollY = useRef<number>(0);
-  const router = useRouter();
   const controlNavigationBar = () => {
     if (typeof window !== "undefined") {
       if (window.scrollY > lastScollY.current && lastScollY.current > 250) {
@@ -98,7 +97,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
           setNavitionValue,
         }}
       >
-        <Stack minHeight={"100vh"}>
+        <Stack minHeight={"100vh"} pb={mobileMenuOpen ? "56px" : 0}>
           <HeaderSection />
           <Box flexGrow={1}>{children}</Box>
           <FooterSection />

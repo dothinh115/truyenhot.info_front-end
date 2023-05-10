@@ -22,15 +22,6 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
     <>
       <Box
         position={"fixed"}
-        width={"100%"}
-        height={"100%"}
-        bgcolor={"rgba(0,0,0,.65)"}
-        zIndex={50}
-        display={open ? "block" : "none"}
-        onClick={() => setMobileMenuOpen(false)}
-      ></Box>
-      <Box
-        position={"fixed"}
         zIndex={50}
         width={"100%"}
         height={"100%"}
@@ -41,7 +32,6 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
         left={open ? "0" : "100%"}
         sx={{
           transition: "left .2s ease",
-          pb: "70px",
         }}
       >
         <Stack
@@ -53,6 +43,11 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
           color={"rgba(255, 255, 255, 0.9)"}
           bgcolor={"#7986cb"}
           p={1}
+          position={"fixed"}
+          top={0}
+          left={0}
+          width={"100%"}
+          zIndex={100}
         >
           <Box>
             <IconButton
@@ -73,7 +68,7 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
           </Box>
           <Box>TRUYENFULL.INFO</Box>
         </Stack>
-        <Stack height={"100%"} p={1}>
+        <Stack height={"100%"} p={1} pt={"50px"}>
           <Box component={"h3"}>Thể loại</Box>
           <Box className={"hr"} my={2} />
           <Box
