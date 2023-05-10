@@ -40,7 +40,7 @@ export const BaseStats = ({ stats }: Props) => {
             </TableRow>
             <TableRow>
               <TableCell scope="row">Số lượt xem:</TableCell>
-              <TableCell align="right">{stats?.totalChapters}</TableCell>
+              <TableCell align="right">{stats?.totalViews}</TableCell>
             </TableRow>
           </TableBody>
         </Table>

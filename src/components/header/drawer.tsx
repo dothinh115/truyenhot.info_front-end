@@ -68,7 +68,7 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
               <ArrowBackIcon />
             </IconButton>
           </Box>
-          <Box>TRUYENFULL.INFO</Box>
+          <Box>TRUYENHOT.INFO</Box>
         </Stack>
         <Stack height={"100%"} p={1} pt={"50px"}>
           <Box component={"h3"}>Thể loại</Box>
