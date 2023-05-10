@@ -82,8 +82,8 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
           label="Menu"
           value={"menu"}
           onClick={() => {
-            setMobileMenuOpen(true);
-            setNavitionValue("menu");
+            setMobileMenuOpen(!mobileMenuOpen);
+            setNavitionValue(mobileMenuOpen ? "" : "menu");
           }}
           icon={<MenuSharpIcon />}
         />

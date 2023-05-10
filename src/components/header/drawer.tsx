@@ -2,7 +2,7 @@ import { CategoryInterface } from "@/models/categories";
 import { Box, Button, Chip, Stack, IconButton } from "@mui/material";
 import Link from "next/link";
 import useSWR from "swr";
-import { useContext, useState } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -14,10 +14,12 @@ type Props = {
 
 export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
   const [cateShow, setCateShow] = useState<boolean>(false);
+
   const { data: categoriesList } = useSWR(`/categories/getAll`, {
     dedupingInterval: 60 * 60 * 24,
   });
   const { setNavitionValue } = useContext<any>(MainLayoutContext);
+
   return (
     <>
       <Box
@@ -43,7 +45,7 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
           color={"rgba(255, 255, 255, 0.9)"}
           bgcolor={"#7986cb"}
           p={1}
-          position={"fixed"}
+          position={"absolute"}
           top={0}
           left={0}
           width={"100%"}
