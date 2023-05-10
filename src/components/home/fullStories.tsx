@@ -53,7 +53,7 @@ export const HomeFullStories = ({ categories }: Props) => {
   );
   const carouselPreRender = () => {
     const result = [];
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 28; i++) {
       result.push(
         <Carousel.Item key={i}>
           <IndexStoryCarouselLoading key={i} />
