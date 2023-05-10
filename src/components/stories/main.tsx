@@ -5,7 +5,13 @@ import { timeSince } from "@/utils/function";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import FolderIcon from "@mui/icons-material/Folder";
+import PersonIcon from "@mui/icons-material/Person";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import StarIcon from "@mui/icons-material/Star";
+import UpdateIcon from "@mui/icons-material/Update";
 import {
   Box,
   Button,
@@ -27,12 +33,6 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { RowLoading } from "../loading";
-import PersonIcon from "@mui/icons-material/Person";
-import FolderIcon from "@mui/icons-material/Folder";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import UpdateIcon from "@mui/icons-material/Update";
-import StarIcon from "@mui/icons-material/Star";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 type Props = {
   story: StoryInterface;
 };
@@ -134,25 +134,35 @@ export const StoryMain = ({ story }: Props) => {
                   borderBottom: "1px dashed #ccc",
                 },
                 display: "flex",
-                alignItems: "center",
+                alignItems: "flex-start",
+
                 "& h4": {
-                  display: "inline-flex",
                   alignItems: "center",
                   color: "rgba(0, 0, 0, .85)",
+                  display: "inline-flex",
                   "& svg": {
                     color: "rgba(0, 0, 0, .45)",
-                    width: "20px",
                     height: "20px",
+                    width: "20px",
                     mr: 1,
+                    mt: "2px",
                   },
+                  "& span": {
+                    display: "inline-block",
+                    width: "60px",
+                  },
+                },
+                "& a": {
+                  display: "inline-block",
+                  lineHeight: "30px",
                 },
               },
               "& > li > ul": {
                 display: "inline-block",
                 pl: 1,
               },
-              "& span": {
-                mr: 1,
+              "& span a": {
+                mr: "4px",
                 "&::after": {
                   content: '","',
                   display: "inline-block",
@@ -176,28 +186,28 @@ export const StoryMain = ({ story }: Props) => {
             <Box component={"li"}>
               <Box component={"h4"}>
                 <FolderIcon />
-                Thể loại:
+                <Box component={"span"}>Thể loại:</Box>
               </Box>
-
-              {story?.story_category.map((cate: CategoryInterface) => {
-                return (
-                  <Box component={"span"} key={cate.cate_id}>
+              <Box component={"span"}>
+                {story?.story_category.map((cate: CategoryInterface) => {
+                  return (
                     <Box
                       component={Link}
+                      key={cate.cate_id}
                       href={`/categories/${cate.cate_code}`}
                     >
                       {cate.cate_title}
                     </Box>
-                  </Box>
-                );
-              })}
+                  );
+                })}
+              </Box>
             </Box>
             <Box component={"li"}>
               <Box component={"h4"}>
                 <ArrowForwardIosIcon />
                 Nguồn:
               </Box>
-              <Typography>{story?.story_source}</Typography>
+              {story?.story_source}
             </Box>
             <Box component={"li"}>
               <Box component={"h4"}>

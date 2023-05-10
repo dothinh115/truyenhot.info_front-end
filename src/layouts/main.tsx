@@ -9,16 +9,19 @@ import SearchSharpIcon from "@mui/icons-material/SearchSharp";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import Link from "next/link";
+import { useRouter } from "next/router";
 export const MainLayout = ({ children }: MainLayoutInterface) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [searchBarFocus, setSearchBarFocus] = useState<HTMLInputElement | null>(
     null
   );
+  const [navigationValue, setNavitionValue] = useState<string>("home");
   const navigationBar = useRef<HTMLDivElement | null>(null);
   const lastScollY = useRef<number>(0);
+  const router = useRouter();
   const controlNavigationBar = () => {
     if (typeof window !== "undefined") {
-      if (window.scrollY > lastScollY.current && lastScollY.current > 300) {
+      if (window.scrollY > lastScollY.current && lastScollY.current > 250) {
         navigationBar.current!.style.transition = "bottom 0s";
         navigationBar.current!.style.bottom = "-100%";
       } else {
@@ -27,7 +30,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
       }
       setTimeout(() => {
         lastScollY.current = window.pageYOffset;
-      }, 300);
+      }, 500);
     }
   };
 
@@ -37,6 +40,13 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
       window.removeEventListener("scroll", controlNavigationBar);
     };
   }, []);
+
+  useEffect(() => {
+    if (router.pathname === "/") setNavitionValue("home");
+    else if (mobileMenuOpen) setNavitionValue("menu");
+    else setNavitionValue("");
+  });
+
   return (
     <>
       <Box
@@ -54,23 +64,35 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
         }}
         showLabels
         ref={navigationBar}
+        value={navigationValue}
       >
         <BottomNavigationAction
           label="Trang chủ"
           LinkComponent={Link}
           href={`/`}
           icon={<HomeSharpIcon />}
+          onClick={() => {
+            setMobileMenuOpen(false);
+          }}
+          value={"home"}
         />
         <BottomNavigationAction
           label="Tìm kiếm"
           onClick={() => {
             if (searchBarFocus) searchBarFocus.click();
+            setMobileMenuOpen(false);
+            if (router.pathname === "/") setNavitionValue("home");
+            else setNavitionValue("");
           }}
           icon={<SearchSharpIcon />}
         />
         <BottomNavigationAction
           label="Menu"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          value={"menu"}
+          onClick={() => {
+            setMobileMenuOpen(true);
+            setNavitionValue("menu");
+          }}
           icon={<MenuSharpIcon />}
         />
       </Box>
