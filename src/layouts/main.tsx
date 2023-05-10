@@ -42,10 +42,10 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
   }, []);
 
   useEffect(() => {
-    if (router.pathname === "/") setNavitionValue("home");
-    else if (mobileMenuOpen) setNavitionValue("menu");
+    if (mobileMenuOpen) setNavitionValue("menu");
+    else if (router.pathname === "/") setNavitionValue("home");
     else setNavitionValue("");
-  });
+  }, [navigationValue]);
 
   return (
     <>
@@ -73,6 +73,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
           icon={<HomeSharpIcon />}
           onClick={() => {
             setMobileMenuOpen(false);
+            setNavitionValue("home");
           }}
           value={"home"}
         />
@@ -102,6 +103,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
           setMobileMenuOpen,
           searchBarFocus,
           setSearchBarFocus,
+          setNavitionValue,
         }}
       >
         <Stack minHeight={"100vh"}>
