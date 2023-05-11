@@ -67,6 +67,8 @@ export const SearchModal = (props: Props) => {
   useEffect(() => {
     if (searchOpen && searchBodyElement?.current)
       searchBodyElement?.current.scroll({ top: 0 });
+
+    if (inputElement?.current && searchOpen) inputElement.current.click();
   }, [searchOpen]);
 
   const loading = () => {
