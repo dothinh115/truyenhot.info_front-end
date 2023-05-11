@@ -12,9 +12,7 @@ import { createContext, useState, useEffect } from "react";
 export const MainLayoutContext = createContext({});
 export const MainLayout = ({ children }: MainLayoutInterface) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
-  const [searchBarFocus, setSearchBarFocus] = useState<HTMLInputElement | null>(
-    null
-  );
+
   const [navigationValue, setNavitionValue] = useState<string>("");
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
 
@@ -62,11 +60,6 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
           label="Tìm kiếm"
           onClick={() => {
             setSearchOpen(!searchOpen);
-            if (searchBarFocus) {
-              setTimeout(() => {
-                searchBarFocus.click();
-              }, 200);
-            }
           }}
           icon={<SearchSharpIcon />}
         />
@@ -84,8 +77,6 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
         value={{
           mobileMenuOpen,
           setMobileMenuOpen,
-          searchBarFocus,
-          setSearchBarFocus,
           setNavitionValue,
           searchOpen,
           setSearchOpen,

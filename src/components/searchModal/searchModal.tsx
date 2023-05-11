@@ -8,8 +8,7 @@ import { Box, IconButton, Stack, Typography } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import React, { useRef, useEffect, useContext } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
 type Props = {};
@@ -23,9 +22,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export const SearchModal = (props: Props) => {
-  const router = useRouter();
-
-  const { control, reset, getValues, handleSubmit } = useForm<{
+  const { control, reset, getValues } = useForm<{
     keywords: string;
   }>({
     mode: "onChange",
@@ -46,18 +43,9 @@ export const SearchModal = (props: Props) => {
       revalidateOnMount: false,
     }
   );
-  const { setSearchBarFocus, setSearchOpen, searchOpen } =
-    useContext<any>(MainLayoutContext);
+  const { setSearchOpen, searchOpen } = useContext<any>(MainLayoutContext);
 
   const timeout = useRef<any>(null);
-
-  const submitHandle = (data: any) => {
-    if (data.keywords) {
-      router.push(`/search/title?keywords=${data.keywords}`);
-      setSearchOpen(false);
-      reset({ keywords: "" });
-    }
-  };
 
   const inputElement = useRef<HTMLInputElement>(null);
   const searchBodyElement = useRef<HTMLDivElement>(null);
@@ -75,10 +63,6 @@ export const SearchModal = (props: Props) => {
       }
     }, 500);
   };
-
-  useEffect(() => {
-    setSearchBarFocus(inputElement.current);
-  });
 
   useEffect(() => {
     if (searchOpen && searchBodyElement?.current)
@@ -106,6 +90,8 @@ export const SearchModal = (props: Props) => {
               "linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%)",
             backgroundSize: "200%",
           }}
+          maxHeight={"100vh"}
+          overflow={"hidden"}
         ></Box>
       );
     }
@@ -131,7 +117,9 @@ export const SearchModal = (props: Props) => {
           component={"form"}
           position={"relative"}
           direction={"row"}
-          onSubmit={handleSubmit(submitHandle)}
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}
           sx={{
             width: {
               md: "25%",
@@ -214,7 +202,6 @@ export const SearchModal = (props: Props) => {
                   mb={2}
                   onClick={() => {
                     setSearchOpen(false);
-                    reset({ keywords: "" });
                   }}
                 >
                   <Stack direction={"row"} alignItems={"center"}>
