@@ -38,6 +38,7 @@ export function HeaderDesktop() {
               sx={{
                 p: 0,
               }}
+              justifyContent={"space-between"}
             >
               <Box
                 component={Link}

@@ -60,7 +60,7 @@ export const SearchModal = (props: Props) => {
   };
 
   const inputElement = useRef<HTMLInputElement>(null);
-
+  const searchBodyElement = useRef<HTMLDivElement>(null);
   const onChangeHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
     clearTimeout(timeout.current);
     const value = e.currentTarget.value;
@@ -79,6 +79,11 @@ export const SearchModal = (props: Props) => {
   useEffect(() => {
     setSearchBarFocus(inputElement.current);
   });
+
+  useEffect(() => {
+    if (searchOpen && searchBodyElement?.current)
+      searchBodyElement?.current.scroll({ top: 0 });
+  }, [searchOpen]);
 
   const loading = () => {
     let html = [];
@@ -120,6 +125,7 @@ export const SearchModal = (props: Props) => {
         left={0}
         sx={{ transition: "top .2s" }}
         pb={20}
+        ref={searchBodyElement}
       >
         <Stack
           component={"form"}
@@ -131,7 +137,6 @@ export const SearchModal = (props: Props) => {
               md: "25%",
               xs: "100%",
             },
-
             borderRadius: "5px",
             backgroundColor: "rgba(255,255,255,.15)",
           }}

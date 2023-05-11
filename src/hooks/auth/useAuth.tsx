@@ -19,7 +19,6 @@ export const useAuth = (option?: SWRConfiguration) => {
   const login = async (payload: LoginPayloadInterface) => {
     const a = await API.post("/signIn", payload);
     mutate();
-    console.log(a);
   };
 
   const logout = async () => {
