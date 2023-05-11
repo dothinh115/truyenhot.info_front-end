@@ -54,8 +54,11 @@ const CategoriesDetail = ({ categoryData, categories }: Props) => {
   useEffect(() => {
     if (page) setPaginationPage(+page);
     else setPaginationPage(1);
-    if (cate_code) storiesMutate();
   }, [page, cate_code]);
+
+  useEffect(() => {
+    if (cate_code) storiesMutate();
+  }, []);
 
   const breadCrumbs = [
     <Box
