@@ -45,7 +45,7 @@ const CategoriesDetail = ({ categoryData, categories }: Props) => {
 
   const cateListPreRender = () => {
     const result = [];
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 20; i++) {
       result.push(<StoryListLoading key={i} />);
     }
     return result;
