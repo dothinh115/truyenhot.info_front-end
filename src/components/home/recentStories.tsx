@@ -171,7 +171,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
             justifyContent={"center"}
             width={{
               md: "70%",
-              xs: "85%",
+              xs: "80%",
             }}
           >
             TÊN TRUYỆN
@@ -181,7 +181,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
             textAlign={"right"}
             width={{
               md: "10%",
-              xs: "15%",
+              xs: "20%",
             }}
           >
             C.CUỐI
@@ -233,7 +233,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
                     <Box
                       width={{
                         md: "70%",
-                        xs: "85%",
+                        xs: "80%",
                       }}
                     >
                       <Stack direction={"row"} alignItems={"center"}>
@@ -274,7 +274,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
                       textAlign={"right"}
                       width={{
                         md: "10%",
-                        xs: "15%",
+                        xs: "20%",
                       }}
                     >
                       <Box
