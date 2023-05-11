@@ -62,7 +62,11 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
           label="Tìm kiếm"
           onClick={() => {
             setSearchOpen(!searchOpen);
-            if (searchBarFocus) searchBarFocus.click();
+            if (searchBarFocus) {
+              setTimeout(() => {
+                searchBarFocus.click();
+              }, 200);
+            }
           }}
           icon={<SearchSharpIcon />}
         />

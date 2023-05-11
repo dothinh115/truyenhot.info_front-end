@@ -206,12 +206,16 @@ export const SearchModal = (props: Props) => {
                 <Stack
                   key={item._id}
                   component={Link}
-                  href={`/story`}
+                  href={`/story/${item.story_code}`}
                   sx={{ textDecoration: "none" }}
                   direction={"row"}
                   justifyContent={"space-between"}
                   alignItems={"center"}
                   mb={2}
+                  onClick={() => {
+                    setSearchOpen(false);
+                    reset({ keywords: "" });
+                  }}
                 >
                   <Stack direction={"row"} alignItems={"center"}>
                     <Box
