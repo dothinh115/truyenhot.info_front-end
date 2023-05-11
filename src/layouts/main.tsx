@@ -14,7 +14,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
   const [searchBarFocus, setSearchBarFocus] = useState<HTMLInputElement | null>(
     null
   );
-  const [navigationValue, setNavitionValue] = useState<string>("home");
+  const [navigationValue, setNavitionValue] = useState<string>("");
 
   return (
     <>

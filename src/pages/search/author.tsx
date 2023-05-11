@@ -1,3 +1,4 @@
+import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
 import { RowStory } from "@/components/categories";
 import { StoryListLoading } from "@/components/loading";
@@ -80,6 +81,14 @@ const SearchByAuthorPage = ({ categories }: Props) => {
   ];
   return (
     <>
+      <Seo
+        data={{
+          title: `Tìm kiếm: ${keywords}`,
+          description: `Kết quả tìm kiếm từ khóa ${keywords} tại truyenhot.info. Chúc bạn có những phút giây thư giãn!`,
+          url: `https//truyenhot.info/search/author?keywords=${keywords}`,
+          thumbnailUrl: `${apiURL}/api/public/images/thumnail/thumbnail.jpg`,
+        }}
+      />
       <MainBreadcrumbs links={breadCrumbs} />
       <Stack direction={"row"} justifyContent={"center"} mt={2}>
         <Container maxWidth={"md"}>

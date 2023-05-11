@@ -1,4 +1,4 @@
 export * from "./baseStats";
-export * from "./carousel";
+export * from "./hotStories";
 export * from "./recentStories";
 export * from "./fullStories";

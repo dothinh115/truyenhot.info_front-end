@@ -33,7 +33,7 @@ type Props = {
   categories: CategoryInterface[];
 };
 
-export const IndexCarousel = ({ categories }: Props) => {
+export const HomeHotStories = ({ categories }: Props) => {
   const [cateValue, setCateValue] = useState<
     | {
         value: string;

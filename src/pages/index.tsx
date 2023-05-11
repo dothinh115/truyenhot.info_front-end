@@ -3,7 +3,7 @@ import { MainBreadcrumbs } from "@/components/breadcrumbs";
 import {
   BaseStats,
   HomeFullStories,
-  IndexCarousel,
+  HomeHotStories,
   IndexRecentStories,
 } from "@/components/home";
 import { CategoriesSidebar } from "@/components/sidebar";
@@ -54,7 +54,7 @@ const Index = ({ categories, stats }: Props) => {
       <MainBreadcrumbs links={breadCrumbs} />
       <Stack direction={"row"} justifyContent={"center"} mt={4}>
         <Container maxWidth={"md"}>
-          <IndexCarousel categories={categories} />
+          <HomeHotStories categories={categories} />
           <Stack
             direction={"row"}
             gap={"15px"}
@@ -94,6 +94,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   const revalidate = 1 * 60 * 60;
   const baseStatsResponse = await fetch(`${apiURL}/api/stats/getBaseStats`);
   const categoriesResponse = await fetch(`${apiURL}/api/categories/getAll`);
+
   const baseStats = await baseStatsResponse.json();
 
   const categories = await categoriesResponse.json();
