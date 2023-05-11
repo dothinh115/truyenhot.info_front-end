@@ -46,8 +46,6 @@ export const SearchModal = (props: Props) => {
   const { setSearchOpen, searchOpen } = useContext<any>(MainLayoutContext);
 
   const timeout = useRef<any>(null);
-
-  const inputElement = useRef<HTMLInputElement>(null);
   const searchBodyElement = useRef<HTMLDivElement>(null);
   const onChangeHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
     clearTimeout(timeout.current);
@@ -67,8 +65,6 @@ export const SearchModal = (props: Props) => {
   useEffect(() => {
     if (searchOpen && searchBodyElement?.current)
       searchBodyElement?.current.scroll({ top: 0 });
-
-    if (inputElement?.current && searchOpen) inputElement.current.click();
   }, [searchOpen]);
 
   const loading = () => {
@@ -153,7 +149,6 @@ export const SearchModal = (props: Props) => {
                   value={value}
                   placeholder="Tìm kiếm"
                   size="small"
-                  ref={inputElement}
                   autoComplete={"off"}
                   sx={{
                     maxHeight: "40px",
