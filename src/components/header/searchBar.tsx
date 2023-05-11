@@ -1,7 +1,8 @@
-import { MainLayoutContext } from "@/layouts";
 import { StoriesSearchResultInterface } from "@/models/search";
 import { API } from "@/utils/config";
+import ClearIcon from "@mui/icons-material/Clear";
 import SearchIcon from "@mui/icons-material/Search";
+import { IconButton, Stack } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -10,10 +11,8 @@ import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import ClearIcon from "@mui/icons-material/Clear";
-import { IconButton, Stack } from "@mui/material";
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "inherit",
@@ -40,7 +39,6 @@ const StyledResultList = styled(List)(() => ({
 type Props = {};
 
 export const SearchBar = (props: Props) => {
-  const { setSearchBarFocus } = useContext<any>(MainLayoutContext);
   const [resultMess, setResultMess] = useState<string>("Loading...");
   const { control, handleSubmit, reset, getValues } = useForm<{
     keywords: string;
@@ -119,9 +117,6 @@ export const SearchBar = (props: Props) => {
     };
   }, []);
 
-  useEffect(() => {
-    setSearchBarFocus(inputElement.current);
-  });
   return (
     <>
       <Stack
@@ -133,6 +128,10 @@ export const SearchBar = (props: Props) => {
           width: {
             md: "25%",
             xs: "100%",
+          },
+          display: {
+            md: "flex",
+            xs: "none",
           },
 
           borderRadius: "5px",

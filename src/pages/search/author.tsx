@@ -118,7 +118,7 @@ const SearchByAuthorPage = ({ categories }: Props) => {
               )}
               <Stack direction={"row"} justifyContent={"center"} mt={2}>
                 <Pagination
-                  count={searchData?.pagination.pages}
+                  count={searchData?.pagination?.pages}
                   page={paginationPage}
                   color="primary"
                   showFirstButton={true}

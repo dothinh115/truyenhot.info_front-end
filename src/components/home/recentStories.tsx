@@ -20,11 +20,12 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { SelectChangeEvent } from "@mui/material/Select";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 const ITEM_HEIGHT = 36;
 const ITEM_PADDING_TOP = 8;
@@ -49,6 +50,8 @@ export const IndexRecentStories = ({ categories }: Props) => {
     | null
     | undefined
   >(null);
+  const lengthLimit = useRef<HTMLDivElement>(null);
+  const table = useRef<HTMLTableSectionElement>(null);
 
   const {
     data: recentUpdateStoriesList,
@@ -147,186 +150,164 @@ export const IndexRecentStories = ({ categories }: Props) => {
         </Box>
       </Stack>
       <Box className={"hr"} my={2} />
-      <TableContainer component={Paper}>
-        <Table
-          size="small"
+
+      <Stack border={"1px solid #ccc"} borderRadius={"4px"} overflow={"hidden"}>
+        <Stack
+          direction={"row"}
+          justifyContent={"space-between"}
           sx={{
-            "& th": {
-              fontWeight: "bold",
-              textTransform: "uppercase",
+            "& div": {
+              p: "4px",
+              borderBottom: "1px solid #ccc",
               bgcolor: "primary.main",
               color: "primary.contrastText",
-              fontSize: {
-                xs: "0.775rem",
-              },
+              fontWeight: "bold",
+              fontSize: ".9em",
+              height: "36.5px",
             },
-            overflow: "hidden",
           }}
         >
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ p: "6px" }}>Tên truyện</TableCell>
-              <TableCell
-                align="right"
-                sx={{
-                  width: {
-                    md: "80px",
-                    xs: "75px",
-                  },
-                  p: "6px 6px 6px 0",
-                }}
-              >
-                C. cuối
-              </TableCell>
-              <Box
-                component={TableCell}
-                align="right"
-                sx={{
-                  display: {
-                    md: "table-cell",
-                    xs: "none",
-                  },
-                  width: {
-                    md: "100px",
-                    xs: "75px",
-                  },
-                  p: "6px",
-                }}
-              >
-                Thời gian
-              </Box>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {recentUpdateStoriesValidating ? (
-              preDataRender()
-            ) : (
-              <>
-                {recentUpdateStoriesList?.result?.map(
-                  (story: RecentStoriesInterface, index: number) => {
-                    if (story.lastChapter)
-                      story.lastChapter.chapter_name =
-                        story.lastChapter?.chapter_name
-                          .replaceAll("Chương ", "C")
-                          .replaceAll("Quyển ", "Q")
-                          .replaceAll(" - ", "-")
-                          .replaceAll("CHƯƠNG ", "C")
-                          .replaceAll("QUYỂN ", "Q");
-                    return (
-                      <TableRow
-                        sx={{
-                          "&:last-child td, &:last-child th": {
-                            border: 0,
-                          },
-                          "& td a": {
-                            textDecoration: "none",
-                            fontSize: "14px",
-                          },
-                          "& td.cate-table a": {
-                            mr: "2px",
-                            "&:not(:last-of-type)::after": {
-                              content: '", "',
-                            },
-                          },
-                          "& td span": {
-                            display: "inline-block",
-                            maxHeight: "24px!important",
-                          },
+          <Stack
+            justifyContent={"center"}
+            width={{
+              md: "70%",
+              xs: "85%",
+            }}
+          >
+            TÊN TRUYỆN
+          </Stack>
+          <Stack
+            justifyContent={"center"}
+            textAlign={"right"}
+            width={{
+              md: "10%",
+              xs: "15%",
+            }}
+          >
+            C.CUỐI
+          </Stack>
+          <Stack
+            textAlign={"right"}
+            justifyContent={"center"}
+            width={{
+              md: "20%",
+            }}
+            display={{
+              md: "flex",
+              xs: "none",
+            }}
+          >
+            UPDATE
+          </Stack>
+        </Stack>
 
-                          "& td": {
-                            p: "6px",
-                            lineHeight: "24px",
-                            maxHeight: "37px",
-                            wordSpacing: "-1px",
-                          },
-                        }}
-                        key={story._id}
-                      >
-                        <TableCell
-                          scope="row"
-                          sx={{
-                            pl: "0!important",
-                          }}
-                        >
-                          <Box
-                            display={"flex"}
-                            alignItems={"center"}
-                            component={Link}
-                            href={`/story/${story.story_code}`}
-                          >
-                            <Box
-                              component={"span"}
-                              color={
-                                (index + 1 === 1 && "error.main") ||
-                                (index + 1 === 2 && "success.main") ||
-                                (index + 1 === 3 && "info.main") ||
-                                "#ccc"
-                              }
-                            >
-                              <KeyboardArrowRightIcon />
-                            </Box>
-                            <Box
-                              display={{
-                                md: "inline-block",
-                                xs: "none",
-                              }}
-                            >
-                              {story.story_title.length > 51
-                                ? story.story_title.substring(0, 48) + " ..."
-                                : story.story_title}
-                            </Box>
-                            <Box
-                              display={{
-                                md: "none",
-                                xs: "inline-block",
-                              }}
-                            >
-                              {story.story_title.length > 30
-                                ? story.story_title.substring(0, 27) + "..."
-                                : story.story_title}
-                            </Box>
-                          </Box>
-                        </TableCell>
-                        <TableCell align="right">
-                          <Box
-                            component={Link}
-                            href={`/story/${story.story_code}/${story.lastChapter?.chapter_code}`}
-                          >
-                            {story.lastChapter?.chapter_name.length > 22
-                              ? story.lastChapter?.chapter_name.substring(
-                                  0,
-                                  21
-                                ) + " ..."
-                              : story.lastChapter?.chapter_name}
-                          </Box>
-                        </TableCell>
-
+        {recentUpdateStoriesValidating
+          ? preDataRender()
+          : recentUpdateStoriesList?.result?.map(
+              (story: RecentStoriesInterface, index: number) => {
+                if (story.lastChapter)
+                  story.lastChapter.chapter_name =
+                    story.lastChapter?.chapter_name
+                      .replaceAll("Chương ", "C")
+                      .replaceAll("Quyển ", "Q")
+                      .replaceAll(" - ", "-")
+                      .replaceAll("CHƯƠNG ", "C")
+                      .replaceAll("QUYỂN ", "Q");
+                return (
+                  <Stack
+                    key={story._id}
+                    direction={"row"}
+                    justifyContent={"space-between"}
+                    flexWrap={"wrap"}
+                    sx={{
+                      "&>div": {
+                        p: "4px",
+                        bgcolor: "#fff",
+                        borderBottom: "1px solid #eee",
+                      },
+                      "& a": {
+                        textDecoration: "none",
+                      },
+                    }}
+                  >
+                    <Box
+                      width={{
+                        md: "70%",
+                        xs: "85%",
+                      }}
+                    >
+                      <Stack direction={"row"} alignItems={"center"}>
                         <Box
-                          component={TableCell}
-                          align="right"
-                          display={{
-                            md: "table-cell",
-                            xs: "none",
+                          component={"span"}
+                          display={"inline-block"}
+                          height={"20px"}
+                          color={
+                            (index + 1 === 1 && "error.main") ||
+                            (index + 1 === 2 && "success.main") ||
+                            (index + 1 === 3 && "info.main") ||
+                            "#ccc"
+                          }
+                          sx={{
+                            "& svg": {
+                              width: "20px",
+                              height: "20px",
+                            },
                           }}
-                          fontSize={".9em"}
                         >
-                          {timeSince(
-                            Math.abs(
-                              new Date().valueOf() -
-                                new Date(story?.updated_at).valueOf()
-                            )
-                          )}{" "}
-                          trước
+                          <KeyboardArrowRightIcon />
                         </Box>
-                      </TableRow>
-                    );
-                  }
-                )}
-              </>
+                        <Box
+                          component={Link}
+                          href={`/story/${story.story_code}`}
+                          lineHeight={"20px"}
+                          sx={{
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          {story.story_title}
+                        </Box>
+                      </Stack>
+                    </Box>
+                    <Box
+                      textAlign={"right"}
+                      width={{
+                        md: "10%",
+                        xs: "15%",
+                      }}
+                    >
+                      <Box
+                        component={Link}
+                        href={`/story/${story.story_code}/${story?.lastChapter?.chapter_code}`}
+                      >
+                        {story?.lastChapter?.chapter_name}
+                      </Box>
+                    </Box>
+                    <Box
+                      width={{
+                        md: "20%",
+                      }}
+                      fontSize={".9em"}
+                      textAlign={"right"}
+                      display={{
+                        md: "block",
+                        xs: "none",
+                      }}
+                    >
+                      {timeSince(
+                        Math.abs(
+                          new Date().valueOf() -
+                            new Date(story?.updated_at).valueOf()
+                        )
+                      )}{" "}
+                      trước
+                    </Box>
+                  </Stack>
+                );
+              }
             )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      </Stack>
     </>
   );
 };

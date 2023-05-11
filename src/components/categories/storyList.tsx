@@ -14,7 +14,7 @@ export const RowStory = ({ storiesData }: Props) => {
   return (
     <>
       <Box component={"ul"} m={0} p={0}>
-        {storiesData?.result.map((story: StoriesInCategoryInterface) => {
+        {storiesData?.result?.map((story: StoriesInCategoryInterface) => {
           return (
             <Stack
               component={"li"}

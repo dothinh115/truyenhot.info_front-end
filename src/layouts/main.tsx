@@ -1,3 +1,4 @@
+import { SearchModal } from "@/components/searchModal";
 import { MainLayoutInterface } from "@/models";
 import { FooterSection, HeaderSection } from "@/sections";
 import HomeSharpIcon from "@mui/icons-material/HomeSharp";
@@ -7,7 +8,7 @@ import { Box, Stack } from "@mui/material";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import Link from "next/link";
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 export const MainLayoutContext = createContext({});
 export const MainLayout = ({ children }: MainLayoutInterface) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
@@ -15,6 +16,17 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
     null
   );
   const [navigationValue, setNavitionValue] = useState<string>("");
+  const [searchOpen, setSearchOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (searchOpen) {
+      (document.body.style.maxHeight = "100vh"),
+        (document.body.style.overflow = "hidden");
+    } else {
+      document.body.style.maxHeight = "unset";
+      document.body.style.overflow = "unset";
+    }
+  }, [searchOpen]);
 
   return (
     <>
@@ -46,10 +58,11 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
           value={"home"}
         />
         <BottomNavigationAction
+          value={"search"}
           label="Tìm kiếm"
           onClick={() => {
+            setSearchOpen(!searchOpen);
             if (searchBarFocus) searchBarFocus.click();
-            setNavitionValue("");
           }}
           icon={<SearchSharpIcon />}
         />
@@ -70,8 +83,11 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
           searchBarFocus,
           setSearchBarFocus,
           setNavitionValue,
+          searchOpen,
+          setSearchOpen,
         }}
       >
+        <SearchModal />
         <Stack minHeight={"100vh"} pb={{ md: 0, xs: 7 }}>
           <HeaderSection />
           <Box flexGrow={1}>{children}</Box>

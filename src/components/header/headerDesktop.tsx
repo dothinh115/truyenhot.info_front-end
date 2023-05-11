@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import { useContext, useEffect } from "react";
 import { Drawer } from "./drawer";
 import { SearchBar } from "./searchBar";
+import Link from "next/link";
 
 export function HeaderDesktop() {
   const { mobileMenuOpen, setMobileMenuOpen } =
@@ -38,14 +39,21 @@ export function HeaderDesktop() {
                 p: 0,
               }}
             >
-              <Typography
-                variant="h6"
-                noWrap
-                component="div"
-                sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+              <Box
+                component={Link}
+                href="/"
+                sx={{ textDecoration: "none", color: "unset" }}
               >
-                TRUYENHOT.INFO
-              </Typography>
+                <Typography
+                  variant="h6"
+                  noWrap
+                  component="div"
+                  sx={{ flexGrow: 1 }}
+                >
+                  TRUYENHOT.INFO
+                </Typography>
+              </Box>
+
               <SearchBar />
             </Stack>
           </Container>
