@@ -137,18 +137,7 @@ export const HomeFullStories = ({ categories }: Props) => {
   };
   return (
     <>
-      <BoxWrapper
-        sx={{
-          flexDirection: {
-            xs: "column",
-            md: "row",
-          },
-          alignItems: {
-            xs: "flex-start",
-            md: "center",
-          },
-        }}
-      >
+      <BoxWrapper>
         <Box component={"h2"} m={0}>
           Truyện đã hoàn thành
           <ReloadButtonStyled
