@@ -1,12 +1,6 @@
 import { BaseStatsInterface } from "@/models/home";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-
+import { Stack } from "@mui/material";
+import { Box } from "@mui/system";
 type Props = {
   stats?: BaseStatsInterface;
 };
@@ -14,37 +8,73 @@ type Props = {
 export const BaseStats = ({ stats }: Props) => {
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table size="small" aria-label="a dense table">
-          <TableHead
+      <Stack spacing={2}>
+        <Box
+          bgcolor={"#fff"}
+          borderRadius={"15px"}
+          overflow={"hidden"}
+          border={"1px dashed #7986cba6"}
+          mb={2}
+        >
+          <Box
+            component={"h3"}
+            m={"4px 4px 0 4px"}
+            px={2}
+            py={1}
+            color={"#fff"}
+            fontWeight={"500"}
+            bgcolor={"#7986cbc2"}
+            borderRadius={"10px 10px 0 0"}
+          >
+            Thống kê
+          </Box>
+
+          <Box
+            component={"ul"}
             sx={{
-              bgcolor: "primary.main",
-              "& th": {
-                color: "primary.contrastText",
+              p: 0,
+              my: 0,
+              mb: 0,
+              "& > li": {
+                listStyleType: "none",
+                px: 1,
+                m: 0,
+                borderBottom: "1px dashed #7986cba6",
+                height: "30px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                "&:last-of-type": {
+                  borderBottom: "none",
+                },
+                "& > a": {
+                  display: "block",
+                  height: "100%",
+                  lineHeight: "30px",
+                  textDecoration: "none",
+                  color: "#303f9f",
+                  textAlign: "center",
+                },
               },
             }}
           >
-            <TableRow>
-              <TableCell>Thống kê</TableCell>
-              <TableCell align="right"></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableRow>
-              <TableCell scope="row">Tổng số truyện:</TableCell>
-              <TableCell align="right">{stats?.totalStories}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell scope="row">Số chương truyện:</TableCell>
-              <TableCell align="right">{stats?.totalChapters}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell scope="row">Số lượt xem:</TableCell>
-              <TableCell align="right">{stats?.totalViews}</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
+            <Box component={"li"}>
+              <Box>Tổng số truyện:</Box>
+              <Box>{stats?.totalStories}</Box>
+            </Box>
+
+            <Box component={"li"}>
+              <Box>Số chương truyện:</Box>
+              <Box>{stats?.totalChapters}</Box>
+            </Box>
+
+            <Box component={"li"}>
+              <Box>Lượt xem:</Box>
+              <Box>{stats?.totalViews}</Box>
+            </Box>
+          </Box>
+        </Box>
+      </Stack>
     </>
   );
 };

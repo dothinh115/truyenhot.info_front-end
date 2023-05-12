@@ -11,21 +11,13 @@ import {
   InputLabel,
   MenuItem,
   OutlinedInput,
-  Paper,
   Select,
   Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { SelectChangeEvent } from "@mui/material/Select";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import useSWR from "swr";
 const ITEM_HEIGHT = 36;
 const ITEM_PADDING_TOP = 8;
@@ -50,8 +42,6 @@ export const IndexRecentStories = ({ categories }: Props) => {
     | null
     | undefined
   >(null);
-  const lengthLimit = useRef<HTMLDivElement>(null);
-  const table = useRef<HTMLTableSectionElement>(null);
 
   const {
     data: recentUpdateStoriesList,
@@ -151,21 +141,27 @@ export const IndexRecentStories = ({ categories }: Props) => {
       </Stack>
       <Box className={"hr"} my={2} />
 
-      <Stack border={"1px solid #ccc"} borderRadius={"4px"} overflow={"hidden"}>
+      <Stack
+        border={"1px dashed #7986cba6"}
+        borderRadius={"16px"}
+        overflow={"hidden"}
+        bgcolor={"#fff"}
+      >
         <Stack
           direction={"row"}
           justifyContent={"space-between"}
           sx={{
             "& div": {
               p: "4px",
-              borderBottom: "1px solid #ccc",
-              bgcolor: "primary.main",
-              color: "primary.contrastText",
-              fontWeight: "bold",
-              fontSize: ".9em",
-              height: "36.5px",
             },
           }}
+          color={"#fff"}
+          fontWeight={"500"}
+          bgcolor={"#7986cbc2"}
+          borderRadius={"10px 10px 0 0"}
+          m={"4px 4px 0 4px"}
+          px={2}
+          py={1}
         >
           <Stack
             justifyContent={"center"}

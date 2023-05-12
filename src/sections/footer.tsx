@@ -1,6 +1,7 @@
 import React from "react";
 import { Box } from "@mui/material";
-import { FooterDesktop, FooterMobile } from "@/components/footer";
+import { FooterDesktop } from "@/components/footer";
+
 type Props = {};
 
 export const FooterSection = (props: Props) => {

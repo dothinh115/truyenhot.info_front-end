@@ -11,19 +11,21 @@ export const CategoriesSidebar = ({ categories }: Props) => {
     <Stack spacing={2}>
       <Box
         bgcolor={"#fff"}
-        borderRadius={"6px"}
+        borderRadius={"15px"}
         overflow={"hidden"}
-        border={"1px solid rgb(224 224 224)"}
+        border={"1px dashed #7986cba6"}
         mb={2}
       >
         <Box
-          component={"h4"}
-          sx={{
-            bgcolor: "primary.main",
-          }}
-          my={0}
-          p={"5px 12px"}
-          color={"primary.contrastText"}
+          component={"h3"}
+          m={"4px 4px 0 4px"}
+          px={2}
+          py={1}
+          borderBottom={"1px dashed #7986cba6"}
+          color={"#fff"}
+          fontWeight={"500"}
+          bgcolor={"#7986cbc2"}
+          borderRadius={"10px 10px 0 0"}
         >
           Thể loại
         </Box>
@@ -33,18 +35,16 @@ export const CategoriesSidebar = ({ categories }: Props) => {
           sx={{
             p: 0,
             my: 0,
-            mb: 1,
+            mb: 0,
             "& > li": {
               listStyleType: "none",
               display: "inline-block",
               width: "50%",
               pl: 1,
               m: 0,
-              borderBottom: "1px dashed #e0e0e0",
+              borderBottom: "1px dashed #7986cba6",
               height: "30px",
-              "&:hover": {
-                backgroundColor: "#e0e0e0",
-              },
+              "&:hover": "unset",
               "& > a": {
                 display: "block",
                 height: "100%",
@@ -54,7 +54,7 @@ export const CategoriesSidebar = ({ categories }: Props) => {
                 textAlign: "center",
               },
               "&:nth-of-type(odd)": {
-                borderRight: "1px dashed #e0e0e0",
+                borderRight: "1px dashed #7986cba6",
               },
             },
           }}

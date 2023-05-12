@@ -10,6 +10,8 @@ export const IndexStoryCarouselLoading = (props: Props) => {
         width={"100%"}
         height={"100%"}
         bgcolor={"#dddddd"}
+        borderRadius={"5px"}
+        overflow={"hidden"}
         sx={{
           animationDuration: {
             md: "1s",

@@ -21,7 +21,7 @@ export const RowStory = ({ storiesData }: Props) => {
               bgcolor={"#fff"}
               p={1}
               sx={{
-                border: "1px dashed #ccc",
+                border: "1px dashed #7986cba6",
               }}
               direction={"row"}
               spacing={1}
@@ -31,6 +31,8 @@ export const RowStory = ({ storiesData }: Props) => {
               maxHeight={{
                 xs: "100px",
               }}
+              borderRadius={"15px"}
+              overflow={"hidden"}
             >
               <Stack
                 width={{
@@ -48,6 +50,7 @@ export const RowStory = ({ storiesData }: Props) => {
                   sx={{
                     objectFit: "cover",
                   }}
+                  borderRadius={"15px"}
                 />
               </Stack>
               <Box width={"80%"}>

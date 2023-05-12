@@ -1,12 +1,12 @@
+import { MainLayoutContext } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
-import { Box, Button, Chip, Stack, IconButton } from "@mui/material";
-import Link from "next/link";
-import useSWR from "swr";
-import { useContext, useState, useRef, useEffect } from "react";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { MainLayoutContext } from "@/layouts";
+import { Box, Button, Chip, IconButton, Stack } from "@mui/material";
+import Link from "next/link";
+import { useContext, useState } from "react";
+import useSWR from "swr";
 type Props = {
   open: boolean;
   setMobileMenuOpen: (arg0: boolean) => void;

@@ -183,6 +183,8 @@ export const HomeHotStories = ({ categories }: Props) => {
                     position={"relative"}
                     height={"180px"}
                     display={"block"}
+                    borderRadius={"5px"}
+                    overflow={"hidden"}
                   >
                     <Box
                       component={"img"}

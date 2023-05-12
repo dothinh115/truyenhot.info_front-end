@@ -151,8 +151,15 @@ const AdminNoCoverStories = (props: Props) => {
                       </TableCell>
                       <TableCell align="right">
                         <Button
-                          component={Link}
-                          href={`/admin/stories/${story.story_code}`}
+                          onClick={() =>
+                            router.push({
+                              pathname: "/admin/stories/[story_code]",
+                              query: {
+                                story_code: story.story_code,
+                                goAround: true,
+                              },
+                            })
+                          }
                           color="info"
                           variant="contained"
                           type="button"

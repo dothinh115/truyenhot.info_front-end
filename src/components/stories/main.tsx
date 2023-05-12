@@ -19,6 +19,7 @@ import {
   ListItemIcon,
   Stack,
   Typography,
+  Chip,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import ListItem from "@mui/material/ListItem";
@@ -73,6 +74,7 @@ export const StoryMain = ({ story }: Props) => {
         .replaceAll("<div text-align: justify; >", "")
         .replaceAll("</div>", "");
   }, [story?.story_description]);
+
   return (
     <>
       <Box>
@@ -86,14 +88,29 @@ export const StoryMain = ({ story }: Props) => {
           THÔNG TIN TRUYỆN
         </Stack>
         <Box className={"hr"} />
-        <Box
+        <Stack
+          direction={"row"}
+          justifyContent={"center"}
           component={"h1"}
           textAlign={"center"}
           mb={1}
-          sx={{ fontWeight: "500", letterSpacing: "-2px", wordSpacing: "5px" }}
+          sx={{
+            fontWeight: "500",
+            letterSpacing: "-2px",
+            wordSpacing: "5px",
+          }}
         >
-          {story?.story_title}
-        </Box>
+          <Box
+            display={"inline"}
+            py={"4px"}
+            px={1}
+            color={"#606fc3"}
+            borderRadius={"5px"}
+            border={"1px dashed #7986cb47"}
+          >
+            {story?.story_title}
+          </Box>
+        </Stack>
         <Box
           position={"relative"}
           sx={{
@@ -108,6 +125,8 @@ export const StoryMain = ({ story }: Props) => {
               left: "50%",
               transform: "translateX(-50%)",
             }}
+            borderRadius={"10px"}
+            overflow={"hidden"}
           >
             <Box
               component={"img"}
@@ -242,22 +261,10 @@ export const StoryMain = ({ story }: Props) => {
                     width: "60px",
                   },
                 },
-                "& a": {
-                  display: "inline-block",
-                  lineHeight: "30px",
-                },
               },
               "& > li > ul": {
                 display: "inline-block",
                 pl: 1,
-              },
-              "& span a": {
-                mr: "4px",
-                "&::after": {
-                  content: '","',
-                  display: "inline-block",
-                  ml: "2px",
-                },
               },
             }}
           >
@@ -281,13 +288,19 @@ export const StoryMain = ({ story }: Props) => {
               <Box component={"span"}>
                 {story?.story_category.map((cate: CategoryInterface) => {
                   return (
-                    <Box
+                    <Chip
                       component={Link}
-                      key={cate.cate_id}
                       href={`/categories/${cate.cate_code}`}
-                    >
-                      {cate.cate_title}
-                    </Box>
+                      label={cate.cate_title}
+                      size="small"
+                      key={cate.cate_id}
+                      sx={{
+                        mr: "4px",
+                        cursor: "pointer",
+                        "&>span": { color: "#fff" },
+                      }}
+                      color="primary"
+                    />
                   );
                 })}
               </Box>

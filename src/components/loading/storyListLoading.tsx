@@ -6,10 +6,12 @@ export const StoryListLoading = (props: Props) => {
     <Box m={0} p={0}>
       <Box
         sx={{
-          border: "1px dashed #ccc",
+          border: "1px dashed #7986cba6",
         }}
         mb={1}
         minHeight={"88px"}
+        borderRadius={"15px"}
+        overflow={"hidden"}
       >
         <Box
           sx={{
