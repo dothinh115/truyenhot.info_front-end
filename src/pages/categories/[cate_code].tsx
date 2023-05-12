@@ -4,7 +4,7 @@ import { RowStory } from "@/components/categories";
 import { StoryListLoading } from "@/components/loading";
 import { CategoriesSidebar, HotStoriesInCate } from "@/components/sidebar";
 import { CategoryInterface } from "@/models/categories";
-import { StoriesSearchResultInterface } from "@/models/search";
+import { HotStoriesInCategoriesInterface } from "@/models/search";
 import { apiURL } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -21,7 +21,7 @@ import useSWR from "swr";
 type Props = {
   categoryData: CategoryInterface;
   categories: CategoryInterface[];
-  hotStoriesInCategory: StoriesSearchResultInterface[];
+  hotStoriesInCategory: HotStoriesInCategoriesInterface[];
 };
 
 const CategoriesDetail = ({
@@ -206,7 +206,7 @@ export const getStaticProps: GetStaticProps<Props> = async (
     const categoriesResponse = await fetch(`${apiURL}/api/categories/getAll`);
     const categories = await categoriesResponse.json();
     const hotStoriesInCategoryResponse = await fetch(
-      `${apiURL}/api/stories/getHotStories?category=${cate_code}`
+      `${apiURL}/api/stories/getHotStoriesNoCover?category=${cate_code}`
     );
     const hotStoriesInCategory = await hotStoriesInCategoryResponse.json();
     return {

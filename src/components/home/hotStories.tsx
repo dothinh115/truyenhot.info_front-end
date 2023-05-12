@@ -71,6 +71,8 @@ type Props = {
 };
 
 export const HomeHotStories = ({ categories, hotStories }: Props) => {
+  const [data, setData] = useState<HotStoriesInterface[]>(hotStories);
+
   const [cateValue, setCateValue] = useState<
     | {
         value: string;
@@ -111,7 +113,7 @@ export const HomeHotStories = ({ categories, hotStories }: Props) => {
   };
 
   useEffect(() => {
-    if (hotStoriesList?.result) hotStories = hotStoriesList?.result;
+    if (hotStoriesList?.result) setData(hotStoriesList?.result);
   }, [hotStoriesList]);
   return (
     <>
@@ -213,7 +215,7 @@ export const HomeHotStories = ({ categories, hotStories }: Props) => {
       >
         {hotStoriesValidating
           ? carouselPreRender()
-          : hotStories?.map((story: HotStoriesInterface) => {
+          : data?.map((story: HotStoriesInterface) => {
               return (
                 <Carousel.Item key={story._id}>
                   <BoxWrapper href={`/story/${story.story_code}`}>

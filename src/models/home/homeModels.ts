@@ -1,5 +1,3 @@
-import { _Count } from "../categories";
-
 export interface RecentStoriesInterface {
   _id: string;
   story_title: string;
@@ -33,5 +31,5 @@ export interface FullStoriesInterface {
   story_code: string;
   story_title: string;
   story_cover: string;
-  _count: _Count;
+  _count: number;
 }

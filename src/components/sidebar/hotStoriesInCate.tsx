@@ -1,5 +1,5 @@
 import { CategoryInterface } from "@/models/categories";
-import { StoriesSearchResultInterface } from "@/models/search";
+import { HotStoriesInCategoriesInterface } from "@/models/search";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import {
   Box,
@@ -13,7 +13,7 @@ import Link from "next/link";
 
 type Props = {
   category: CategoryInterface;
-  hotStoriesInCategory: StoriesSearchResultInterface[];
+  hotStoriesInCategory: HotStoriesInCategoriesInterface[];
 };
 
 export const HotStoriesInCate = ({ category, hotStoriesInCategory }: Props) => {
@@ -32,7 +32,7 @@ export const HotStoriesInCate = ({ category, hotStoriesInCategory }: Props) => {
         <Box>
           <Box component={List} py={0} dense={true}>
             {hotStoriesInCategory?.map(
-              (story: StoriesSearchResultInterface, index: number) => {
+              (story: HotStoriesInCategoriesInterface, index: number) => {
                 return (
                   <Box
                     component={ListItem}

@@ -11,11 +11,13 @@ export interface StoriesSearchResultInterface {
   story_status: string;
   story_cover: string;
   story_code: string;
-  _count: _Count;
+  _count: number;
 }
 
-interface _Count {
-  chapter: number;
+export interface HotStoriesInCategoriesInterface {
+  _id: string;
+  story_title: string;
+  story_code: string;
 }
 
 interface Pagination {

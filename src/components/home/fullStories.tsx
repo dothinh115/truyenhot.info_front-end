@@ -99,6 +99,7 @@ type Props = {
   fullStories: FullStoriesInterface[];
 };
 export const HomeFullStories = ({ categories, fullStories }: Props) => {
+  const [data, setData] = useState<FullStoriesInterface[]>(fullStories);
   const [cateValue, setCateValue] = useState<
     | {
         value: string;
@@ -108,9 +109,9 @@ export const HomeFullStories = ({ categories, fullStories }: Props) => {
     | undefined
   >(null);
   const {
-    data: hotStoriesList,
-    mutate: hotStoriesListMutate,
-    isValidating: hotStoriesValidating,
+    data: fullStoriesListData,
+    mutate: fullStoriesListMutate,
+    isValidating: fullStoriesValidating,
   } = useSWR(
     `/stories/getFullStories${cateValue ? "?category=" + cateValue.value : ""}`,
     {
@@ -138,8 +139,8 @@ export const HomeFullStories = ({ categories, fullStories }: Props) => {
   };
 
   useEffect(() => {
-    if (hotStoriesList?.result) fullStories = hotStoriesList?.result;
-  }, [hotStoriesList]);
+    if (fullStoriesListData) setData(fullStoriesListData?.result);
+  }, [fullStoriesListData]);
   return (
     <>
       <BoxWrapper>
@@ -147,10 +148,10 @@ export const HomeFullStories = ({ categories, fullStories }: Props) => {
           Truyện đã hoàn thành
           <ReloadButtonStyled
             type={"button"}
-            onClick={() => hotStoriesListMutate()}
-            disabled={hotStoriesValidating ? true : false}
+            onClick={() => fullStoriesListMutate()}
+            disabled={fullStoriesValidating ? true : false}
           >
-            {hotStoriesValidating ? (
+            {fullStoriesValidating ? (
               <CircularProgress size={"1.5em"} color="inherit" />
             ) : (
               <CachedIcon />
@@ -238,16 +239,14 @@ export const HomeFullStories = ({ categories, fullStories }: Props) => {
           },
         ]}
       >
-        {hotStoriesValidating
+        {fullStoriesValidating
           ? carouselPreRender()
-          : fullStories?.map((story: FullStoriesInterface) => {
+          : data?.map((story: FullStoriesInterface) => {
               return (
                 <Carousel.Item key={story._id}>
                   <ItemLinkWrapper href={`/story/${story.story_code}`}>
                     <ItemImg src={story.story_cover} alt={story.story_title} />
-                    <ItemChapter>
-                      Full - {story._count.chapter} chương
-                    </ItemChapter>
+                    <ItemChapter>Full - {story._count} chương</ItemChapter>
                   </ItemLinkWrapper>
                   <ItemTitle href={`/story/${story.story_code}`}>
                     {story.story_title}

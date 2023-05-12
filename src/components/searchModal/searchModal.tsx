@@ -230,7 +230,7 @@ export const SearchModal = (props: Props) => {
                         fontSize={".9em"}
                         color={"rgba(0, 0, 0, .6)"}
                       >
-                        {item._count.chapter} chương
+                        {item._count} chương
                       </Typography>
                     </Stack>
                   </Stack>
