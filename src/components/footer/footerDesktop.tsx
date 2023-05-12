@@ -30,7 +30,6 @@ export const FooterDesktop = (props: Props) => {
           <Container maxWidth={"md"}>
             <Stack
               direction={"row"}
-              spacing={2}
               minHeight={"150px"}
               alignItems={"flex-start"}
               flexWrap={"wrap"}
