@@ -1,5 +1,5 @@
 import { CategoryInterface } from "@/models/categories";
-import { FullStoriesInterface, HotStoriesInterface } from "@/models/home";
+import { FullStoriesInterface } from "@/models/home";
 import CachedIcon from "@mui/icons-material/Cached";
 import {
   Box,
@@ -9,10 +9,10 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
-  Stack,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { SelectChangeEvent } from "@mui/material/Select";
+import { styled } from "@mui/material/styles";
 import Carousel from "better-react-carousel";
 import Link from "next/link";
 import { useState } from "react";
@@ -28,6 +28,71 @@ const MenuProps = {
     },
   },
 };
+
+const BoxWrapper = styled(Box)(({ theme }) => ({
+  display: "flex",
+  gap: "10px",
+  justifyContent: "space-between",
+  [theme.breakpoints.up("xs")]: {
+    direction: "column",
+    alignItems: "flex-start",
+  },
+  [theme.breakpoints.up("md")]: {
+    direction: "row",
+    alignItems: "center",
+  },
+}));
+
+const ReloadButtonStyled = styled(Button)(() => ({
+  padding: ".5px",
+  minWidth: "unset",
+  marginLeft: 1,
+}));
+
+const ItemLinkWrapper = styled(Link)(() => ({
+  width: "100%",
+  padding: 0,
+  margin: 0,
+  position: "relative",
+  height: "150px",
+  display: "block",
+  borderRadius: "5px",
+  overflow: "hidden",
+}));
+
+const ItemImg = styled("img")(() => ({
+  width: "100%",
+  height: "100%",
+  objectFit: "cover",
+}));
+
+const ItemChapter = styled(Box)(({ theme }) => ({
+  width: "100%",
+  height: "100%",
+  position: "absolute",
+  display: "block",
+  bottom: 0,
+  left: 0,
+  padding: "4px",
+  fontSize: ".85em",
+  backgroundColor: "rgba(0, 0, 0, .4)",
+  textShadow: `0 0 10px ${theme.palette.primary.main}`,
+  maxHeight: "24px",
+  overflow: "hidden",
+  textAlign: "center",
+  color: theme.palette.primary.contrastText,
+}));
+
+const ItemTitle = styled(Link)(({ theme }) => ({
+  textDecoration: "none",
+  fontSize: ".9em",
+  display: "block",
+  textAlign: "center",
+  color: theme.palette.primary.main,
+  textShadow: "1px 1px 2px rgba(0, 0, 0, .05)",
+  maxHeight: "38px",
+  overflow: "hidden",
+}));
 
 type Props = {
   categories: CategoryInterface[];
@@ -71,27 +136,11 @@ export const HomeFullStories = ({ categories }: Props) => {
   };
   return (
     <>
-      <Stack
-        direction={{
-          md: "row",
-          xs: "column",
-        }}
-        mt={4}
-        alignItems={{
-          md: "center",
-          xs: "flex-start",
-        }}
-        gap={"10px"}
-        justifyContent={"space-between"}
-      >
+      <BoxWrapper>
         <Box component={"h2"} m={0}>
           Truyện đã hoàn thành
-          <Box
-            component={Button}
-            p={".5px"}
-            minWidth={"unset"}
+          <ReloadButtonStyled
             type={"button"}
-            ml={1}
             onClick={() => hotStoriesListMutate()}
             disabled={hotStoriesValidating ? true : false}
           >
@@ -100,7 +149,7 @@ export const HomeFullStories = ({ categories }: Props) => {
             ) : (
               <CachedIcon />
             )}
-          </Box>
+          </ReloadButtonStyled>
         </Box>
         <Box
           component={FormControl}
@@ -137,7 +186,7 @@ export const HomeFullStories = ({ categories }: Props) => {
             ))}
           </Select>
         </Box>
-      </Stack>
+      </BoxWrapper>
       <Box className={"hr"} my={2} />
       <Carousel
         mobileBreakpoint={100}
@@ -188,65 +237,15 @@ export const HomeFullStories = ({ categories }: Props) => {
           : hotStoriesList?.result.map((story: FullStoriesInterface) => {
               return (
                 <Carousel.Item key={story._id}>
-                  <Box
-                    component={Link}
-                    href={`/story/${story.story_code}`}
-                    width={"100%"}
-                    p={0}
-                    m={0}
-                    position={"relative"}
-                    height={"150px"}
-                    display={"block"}
-                    borderRadius={"5px"}
-                    overflow={"hidden"}
-                  >
-                    <Box
-                      component={"img"}
-                      width="100%"
-                      height={"100%"}
-                      src={story.story_cover}
-                      sx={{
-                        objectFit: "cover",
-                      }}
-                      alt={story.story_title}
-                    />
-                    <Box
-                      width={"100%"}
-                      height={"auto"}
-                      position={"absolute"}
-                      display={"block"}
-                      bottom={0}
-                      left={0}
-                      p={"4px"}
-                      fontSize={".85em"}
-                      bgcolor={"rgba(0,0,0, .4)"}
-                      color={"primary.contrastText"}
-                      sx={{
-                        textShadow: "0 0 10px primary.main",
-                      }}
-                      maxHeight={"45px"}
-                      overflow={"hidden"}
-                      textAlign={"center"}
-                    >
+                  <ItemLinkWrapper href={`/story/${story.story_code}`}>
+                    <ItemImg src={story.story_cover} alt={story.story_title} />
+                    <ItemChapter>
                       Full - {story._count.chapter} chương
-                    </Box>
-                  </Box>
-                  <Box
-                    sx={{
-                      textDecoration: "none",
-                      fontSize: ".9em",
-                      display: "block",
-                      textAlign: "center",
-                      color: "main.main",
-                      textShadow: "1px 1px 2px rgba(0, 0, 0, .05)",
-                      maxHeight: "38px",
-                      overflow: "hidden",
-                    }}
-                    component={Link}
-                    href={`/story/${story.story_code}`}
-                  >
+                    </ItemChapter>
+                  </ItemLinkWrapper>
+                  <ItemTitle href={`/story/${story.story_code}`}>
                     {story.story_title}
-                  </Box>
+                  </ItemTitle>
                 </Carousel.Item>
               );
             })}

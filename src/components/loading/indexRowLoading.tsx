@@ -1,36 +1,39 @@
+import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
 type Props = {};
+
+const LoadingWrapper = styled(Box)(({ theme }) => ({
+  animationFillMode: "forwards",
+  animationIterationCount: "infinite",
+  animationName: "story-list-loading",
+  animationTimingFunction: "linear",
+  background: "#f6f7f8",
+  backgroundImage:
+    "linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%)",
+  backgroundSize: "200%",
+  [theme.breakpoints.up("xs")]: {
+    animationDuration: "2s",
+  },
+  [theme.breakpoints.up("md")]: {
+    animationDuration: "1s",
+  },
+}));
+
+const LoadingItem = styled(Box)(() => ({
+  borderBottom: "1px solid #ccc",
+  position: "relative",
+  height: "30px",
+  "&>div": {
+    backgroundColor: "#fff",
+    position: "absolute",
+  },
+}));
 
 export const IndexRowLoading = (props: Props) => {
   return (
     <>
-      <Box
-        sx={{
-          animationDuration: {
-            md: "1s",
-            xs: "2s",
-          },
-          animationFillMode: "forwards",
-          animationIterationCount: "infinite",
-          animationName: "story-list-loading",
-          animationTimingFunction: "linear",
-          background: "#f6f7f8",
-          backgroundImage:
-            "linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%)",
-          backgroundSize: "200%",
-        }}
-      >
-        <Box
-          borderBottom={"1px solid #ccc"}
-          sx={{
-            position: "relative",
-            "&>div": {
-              bgcolor: "#fff",
-              position: "absolute",
-            },
-            height: "30px",
-          }}
-        >
+      <LoadingWrapper>
+        <LoadingItem>
           <Box sx={{ top: 0, left: 0, right: 0, height: "6px" }}></Box>
           <Box sx={{ bottom: 0, left: 0, right: 0, height: "6px" }}></Box>
           <Box sx={{ top: 0, left: 0, bottom: 0, width: "6px" }}></Box>
@@ -43,8 +46,8 @@ export const IndexRowLoading = (props: Props) => {
               left: "calc(6px + 18px)",
             }}
           ></Box>
-        </Box>
-      </Box>
+        </LoadingItem>
+      </LoadingWrapper>
     </>
   );
 };

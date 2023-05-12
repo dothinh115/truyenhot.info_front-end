@@ -19,6 +19,8 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
+import { styled } from "@mui/material/styles";
+
 const ITEM_HEIGHT = 36;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -28,6 +30,126 @@ const MenuProps = {
     },
   },
 };
+
+const ReloadButtonStyled = styled(Button)(() => ({
+  p: ".5px",
+  minWidth: "unset",
+  ml: 1,
+}));
+
+const StackWrapper = styled(Stack)(() => ({
+  border: "1px dashed #7986cba6",
+  borderRadius: "16px",
+  overflow: "hidden",
+  backgroundColor: "#fff",
+}));
+
+const RowWrapper = styled(Stack)(() => ({
+  justifyContent: "space-between",
+  color: "#fff",
+  fontWeight: "500",
+  backgroundColor: "#7986cbc2",
+  borderRadius: "10px 10px 0 0",
+  margin: "4px 4px 0 4px",
+  padding: "8px 16px",
+  "& div": {
+    padding: "4px",
+  },
+}));
+
+const FirstRowHeading = styled(Stack)(({ theme }) => ({
+  justifyContent: "center",
+  [theme.breakpoints.up("xs")]: {
+    width: "80%",
+  },
+  [theme.breakpoints.up("md")]: {
+    width: "70%",
+  },
+}));
+
+const SecondRowHeading = styled(Stack)(({ theme }) => ({
+  justifyContent: "center",
+  textAlign: "right",
+  [theme.breakpoints.up("xs")]: {
+    width: "20%",
+  },
+  [theme.breakpoints.up("md")]: {
+    width: "15%",
+  },
+}));
+
+const ThirdRowHeading = styled(Stack)(({ theme }) => ({
+  justifyContent: "center",
+  textAlign: "right",
+  [theme.breakpoints.up("xs")]: {
+    display: "none",
+  },
+  [theme.breakpoints.up("md")]: {
+    width: "15%",
+    display: "flex",
+  },
+}));
+
+const ItemRowWrapper = styled(Stack)(() => ({
+  justifyContent: "space-between",
+  flexWrap: "wrap",
+  "&>div": {
+    padding: "4px",
+    backgroundColor: "#fff",
+    borderBottom: "1px solid #eee",
+  },
+  "& a": {
+    textDecoration: "none",
+  },
+}));
+
+const ItemFirstRow = styled(Box)(({ theme }) => ({
+  [theme.breakpoints.up("xs")]: {
+    width: "80%",
+  },
+  [theme.breakpoints.up("md")]: {
+    width: "70%",
+  },
+}));
+
+const ItemSecondRow = styled(Box)(({ theme }) => ({
+  textAlign: "right",
+  [theme.breakpoints.up("xs")]: {
+    width: "20%",
+  },
+  [theme.breakpoints.up("md")]: {
+    width: "15%",
+  },
+}));
+
+const ItemThirdRow = styled(Box)(({ theme }) => ({
+  textAlign: "right",
+  fontSize: ".9em",
+  [theme.breakpoints.up("xs")]: {
+    display: "none",
+  },
+  [theme.breakpoints.up("md")]: {
+    width: "15%",
+    display: "block",
+  },
+}));
+
+const ItemIcon = styled("span")(() => ({
+  display: "inline-block",
+  height: "20px",
+  "& svg": {
+    width: "20px",
+    height: "20px",
+  },
+}));
+
+const ItemMainLink = styled(Link)(() => ({
+  lineHeight: "20px",
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  letterSpacing: "-.5px",
+}));
 
 type Props = {
   categories: CategoryInterface[];
@@ -87,12 +209,8 @@ export const IndexRecentStories = ({ categories }: Props) => {
       >
         <Box component={"h2"} m={0}>
           Truyện mới cập nhật
-          <Box
-            component={Button}
-            p={".5px"}
-            minWidth={"unset"}
+          <ReloadButtonStyled
             type={"button"}
-            ml={1}
             onClick={() => recenUpdatetStoriesListMutate()}
             disabled={recentUpdateStoriesValidating ? true : false}
           >
@@ -101,7 +219,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
             ) : (
               <CachedIcon />
             )}
-          </Box>
+          </ReloadButtonStyled>
         </Box>
         <Box
           component={FormControl}
@@ -141,61 +259,12 @@ export const IndexRecentStories = ({ categories }: Props) => {
       </Stack>
       <Box className={"hr"} my={2} />
 
-      <Stack
-        border={"1px dashed #7986cba6"}
-        borderRadius={"16px"}
-        overflow={"hidden"}
-        bgcolor={"#fff"}
-      >
-        <Stack
-          direction={"row"}
-          justifyContent={"space-between"}
-          sx={{
-            "& div": {
-              p: "4px",
-            },
-          }}
-          color={"#fff"}
-          fontWeight={"500"}
-          bgcolor={"#7986cbc2"}
-          borderRadius={"10px 10px 0 0"}
-          m={"4px 4px 0 4px"}
-          px={2}
-          py={1}
-        >
-          <Stack
-            justifyContent={"center"}
-            width={{
-              md: "70%",
-              xs: "80%",
-            }}
-          >
-            TÊN TRUYỆN
-          </Stack>
-          <Stack
-            justifyContent={"center"}
-            textAlign={"right"}
-            width={{
-              md: "15%",
-              xs: "20%",
-            }}
-          >
-            C.CUỐI
-          </Stack>
-          <Stack
-            textAlign={"right"}
-            justifyContent={"center"}
-            width={{
-              md: "15%",
-            }}
-            display={{
-              md: "flex",
-              xs: "none",
-            }}
-          >
-            UPDATE
-          </Stack>
-        </Stack>
+      <StackWrapper>
+        <RowWrapper direction={"row"}>
+          <FirstRowHeading>TÊN TRUYỆN</FirstRowHeading>
+          <SecondRowHeading>C.CUỐI</SecondRowHeading>
+          <ThirdRowHeading>UPDATE</ThirdRowHeading>
+        </RowWrapper>
 
         {recentUpdateStoriesValidating
           ? preDataRender()
@@ -210,88 +279,34 @@ export const IndexRecentStories = ({ categories }: Props) => {
                       .replaceAll("CHƯƠNG ", "C")
                       .replaceAll("QUYỂN ", "Q");
                 return (
-                  <Stack
-                    key={story._id}
-                    direction={"row"}
-                    justifyContent={"space-between"}
-                    flexWrap={"wrap"}
-                    sx={{
-                      "&>div": {
-                        p: "4px",
-                        bgcolor: "#fff",
-                        borderBottom: "1px solid #eee",
-                      },
-                      "& a": {
-                        textDecoration: "none",
-                      },
-                    }}
-                  >
-                    <Box
-                      width={{
-                        md: "70%",
-                        xs: "80%",
-                      }}
-                    >
+                  <ItemRowWrapper key={story._id} direction={"row"}>
+                    <ItemFirstRow>
                       <Stack direction={"row"} alignItems={"center"}>
-                        <Box
-                          component={"span"}
-                          display={"inline-block"}
-                          height={"20px"}
-                          color={
-                            (index + 1 === 1 && "error.main") ||
-                            (index + 1 === 2 && "success.main") ||
-                            (index + 1 === 3 && "info.main") ||
-                            "#ccc"
-                          }
+                        <ItemIcon
                           sx={{
-                            "& svg": {
-                              width: "20px",
-                              height: "20px",
-                            },
+                            color:
+                              (index + 1 === 1 && "error.main") ||
+                              (index + 1 === 2 && "success.main") ||
+                              (index + 1 === 3 && "info.main") ||
+                              "#ccc",
                           }}
                         >
                           <KeyboardArrowRightIcon />
-                        </Box>
-                        <Box
-                          component={Link}
-                          href={`/story/${story.story_code}`}
-                          lineHeight={"20px"}
-                          sx={{
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            letterSpacing: "-.5px",
-                          }}
-                        >
+                        </ItemIcon>
+                        <ItemMainLink href={`/story/${story.story_code}`}>
                           {story.story_title}
-                        </Box>
+                        </ItemMainLink>
                       </Stack>
-                    </Box>
-                    <Box
-                      textAlign={"right"}
-                      width={{
-                        md: "15%",
-                        xs: "20%",
-                      }}
-                    >
+                    </ItemFirstRow>
+                    <ItemSecondRow>
                       <Box
                         component={Link}
                         href={`/story/${story.story_code}/${story?.lastChapter?.chapter_code}`}
                       >
                         {story?.lastChapter?.chapter_name}
                       </Box>
-                    </Box>
-                    <Box
-                      width={{
-                        md: "15%",
-                      }}
-                      fontSize={".9em"}
-                      textAlign={"right"}
-                      display={{
-                        md: "block",
-                        xs: "none",
-                      }}
-                    >
+                    </ItemSecondRow>
+                    <ItemThirdRow>
                       {timeSince(
                         Math.abs(
                           new Date().valueOf() -
@@ -299,12 +314,12 @@ export const IndexRecentStories = ({ categories }: Props) => {
                         )
                       )}{" "}
                       trước
-                    </Box>
-                  </Stack>
+                    </ItemThirdRow>
+                  </ItemRowWrapper>
                 );
               }
             )}
-      </Stack>
+      </StackWrapper>
     </>
   );
 };

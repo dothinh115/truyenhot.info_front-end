@@ -18,6 +18,42 @@ import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
 import { HotStoriesLoading } from "../loading";
+import { styled } from "@mui/material/styles";
+
+const BoxWrapper = styled(Link)(() => ({
+  width: "100%",
+  padding: 0,
+  margin: 0,
+  position: "relative",
+  height: "180px",
+  display: "block",
+  borderRadius: "5px",
+  overflow: "hidden",
+}));
+
+const BoxImg = styled("img")(() => ({
+  width: "100%",
+  height: "100%",
+  objectFit: "cover",
+}));
+
+const BoxTitle = styled(Box)(({ theme }) => ({
+  width: "100%",
+  height: "auto",
+  position: "absolute",
+  display: "block",
+  bottom: 0,
+  left: 0,
+  padding: "4px",
+  fontSize: ".85em",
+  backgroundColor: "rgba(0,0,0, .4)",
+  color: theme.palette.primary.contrastText,
+  textShadow: "0 0 10px primary.main",
+  overflow: "hidden",
+  whiteSpace: "nowrap",
+  textOverflow: "ellipsis",
+  letterSpacing: "-1px",
+}));
 
 const ITEM_HEIGHT = 36;
 const ITEM_PADDING_TOP = 8;
@@ -174,50 +210,10 @@ export const HomeHotStories = ({ categories }: Props) => {
           : hotStoriesList?.result.map((story: HotStoriesInterface) => {
               return (
                 <Carousel.Item key={story._id}>
-                  <Box
-                    component={Link}
-                    href={`/story/${story.story_code}`}
-                    width={"100%"}
-                    p={0}
-                    m={0}
-                    position={"relative"}
-                    height={"180px"}
-                    display={"block"}
-                    borderRadius={"5px"}
-                    overflow={"hidden"}
-                  >
-                    <Box
-                      component={"img"}
-                      width="100%"
-                      height={"180px"}
-                      src={story.story_cover}
-                      sx={{
-                        objectFit: "cover",
-                      }}
-                      alt={story.story_title}
-                    />
-                    <Box
-                      width={"100%"}
-                      height={"auto"}
-                      position={"absolute"}
-                      display={"block"}
-                      bottom={0}
-                      left={0}
-                      p={"4px"}
-                      fontSize={".85em"}
-                      bgcolor={"rgba(0,0,0, .4)"}
-                      color={"primary.contrastText"}
-                      sx={{
-                        textShadow: "0 0 10px primary.main",
-                      }}
-                      overflow={"hidden"}
-                      whiteSpace={"nowrap"}
-                      textOverflow={"ellipsis"}
-                      letterSpacing={"-1px"}
-                    >
-                      {story.story_title}
-                    </Box>
-                  </Box>
+                  <BoxWrapper href={`/story/${story.story_code}`}>
+                    <BoxImg src={story.story_cover} alt={story.story_title} />
+                    <BoxTitle>{story.story_title}</BoxTitle>
+                  </BoxWrapper>
                 </Carousel.Item>
               );
             })}

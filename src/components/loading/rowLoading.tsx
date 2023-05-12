@@ -1,35 +1,37 @@
 import { Box } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
+import { styled } from "@mui/material/styles";
 
 type Props = {};
 
+const ListItemLoading = styled(ListItem)(({ theme }) => ({
+  borderBottom: "1px dashed #ccc",
+  height: "45px",
+  padding: 0,
+  animationFillMode: "forwards",
+  animationIterationCount: "infinite",
+  animationName: "story-list-loading",
+  animationTimingFunction: "linear",
+  background: "#f6f7f8",
+  backgroundImage:
+    "linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%)",
+  backgroundSize: "200%",
+  position: "relative",
+  "&>div": {
+    backgroundColor: "#fff",
+    position: "absolute",
+  },
+  [theme.breakpoints.up("xs")]: {
+    animationDuration: "2s",
+  },
+  [theme.breakpoints.up("md")]: {
+    animationDuration: "1s",
+  },
+}));
+
 export const RowLoading = (props: Props) => {
   return (
-    <ListItem
-      sx={{
-        borderBottom: "1px dashed #ccc",
-        height: "45px",
-        p: 0,
-        animationDuration: {
-          md: "1s",
-          xs: "2s",
-        },
-        animationFillMode: "forwards",
-        animationIterationCount: "infinite",
-        animationName: "story-list-loading",
-        animationTimingFunction: "linear",
-        background: "#f6f7f8",
-        backgroundImage:
-          "linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%)",
-        backgroundSize: "200%",
-        position: "relative",
-        "&>div": {
-          background: "#fff",
-          position: "absolute",
-        },
-      }}
-      dense={true}
-    >
+    <ListItemLoading dense={true}>
       <Box sx={{ top: 0, left: 0, right: 0, height: "13px" }}></Box>
       <Box sx={{ bottom: 0, left: 0, right: 0, height: "13px" }}></Box>
       <Box sx={{ top: 0, left: 0, bottom: 0, width: "14px" }}></Box>
@@ -42,6 +44,6 @@ export const RowLoading = (props: Props) => {
           top: "13px",
         }}
       ></Box>
-    </ListItem>
+    </ListItemLoading>
   );
 };

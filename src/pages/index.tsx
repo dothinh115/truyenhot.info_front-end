@@ -25,11 +25,11 @@ type Props = {
 const Index = ({ categories, stats }: Props) => {
   useContext<any>(MainLayoutContext);
   const breadCrumbs = [
-    <Box
+    <Stack
       key={1}
+      direction={"row"}
       component={Link}
       href="/"
-      display={"flex"}
       alignItems={"center"}
       fontSize={{
         md: "1rem",
@@ -38,7 +38,7 @@ const Index = ({ categories, stats }: Props) => {
       scroll={true}
     >
       <HomeIcon />
-    </Box>,
+    </Stack>,
   ];
 
   return (
