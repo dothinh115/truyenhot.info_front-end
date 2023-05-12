@@ -9,6 +9,7 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
+  Stack,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { SelectChangeEvent } from "@mui/material/Select";
@@ -29,18 +30,9 @@ const MenuProps = {
   },
 };
 
-const BoxWrapper = styled(Box)(({ theme }) => ({
-  display: "flex",
+const BoxWrapper = styled(Stack)(({ theme }) => ({
   gap: "10px",
   justifyContent: "space-between",
-  [theme.breakpoints.up("xs")]: {
-    direction: "column",
-    alignItems: "flex-start",
-  },
-  [theme.breakpoints.up("md")]: {
-    direction: "row",
-    alignItems: "center",
-  },
 }));
 
 const ReloadButtonStyled = styled(Button)(() => ({
@@ -136,7 +128,18 @@ export const HomeFullStories = ({ categories }: Props) => {
   };
   return (
     <>
-      <BoxWrapper>
+      <BoxWrapper
+        sx={{
+          direction: {
+            xs: "column",
+            md: "row",
+          },
+          alignItems: {
+            xs: "flex-start",
+            md: "center",
+          },
+        }}
+      >
         <Box component={"h2"} m={0}>
           Truyện đã hoàn thành
           <ReloadButtonStyled
@@ -196,21 +199,21 @@ export const HomeFullStories = ({ categories }: Props) => {
         responsiveLayout={[
           {
             breakpoint: 900,
-            cols: 6,
+            cols: 7,
             rows: 4,
             gap: 10,
             loop: true,
           },
           {
             breakpoint: 800,
-            cols: 5,
+            cols: 6,
             rows: 4,
             gap: 10,
             loop: true,
           },
           {
             breakpoint: 700,
-            cols: 4,
+            cols: 5,
             rows: 4,
             gap: 10,
             loop: true,
@@ -218,14 +221,14 @@ export const HomeFullStories = ({ categories }: Props) => {
 
           {
             breakpoint: 600,
-            cols: 3,
+            cols: 4,
             rows: 4,
             gap: 10,
             loop: true,
           },
           {
             breakpoint: 400,
-            cols: 2,
+            cols: 3,
             rows: 4,
             gap: 10,
             loop: true,
