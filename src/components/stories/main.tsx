@@ -86,6 +86,7 @@ export const StoryMain = ({ story }: Props) => {
           <StoryReportButton
             open={reportModalOpen}
             setOpen={setReportModalOpen}
+            story_code={story?.story_code}
           />
         </Stack>
         <Box className={"hr"} />

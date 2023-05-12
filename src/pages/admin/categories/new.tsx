@@ -96,7 +96,7 @@ const NewCategory = (props: Props) => {
           </Box>
           <Box className={"hr"} />
           <Box>
-            <form onSubmit={handleSubmit(submitHandle)}>
+            <Box component={"form"} onSubmit={handleSubmit(submitHandle)}>
               <Controller
                 name="cate_title"
                 control={control}
@@ -126,7 +126,7 @@ const NewCategory = (props: Props) => {
                   Thêm
                 </Button>
               </Box>
-            </form>
+            </Box>
           </Box>
           <Box className={"hr"} my={2} />
           <Box>

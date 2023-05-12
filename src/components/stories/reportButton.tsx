@@ -1,25 +1,26 @@
+import { useSnackbar } from "@/hooks/snackbar";
+import { NewReportInterface, ReportOptionInterface } from "@/models/stories";
+import { API } from "@/utils/config";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
   FormControl,
+  FormHelperText,
   IconButton,
   InputLabel,
   MenuItem,
   Modal,
   Select,
   TextField,
-  FormHelperText,
 } from "@mui/material";
-import useSWR from "swr";
 import { useEffect } from "react";
-import { ReportInterface, ReportOptionInterface } from "@/models/stories";
 import { Controller, useForm } from "react-hook-form";
-import { API } from "@/utils/config";
-import { useSnackbar } from "@/hooks/snackbar";
+import useSWR from "swr";
 type Props = {
   open: boolean;
   setOpen: any;
+  story_code: string;
 };
 
 const style = {
@@ -37,7 +38,7 @@ const style = {
   p: 2,
 };
 
-export const StoryReportButton = ({ open, setOpen }: Props) => {
+export const StoryReportButton = ({ open, setOpen, story_code }: Props) => {
   const { snackbar, setSnackbar } = useSnackbar();
   const { data: reportOptionData, mutate: reportOptionMutate } = useSWR(
     `/stories/errorReportOption/getAll`,
@@ -51,7 +52,7 @@ export const StoryReportButton = ({ open, setOpen }: Props) => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<ReportInterface>({
+  } = useForm<NewReportInterface>({
     mode: "onSubmit",
     defaultValues: {
       report_description: "",
@@ -59,9 +60,13 @@ export const StoryReportButton = ({ open, setOpen }: Props) => {
     },
   });
 
-  const submitHandle = async (data: ReportInterface) => {
+  const submitHandle = async (data: NewReportInterface) => {
+    data = {
+      ...data,
+      story_code,
+    };
     try {
-      const respone = API.post(`/stories/errorReport/new`, data);
+      API.post(`/stories/errorReport/new`, data);
       setSnackbar({
         message: "Gửi lỗi thành công",
         open: true,
@@ -112,7 +117,7 @@ export const StoryReportButton = ({ open, setOpen }: Props) => {
                     {reportOptionData?.result.map(
                       (item: ReportOptionInterface) => {
                         return (
-                          <MenuItem value={item._id} key={item._id}>
+                          <MenuItem value={item.report_title} key={item._id}>
                             {item.report_title}
                           </MenuItem>
                         );
@@ -132,6 +137,7 @@ export const StoryReportButton = ({ open, setOpen }: Props) => {
               name={"report_description"}
               control={control}
               rules={{
+                required: "Không được để trống",
                 maxLength: {
                   value: 99,
                   message: "Tối đa 100 ký tự!",
@@ -150,7 +156,7 @@ export const StoryReportButton = ({ open, setOpen }: Props) => {
                   helperText={
                     errors.report_description?.message
                       ? errors.report_description?.message
-                      : null
+                      : "Mô tả ngắn gọn về lỗi, ví dụ như chương nào bị trống."
                   }
                 />
               )}

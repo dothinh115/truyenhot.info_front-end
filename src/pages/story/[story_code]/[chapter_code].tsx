@@ -230,7 +230,11 @@ const ChapterDetail = ({ chapterData }: Props) => {
               </Button>
             </Stack>
             <Box textAlign={"center"}>
-              <StoryReportButton open={open} setOpen={setOpen} />
+              <StoryReportButton
+                open={open}
+                setOpen={setOpen}
+                story_code={chapterData?.story_code}
+              />
             </Box>
             <Box className={"hr"} my={4} />
 
@@ -257,7 +261,11 @@ const ChapterDetail = ({ chapterData }: Props) => {
 
             <Box className={"hr"} my={4} />
             <Box textAlign={"center"}>
-              <StoryReportButton open={open} setOpen={setOpen} />
+              <StoryReportButton
+                open={open}
+                setOpen={setOpen}
+                story_code={chapterData?.story_code}
+              />
             </Box>
             <Stack
               direction={"row"}

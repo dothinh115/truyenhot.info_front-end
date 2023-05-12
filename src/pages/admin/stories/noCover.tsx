@@ -22,12 +22,12 @@ import useSWR from "swr";
 
 type Props = {};
 
-const AdminStoryIndex = (props: Props) => {
+const AdminNoCoverStories = (props: Props) => {
   const {
     data: storiesList,
     mutate: storiesListMutate,
     isValidating: storiesValidating,
-  } = useSWR("/stories/getRecentUpdate");
+  } = useSWR("/admin/getNoCoverStories");
 
   const router = useRouter();
 
@@ -177,6 +177,6 @@ const AdminStoryIndex = (props: Props) => {
   );
 };
 
-AdminStoryIndex.Layout = AdminLayout;
+AdminNoCoverStories.Layout = AdminLayout;
 
-export default AdminStoryIndex;
+export default AdminNoCoverStories;

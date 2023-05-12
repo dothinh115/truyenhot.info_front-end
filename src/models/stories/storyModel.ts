@@ -40,8 +40,22 @@ export interface ReportOptionInterface {
   report_title: string;
 }
 
-export interface ReportInterface {
-  _id?: string;
+export interface NewReportInterface {
   report_title: string;
   report_description: string;
+  story_code: string;
+}
+
+export interface ReportInterface {
+  _id: string;
+  report_title: string;
+  report_description: string;
+  story_code: string;
+  updated_at: Date;
+  handled: boolean;
+}
+
+export interface ReportOptionInterface {
+  _id: string;
+  report_title: string;
 }
