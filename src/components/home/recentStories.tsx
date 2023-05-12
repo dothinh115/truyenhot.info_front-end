@@ -93,10 +93,13 @@ const ThirdRowHeading = styled(Stack)(({ theme }) => ({
 const ItemRowWrapper = styled(Stack)(() => ({
   justifyContent: "space-between",
   flexWrap: "wrap",
+  borderBottom: "1px dashed #7986cba6",
+  "&:last-of-type": {
+    borderBottom: "none",
+  },
   "&>div": {
     padding: "4px",
     backgroundColor: "#fff",
-    borderBottom: "1px solid #eee",
   },
   "& a": {
     textDecoration: "none",
@@ -271,8 +274,8 @@ export const IndexRecentStories = ({ categories }: Props) => {
           : recentUpdateStoriesList?.result?.map(
               (story: RecentStoriesInterface, index: number) => {
                 if (story.lastChapter)
-                  story.lastChapter.chapter_name =
-                    story.lastChapter?.chapter_name
+                  story.lastChapter[0].chapter_name =
+                    story.lastChapter[0]?.chapter_name
                       .replaceAll("Chương ", "C")
                       .replaceAll("Quyển ", "Q")
                       .replaceAll(" - ", "-")
@@ -301,9 +304,9 @@ export const IndexRecentStories = ({ categories }: Props) => {
                     <ItemSecondRow>
                       <Box
                         component={Link}
-                        href={`/story/${story.story_code}/${story?.lastChapter?.chapter_code}`}
+                        href={`/story/${story.story_code}/${story?.lastChapter[0]?.chapter_code}`}
                       >
-                        {story?.lastChapter?.chapter_name}
+                        {story?.lastChapter[0]?.chapter_name}
                       </Box>
                     </ItemSecondRow>
                     <ItemThirdRow>
