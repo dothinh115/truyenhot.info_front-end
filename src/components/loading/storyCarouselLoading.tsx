@@ -27,7 +27,7 @@ export const IndexStoryCarouselLoading = (props: Props) => {
           backgroundSize: "200%",
         }}
       >
-        <Box width={"100%"} height={"180px"} position={"relative"}>
+        <Box width={"100%"} height={"150px"} position={"relative"}>
           <Box
             width={"100%"}
             height={"auto"}
