@@ -195,7 +195,7 @@ export const HomeFullStories = ({ categories }: Props) => {
                     p={0}
                     m={0}
                     position={"relative"}
-                    height={"180px"}
+                    height={"150px"}
                     display={"block"}
                     borderRadius={"5px"}
                     overflow={"hidden"}
@@ -203,7 +203,7 @@ export const HomeFullStories = ({ categories }: Props) => {
                     <Box
                       component={"img"}
                       width="100%"
-                      height={"180px"}
+                      height={"100%"}
                       src={story.story_cover}
                       sx={{
                         objectFit: "cover",
