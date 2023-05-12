@@ -17,7 +17,7 @@ import Carousel from "better-react-carousel";
 import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
-import { IndexStoryCarouselLoading } from "../loading";
+import { FullStoriesLoading } from "../loading/fullStoriesLoading";
 
 const ITEM_HEIGHT = 36;
 const ITEM_PADDING_TOP = 8;
@@ -56,7 +56,7 @@ export const HomeFullStories = ({ categories }: Props) => {
     for (let i = 0; i < 28; i++) {
       result.push(
         <Carousel.Item key={i}>
-          <IndexStoryCarouselLoading key={i} />
+          <FullStoriesLoading key={i} />
         </Carousel.Item>
       );
     }

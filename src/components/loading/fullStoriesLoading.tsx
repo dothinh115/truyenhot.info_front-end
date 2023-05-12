@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 
 type Props = {};
 
-export const HotStoriesLoading = (props: Props) => {
+export const FullStoriesLoading = (props: Props) => {
   return (
     <>
       <Box
@@ -27,7 +27,7 @@ export const HotStoriesLoading = (props: Props) => {
           backgroundSize: "200%",
         }}
       >
-        <Box width={"100%"} height={"180px"} position={"relative"}>
+        <Box width={"100%"} height={"150px"} position={"relative"}>
           <Box
             width={"100%"}
             height={"auto"}
