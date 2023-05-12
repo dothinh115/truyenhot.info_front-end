@@ -87,6 +87,7 @@ export const FooterDesktop = (props: Props) => {
                         mr: "4px",
                         mb: "4px",
                         bgcolor: "rgba(255, 255, 255, .85)",
+                        cursor: "pointer",
                       }}
                     />
                   );
