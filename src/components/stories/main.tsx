@@ -34,6 +34,7 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { RowLoading } from "../loading";
 import { StoryReportButton } from "./reportButton";
+import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 type Props = {
   story: StoryInterface;
 };
@@ -79,28 +80,104 @@ export const StoryMain = ({ story }: Props) => {
           direction={"row"}
           justifyContent={"space-between"}
           alignItems={"center"}
-          component={"h3"}
+          component={"h2"}
           mt={0}
         >
           THÔNG TIN TRUYỆN
+        </Stack>
+        <Box className={"hr"} />
+        <Box
+          component={"h1"}
+          textAlign={"center"}
+          mb={1}
+          sx={{ fontWeight: "500", letterSpacing: "-2px", wordSpacing: "5px" }}
+        >
+          {story?.story_title}
+        </Box>
+        <Box
+          position={"relative"}
+          sx={{
+            height: "270px",
+          }}
+        >
+          <Box
+            position={"relative"}
+            sx={{
+              height: "270px",
+              width: "180px",
+              left: "50%",
+              transform: "translateX(-50%)",
+            }}
+          >
+            <Box
+              component={"img"}
+              src={story?.story_cover}
+              sx={{
+                objectFit: "cover",
+                position: "absolute",
+                width: "100%",
+                height: "100%",
+                top: 0,
+                left: 0,
+              }}
+              alt={story?.story_title}
+            />
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              position={"absolute"}
+              justifyContent={"center"}
+              spacing={"4px"}
+              sx={{
+                maxHeight: "24px",
+                left: 0,
+                bottom: 0,
+                bgcolor: "rgba(0, 0, 0, .8)",
+                width: "100%",
+                color: "#fff",
+                fontSize: ".95em",
+                p: "3px",
+                "& svg": {
+                  width: ".7em",
+                  height: ".7em",
+                },
+              }}
+            >
+              <RemoveRedEyeIcon />
+              <Box component={"span"}>{story?.story_view}</Box>
+            </Stack>
+          </Box>
+        </Box>
+        <Stack
+          direction={"row"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          spacing={1}
+          mt={1}
+        >
+          <Button
+            variant="outlined"
+            color="info"
+            size="small"
+            startIcon={<PlayCircleFilledIcon />}
+            onClick={() =>
+              router.push({
+                pathname: `/story/[story_code]/[chapter_code]`,
+                query: {
+                  story_code: story?.story_code,
+                  chapter_code: story?.start_chapter,
+                },
+              })
+            }
+          >
+            Đọc truyện
+          </Button>
           <StoryReportButton
             open={reportModalOpen}
             setOpen={setReportModalOpen}
             story_code={story?.story_code}
           />
         </Stack>
-        <Box className={"hr"} />
-        <Box component={"h1"} textAlign={"center"}>
-          {story?.story_title}
-        </Box>
-        <Box textAlign={"center"}>
-          <Box
-            component={"img"}
-            src={story?.story_cover}
-            width={215}
-            alt={story?.story_title}
-          />
-        </Box>
         <Stack direction={"row"} justifyContent={"center"}>
           <FavoriteIcon
             sx={{
@@ -241,13 +318,6 @@ export const StoryMain = ({ story }: Props) => {
                   )
                 )} trước`}</>
               )}
-            </Box>
-            <Box component={"li"}>
-              <Box component={"h4"}>
-                <RemoveRedEyeIcon />
-                Lượt xem:
-              </Box>
-              {story?.story_view}
             </Box>
           </Box>
         </Stack>

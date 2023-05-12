@@ -17,6 +17,8 @@ import {
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
+import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
+import ReportIcon from "@mui/icons-material/Report";
 type Props = {
   open: boolean;
   setOpen: any;
@@ -190,15 +192,15 @@ export const StoryReportButton = ({ open, setOpen, story_code }: Props) => {
           </Box>
         </Box>
       </Modal>
-      <Box
-        component={Button}
-        size="small"
-        variant="contained"
-        color={"info"}
+      <Button
+        startIcon={<ReportIcon />}
+        variant="outlined"
+        color={"error"}
         onClick={openModalHandle}
+        size="small"
       >
-        Report truyện lỗi
-      </Box>
+        Báo cáo lỗi
+      </Button>
     </>
   );
 };

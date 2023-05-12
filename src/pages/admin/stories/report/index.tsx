@@ -2,21 +2,22 @@ import { useSnackbar } from "@/hooks/snackbar";
 import { AdminLayout } from "@/layouts";
 import { ReportInterface } from "@/models/stories";
 import { API } from "@/utils/config";
+import { timeSince } from "@/utils/function";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import CachedIcon from "@mui/icons-material/Cached";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
+  Button,
   Chip,
   Container,
-  Stack,
-  Button,
-  Modal,
   IconButton,
+  Modal,
+  Stack,
 } from "@mui/material";
+import { useRouter } from "next/router";
+import { useRef, useState } from "react";
 import useSWR from "swr";
-import CachedIcon from "@mui/icons-material/Cached";
-import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import CloseIcon from "@mui/icons-material/Close";
 
 type Props = {};
 
@@ -49,6 +50,7 @@ const AdminReport = (props: Props) => {
     isValidating: reportIsValidating,
   } = useSWR(`/stories/errorReport/getAll`);
 
+  const router = useRouter();
   const { data: getReportData, mutate: getReportMutate } = useSWR(
     `/stories/errorReport/get/${reportDataById?.current}`,
     {
@@ -99,14 +101,25 @@ const AdminReport = (props: Props) => {
             <Box>Mô tả lỗi:</Box>
             <Box>{getReportData?.result?.report_description}</Box>
           </Stack>
-          <Stack direction={"row"} justifyContent={"space-between"}>
+          <Stack
+            direction={"row"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
             <Box>Truyện lỗi:</Box>
-            <Box
-              component={Link}
-              href={`/admin/stories/${getReportData?.result?.story_code}`}
+            <IconButton
+              onClick={() =>
+                router.push({
+                  pathname: `/admin/stories/[story_code]`,
+                  query: {
+                    story_code: getReportData?.result?.story_code,
+                    goAround: true,
+                  },
+                })
+              }
             >
               <ArrowForwardIcon />
-            </Box>
+            </IconButton>
           </Stack>
           <Box className="hr" my={1} />
           <Box textAlign={"right"}>
@@ -153,7 +166,15 @@ const AdminReport = (props: Props) => {
                   return (
                     <Chip
                       key={report._id}
-                      label={report.report_title}
+                      label={`${report.report_title} [${
+                        report.created_at &&
+                        timeSince(
+                          Math.abs(
+                            new Date().valueOf() -
+                              new Date(report?.created_at).valueOf()
+                          )
+                        )
+                      } trước]`}
                       variant="outlined"
                       onDelete={() => deleteHandle(report._id)}
                       sx={{

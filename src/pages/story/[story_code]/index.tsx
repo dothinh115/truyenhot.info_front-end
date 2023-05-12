@@ -8,7 +8,7 @@ import { StoryInterface } from "@/models/stories";
 import { StorySection } from "@/sections";
 import { API, apiURL } from "@/utils/config";
 import HomeIcon from "@mui/icons-material/Home";
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { Box, Container, Stack } from "@mui/material";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Link from "next/link";
 import { useEffect } from "react";
