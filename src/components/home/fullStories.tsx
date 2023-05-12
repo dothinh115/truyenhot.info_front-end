@@ -9,14 +9,13 @@ import {
   MenuItem,
   OutlinedInput,
   Select,
-  Stack,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import Carousel from "better-react-carousel";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { FullStoriesLoading } from "../loading/fullStoriesLoading";
 
@@ -97,8 +96,9 @@ const ItemTitle = styled(Link)(({ theme }) => ({
 
 type Props = {
   categories: CategoryInterface[];
+  fullStories: FullStoriesInterface[];
 };
-export const HomeFullStories = ({ categories }: Props) => {
+export const HomeFullStories = ({ categories, fullStories }: Props) => {
   const [cateValue, setCateValue] = useState<
     | {
         value: string;
@@ -115,6 +115,7 @@ export const HomeFullStories = ({ categories }: Props) => {
     `/stories/getFullStories${cateValue ? "?category=" + cateValue.value : ""}`,
     {
       keepPreviousData: true,
+      revalidateOnMount: false,
     }
   );
   const carouselPreRender = () => {
@@ -135,6 +136,10 @@ export const HomeFullStories = ({ categories }: Props) => {
   ) => {
     setCateValue(child?.props);
   };
+
+  useEffect(() => {
+    if (hotStoriesList?.result) fullStories = hotStoriesList?.result;
+  }, [hotStoriesList]);
   return (
     <>
       <BoxWrapper>
@@ -235,7 +240,7 @@ export const HomeFullStories = ({ categories }: Props) => {
       >
         {hotStoriesValidating
           ? carouselPreRender()
-          : hotStoriesList?.result.map((story: FullStoriesInterface) => {
+          : fullStories?.map((story: FullStoriesInterface) => {
               return (
                 <Carousel.Item key={story._id}>
                   <ItemLinkWrapper href={`/story/${story.story_code}`}>

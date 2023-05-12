@@ -15,7 +15,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { SelectChangeEvent } from "@mui/material/Select";
 import Carousel from "better-react-carousel";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { HotStoriesLoading } from "../loading";
 import { styled } from "@mui/material/styles";
@@ -67,9 +67,10 @@ const MenuProps = {
 
 type Props = {
   categories: CategoryInterface[];
+  hotStories: HotStoriesInterface[];
 };
 
-export const HomeHotStories = ({ categories }: Props) => {
+export const HomeHotStories = ({ categories, hotStories }: Props) => {
   const [cateValue, setCateValue] = useState<
     | {
         value: string;
@@ -86,6 +87,7 @@ export const HomeHotStories = ({ categories }: Props) => {
     `/stories/getHotStories${cateValue ? "?category=" + cateValue.value : ""}`,
     {
       keepPreviousData: true,
+      revalidateOnMount: false,
     }
   );
 
@@ -107,6 +109,10 @@ export const HomeHotStories = ({ categories }: Props) => {
   ) => {
     setCateValue(child?.props);
   };
+
+  useEffect(() => {
+    if (hotStoriesList?.result) hotStories = hotStoriesList?.result;
+  }, [hotStoriesList]);
   return (
     <>
       <Stack
@@ -207,7 +213,7 @@ export const HomeHotStories = ({ categories }: Props) => {
       >
         {hotStoriesValidating
           ? carouselPreRender()
-          : hotStoriesList?.result.map((story: HotStoriesInterface) => {
+          : hotStories?.map((story: HotStoriesInterface) => {
               return (
                 <Carousel.Item key={story._id}>
                   <BoxWrapper href={`/story/${story.story_code}`}>

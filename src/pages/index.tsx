@@ -9,7 +9,11 @@ import {
 import { CategoriesSidebar } from "@/components/sidebar";
 import { MainLayoutContext } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
-import { BaseStatsInterface } from "@/models/home";
+import {
+  BaseStatsInterface,
+  FullStoriesInterface,
+  HotStoriesInterface,
+} from "@/models/home";
 import { apiURL } from "@/utils/config";
 import HomeIcon from "@mui/icons-material/Home";
 import { Box, Container, Stack } from "@mui/material";
@@ -20,9 +24,11 @@ import { useContext } from "react";
 type Props = {
   categories: CategoryInterface[];
   stats: BaseStatsInterface;
+  hotStories: HotStoriesInterface[];
+  fullStories: FullStoriesInterface[];
 };
 
-const Index = ({ categories, stats }: Props) => {
+const Index = ({ categories, stats, hotStories, fullStories }: Props) => {
   useContext<any>(MainLayoutContext);
   const breadCrumbs = [
     <Stack
@@ -54,7 +60,7 @@ const Index = ({ categories, stats }: Props) => {
       <MainBreadcrumbs links={breadCrumbs} />
       <Stack direction={"row"} justifyContent={"center"} mt={4}>
         <Container maxWidth={"md"}>
-          <HomeHotStories categories={categories} />
+          <HomeHotStories categories={categories} hotStories={hotStories} />
           <Stack
             direction={"row"}
             gap={"15px"}
@@ -83,7 +89,7 @@ const Index = ({ categories, stats }: Props) => {
             </Box>
           </Stack>
 
-          <HomeFullStories categories={categories} />
+          <HomeFullStories categories={categories} fullStories={fullStories} />
         </Container>
       </Stack>
     </>
@@ -94,15 +100,21 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   const revalidate = 1 * 60 * 60;
   const baseStatsResponse = await fetch(`${apiURL}/api/stats/getBaseStats`);
   const categoriesResponse = await fetch(`${apiURL}/api/categories/getAll`);
-
+  const hotStoriesResponse = await fetch(`${apiURL}/api/stories/getHotStories`);
+  const fullStoriesResponse = await fetch(
+    `${apiURL}/api/stories/getFullStories`
+  );
+  const hotStories = await hotStoriesResponse.json();
+  const fullStories = await fullStoriesResponse.json();
   const baseStats = await baseStatsResponse.json();
-
   const categories = await categoriesResponse.json();
 
   return {
     props: {
       categories: categories.result,
       stats: baseStats.result,
+      hotStories: hotStories.result,
+      fullStories: fullStories.result,
     },
     revalidate,
   };

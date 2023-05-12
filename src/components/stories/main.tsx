@@ -36,6 +36,136 @@ import useSWR from "swr";
 import { RowLoading } from "../loading";
 import { StoryReportButton } from "./reportButton";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
+import { styled } from "@mui/material/styles";
+
+const Wrapper = styled("h2")(() => ({
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginBottom: "0",
+  color: "rgba(0, 0, 0, .65)",
+}));
+
+const TitleWrapper = styled("h1")(() => ({
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "center",
+  textAlign: "center",
+  marginBottom: "8px",
+  fontWeight: "500",
+  letterSpacing: "-1px",
+  wordSpacing: "2px",
+}));
+
+const Title = styled(Box)(() => ({
+  display: "inline",
+  padding: "4px 8px",
+  color: "#606fc3",
+  borderRadius: "5px",
+  border: "1px dashed #7986cb47",
+}));
+
+const TitleAndImgWrapper = styled(Box)(() => ({
+  position: "relative",
+  height: "270px",
+}));
+
+const ImgWrapper = styled(Box)(() => ({
+  position: "relative",
+  height: "270px",
+  width: "180px",
+  left: "50%",
+  transform: "translateX(-50%)",
+  borderRadius: "10px",
+  overflow: "hidden",
+}));
+
+const CoverImage = styled("img")(() => ({
+  objectFit: "cover",
+  position: "absolute",
+  width: "100%",
+  height: "100%",
+  top: "0",
+  left: "0",
+}));
+
+const ViewStyled = styled(Stack)(() => ({
+  flexDirection: "row",
+  alignItems: "center",
+  position: "absolute",
+  justifyContent: "center",
+  gap: "4px",
+  maxHeight: "24px",
+  left: "0",
+  bottom: "0",
+  backgroundColor: "rgba(0, 0, 0, .8)",
+  width: "100%",
+  color: "#fff",
+  fontSize: ".95em",
+  padding: "3px",
+  "& svg": {
+    width: ".7em",
+    height: ".7em",
+  },
+}));
+
+const ButtonWrapper = styled(Stack)(() => ({
+  flexDirection: "row",
+  justifyContent: "center",
+  alignItems: "center",
+  gap: "8px",
+  marginTop: "8px",
+}));
+
+const UListStyled = styled("ul")(() => ({
+  listStyleType: "none",
+  paddingLeft: "0",
+  "& a ": {
+    textDecoration: "none",
+    color: "#303f9f",
+  },
+  "& > li > a, & > li > h4, & > li > p": {
+    display: "inline-block",
+    marginRight: "5px",
+  },
+  "& p, & a, & h4, & li": {
+    fontSize: "13px",
+  },
+  "& > li > h4": {
+    marginTop: "0",
+    marginBottom: "0",
+  },
+  "& > li": {
+    lineHeight: "30px",
+    "&:not(:last-child)": {
+      borderBottom: "1px dashed #ccc",
+    },
+    display: "flex",
+    alignItems: "flex-start",
+    "& h4": {
+      alignItems: "center",
+      color: "rgba(0, 0, 0, .85)",
+      display: "inline-flex",
+      "& svg": {
+        color: "rgba(0, 0, 0, .45)",
+        height: "20px",
+        width: "20px",
+        marginRight: "8px",
+        marginTop: "2px",
+      },
+      "& span": {
+        display: "inline-block",
+        width: "60px",
+      },
+    },
+  },
+  "& > li > ul": {
+    display: "inline-block",
+    paddingLeft: "8px",
+  },
+}));
+
 type Props = {
   story: StoryInterface;
 };
@@ -77,407 +207,275 @@ export const StoryMain = ({ story }: Props) => {
 
   return (
     <>
-      <Box>
-        <Stack
-          direction={"row"}
-          justifyContent={"space-between"}
-          alignItems={"center"}
-          component={"h2"}
-          mt={0}
+      <Wrapper>THÔNG TIN TRUYỆN</Wrapper>
+      <Box className={"hr"} />
+      <TitleWrapper>
+        <Title>{story?.story_title}</Title>
+      </TitleWrapper>
+      <TitleAndImgWrapper>
+        <ImgWrapper>
+          <CoverImage src={story?.story_cover} alt={story?.story_title} />
+          <ViewStyled>
+            <RemoveRedEyeIcon />
+            <Box component={"span"}>{story?.story_view}</Box>
+          </ViewStyled>
+        </ImgWrapper>
+      </TitleAndImgWrapper>
+      <ButtonWrapper>
+        <Button
+          variant="outlined"
+          color="info"
+          size="small"
+          startIcon={<PlayCircleFilledIcon />}
+          onClick={() =>
+            router.push({
+              pathname: `/story/[story_code]/[chapter_code]`,
+              query: {
+                story_code: story?.story_code,
+                chapter_code: story?.start_chapter,
+              },
+            })
+          }
         >
-          THÔNG TIN TRUYỆN
-        </Stack>
-        <Box className={"hr"} />
-        <Stack
-          direction={"row"}
-          justifyContent={"center"}
-          component={"h1"}
-          textAlign={"center"}
-          mb={1}
+          Đọc truyện
+        </Button>
+        <StoryReportButton
+          open={reportModalOpen}
+          setOpen={setReportModalOpen}
+          story_code={story?.story_code}
+        />
+      </ButtonWrapper>
+      <Stack direction={"row"} justifyContent={"center"}>
+        <FavoriteIcon
           sx={{
-            fontWeight: "500",
-            letterSpacing: "-2px",
-            wordSpacing: "5px",
+            color: "red",
+            height: "25px",
+            lineHeight: "25px",
+            fontSize: "25px",
+          }}
+        />
+        <Typography
+          sx={{
+            fontStyle: "italic",
+            fontSize: "13px",
+            height: "25px",
+            lineHeight: "25px",
           }}
         >
-          <Box
-            display={"inline"}
-            py={"4px"}
-            px={1}
-            color={"#606fc3"}
-            borderRadius={"5px"}
-            border={"1px dashed #7986cb47"}
-          >
-            {story?.story_title}
-          </Box>
-        </Stack>
-        <Box
-          position={"relative"}
-          sx={{
-            height: "270px",
-          }}
-        >
-          <Box
-            position={"relative"}
-            sx={{
-              height: "270px",
-              width: "180px",
-              left: "50%",
-              transform: "translateX(-50%)",
-            }}
-            borderRadius={"10px"}
-            overflow={"hidden"}
-          >
+          3000 lượt like
+        </Typography>
+      </Stack>
+      <Stack>
+        <UListStyled>
+          <Box component={"li"}>
+            <Box component={"h4"}>
+              <PersonIcon />
+              Tác giả:
+            </Box>
             <Box
-              component={"img"}
-              src={story?.story_cover}
-              sx={{
-                objectFit: "cover",
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-                top: 0,
-                left: 0,
-              }}
-              alt={story?.story_title}
-            />
-            <Stack
-              direction={"row"}
-              alignItems={"center"}
-              position={"absolute"}
-              justifyContent={"center"}
-              spacing={"4px"}
-              sx={{
-                maxHeight: "24px",
-                left: 0,
-                bottom: 0,
-                bgcolor: "rgba(0, 0, 0, .8)",
-                width: "100%",
-                color: "#fff",
-                fontSize: ".95em",
-                p: "3px",
-                "& svg": {
-                  width: ".7em",
-                  height: ".7em",
-                },
-              }}
+              component={Link}
+              href={`/search/author?keywords=${story?.story_author}`}
             >
-              <RemoveRedEyeIcon />
-              <Box component={"span"}>{story?.story_view}</Box>
-            </Stack>
-          </Box>
-        </Box>
-        <Stack
-          direction={"row"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          spacing={1}
-          mt={1}
-        >
-          <Button
-            variant="outlined"
-            color="info"
-            size="small"
-            startIcon={<PlayCircleFilledIcon />}
-            onClick={() =>
-              router.push({
-                pathname: `/story/[story_code]/[chapter_code]`,
-                query: {
-                  story_code: story?.story_code,
-                  chapter_code: story?.start_chapter,
-                },
-              })
-            }
-          >
-            Đọc truyện
-          </Button>
-          <StoryReportButton
-            open={reportModalOpen}
-            setOpen={setReportModalOpen}
-            story_code={story?.story_code}
-          />
-        </Stack>
-        <Stack direction={"row"} justifyContent={"center"}>
-          <FavoriteIcon
-            sx={{
-              color: "red",
-              height: "25px",
-              lineHeight: "25px",
-              fontSize: "25px",
-            }}
-          />
-          <Typography
-            sx={{
-              fontStyle: "italic",
-              fontSize: "13px",
-              height: "25px",
-              lineHeight: "25px",
-            }}
-          >
-            3000 lượt like
-          </Typography>
-        </Stack>
-        <Stack>
-          <Box
-            component={"ul"}
-            sx={{
-              listStyleType: "none",
-              pl: 0,
-              "& a ": {
-                textDecoration: "none",
-                color: "#303f9f",
-              },
-              "& > li > a, & > li > h4, & > li > p": {
-                display: "inline-block",
-                marginRight: "5px",
-              },
-              "& p, & a, & h4, & li": {
-                fontSize: "13px",
-              },
-              "& > li > h4": {
-                my: 0,
-              },
-              "& > li": {
-                lineHeight: "30px",
-                "&:not(:last-child)": {
-                  borderBottom: "1px dashed #ccc",
-                },
-                display: "flex",
-                alignItems: "flex-start",
-
-                "& h4": {
-                  alignItems: "center",
-                  color: "rgba(0, 0, 0, .85)",
-                  display: "inline-flex",
-                  "& svg": {
-                    color: "rgba(0, 0, 0, .45)",
-                    height: "20px",
-                    width: "20px",
-                    mr: 1,
-                    mt: "2px",
-                  },
-                  "& span": {
-                    display: "inline-block",
-                    width: "60px",
-                  },
-                },
-              },
-              "& > li > ul": {
-                display: "inline-block",
-                pl: 1,
-              },
-            }}
-          >
-            <Box component={"li"}>
-              <Box component={"h4"}>
-                <PersonIcon />
-                Tác giả:
-              </Box>
-              <Box
-                component={Link}
-                href={`/search/author?keywords=${story?.story_author}`}
-              >
-                {story?.story_author}
-              </Box>
-            </Box>
-            <Box component={"li"}>
-              <Box component={"h4"}>
-                <FolderIcon />
-                <Box component={"span"}>Thể loại:</Box>
-              </Box>
-              <Box component={"span"}>
-                {story?.story_category.map((cate: CategoryInterface) => {
-                  return (
-                    <Chip
-                      component={Link}
-                      href={`/categories/${cate.cate_code}`}
-                      label={cate.cate_title}
-                      size="small"
-                      key={cate.cate_id}
-                      sx={{
-                        mr: "4px",
-                        cursor: "pointer",
-                        "&>span": { color: "#fff" },
-                      }}
-                      color="primary"
-                    />
-                  );
-                })}
-              </Box>
-            </Box>
-            <Box component={"li"}>
-              <Box component={"h4"}>
-                <ArrowForwardIosIcon />
-                Nguồn:
-              </Box>
-              {story?.story_source}
-            </Box>
-            <Box component={"li"}>
-              <Box component={"h4"}>
-                <StarIcon />
-                Trạng thái:
-              </Box>
-              {story?.story_status}
-            </Box>
-            <Box component={"li"}>
-              <Box component={"h4"}>
-                <UpdateIcon />
-                Update lần cuối:
-              </Box>
-              {story?.updated_at && (
-                <>{`${timeSince(
-                  Math.abs(
-                    new Date().valueOf() - new Date(story?.updated_at).valueOf()
-                  )
-                )} trước`}</>
-              )}
+              {story?.story_author}
             </Box>
           </Box>
-        </Stack>
-        <Box className={"hr"}></Box>
-        {story?.story_description && (
-          <Box
-            component={"div"}
-            sx={{
-              my: 2,
-              fontSize: "13px",
-            }}
-            dangerouslySetInnerHTML={{
-              __html:
-                story?.story_description.length >= 400
-                  ? showMore
-                    ? story?.story_description
-                    : story?.story_description.substring(0, 400) + "..."
-                  : story?.story_description,
-            }}
-          ></Box>
-        )}
-
-        <Box textAlign={"right"} my={2}>
-          <Button
-            type="button"
-            variant="contained"
-            color="info"
-            onClick={() => setShowMore(!showMore)}
-            size="small"
-          >
-            {showMore ? "Rút gọn" : "Xem thêm"}
-          </Button>
-        </Box>
-        <Stack
-          component={"h1"}
-          fontSize={20}
-          direction={"row"}
-          gap={"5px"}
-          alignItems={"center"}
-          id="chapter-list"
-        >
-          DANH SÁCH CHƯƠNG
-          {chapterListIsValidating && (
-            <CircularProgress size={"1em"} color="primary" />
-          )}
-        </Stack>
-        <Box className={"hr"} />
-        <Stack
-          display={{
-            xs: "flex",
-            md: "none",
-          }}
-          direction={"row"}
-          justifyContent={"center"}
-          mt={2}
-        >
-          <Pagination
-            count={chapterListData?.pagination.pages}
-            page={paginationPage}
-            color="primary"
-            renderItem={(item) => (
-              <PaginationItem
-                component={Link}
-                href={`/story/${story_code}?page=${item.page}#chapter-list`}
-                slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
-                {...item}
-              />
-            )}
-          />
-        </Stack>
-
-        <Box
-          component={List}
-          maxHeight={{
-            md: 600,
-            xs: "100%",
-          }}
-          height={{
-            md: 600,
-            xs: "100%",
-          }}
-          overflow={"auto"}
-          mt={3}
-          bgcolor={"#fff"}
-          dense={true}
-        >
-          {chapterListIsValidating
-            ? paginationRowLoading()
-            : chapterListData?.result.map((data: ChapterDataInterface) => {
+          <Box component={"li"}>
+            <Box component={"h4"}>
+              <FolderIcon />
+              <Box component={"span"}>Thể loại:</Box>
+            </Box>
+            <Box component={"span"}>
+              {story?.story_category.map((cate: CategoryInterface) => {
                 return (
-                  <ListItem
-                    key={data._id}
+                  <Chip
+                    component={Link}
+                    href={`/categories/${cate.cate_code}`}
+                    label={cate.cate_title}
+                    size="small"
+                    key={cate.cate_id}
                     sx={{
-                      borderBottom: "1px dashed #ccc",
-                      px: 1,
+                      mr: "4px",
+                      cursor: "pointer",
+                      "&>span": { color: "#fff" },
                     }}
-                    dense={true}
-                  >
-                    <Box component={ListItemIcon} minWidth={"25px"}>
-                      <ArrowCircleRightIcon />
-                    </Box>
-                    <ListItemButton
-                      component={Link}
-                      href={`/story/${story_code}/${data.chapter_code}`}
-                      sx={{
-                        px: 1,
-                      }}
-                    >
-                      <ListItemText
-                        sx={{
-                          "& > span": {
-                            fontSize: {
-                              md: "1em",
-                              xs: ".9em",
-                            },
-                          },
-                        }}
-                        primary={`${data.chapter_name}${
-                          data.chapter_title ? ": " + data.chapter_title : ""
-                        }`}
-                      />
-                    </ListItemButton>
-                  </ListItem>
+                    color="primary"
+                  />
                 );
               })}
-        </Box>
-        <Stack direction={"row"} justifyContent={"center"} mt={2}>
-          <Pagination
-            count={chapterListData?.pagination.pages}
-            page={paginationPage}
-            color="primary"
-            sx={{
-              "& button": {
-                m: "unset",
-              },
-            }}
-            renderItem={(item: PaginationRenderItemParams) => (
-              <PaginationItem
-                component={Link}
-                href={`/story/${story_code}?page=${item.page}#chapter-list`}
-                slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
-                {...item}
-              />
+            </Box>
+          </Box>
+          <Box component={"li"}>
+            <Box component={"h4"}>
+              <ArrowForwardIosIcon />
+              Nguồn:
+            </Box>
+            {story?.story_source}
+          </Box>
+          <Box component={"li"}>
+            <Box component={"h4"}>
+              <StarIcon />
+              Trạng thái:
+            </Box>
+            {story?.story_status}
+          </Box>
+          <Box component={"li"}>
+            <Box component={"h4"}>
+              <UpdateIcon />
+              Update lần cuối:
+            </Box>
+            {story?.updated_at && (
+              <>{`${timeSince(
+                Math.abs(
+                  new Date().valueOf() - new Date(story?.updated_at).valueOf()
+                )
+              )} trước`}</>
             )}
-          />
-        </Stack>
+          </Box>
+        </UListStyled>
+      </Stack>
+      <Box className={"hr"}></Box>
+      {story?.story_description && (
+        <Box
+          component={"div"}
+          sx={{
+            my: 2,
+            fontSize: "13px",
+          }}
+          dangerouslySetInnerHTML={{
+            __html:
+              story?.story_description.length >= 400
+                ? showMore
+                  ? story?.story_description
+                  : story?.story_description.substring(0, 400) + "..."
+                : story?.story_description,
+          }}
+        ></Box>
+      )}
+
+      <Box textAlign={"right"} my={2}>
+        <Button
+          type="button"
+          variant="contained"
+          color="info"
+          onClick={() => setShowMore(!showMore)}
+          size="small"
+        >
+          {showMore ? "Rút gọn" : "Xem thêm"}
+        </Button>
       </Box>
+      <Stack
+        component={"h1"}
+        fontSize={20}
+        direction={"row"}
+        gap={"5px"}
+        alignItems={"center"}
+        id="chapter-list"
+      >
+        DANH SÁCH CHƯƠNG
+        {chapterListIsValidating && (
+          <CircularProgress size={"1em"} color="primary" />
+        )}
+      </Stack>
+      <Box className={"hr"} />
+      <Stack
+        display={{
+          xs: "flex",
+          md: "none",
+        }}
+        direction={"row"}
+        justifyContent={"center"}
+        mt={2}
+      >
+        <Pagination
+          count={chapterListData?.pagination.pages}
+          page={paginationPage}
+          color="primary"
+          renderItem={(item) => (
+            <PaginationItem
+              component={Link}
+              href={`/story/${story_code}?page=${item.page}#chapter-list`}
+              slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
+              {...item}
+            />
+          )}
+        />
+      </Stack>
+
+      <Box
+        component={List}
+        maxHeight={{
+          md: 600,
+          xs: "100%",
+        }}
+        height={{
+          md: 600,
+          xs: "100%",
+        }}
+        overflow={"auto"}
+        mt={3}
+        bgcolor={"#fff"}
+        dense={true}
+      >
+        {chapterListIsValidating
+          ? paginationRowLoading()
+          : chapterListData?.result.map((data: ChapterDataInterface) => {
+              return (
+                <ListItem
+                  key={data._id}
+                  sx={{
+                    borderBottom: "1px dashed #ccc",
+                    px: 1,
+                  }}
+                  dense={true}
+                >
+                  <Box component={ListItemIcon} minWidth={"25px"}>
+                    <ArrowCircleRightIcon />
+                  </Box>
+                  <ListItemButton
+                    component={Link}
+                    href={`/story/${story_code}/${data.chapter_code}`}
+                    sx={{
+                      px: 1,
+                    }}
+                  >
+                    <ListItemText
+                      sx={{
+                        "& > span": {
+                          fontSize: {
+                            md: "1em",
+                            xs: ".9em",
+                          },
+                        },
+                      }}
+                      primary={`${data.chapter_name}${
+                        data.chapter_title ? ": " + data.chapter_title : ""
+                      }`}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
+      </Box>
+      <Stack direction={"row"} justifyContent={"center"} mt={2}>
+        <Pagination
+          count={chapterListData?.pagination.pages}
+          page={paginationPage}
+          color="primary"
+          sx={{
+            "& button": {
+              m: "unset",
+            },
+          }}
+          renderItem={(item: PaginationRenderItemParams) => (
+            <PaginationItem
+              component={Link}
+              href={`/story/${story_code}?page=${item.page}#chapter-list`}
+              slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
+              {...item}
+            />
+          )}
+        />
+      </Stack>
     </>
   );
 };

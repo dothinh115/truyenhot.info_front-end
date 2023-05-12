@@ -4,6 +4,7 @@ import { RowStory } from "@/components/categories";
 import { StoryListLoading } from "@/components/loading";
 import { CategoriesSidebar, HotStoriesInCate } from "@/components/sidebar";
 import { CategoryInterface } from "@/models/categories";
+import { StoriesSearchResultInterface } from "@/models/search";
 import { apiURL } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -20,9 +21,14 @@ import useSWR from "swr";
 type Props = {
   categoryData: CategoryInterface;
   categories: CategoryInterface[];
+  hotStoriesInCategory: StoriesSearchResultInterface[];
 };
 
-const CategoriesDetail = ({ categoryData, categories }: Props) => {
+const CategoriesDetail = ({
+  categoryData,
+  categories,
+  hotStoriesInCategory,
+}: Props) => {
   const router = useRouter();
   const { page } = router.query;
   const cate_code = categoryData?.cate_code;
@@ -154,18 +160,11 @@ const CategoriesDetail = ({ categoryData, categories }: Props) => {
               m={"0!important"}
             >
               <CategoriesSidebar categories={categories} />
-              <HotStoriesInCate category={categoryData} />
+              <HotStoriesInCate
+                category={categoryData}
+                hotStoriesInCategory={hotStoriesInCategory}
+              />
             </Box>
-            <Stack
-              display={{
-                xs: "block",
-                md: "none",
-                width: "100%",
-              }}
-            >
-              <Box className={"hr"} my={2} />
-              <HotStoriesInCate category={categoryData} />
-            </Stack>
           </Stack>
         </Container>
       </Stack>
@@ -206,10 +205,15 @@ export const getStaticProps: GetStaticProps<Props> = async (
     const category = await cateDetailResponse.json();
     const categoriesResponse = await fetch(`${apiURL}/api/categories/getAll`);
     const categories = await categoriesResponse.json();
+    const hotStoriesInCategoryResponse = await fetch(
+      `${apiURL}/api/stories/getHotStories?category=${cate_code}`
+    );
+    const hotStoriesInCategory = await hotStoriesInCategoryResponse.json();
     return {
       props: {
         categoryData: category.result,
         categories: categories.result,
+        hotStoriesInCategory: hotStoriesInCategory.result,
       },
       revalidate,
     };

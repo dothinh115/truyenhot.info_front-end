@@ -109,7 +109,7 @@ export const RowStory = ({ storiesData }: Props) => {
                   }}
                 >
                   <FormatListBulletedIcon />
-                  {story._count.chapter + " chương"}
+                  {story._count + " chương"}
                 </Typography>
               </Box>
             </Stack>
