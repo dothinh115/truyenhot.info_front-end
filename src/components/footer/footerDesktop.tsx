@@ -4,6 +4,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import ClassIcon from "@mui/icons-material/Class";
 import useSWR from "swr";
 import { CategoryInterface } from "@/models/categories";
+import Link from "next/link";
 
 type Props = {};
 
@@ -75,6 +76,8 @@ export const FooterDesktop = (props: Props) => {
                 {categoriesList?.result.map((cate: CategoryInterface) => {
                   return (
                     <Chip
+                      component={Link}
+                      href={`/categories/${cate.cate_code}`}
                       key={cate._id}
                       label={cate.cate_title}
                       size="small"
