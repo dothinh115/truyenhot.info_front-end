@@ -260,6 +260,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
                             whiteSpace: "nowrap",
                             overflow: "hidden",
                             textOverflow: "ellipsis",
+                            letterSpacing: "-.5px",
                           }}
                         >
                           {story.story_title}
