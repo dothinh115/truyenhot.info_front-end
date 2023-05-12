@@ -10,6 +10,7 @@ import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import Link from "next/link";
 import { createContext, useState, useEffect } from "react";
 export const MainLayoutContext = createContext({});
+
 export const MainLayout = ({ children }: MainLayoutInterface) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 

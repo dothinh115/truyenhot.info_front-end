@@ -40,21 +40,21 @@ const StoryDetail = ({ story, categories, sameAuthor }: Props) => {
     >
       <HomeIcon />
     </Box>,
-    <Typography
+    <Box
+      component={Link}
       key="2"
       color="inherit"
+      href={`/story/${story?.story_code}`}
       fontSize={{
         md: "1rem",
-        xs: ".9rem",
+        xs: ".8rem",
       }}
       sx={{
         textDecoration: "none",
       }}
     >
-      {story?.story_title.length > 30
-        ? story?.story_title.substring(0, 29) + "..."
-        : story?.story_title}
-    </Typography>,
+      {story?.story_title}
+    </Box>,
   ];
   return (
     <>
@@ -92,27 +92,12 @@ const StoryDetail = ({ story, categories, sameAuthor }: Props) => {
             >
               <StoryMain story={story} />
             </Box>
-
-            <Box
-              display={{
-                xs: "block",
-                md: "none",
-              }}
-            >
-              <Box className={"hr"} width={"100%"} my={3} />
-              <SameAuthorSidebar sameAuthor={sameAuthor} />
-            </Box>
-            <Box
-              width={"30%"}
-              display={{
-                xs: "none",
-                md: "block",
-              }}
-            >
+            <Box width={{ md: "30%", xs: "100%" }}>
               <StorySidebar>
                 <SameAuthorSidebar sameAuthor={sameAuthor} />
-
-                <CategoriesSidebar categories={categories} />
+                <Box display={{ md: "block", xs: "none" }}>
+                  <CategoriesSidebar categories={categories} />
+                </Box>
               </StorySidebar>
             </Box>
           </Stack>

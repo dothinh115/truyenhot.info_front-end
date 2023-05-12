@@ -124,38 +124,14 @@ export const HotStoriesInCate = ({ category }: Props) => {
 
                           <Box
                             component={ListItemText}
-                            display={{
-                              md: "block",
-                              xs: "none",
-                            }}
-                            primary={
-                              story.story_title.length > 30
-                                ? story.story_title.substring(0, 29) + "..."
-                                : story.story_title
-                            }
+                            primary={story.story_title}
                             m={0}
                             sx={{
                               "& > span": {
                                 fontSize: 14,
-                              },
-                            }}
-                          />
-
-                          <Box
-                            component={ListItemText}
-                            display={{
-                              md: "none",
-                              xs: "block",
-                            }}
-                            primary={
-                              story.story_title.length > 50
-                                ? story.story_title.substring(0, 47) + "..."
-                                : story.story_title
-                            }
-                            m={0}
-                            sx={{
-                              "& > span": {
-                                fontSize: 14,
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
                               },
                             }}
                           />

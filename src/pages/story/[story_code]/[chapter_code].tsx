@@ -24,6 +24,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
+import { StoryReportButton } from "@/components/stories";
 
 type Props = {
   chapterData: ChapterDataInterface;
@@ -40,6 +41,7 @@ const MenuProps = {
 };
 
 const ChapterDetail = ({ chapterData }: Props) => {
+  const [open, setOpen] = useState<boolean>(false);
   const [chapterListData, setChapterListData] = useState<{
     result: ChapterListInterface[];
   }>();
@@ -95,9 +97,7 @@ const ChapterDetail = ({ chapterData }: Props) => {
         textDecoration: "none",
       }}
     >
-      {chapterData?.story_title.length > 20
-        ? chapterData?.story_title.substring(0, 19) + "..."
-        : chapterData?.story_title}
+      {chapterData?.story_title}
     </Box>,
     <Box
       component={"span"}
@@ -145,9 +145,18 @@ const ChapterDetail = ({ chapterData }: Props) => {
                 md: "40px",
                 xs: "30px",
               }}
-              mb={4}
+              m={0}
             >
               {chapterData?.story_title}
+            </Box>
+            <Box
+              component={"h2"}
+              textAlign={"center"}
+              m={0}
+              color={"rgba(0, 0, 0, .55)"}
+              fontWeight={600}
+            >
+              {chapterData?.chapter_title}
             </Box>
 
             <Stack
@@ -220,6 +229,9 @@ const ChapterDetail = ({ chapterData }: Props) => {
                 <ArrowForwardIcon />
               </Button>
             </Stack>
+            <Box textAlign={"center"}>
+              <StoryReportButton open={open} setOpen={setOpen} />
+            </Box>
             <Box className={"hr"} my={4} />
 
             <Box
@@ -242,7 +254,11 @@ const ChapterDetail = ({ chapterData }: Props) => {
                 __html: chapterData?.chapter_content,
               }}
             ></Box>
+
             <Box className={"hr"} my={4} />
+            <Box textAlign={"center"}>
+              <StoryReportButton open={open} setOpen={setOpen} />
+            </Box>
             <Stack
               direction={"row"}
               justifyContent={"center"}

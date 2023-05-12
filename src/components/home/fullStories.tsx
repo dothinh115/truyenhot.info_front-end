@@ -243,9 +243,7 @@ export const HomeFullStories = ({ categories }: Props) => {
                     component={Link}
                     href={`/story/${story.story_code}`}
                   >
-                    {story.story_title.length > 30
-                      ? story.story_title.substring(0, 26) + " ..."
-                      : story.story_title}
+                    {story.story_title}
                   </Box>
                 </Carousel.Item>
               );

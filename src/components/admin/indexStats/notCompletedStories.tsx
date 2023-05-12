@@ -56,13 +56,14 @@ export const AdminNotCompletedStories = (props: Props) => {
                       component={Link}
                       sx={{
                         textDecoration: "none",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
                       }}
                       href={`/story/${story.story_code}`}
                       target="_blank"
                     >
-                      {story.story_title.length > 60
-                        ? story.story_title.substring(0, 59) + "..."
-                        : story.story_title}
+                      {story.story_title}
                     </Box>
                   </TableCell>
                   <TableCell align="right">

@@ -208,8 +208,10 @@ export const HomeHotStories = ({ categories }: Props) => {
                       sx={{
                         textShadow: "0 0 10px primary.main",
                       }}
-                      maxHeight={"45px"}
                       overflow={"hidden"}
+                      whiteSpace={"nowrap"}
+                      textOverflow={"ellipsis"}
+                      letterSpacing={"-1px"}
                     >
                       {story.story_title}
                     </Box>

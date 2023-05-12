@@ -13,7 +13,6 @@ import {
   TextField,
 } from "@mui/material";
 import dynamic from "next/dynamic";
-import { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -38,7 +37,6 @@ const QuillNoSSRWrapper = dynamic(import("react-quill"), {
 });
 
 const AdminNewStories = (props: Props) => {
-  const { setLoading } = useContext<any>(AdminLayoutContext);
   const { data: categoriesList } = useSWR("/categories/getAll");
   const { snackbar, setSnackbar } = useSnackbar();
 

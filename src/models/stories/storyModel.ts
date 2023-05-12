@@ -34,3 +34,14 @@ export interface NewStoryInterface {
   story_category: CategoryInterface[];
   cover_img?: any;
 }
+
+export interface ReportOptionInterface {
+  _id: string;
+  report_title: string;
+}
+
+export interface ReportInterface {
+  _id?: string;
+  report_title: string;
+  report_description: string;
+}

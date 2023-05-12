@@ -33,6 +33,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { RowLoading } from "../loading";
+import { StoryReportButton } from "./reportButton";
 type Props = {
   story: StoryInterface;
 };
@@ -41,6 +42,7 @@ export const StoryMain = ({ story }: Props) => {
   const router = useRouter();
   const { story_code, page } = router?.query;
   const [paginationPage, setPaginationPage] = useState<number>(1);
+  const [reportModalOpen, setReportModalOpen] = useState<boolean>(false);
   const {
     data: chapterListData,
     mutate: chapterListMutate,
@@ -73,9 +75,19 @@ export const StoryMain = ({ story }: Props) => {
   return (
     <>
       <Box>
-        <Box component={"h1"} fontSize={20} mt={0}>
+        <Stack
+          direction={"row"}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+          component={"h3"}
+          mt={0}
+        >
           THÔNG TIN TRUYỆN
-        </Box>
+          <StoryReportButton
+            open={reportModalOpen}
+            setOpen={setReportModalOpen}
+          />
+        </Stack>
         <Box className={"hr"} />
         <Box component={"h1"} textAlign={"center"}>
           {story?.story_title}

@@ -19,6 +19,15 @@ export const MainBreadcrumbs = ({ links }: Props) => {
         <Breadcrumbs
           separator={<NavigateNextIcon fontSize="small" />}
           aria-label="breadcrumb"
+          sx={{
+            "& li": {
+              maxWidth: "50%",
+              overFlow: "hidden",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            },
+          }}
         >
           {breadcrumbs}
         </Breadcrumbs>
