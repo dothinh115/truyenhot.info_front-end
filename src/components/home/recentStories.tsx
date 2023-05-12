@@ -180,7 +180,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
             justifyContent={"center"}
             textAlign={"right"}
             width={{
-              md: "10%",
+              md: "15%",
               xs: "20%",
             }}
           >
@@ -190,7 +190,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
             textAlign={"right"}
             justifyContent={"center"}
             width={{
-              md: "20%",
+              md: "15%",
             }}
             display={{
               md: "flex",
@@ -273,7 +273,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
                     <Box
                       textAlign={"right"}
                       width={{
-                        md: "10%",
+                        md: "15%",
                         xs: "20%",
                       }}
                     >
@@ -286,7 +286,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
                     </Box>
                     <Box
                       width={{
-                        md: "20%",
+                        md: "15%",
                       }}
                       fontSize={".9em"}
                       textAlign={"right"}

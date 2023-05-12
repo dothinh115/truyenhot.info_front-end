@@ -1,5 +1,9 @@
 import { MainLayoutContext } from "@/layouts";
-import { StoriesSearchResultInterface } from "@/models/search";
+import {
+  SearchDataInterface,
+  StoriesSearchResultInterface,
+} from "@/models/search";
+import { API } from "@/utils/config";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -8,9 +12,8 @@ import { Box, IconButton, Stack, Typography } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import useSWR from "swr";
 type Props = {};
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -31,33 +34,35 @@ export const SearchModal = (props: Props) => {
     },
   });
 
-  const {
-    data: searchData,
-    mutate: searchMutate,
-    isValidating: searchIsValidating,
-  } = useSWR(
-    `/search/storyTitle?${
-      getValues("keywords") ? `keywords=${getValues("keywords")}` : ""
-    }`,
-    {
-      revalidateOnMount: false,
-    }
-  );
   const { setSearchOpen, searchOpen } = useContext<any>(MainLayoutContext);
-
+  const [loading, setLoading] = useState<boolean>(false);
   const timeout = useRef<any>(null);
   const searchBodyElement = useRef<HTMLDivElement>(null);
+  const [searchData, setSearchData] = useState<SearchDataInterface | null>(
+    null
+  );
+
   const onChangeHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
     clearTimeout(timeout.current);
     const value = e.currentTarget.value;
 
     if (value === "") {
       reset({ keywords: "" });
+      setSearchData(null);
     }
 
     timeout.current = setTimeout(async () => {
       if (value !== "") {
-        searchMutate();
+        setLoading(true);
+        try {
+          const searchResponse: any = await API.get(
+            `/search/storyTitle?keywords=${value}`
+          );
+          setSearchData(searchResponse);
+        } catch (error) {
+        } finally {
+          setLoading(false);
+        }
       }
     }, 500);
   };
@@ -67,7 +72,7 @@ export const SearchModal = (props: Props) => {
       searchBodyElement?.current.scroll({ top: 0 });
   }, [searchOpen]);
 
-  const loading = () => {
+  const loadingRender = () => {
     let html = [];
     for (let i = 0; i < 4; i++) {
       html.push(
@@ -169,7 +174,7 @@ export const SearchModal = (props: Props) => {
               }}
               onClick={() => {
                 reset({ keywords: "" });
-                searchMutate({}, { revalidate: false });
+                setSearchData(null);
               }}
             >
               <ClearIcon />
@@ -178,15 +183,15 @@ export const SearchModal = (props: Props) => {
         </Stack>
         <Box className={"hr"} my={2} />
         <Stack maxHeight={"100%"} overflow={"auto"}>
-          {searchIsValidating ? (
-            loading()
-          ) : searchData?.result?.length === 0 && getValues("keywords") ? (
+          {loading ? (
+            loadingRender()
+          ) : searchData?.result.length === 0 && getValues("keywords") ? (
             <Stack direction={"row"} gap={2} justifyContent={"center"}>
               <SearchIcon />
               Không tìm thấy kết quả nào!
             </Stack>
           ) : (
-            searchData?.result?.map((item: StoriesSearchResultInterface) => {
+            searchData?.result.map((item: StoriesSearchResultInterface) => {
               return (
                 <Stack
                   key={item._id}
@@ -246,7 +251,9 @@ export const SearchModal = (props: Props) => {
             })
           )}
 
-          {searchData?.pagination?.pages > 1 && !searchIsValidating && (
+          {searchData?.pagination?.pages &&
+          searchData?.pagination?.pages > 1 &&
+          !loading ? (
             <Stack
               direction={"row"}
               justifyContent={"center"}
@@ -262,7 +269,7 @@ export const SearchModal = (props: Props) => {
             >
               Xem thêm kết quả
             </Stack>
-          )}
+          ) : null}
         </Stack>
       </Box>
     </>
