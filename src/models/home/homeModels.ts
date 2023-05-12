@@ -2,7 +2,7 @@ export interface RecentStoriesInterface {
   _id: string;
   story_title: string;
   story_code: string;
-  lastChapter: LastChapterInterface[];
+  lastChapter: LastChapterInterface;
   updated_at: Date;
 }
 
