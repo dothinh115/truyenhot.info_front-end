@@ -306,7 +306,13 @@ const EditStory = (props: Props) => {
                 src={storyData?.result.story_cover}
                 width={{
                   md: "100%",
-                  xs: "50%",
+                  xs: "20%",
+                }}
+                height={{
+                  md: "350px",
+                }}
+                sx={{
+                  objectFit: "cover",
                 }}
               />
             </Box>
