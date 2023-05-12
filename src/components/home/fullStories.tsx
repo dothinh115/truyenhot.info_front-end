@@ -30,9 +30,18 @@ const MenuProps = {
   },
 };
 
-const BoxWrapper = styled(Stack)(({ theme }) => ({
+const BoxWrapper = styled(Box)(({ theme }) => ({
+  display: "flex",
   gap: "10px",
   justifyContent: "space-between",
+  [theme.breakpoints.up("xs")]: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+  },
+  [theme.breakpoints.up("md")]: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
 }));
 
 const ReloadButtonStyled = styled(Button)(() => ({
@@ -130,7 +139,7 @@ export const HomeFullStories = ({ categories }: Props) => {
     <>
       <BoxWrapper
         sx={{
-          direction: {
+          flexDirection: {
             xs: "column",
             md: "row",
           },
