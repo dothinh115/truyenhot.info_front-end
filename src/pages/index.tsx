@@ -6,7 +6,7 @@ import {
   HomeHotStories,
   IndexRecentStories,
 } from "@/components/home";
-import { CategoriesSidebar } from "@/components/sidebar";
+import { CategoriesSidebar, ReadingStoriesHistory } from "@/components/sidebar";
 import { MainLayoutContext } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
 import {
@@ -84,11 +84,11 @@ const Index = ({ categories, stats, hotStories, fullStories }: Props) => {
                 xs: "100%",
               }}
             >
+              <ReadingStoriesHistory />
               <CategoriesSidebar categories={categories} />
               <BaseStats stats={stats} />
             </Box>
           </Stack>
-
           <HomeFullStories categories={categories} fullStories={fullStories} />
         </Container>
       </Stack>

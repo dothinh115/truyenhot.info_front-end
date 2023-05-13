@@ -60,3 +60,10 @@ export interface ReportOptionInterface {
   _id: string;
   report_title: string;
 }
+
+export interface ReadingStoriesInterface {
+  story_title: string;
+  story_code: string;
+  chapter_code: string;
+  chapter_name: string;
+}

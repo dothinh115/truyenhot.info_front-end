@@ -1,74 +1,98 @@
 import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
+import { StoryChapterPicker, StoryReportButton } from "@/components/stories";
 import { ChapterDataInterface, ChapterListInterface } from "@/models/chapters";
 import { ChapterSection } from "@/sections";
-import { API, apiURL } from "@/utils/config";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { apiURL } from "@/utils/config";
 import HomeIcon from "@mui/icons-material/Home";
-import {
-  Box,
-  Button,
-  Container,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { SelectChangeEvent } from "@mui/material/Select";
+import { Box, Container, Stack } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import CircularProgress from "@mui/material/CircularProgress";
-import { StoryReportButton } from "@/components/stories";
-
+import useSWR from "swr";
 type Props = {
   chapterData: ChapterDataInterface;
 };
 
-const ITEM_HEIGHT = 36;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 10 + ITEM_PADDING_TOP,
-    },
+const ChapterTitle = styled("h1")(({ theme }) => ({
+  textAlign: "center",
+  color: "#3949ab",
+  margin: "0",
+  [theme.breakpoints.up("xs")]: {
+    fontWeight: "medium",
+    fontSize: "30px",
   },
-};
+  [theme.breakpoints.up("md")]: {
+    fontWeight: "light",
+    fontSize: "40px",
+  },
+}));
+
+const ChapterName = styled("h2")(() => ({
+  textAlign: "center",
+  margin: "0",
+  color: "rgba(0, 0, 0, .55)",
+  fontWeight: "500",
+}));
+
+const ChapterContent = styled(Box)(({ theme }) => ({
+  [theme.breakpoints.up("xs")]: {
+    fontSize: "18px",
+  },
+  [theme.breakpoints.up("md")]: {
+    fontSize: "24px",
+  },
+  lineHeight: "2",
+  wordSpacing: ".3px",
+  "& figure": {
+    textAlign: "center",
+  },
+  "& img": {
+    maxWidth: "100%",
+  },
+}));
 
 const ChapterDetail = ({ chapterData }: Props) => {
   const [open, setOpen] = useState<boolean>(false);
-  const [chapterListData, setChapterListData] = useState<{
+
+  const { data: chapterListData, mutate: chapterListMutate } = useSWR<{
     result: ChapterListInterface[];
-  }>();
-
-  const router = useRouter();
-  const handleChange = (event: SelectChangeEvent, child?: any) => {
-    router.push({
-      pathname: router.pathname,
-      query: {
-        chapter_code: child.props.value,
-        story_code: chapterData?.story_code,
-      },
-    });
-  };
-
-  const getChapterListData = async () => {
-    try {
-      const result: { result: ChapterListInterface[] } = await API.get(
-        `/chapter/getChapterListByStoryCode/${chapterData?.story_code}?page=all`
-      );
-      setChapterListData(result);
-    } catch (error) {}
-  };
+  }>(`/chapter/getChapterListByStoryCode/${chapterData?.story_code}?page=all`, {
+    revalidateOnMount: false,
+  });
 
   useEffect(() => {
-    if (chapterData?.story_code) getChapterListData();
-  }, [router.query]);
+    if (chapterData) {
+      const getData = localStorage.getItem("readingStories");
+      let readingStories = [];
+      if (getData) readingStories = JSON.parse(getData);
+      const data = {
+        story_title: chapterData?.story_title,
+        story_code: chapterData?.story_code,
+        chapter_code: chapterData?.chapter_code,
+        chapter_name: chapterData?.chapter_name,
+      };
+
+      const findIndex = readingStories.findIndex(
+        (story: any) => story.story_code === chapterData?.story_code
+      );
+      console.log(findIndex);
+      if (findIndex !== -1) {
+        readingStories = readingStories.filter(
+          (item: any) => item.story_code !== chapterData?.story_code
+        );
+        readingStories = [data, ...readingStories];
+      } else readingStories = [data, ...readingStories];
+      if (readingStories.length > 5)
+        readingStories = readingStories.slice(0, 5);
+      localStorage.setItem("readingStories", JSON.stringify(readingStories));
+    }
+  }, [chapterData]);
+
+  useEffect(() => {
+    if (chapterData?.story_code) chapterListMutate();
+  }, [chapterData?.story_code]);
 
   const breadCrumbs = [
     <Box
@@ -133,102 +157,16 @@ const ChapterDetail = ({ chapterData }: Props) => {
       <ChapterSection>
         <Stack direction={"row"} justifyContent={"center"}>
           <Container maxWidth={"md"}>
-            <Box
-              component={"h1"}
-              textAlign={"center"}
-              color={"#3949ab"}
-              fontWeight={{
-                md: "light",
-                xs: "medium",
-              }}
-              fontSize={{
-                md: "40px",
-                xs: "30px",
-              }}
-              m={0}
-            >
-              {chapterData?.story_title}
-            </Box>
-            <Box
-              component={"h2"}
-              textAlign={"center"}
-              m={0}
-              color={"rgba(0, 0, 0, .55)"}
-              fontWeight={600}
-            >
-              {chapterData?.chapter_title}
-            </Box>
+            <ChapterTitle>{chapterData?.story_title}</ChapterTitle>
+            <ChapterName>{chapterData?.chapter_title}</ChapterName>
 
-            <Stack
-              direction={"row"}
-              justifyContent={"center"}
-              spacing={1}
-              my={2}
-            >
-              <Button
-                component={Link}
-                href={`/story/${chapterData?.story_code}/${chapterData?.prevChapter}`}
-                color="info"
-                variant="contained"
-                size="small"
-                disabled={!chapterData?.prevChapter ? true : false}
-              >
-                <ArrowBackIcon />
-                <Typography
-                  display={{
-                    md: "block",
-                    xs: "none",
-                  }}
-                >
-                  Chương trước
-                </Typography>
-              </Button>
-              {!chapterListData?.result ? (
-                <>
-                  <CircularProgress size={"2em"} color="primary" />{" "}
-                  <Typography>...Đang lấy dữ liệu</Typography>
-                </>
-              ) : (
-                <FormControl sx={{ m: 1, width: 300 }}>
-                  <InputLabel>Chọn chương</InputLabel>
-                  <Select
-                    value={
-                      chapterData?.chapter_code && chapterListData
-                        ? chapterData?.chapter_code
-                        : ""
-                    }
-                    onChange={(event, child) => handleChange(event, child)}
-                    input={<OutlinedInput label="Chọn chương" />}
-                    MenuProps={MenuProps}
-                  >
-                    {chapterListData?.result.map((chapter: any) => (
-                      <MenuItem key={chapter._id} value={chapter.chapter_code}>
-                        {chapter.chapter_name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
+            <StoryChapterPicker
+              chapterData={chapterData}
+              chapterListData={
+                chapterListData?.result ? chapterListData?.result : []
+              }
+            />
 
-              <Button
-                component={Link}
-                href={`/story/${chapterData?.story_code}/${chapterData?.nextChapter}`}
-                color="info"
-                variant="contained"
-                size="small"
-                disabled={!chapterData?.nextChapter ? true : false}
-              >
-                <Typography
-                  display={{
-                    md: "block",
-                    xs: "none",
-                  }}
-                >
-                  Chương sau
-                </Typography>
-                <ArrowForwardIcon />
-              </Button>
-            </Stack>
             <Box textAlign={"center"}>
               <StoryReportButton
                 open={open}
@@ -238,26 +176,11 @@ const ChapterDetail = ({ chapterData }: Props) => {
             </Box>
             <Box className={"hr"} my={4} />
 
-            <Box
-              component={"div"}
-              fontSize={{
-                md: "24px",
-                xs: "18px",
-              }}
-              lineHeight={"2"}
-              sx={{
-                wordSpacing: ".3px",
-                "& figure": {
-                  textAlign: "center",
-                },
-                "& img": {
-                  maxWidth: "100%",
-                },
-              }}
+            <ChapterContent
               dangerouslySetInnerHTML={{
                 __html: chapterData?.chapter_content,
               }}
-            ></Box>
+            ></ChapterContent>
 
             <Box className={"hr"} my={4} />
             <Box textAlign={"center"}>
@@ -267,77 +190,12 @@ const ChapterDetail = ({ chapterData }: Props) => {
                 story_code={chapterData?.story_code}
               />
             </Box>
-            <Stack
-              direction={"row"}
-              justifyContent={"center"}
-              spacing={1}
-              my={2}
-            >
-              <Button
-                component={Link}
-                href={`/story/${chapterData?.story_code}/${chapterData?.prevChapter}`}
-                color="info"
-                variant="contained"
-                size="small"
-                disabled={!chapterData?.prevChapter ? true : false}
-              >
-                <ArrowBackIcon />
-                <Typography
-                  display={{
-                    md: "block",
-                    xs: "none",
-                  }}
-                >
-                  Chương trước
-                </Typography>
-              </Button>
-
-              {!chapterListData?.result ? (
-                <>
-                  <CircularProgress size={"2em"} color="primary" />{" "}
-                  <Typography>...Đang lấy dữ liệu</Typography>
-                </>
-              ) : (
-                <FormControl sx={{ m: 1, width: 300 }}>
-                  <InputLabel>Chọn chương</InputLabel>
-                  <Select
-                    value={
-                      chapterData?.chapter_code && chapterListData
-                        ? chapterData?.chapter_code
-                        : ""
-                    }
-                    onChange={(event, child) => handleChange(event, child)}
-                    input={<OutlinedInput label="Chọn chương" />}
-                    MenuProps={MenuProps}
-                  >
-                    {chapterListData?.result.map((chapter: any) => (
-                      <MenuItem key={chapter._id} value={chapter.chapter_code}>
-                        {chapter.chapter_name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
-
-              <Button
-                component={Link}
-                href={`/story/${chapterData?.story_code}/${chapterData?.nextChapter}`}
-                color="info"
-                variant="contained"
-                size="small"
-                disabled={!chapterData?.nextChapter ? true : false}
-              >
-                <Typography
-                  display={{
-                    md: "block",
-                    xs: "none",
-                  }}
-                >
-                  Chương sau
-                </Typography>
-                <ArrowForwardIcon />
-              </Button>
-            </Stack>
+            <StoryChapterPicker
+              chapterData={chapterData}
+              chapterListData={
+                chapterListData?.result ? chapterListData?.result : []
+              }
+            />
           </Container>
         </Stack>
       </ChapterSection>

@@ -264,7 +264,6 @@ export const SearchModal = (props: Props) => {
               href={`/search/title?keywords=${getValues("keywords")}`}
               onClick={() => {
                 setSearchOpen(false);
-                reset({ keywords: "" });
               }}
             >
               Xem thêm kết quả

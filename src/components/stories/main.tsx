@@ -20,6 +20,7 @@ import {
   Stack,
   Typography,
   Chip,
+  IconButton,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import ListItem from "@mui/material/ListItem";
@@ -37,7 +38,8 @@ import { RowLoading } from "../loading";
 import { StoryReportButton } from "./reportButton";
 import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import { styled } from "@mui/material/styles";
-
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 const Wrapper = styled("h2")(() => ({
   display: "flex",
   flexDirection: "row",
@@ -119,6 +121,7 @@ const ButtonWrapper = styled(Stack)(() => ({
 }));
 
 const UListStyled = styled("ul")(() => ({
+  margin: 0,
   listStyleType: "none",
   paddingLeft: "0",
   "& a ": {
@@ -139,7 +142,7 @@ const UListStyled = styled("ul")(() => ({
   "& > li": {
     lineHeight: "30px",
     "&:not(:last-child)": {
-      borderBottom: "1px dashed #ccc",
+      borderBottom: "1px dashed #7986cba6",
     },
     display: "flex",
     alignItems: "flex-start",
@@ -209,6 +212,7 @@ export const StoryMain = ({ story }: Props) => {
     <>
       <Wrapper>THÔNG TIN TRUYỆN</Wrapper>
       <Box className={"hr"} />
+
       <TitleWrapper>
         <Title>{story?.story_title}</Title>
       </TitleWrapper>
@@ -265,7 +269,15 @@ export const StoryMain = ({ story }: Props) => {
           3000 lượt like
         </Typography>
       </Stack>
-      <Stack>
+      <Stack
+        sx={{
+          border: "1px dashed #7986cba6",
+          margin: "16px 0",
+          padding: "8px",
+          borderRadius: "16px",
+          backgroundColor: "#fff",
+        }}
+      >
         <UListStyled>
           <Box component={"li"}>
             <Box component={"h4"}>
@@ -333,50 +345,48 @@ export const StoryMain = ({ story }: Props) => {
           </Box>
         </UListStyled>
       </Stack>
-      <Box className={"hr"}></Box>
-      {story?.story_description && (
-        <Box
-          component={"div"}
-          sx={{
-            my: 2,
-            fontSize: "13px",
-          }}
-          dangerouslySetInnerHTML={{
-            __html:
-              story?.story_description.length >= 400
-                ? showMore
-                  ? story?.story_description
-                  : story?.story_description.substring(0, 400) + "..."
-                : story?.story_description,
-          }}
-        ></Box>
-      )}
-
-      <Box textAlign={"right"} my={2}>
-        <Button
-          type="button"
-          variant="contained"
-          color="info"
-          onClick={() => setShowMore(!showMore)}
-          size="small"
-        >
-          {showMore ? "Rút gọn" : "Xem thêm"}
-        </Button>
-      </Box>
       <Stack
-        component={"h1"}
-        fontSize={20}
-        direction={"row"}
-        gap={"5px"}
-        alignItems={"center"}
-        id="chapter-list"
+        sx={{
+          border: "1px dashed #7986cba6",
+          margin: "16px 0",
+          padding: "8px",
+          borderRadius: "16px",
+          backgroundColor: "#fff",
+        }}
       >
-        DANH SÁCH CHƯƠNG
-        {chapterListIsValidating && (
-          <CircularProgress size={"1em"} color="primary" />
+        <Box
+          component={"h3"}
+          sx={{
+            margin: "0",
+            color: "#7986cb",
+            borderBottom: "1px dashed #7986cba6",
+          }}
+        >
+          Mô tả truyện
+        </Box>
+        {story?.story_description && (
+          <Box
+            component={"div"}
+            sx={{
+              fontSize: "13px",
+            }}
+            dangerouslySetInnerHTML={{
+              __html:
+                story?.story_description.length >= 400
+                  ? showMore
+                    ? story?.story_description
+                    : story?.story_description.substring(0, 400) + "..."
+                  : story?.story_description,
+            }}
+          ></Box>
         )}
+        <Stack direction={"row"} justifyContent={"center"}>
+          <IconButton onClick={() => setShowMore(!showMore)} size="small">
+            {showMore ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+          </IconButton>
+        </Stack>
       </Stack>
-      <Box className={"hr"} />
+
       <Stack
         display={{
           xs: "flex",
@@ -402,59 +412,97 @@ export const StoryMain = ({ story }: Props) => {
       </Stack>
 
       <Box
-        component={List}
-        maxHeight={{
-          md: 600,
-          xs: "100%",
+        sx={{
+          border: "1px dashed #7986cba6",
+          borderRadius: "16px",
+          backgroundColor: "#fff",
+          margin: "16px 0",
+          overflow: "hidden",
         }}
-        height={{
-          md: 600,
-          xs: "100%",
-        }}
-        overflow={"auto"}
-        mt={3}
-        bgcolor={"#fff"}
-        dense={true}
+        id="chapter-list"
       >
-        {chapterListIsValidating
-          ? paginationRowLoading()
-          : chapterListData?.result.map((data: ChapterDataInterface) => {
-              return (
-                <ListItem
-                  key={data._id}
-                  sx={{
-                    borderBottom: "1px dashed #ccc",
-                    px: 1,
-                  }}
-                  dense={true}
-                >
-                  <Box component={ListItemIcon} minWidth={"25px"}>
-                    <ArrowCircleRightIcon />
-                  </Box>
-                  <ListItemButton
-                    component={Link}
-                    href={`/story/${story_code}/${data.chapter_code}`}
+        <Box
+          component={"h3"}
+          sx={{
+            margin: "0",
+            padding: "5px",
+            paddingLeft: "16px",
+            color: "#7986cb",
+            borderBottom: "1px dashed #7986cba6",
+          }}
+        >
+          Danh sách chương
+        </Box>
+        <Box
+          component={List}
+          maxHeight={{
+            md: 600,
+            xs: "100%",
+          }}
+          height="100%"
+          overflow={"auto"}
+          bgcolor={"#fff"}
+          dense={true}
+          sx={{
+            overflowY: "auto",
+            "&::-webkit-scrollbar": {
+              borderRadius: "0 16px 16px 0",
+              backgroundColor: "transparent",
+              width: "5px",
+            },
+
+            // "&::-webkit-scrollbar-track": {
+            //   borderRadius: "100px",
+            // },
+            "&::-webkit-scrollbar-thumb": {
+              background: "#7986cba6",
+            },
+          }}
+        >
+          {chapterListIsValidating
+            ? paginationRowLoading()
+            : chapterListData?.result.map((data: ChapterDataInterface) => {
+                return (
+                  <ListItem
+                    key={data._id}
                     sx={{
+                      borderBottom: "1px dashed #7986cba6",
                       px: 1,
+                      height: "35px",
                     }}
+                    dense={true}
                   >
-                    <ListItemText
+                    <Box component={ListItemIcon} minWidth={"25px"}>
+                      <ArrowCircleRightIcon />
+                    </Box>
+                    <ListItemButton
+                      component={Link}
+                      href={`/story/${story_code}/${data.chapter_code}`}
                       sx={{
-                        "& > span": {
-                          fontSize: {
-                            md: "1em",
-                            xs: ".9em",
-                          },
+                        px: 1,
+                        "&:hover": {
+                          backgroundColor: "unset",
                         },
                       }}
-                      primary={`${data.chapter_name}${
-                        data.chapter_title ? ": " + data.chapter_title : ""
-                      }`}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              );
-            })}
+                    >
+                      <ListItemText
+                        sx={{
+                          "& > span": {
+                            fontSize: {
+                              md: "1em",
+                              xs: ".9em",
+                            },
+                          },
+                        }}
+                        primary={`${data.chapter_name}${
+                          data.chapter_title ? ": " + data.chapter_title : ""
+                        }`}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                );
+              })}
+        </Box>
       </Box>
       <Stack direction={"row"} justifyContent={"center"} mt={2}>
         <Pagination
