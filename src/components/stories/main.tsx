@@ -4,25 +4,27 @@ import { StoryInterface } from "@/models/stories";
 import { timeSince } from "@/utils/function";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FolderIcon from "@mui/icons-material/Folder";
 import PersonIcon from "@mui/icons-material/Person";
+import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import StarIcon from "@mui/icons-material/Star";
 import UpdateIcon from "@mui/icons-material/Update";
 import {
   Box,
   Button,
+  Chip,
+  IconButton,
   List,
   ListItemIcon,
   Stack,
   Typography,
-  Chip,
-  IconButton,
 } from "@mui/material";
-import CircularProgress from "@mui/material/CircularProgress";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
@@ -30,16 +32,13 @@ import Pagination, {
   PaginationRenderItemParams,
 } from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
+import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { RowLoading } from "../loading";
 import { StoryReportButton } from "./reportButton";
-import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
-import { styled } from "@mui/material/styles";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 const Wrapper = styled("h2")(() => ({
   display: "flex",
   flexDirection: "row",
@@ -166,6 +165,51 @@ const UListStyled = styled("ul")(() => ({
   "& > li > ul": {
     display: "inline-block",
     paddingLeft: "8px",
+  },
+}));
+
+const ChapterListWrapper = styled(Box)(() => ({
+  border: "1px dashed #7986cba6",
+  borderRadius: "16px",
+  backgroundColor: "#fff",
+  margin: "16px 0",
+  overflow: "hidden",
+}));
+
+const ChapterListH3 = styled("h3")(() => ({
+  margin: "0",
+  padding: "5px",
+  paddingLeft: "16px",
+  color: "#7986cb",
+  borderBottom: "1px dashed #7986cba6",
+}));
+
+const ListStyled = styled(List)(({ theme }) => ({
+  height: "100%",
+  overflow: "auto",
+  backgroundColor: "#fff",
+  overflowY: "auto",
+  "&::-webkit-scrollbar": {
+    borderRadius: "0 16px 16px 0",
+    backgroundColor: "transparent",
+    width: "5px",
+  },
+  "&::-webkit-scrollbar-thumb": {
+    background: "#7986cba6",
+  },
+  "&>li": {
+    borderBottom: "1px dashed #7986cba6",
+    padding: "8px 0",
+    height: "35px",
+    "&:last-of-type": {
+      borderBottom: "none",
+    },
+  },
+  [theme.breakpoints.up("xs")]: {
+    maxHeight: "100%",
+  },
+  [theme.breakpoints.up("md")]: {
+    maxHeight: "600px",
   },
 }));
 
@@ -411,67 +455,14 @@ export const StoryMain = ({ story }: Props) => {
         />
       </Stack>
 
-      <Box
-        sx={{
-          border: "1px dashed #7986cba6",
-          borderRadius: "16px",
-          backgroundColor: "#fff",
-          margin: "16px 0",
-          overflow: "hidden",
-        }}
-        id="chapter-list"
-      >
-        <Box
-          component={"h3"}
-          sx={{
-            margin: "0",
-            padding: "5px",
-            paddingLeft: "16px",
-            color: "#7986cb",
-            borderBottom: "1px dashed #7986cba6",
-          }}
-        >
-          Danh sách chương
-        </Box>
-        <Box
-          component={List}
-          maxHeight={{
-            md: 600,
-            xs: "100%",
-          }}
-          height="100%"
-          overflow={"auto"}
-          bgcolor={"#fff"}
-          dense={true}
-          sx={{
-            overflowY: "auto",
-            "&::-webkit-scrollbar": {
-              borderRadius: "0 16px 16px 0",
-              backgroundColor: "transparent",
-              width: "5px",
-            },
-
-            // "&::-webkit-scrollbar-track": {
-            //   borderRadius: "100px",
-            // },
-            "&::-webkit-scrollbar-thumb": {
-              background: "#7986cba6",
-            },
-          }}
-        >
+      <ChapterListWrapper id="chapter-list">
+        <ChapterListH3>Danh sách chương</ChapterListH3>
+        <ListStyled dense={true}>
           {chapterListIsValidating
             ? paginationRowLoading()
             : chapterListData?.result.map((data: ChapterDataInterface) => {
                 return (
-                  <ListItem
-                    key={data._id}
-                    sx={{
-                      borderBottom: "1px dashed #7986cba6",
-                      px: 1,
-                      height: "35px",
-                    }}
-                    dense={true}
-                  >
+                  <ListItem key={data._id} dense={true}>
                     <Box component={ListItemIcon} minWidth={"25px"}>
                       <ArrowCircleRightIcon />
                     </Box>
@@ -502,8 +493,8 @@ export const StoryMain = ({ story }: Props) => {
                   </ListItem>
                 );
               })}
-        </Box>
-      </Box>
+        </ListStyled>
+      </ChapterListWrapper>
       <Stack direction={"row"} justifyContent={"center"} mt={2}>
         <Pagination
           count={chapterListData?.pagination.pages}
