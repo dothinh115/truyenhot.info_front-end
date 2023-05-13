@@ -199,7 +199,7 @@ const ListStyled = styled(List)(({ theme }) => ({
   },
   "&>li": {
     borderBottom: "1px dashed #7986cba6",
-    padding: "8px 0",
+    padding: "8px 16px",
     height: "35px",
     "&:last-of-type": {
       borderBottom: "none",
