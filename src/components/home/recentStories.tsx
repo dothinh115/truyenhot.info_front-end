@@ -173,7 +173,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
     mutate: recenUpdatetStoriesListMutate,
     isValidating: recentUpdateStoriesValidating,
   } = useSWR(
-    `/stories/getRecentUpdate?limit=35${
+    `/stories/getRecentUpdate?limit=30${
       cateValue ? "&category=" + cateValue.value : ""
     }`,
     {
@@ -190,7 +190,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
 
   const preDataRender = () => {
     let result = [];
-    for (let i = 0; i < 35; i++) {
+    for (let i = 0; i < 30; i++) {
       result.push(<IndexRowLoading key={i} />);
     }
     return result;

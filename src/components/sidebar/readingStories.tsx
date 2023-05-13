@@ -1,28 +1,58 @@
-import React, { useState } from "react";
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
 import { ReadingStoriesInterface } from "@/models/stories";
-import Link from "next/link";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { Box, List, ListItem, ListItemIcon, Stack } from "@mui/material";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { styled } from "@mui/material/styles";
+
+const ListItemStyled = styled(ListItem)(() => ({
+  padding: "0",
+  margin: "0",
+  "&:not(:last-of-type)": {
+    borderBottom: "1px dashed #ccc",
+  },
+}));
+
+const RowWrapper = styled(Stack)(() => ({
+  flexDirection: "row",
+  paddingTop: "0",
+  paddingBottom: "0",
+  alignItems: "center",
+  width: "100%",
+  fontSize: "13.5",
+  height: "28px",
+}));
+
+const MainLink = styled(Link)(() => ({
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  textDecoration: "none",
+  flexGrow: 1,
+  margin: "0",
+}));
+
+const ChapterLink = styled(Link)(() => ({
+  textAlign: "right",
+  minWidth: "40px",
+  maxWidth: "40px",
+  textDecoration: "none",
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+}));
 
 type Props = {};
 
 export const ReadingStoriesHistory = (props: Props) => {
-  let getData;
-  if (typeof window !== "undefined") {
-    getData = localStorage.getItem("readingStories");
-  }
-  let data: ReadingStoriesInterface[] = [];
-  if (getData) data = JSON.parse(getData);
-  const [readingStories, setReadingStories] =
-    useState<ReadingStoriesInterface[]>(data);
-  if (readingStories.length === 0) return null;
+  const [readingStories, setReadingStories] = useState<
+    ReadingStoriesInterface[]
+  >([]);
+  useEffect(() => {
+    const getData = localStorage.getItem("readingStories");
+    if (getData) setReadingStories(JSON.parse(getData));
+  }, []);
+  if (readingStories.length === 0 || typeof window === "undefined") return null;
   return (
     <>
       <Box>
@@ -34,24 +64,8 @@ export const ReadingStoriesHistory = (props: Props) => {
             {readingStories?.map(
               (story: ReadingStoriesInterface, index: number) => {
                 return (
-                  <Box
-                    component={ListItem}
-                    p={0}
-                    m={0}
-                    key={story.story_code}
-                    sx={{
-                      "&:not(:last-of-type)": {
-                        borderBottom: "1px dashed #ccc",
-                      },
-                    }}
-                  >
-                    <ListItemButton
-                      component={Link}
-                      href={`/story/${story.story_code}/${story.chapter_code}`}
-                      sx={{
-                        px: 0,
-                      }}
-                    >
+                  <ListItemStyled key={story.story_code}>
+                    <RowWrapper>
                       <Box component={ListItemIcon} minWidth={"15px"}>
                         <ArrowForwardIosIcon
                           sx={{
@@ -65,26 +79,22 @@ export const ReadingStoriesHistory = (props: Props) => {
                         />
                       </Box>
 
-                      <Box
-                        component={ListItemText}
-                        primary={`[${story.chapter_name
+                      <MainLink href={`/story/${story.story_code}`}>
+                        {story.story_title}
+                      </MainLink>
+
+                      <ChapterLink
+                        href={`/story/${story.story_code}/${story.chapter_code}`}
+                      >
+                        {story?.chapter_name
                           .replaceAll("Chương ", "C")
                           .replaceAll("Quyển ", "Q")
                           .replaceAll(" - ", "-")
                           .replaceAll("CHƯƠNG ", "C")
-                          .replaceAll("QUYỂN ", "Q")}]${story.story_title}`}
-                        m={0}
-                        sx={{
-                          "& > span": {
-                            fontSize: 14,
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                          },
-                        }}
-                      />
-                    </ListItemButton>
-                  </Box>
+                          .replaceAll("QUYỂN ", "Q")}
+                      </ChapterLink>
+                    </RowWrapper>
+                  </ListItemStyled>
                 );
               }
             )}
