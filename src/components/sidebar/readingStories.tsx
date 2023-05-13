@@ -14,7 +14,10 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 type Props = {};
 
 export const ReadingStoriesHistory = (props: Props) => {
-  let getData = localStorage.getItem("readingStories");
+  let getData;
+  if (typeof window !== "undefined") {
+    getData = localStorage.getItem("readingStories");
+  }
   let data: ReadingStoriesInterface[] = [];
   if (getData) data = JSON.parse(getData);
   const [readingStories, setReadingStories] =
