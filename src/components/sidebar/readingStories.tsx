@@ -34,8 +34,7 @@ const MainLink = styled(Link)(() => ({
 
 const ChapterLink = styled(Link)(() => ({
   textAlign: "right",
-  minWidth: "40px",
-  maxWidth: "40px",
+  width: "60px",
   textDecoration: "none",
   whiteSpace: "nowrap",
   overflow: "hidden",
