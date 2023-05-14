@@ -4,3 +4,4 @@ export * from "./storiesManage";
 export * from "./usersManage";
 export * from "./dragAndDropImg";
 export * from "./adminSearchBar";
+export * from "./noCoverRow";
