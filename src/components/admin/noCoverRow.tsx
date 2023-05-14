@@ -85,16 +85,23 @@ export const AdminNoCoverStoriesRow = ({ storyData, mutate }: Props) => {
           alignItems={"center"}
         >
           <Box
-            component={"img"}
-            src={image ? image : storyData.story_cover}
+            component={Link}
+            href={`/admin/stories/${storyData.story_code}?goAround=true`}
             width={"100%"}
             height={"100%"}
-            maxHeight={"90px"}
-            sx={{
-              objectFit: "cover",
-            }}
-            borderRadius={"15px"}
-          />
+          >
+            <Box
+              component={"img"}
+              src={image ? image : storyData.story_cover}
+              maxHeight={"90px"}
+              width={"100%"}
+              height={"100%"}
+              sx={{
+                objectFit: "cover",
+              }}
+              borderRadius={"15px"}
+            />
+          </Box>
         </Stack>
         <Box sx={{ flexGrow: "1" }} width={"60%"}>
           <Box
