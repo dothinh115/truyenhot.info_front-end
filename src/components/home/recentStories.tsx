@@ -179,7 +179,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
     }`,
     {
       keepPreviousData: true,
-      // refreshInterval: 10000,
+      refreshInterval: 10000,
     }
   );
   const handleChange = (
