@@ -113,6 +113,7 @@ export const AdminNoCoverStoriesRow = ({ storyData, mutate }: Props) => {
                 md: "1.3em",
                 xs: "1em",
               },
+              userSelect: "all",
             }}
             fontWeight={"bold"}
           >
