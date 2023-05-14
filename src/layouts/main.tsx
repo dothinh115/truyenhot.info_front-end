@@ -39,7 +39,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
           },
           position: "fixed",
           bottom: 0,
-          zIndex: 100,
+          zIndex: 50,
           boxShadow: "1px 1px 10px rgba(0, 0, 0, .15)",
         }}
         showLabels

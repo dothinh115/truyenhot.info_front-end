@@ -24,7 +24,7 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
     <>
       <Box
         position={"fixed"}
-        zIndex={50}
+        zIndex={100}
         width={"100%"}
         height={"100%"}
         bgcolor={"#fff"}

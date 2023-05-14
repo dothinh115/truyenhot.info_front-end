@@ -29,7 +29,9 @@ const SearchByAuthorPage = ({ categories }: Props) => {
     mutate: searchMutate,
     isValidating: searchIsValidating,
   } = useSWR(
-    `/search/storyAuthor?keywords=${keywords}${page ? `&page=${page}` : ""}`,
+    `/search/storyAuthor?keywords=${keywords}${
+      page ? `&page=${page}` : ""
+    }&exact=true`,
     {
       revalidateOnMount: false,
     }

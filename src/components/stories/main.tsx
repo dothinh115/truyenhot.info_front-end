@@ -57,19 +57,15 @@ const TitleWrapper = styled("h1")(() => ({
   fontWeight: "500",
   letterSpacing: "-1px",
   wordSpacing: "2px",
-}));
-
-const Title = styled(Box)(() => ({
-  display: "inline",
-  padding: "4px 8px",
+  margin: 0,
+  padding: 0,
   color: "#606fc3",
-  borderRadius: "5px",
-  border: "1px dashed #7986cb47",
 }));
 
-const TitleAndImgWrapper = styled(Box)(() => ({
+const ViewedAndImgWrapper = styled(Box)(() => ({
   position: "relative",
   height: "270px",
+  display: "flex",
 }));
 
 const ImgWrapper = styled(Box)(() => ({
@@ -257,43 +253,145 @@ export const StoryMain = ({ story }: Props) => {
       <Wrapper>THÔNG TIN TRUYỆN</Wrapper>
       <Box className={"hr"} />
 
-      <TitleWrapper>
-        <Title>{story?.story_title}</Title>
-      </TitleWrapper>
-      <TitleAndImgWrapper>
-        <ImgWrapper>
-          <CoverImage src={story?.story_cover} alt={story?.story_title} />
-          <ViewStyled>
-            <RemoveRedEyeIcon />
-            <Box component={"span"}>{story?.story_view}</Box>
-          </ViewStyled>
-        </ImgWrapper>
-      </TitleAndImgWrapper>
-      <ButtonWrapper>
-        <Button
-          variant="outlined"
-          color="info"
-          size="small"
-          startIcon={<PlayCircleFilledIcon />}
-          onClick={() =>
-            router.push({
-              pathname: `/story/[story_code]/[chapter_code]`,
-              query: {
-                story_code: story?.story_code,
-                chapter_code: story?.start_chapter,
-              },
-            })
-          }
+      <Stack
+        direction={{ md: "row-reverse", xs: "column-reverse" }}
+        justifyContent={"flex-end"}
+        mt={2}
+        gap={"10px"}
+      >
+        <Stack flexGrow={1}>
+          <Box
+            display={{
+              md: "block",
+              xs: "none",
+              flexGrow: "1",
+            }}
+          >
+            <TitleWrapper>{story?.story_title}</TitleWrapper>
+          </Box>
+          <Stack
+            sx={{
+              border: "1px dashed #7986cba6",
+              padding: "8px",
+              borderRadius: "16px",
+              backgroundColor: "#fff",
+            }}
+          >
+            <UListStyled>
+              <Box component={"li"}>
+                <Box component={"h4"}>
+                  <PersonIcon />
+                  Tác giả:
+                </Box>
+                <Box
+                  component={Link}
+                  href={`/search/author?keywords=${story?.story_author}`}
+                >
+                  {story?.story_author}
+                </Box>
+              </Box>
+              <Box component={"li"}>
+                <Box component={"h4"}>
+                  <FolderIcon />
+                  <Box component={"span"}>Thể loại:</Box>
+                </Box>
+                <Box component={"span"}>
+                  {story?.story_category.map((cate: CategoryInterface) => {
+                    return (
+                      <Chip
+                        component={Link}
+                        href={`/categories/${cate.cate_code}`}
+                        label={cate.cate_title}
+                        size="small"
+                        key={cate.cate_id}
+                        sx={{
+                          mr: "4px",
+                          cursor: "pointer",
+                          "&>span": { color: "#fff" },
+                        }}
+                        color="primary"
+                      />
+                    );
+                  })}
+                </Box>
+              </Box>
+              <Box component={"li"}>
+                <Box component={"h4"}>
+                  <ArrowForwardIosIcon />
+                  Nguồn:
+                </Box>
+                {story?.story_source}
+              </Box>
+              <Box component={"li"}>
+                <Box component={"h4"}>
+                  <StarIcon />
+                  Trạng thái:
+                </Box>
+                {story?.story_status}
+              </Box>
+              <Box component={"li"}>
+                <Box component={"h4"}>
+                  <UpdateIcon />
+                  Update lần cuối:
+                </Box>
+                {story?.updated_at && (
+                  <>{`${timeSince(
+                    Math.abs(
+                      new Date().valueOf() -
+                        new Date(story?.updated_at).valueOf()
+                    )
+                  )} trước`}</>
+                )}
+              </Box>
+              <ButtonWrapper>
+                <Button
+                  variant="outlined"
+                  color="info"
+                  size="small"
+                  startIcon={<PlayCircleFilledIcon />}
+                  onClick={() =>
+                    router.push({
+                      pathname: `/story/[story_code]/[chapter_code]`,
+                      query: {
+                        story_code: story?.story_code,
+                        chapter_code: story?.start_chapter,
+                      },
+                    })
+                  }
+                >
+                  Đọc truyện
+                </Button>
+                <StoryReportButton
+                  open={reportModalOpen}
+                  setOpen={setReportModalOpen}
+                  story_code={story?.story_code}
+                />
+              </ButtonWrapper>
+            </UListStyled>
+          </Stack>
+        </Stack>
+
+        <ViewedAndImgWrapper>
+          <ImgWrapper>
+            <CoverImage src={story?.story_cover} alt={story?.story_title} />
+            <ViewStyled>
+              <RemoveRedEyeIcon />
+              <Box component={"span"}>{story?.story_view}</Box>
+            </ViewStyled>
+          </ImgWrapper>
+        </ViewedAndImgWrapper>
+
+        <Box
+          display={{
+            md: "none",
+            xs: "block",
+          }}
         >
-          Đọc truyện
-        </Button>
-        <StoryReportButton
-          open={reportModalOpen}
-          setOpen={setReportModalOpen}
-          story_code={story?.story_code}
-        />
-      </ButtonWrapper>
-      <Stack direction={"row"} justifyContent={"center"}>
+          <TitleWrapper>{story?.story_title}</TitleWrapper>
+        </Box>
+      </Stack>
+
+      {/* <Stack direction={"row"} justifyContent={"center"}>
         <FavoriteIcon
           sx={{
             color: "red",
@@ -312,83 +410,8 @@ export const StoryMain = ({ story }: Props) => {
         >
           3000 lượt like
         </Typography>
-      </Stack>
-      <Stack
-        sx={{
-          border: "1px dashed #7986cba6",
-          margin: "16px 0",
-          padding: "8px",
-          borderRadius: "16px",
-          backgroundColor: "#fff",
-        }}
-      >
-        <UListStyled>
-          <Box component={"li"}>
-            <Box component={"h4"}>
-              <PersonIcon />
-              Tác giả:
-            </Box>
-            <Box
-              component={Link}
-              href={`/search/author?keywords=${story?.story_author}`}
-            >
-              {story?.story_author}
-            </Box>
-          </Box>
-          <Box component={"li"}>
-            <Box component={"h4"}>
-              <FolderIcon />
-              <Box component={"span"}>Thể loại:</Box>
-            </Box>
-            <Box component={"span"}>
-              {story?.story_category.map((cate: CategoryInterface) => {
-                return (
-                  <Chip
-                    component={Link}
-                    href={`/categories/${cate.cate_code}`}
-                    label={cate.cate_title}
-                    size="small"
-                    key={cate.cate_id}
-                    sx={{
-                      mr: "4px",
-                      cursor: "pointer",
-                      "&>span": { color: "#fff" },
-                    }}
-                    color="primary"
-                  />
-                );
-              })}
-            </Box>
-          </Box>
-          <Box component={"li"}>
-            <Box component={"h4"}>
-              <ArrowForwardIosIcon />
-              Nguồn:
-            </Box>
-            {story?.story_source}
-          </Box>
-          <Box component={"li"}>
-            <Box component={"h4"}>
-              <StarIcon />
-              Trạng thái:
-            </Box>
-            {story?.story_status}
-          </Box>
-          <Box component={"li"}>
-            <Box component={"h4"}>
-              <UpdateIcon />
-              Update lần cuối:
-            </Box>
-            {story?.updated_at && (
-              <>{`${timeSince(
-                Math.abs(
-                  new Date().valueOf() - new Date(story?.updated_at).valueOf()
-                )
-              )} trước`}</>
-            )}
-          </Box>
-        </UListStyled>
-      </Stack>
+      </Stack> */}
+
       <Stack
         sx={{
           border: "1px dashed #7986cba6",

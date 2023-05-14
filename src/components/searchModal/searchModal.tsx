@@ -106,7 +106,7 @@ export const SearchModal = (props: Props) => {
       <Box
         position={"fixed"}
         bgcolor={"#fff"}
-        zIndex={50}
+        zIndex={100}
         width={"100%"}
         height={"100%"}
         p={1}
