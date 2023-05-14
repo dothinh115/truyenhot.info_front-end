@@ -2,6 +2,7 @@ import { useSnackbar } from "@/hooks/snackbar";
 import { NewReportInterface, ReportOptionInterface } from "@/models/stories";
 import { API } from "@/utils/config";
 import CloseIcon from "@mui/icons-material/Close";
+import ReportIcon from "@mui/icons-material/Report";
 import {
   Box,
   Button,
@@ -17,8 +18,6 @@ import {
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
-import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
-import ReportIcon from "@mui/icons-material/Report";
 type Props = {
   open: boolean;
   setOpen: any;
@@ -37,6 +36,7 @@ const style = {
     md: "20%",
     xs: "90%",
   },
+  minWidth: "350px",
   p: 2,
 };
 

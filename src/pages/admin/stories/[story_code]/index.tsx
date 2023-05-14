@@ -138,9 +138,9 @@ const EditStory = (props: Props) => {
           "Content-Type": "multipart/form-data",
         },
       });
-      setTimeout(async () => {
+      await setTimeout(async () => {
         await mutate();
-      }, 1000);
+      }, 1500);
       setSnackbar({
         message: "Update truyện thành công",
         open: true,
