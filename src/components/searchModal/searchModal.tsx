@@ -113,7 +113,7 @@ export const SearchModal = (props: Props) => {
         top={searchOpen ? "0" : "100%"}
         left={0}
         sx={{ transition: "top .2s" }}
-        pb={20}
+        pb={13}
         ref={searchBodyElement}
       >
         <Stack
