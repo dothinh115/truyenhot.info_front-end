@@ -436,6 +436,7 @@ export const StoryMain = ({ story }: Props) => {
             component={"div"}
             sx={{
               fontSize: "13px",
+              mt: 1,
             }}
             dangerouslySetInnerHTML={{
               __html:

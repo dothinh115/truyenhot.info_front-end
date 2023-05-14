@@ -128,6 +128,7 @@ const ItemSecondRow = styled(Box)(({ theme }) => ({
 const ItemThirdRow = styled(Box)(({ theme }) => ({
   textAlign: "right",
   fontSize: ".9em",
+  lineHeight: "22px",
   [theme.breakpoints.up("xs")]: {
     display: "none",
   },
@@ -178,7 +179,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
     }`,
     {
       keepPreviousData: true,
-      refreshInterval: 10000,
+      // refreshInterval: 10000,
     }
   );
   const handleChange = (
