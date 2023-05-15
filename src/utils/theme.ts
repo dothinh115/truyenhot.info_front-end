@@ -112,7 +112,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             input: grey[600],
             loading: grey[900],
             //headding
-            main: "#7986cbc2",
+            main: "#7986cb",
             headfoot: "#7986cb",
             imgFooter: grey[600],
             loadingBack: grey[300],

@@ -29,7 +29,7 @@ const Heading = styled("h3")(({ theme }) => ({
   borderRadius: "10px 10px 0 0",
   borderWidth: "1px 1px 0 1px",
   borderStyle: "solid",
-  borderColor: theme.palette.mySecondary.main,
+  borderColor: theme.palette.myBackground.main,
 }));
 
 const UList = styled("ul")(({ theme }) => ({
@@ -37,7 +37,7 @@ const UList = styled("ul")(({ theme }) => ({
   margin: 0,
   borderWidth: "0 1px 1px 1px",
   borderStyle: "solid",
-  borderColor: theme.palette.mySecondary.main,
+  borderColor: theme.palette.myBackground.main,
   borderRadius: "0 0 10px 10px",
 }));
 
