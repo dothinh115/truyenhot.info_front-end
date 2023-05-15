@@ -127,7 +127,7 @@ export const getStaticProps: GetStaticProps<Props> = async (
   if (!context.params) return { notFound: true };
   const story_code = context.params.story_code;
   const storyRespone = await fetch(
-    `${apiURL}/api/stories/getDetail/${story_code}`
+    `${apiURL}/api/stories/getDetail/${story_code}?limit=1100`
   );
   const story: { result: StoryInterface } = await storyRespone.json();
 
