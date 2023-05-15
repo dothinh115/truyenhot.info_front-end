@@ -7,7 +7,6 @@ type Props = {};
 const LoadingWrapper = styled(Box)(({ theme }) => ({
   width: "100%",
   height: "100%",
-  backgroundColor: "#dddddd",
   borderRadius: "5px",
   overflow: "hidden",
   animationFillMode: "forwards",
@@ -15,8 +14,7 @@ const LoadingWrapper = styled(Box)(({ theme }) => ({
   animationName: "story-list-loading",
   animationTimingFunction: "linear",
   background: "#f6f7f8",
-  backgroundImage:
-    "linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%)",
+  backgroundImage: `linear-gradient(to right, ${theme.palette.background.loadingBack} 8%, ${theme.palette.background.loadingMove} 18%, ${theme.palette.background.loadingBack} 33%)`,
   backgroundSize: "200%",
   [theme.breakpoints.up("xs")]: {
     animationDuration: "2s",

@@ -27,7 +27,7 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
         zIndex={100}
         width={"100%"}
         height={"100%"}
-        bgcolor={"#fff"}
+        bgcolor={"background.default"}
         p={0}
         maxHeight={"100vh"}
         overflow={"auto"}
@@ -71,7 +71,14 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
           <Box>TRUYENHOT.INFO</Box>
         </Stack>
         <Stack height={"100%"} p={1} pt={"50px"}>
-          <Box component={"h3"}>Thể loại</Box>
+          <Box
+            component={"h3"}
+            sx={{
+              color: "text.primary",
+            }}
+          >
+            Thể loại
+          </Box>
           <Box className={"hr"} my={2} />
           <Box
             my={2}

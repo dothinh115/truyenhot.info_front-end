@@ -1,5 +1,7 @@
 import { Noto_Sans } from "next/font/google";
 import { createTheme } from "@mui/material/styles";
+import { PaletteMode } from "@mui/material";
+import { deepOrange, grey, indigo, yellow } from "@mui/material/colors";
 
 export const noto = Noto_Sans({
   weight: ["300", "400", "500", "700"],
@@ -60,3 +62,75 @@ const theme = createTheme({
 });
 
 export default theme;
+
+export const getDesignTokens = (mode: PaletteMode) => ({
+  palette: {
+    mode,
+    ...(mode === "light"
+      ? {
+          primary: {
+            main: indigo[300],
+          },
+          background: {
+            default: grey[200],
+            paper: grey[100],
+            //những dòng trong bảng
+            secondary: "#fff",
+            input: grey[50],
+            loading: "#fff",
+            //headding
+            main: "#7986cbc2",
+            headfoot: "#7986cb",
+            imgFooter: grey[700],
+            loadingBack: grey[300],
+            loadingMove: grey[400],
+          },
+          // màu theme
+          secondary: {
+            //màu border
+            main: "#7986cbc2",
+          },
+          text: {
+            //màu text chính
+            primary: grey[800],
+            secondary: grey[400],
+            //màu text heading
+            main: "#fff",
+            link: "#303f9f",
+          },
+        }
+      : {
+          primary: {
+            main: indigo[300],
+          },
+          divider: deepOrange[700],
+          background: {
+            default: grey[800],
+            paper: grey[900],
+            //những dòng trong bảng
+            secondary: grey[700],
+            input: grey[600],
+            loading: grey[900],
+            //headding
+            main: "#7986cbc2",
+            headfoot: "#7986cb",
+            imgFooter: grey[600],
+            loadingBack: grey[300],
+            loadingMove: grey[400],
+          },
+          // màu theme
+          secondary: {
+            //màu border
+            main: grey[300],
+          },
+          text: {
+            //màu text chính
+            primary: grey[200],
+            secondary: grey[400],
+            //màu text heading
+            main: "#fff",
+            link: "#fff", //light: #303f9f
+          },
+        }),
+  },
+});

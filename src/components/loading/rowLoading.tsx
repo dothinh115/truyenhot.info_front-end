@@ -12,13 +12,13 @@ const ListItemLoading = styled(ListItem)(({ theme }) => ({
   animationIterationCount: "infinite",
   animationName: "story-list-loading",
   animationTimingFunction: "linear",
-  background: "#f6f7f8",
+  background: theme.palette.background.loading,
   backgroundImage:
     "linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%)",
   backgroundSize: "200%",
   position: "relative",
   "&>div": {
-    backgroundColor: "#fff",
+    backgroundColor: theme.palette.background.secondary,
     position: "absolute",
   },
   [theme.breakpoints.up("xs")]: {
@@ -32,16 +32,16 @@ const ListItemLoading = styled(ListItem)(({ theme }) => ({
 export const RowLoading = (props: Props) => {
   return (
     <ListItemLoading dense={true}>
-      <Box sx={{ top: 0, left: 0, right: 0, height: "13px" }}></Box>
-      <Box sx={{ bottom: 0, left: 0, right: 0, height: "13px" }}></Box>
+      <Box sx={{ top: 0, left: 0, right: 0, height: "8px" }}></Box>
+      <Box sx={{ bottom: 0, left: 0, right: 0, height: "8px" }}></Box>
       <Box sx={{ top: 0, left: 0, bottom: 0, width: "14px" }}></Box>
       <Box sx={{ top: 0, right: 0, bottom: 0, width: "14px" }}></Box>
       <Box
         sx={{
-          height: "calc(100% - 13px - 13px)",
+          height: "calc(100% - 8px - 8px)",
           width: "20px",
           left: "calc(14px + 19px)",
-          top: "13px",
+          top: "8px",
         }}
       ></Box>
     </ListItemLoading>

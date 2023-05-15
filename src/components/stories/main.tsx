@@ -37,13 +37,14 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { RowLoading } from "../loading";
 import { StoryReportButton } from "./reportButton";
-const Wrapper = styled("h2")(() => ({
+
+const Wrapper = styled("h2")(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
   justifyContent: "space-between",
   alignItems: "center",
   marginBottom: "0",
-  color: "rgba(0, 0, 0, .65)",
+  color: theme.palette.text.primary,
 }));
 
 const TitleWrapper = styled("h1")(({ theme }) => ({
@@ -119,13 +120,13 @@ const ButtonWrapper = styled(Stack)(() => ({
   marginTop: "8px",
 }));
 
-const UListStyled = styled("ul")(() => ({
+const UListStyled = styled("ul")(({ theme }) => ({
   margin: 0,
   listStyleType: "none",
   paddingLeft: "0",
   "& a ": {
     textDecoration: "none",
-    color: "#303f9f",
+    color: theme.palette.text.link,
   },
   "& > li > a, & > li > h4, & > li > p": {
     display: "inline-block",
@@ -141,16 +142,18 @@ const UListStyled = styled("ul")(() => ({
   "& > li": {
     lineHeight: "30px",
     "&:not(:last-child)": {
-      borderBottom: "1px dashed #7986cba6",
+      borderBottomWidth: "1px",
+      borderBottomStyle: "dashed",
+      borderBottomColor: theme.palette.secondary.main,
     },
     display: "flex",
     alignItems: "flex-start",
     "& h4": {
       alignItems: "center",
-      color: "rgba(0, 0, 0, .85)",
+      color: theme.palette.info.main,
       display: "inline-flex",
       "& svg": {
-        color: "rgba(0, 0, 0, .45)",
+        color: theme.palette.info.main,
         height: "20px",
         width: "20px",
         marginRight: "8px",
@@ -168,29 +171,33 @@ const UListStyled = styled("ul")(() => ({
   },
 }));
 
-const ChapterListWrapper = styled(Box)(() => ({
-  border: "1px dashed #7986cba6",
-  borderRadius: "16px",
-  backgroundColor: "#fff",
-  margin: "16px 0",
+const ChapterListWrapper = styled(Box)(({ theme }) => ({
+  borderWidth: "1px",
+  borderStyle: "dashed",
+  borderColor: theme.palette.secondary.main,
+  borderRadius: theme.spacing(2),
+  backgroundColor: theme.palette.background.secondary,
+  margin: theme.spacing(2, 0),
   overflow: "hidden",
 }));
 
-const ChapterListH3 = styled("h3")(() => ({
+const ChapterListH3 = styled("h3")(({ theme }) => ({
   margin: "0",
   padding: "5px",
-  paddingLeft: "16px",
-  color: "#7986cb",
-  borderBottom: "1px dashed #7986cba6",
+  paddingLeft: theme.spacing(2),
+  color: theme.palette.secondary.main,
+  borderBottomWidth: "1px",
+  borderBottomStyle: "dashed",
+  borderBottomColor: theme.palette.secondary.main,
 }));
 
 const ListStyled = styled(List)(({ theme }) => ({
   height: "100%",
   overflow: "auto",
-  backgroundColor: "#fff",
+  backgroundColor: theme.palette.background.secondary,
   overflowY: "auto",
   "&::-webkit-scrollbar": {
-    borderRadius: "0 16px 16px 0",
+    borderRadius: theme.spacing(0, 2, 2, 0),
     backgroundColor: "transparent",
     width: "5px",
   },
@@ -198,12 +205,15 @@ const ListStyled = styled(List)(({ theme }) => ({
     background: "#7986cba6",
   },
   "&>li": {
-    borderBottom: "1px dashed #7986cba6",
-    padding: "8px 16px",
+    borderBottomWidth: "1px",
+    borderBottomStyle: "dashed",
+    borderBottomColor: theme.palette.secondary.main,
+    padding: theme.spacing(1, 2),
     height: "35px",
     "&:last-of-type": {
       borderBottom: "none",
     },
+    color: theme.palette.text.primary,
   },
   [theme.breakpoints.up("xs")]: {
     maxHeight: "100%",
@@ -211,6 +221,40 @@ const ListStyled = styled(List)(({ theme }) => ({
   [theme.breakpoints.up("md")]: {
     maxHeight: "600px",
   },
+}));
+
+const ULWrapper = styled(Stack)(({ theme }) => ({
+  borderWidth: "1px",
+  borderStyle: "dashed",
+  borderColor: theme.palette.secondary.main,
+  padding: theme.spacing(1),
+  borderRadius: theme.spacing(2),
+  backgroundColor: theme.palette.background.secondary,
+  flexGrow: 1,
+}));
+
+const DescriptionWrapper = styled(Stack)(({ theme }) => ({
+  borderWidth: "1px",
+  borderStyle: "dashed",
+  borderColor: theme.palette.secondary.main,
+  margin: theme.spacing(2, 0),
+  padding: theme.spacing(1),
+  backgroundColor: theme.palette.background.secondary,
+  borderRadius: theme.spacing(2),
+}));
+
+const DescriptionHeading = styled("h3")(({ theme }) => ({
+  margin: "0",
+  color: theme.palette.secondary.main,
+  borderBottomWidth: "1px",
+  borderBottomStyle: "dashed",
+  borderBottomColor: theme.palette.secondary.main,
+}));
+
+const DescriptionContent = styled(Box)(({ theme }) => ({
+  fontSize: "13px",
+  marginTop: theme.spacing(1),
+  color: theme.palette.text.primary,
 }));
 
 type Props = {
@@ -274,15 +318,7 @@ export const StoryMain = ({ story }: Props) => {
           </ImgWrapper>
         </ViewedAndImgWrapper>
         <Stack flexGrow={1}>
-          <Stack
-            sx={{
-              border: "1px dashed #7986cba6",
-              padding: "8px",
-              borderRadius: "16px",
-              backgroundColor: "#fff",
-              flexGrow: 1,
-            }}
-          >
+          <ULWrapper>
             <UListStyled>
               <Box component={"li"}>
                 <Box component={"h4"}>
@@ -350,7 +386,7 @@ export const StoryMain = ({ story }: Props) => {
                 )}
               </Box>
             </UListStyled>
-          </Stack>
+          </ULWrapper>
           <ButtonWrapper>
             <Button
               variant="outlined"
@@ -399,32 +435,10 @@ export const StoryMain = ({ story }: Props) => {
         </Typography>
       </Stack> */}
 
-      <Stack
-        sx={{
-          border: "1px dashed #7986cba6",
-          margin: "16px 0",
-          padding: "8px",
-          borderRadius: "16px",
-          backgroundColor: "#fff",
-        }}
-      >
-        <Box
-          component={"h3"}
-          sx={{
-            margin: "0",
-            color: "#7986cb",
-            borderBottom: "1px dashed #7986cba6",
-          }}
-        >
-          Mô tả truyện
-        </Box>
+      <DescriptionWrapper>
+        <DescriptionHeading>Mô tả truyện</DescriptionHeading>
         {story?.story_description && (
-          <Box
-            component={"div"}
-            sx={{
-              fontSize: "13px",
-              mt: 1,
-            }}
+          <DescriptionContent
             dangerouslySetInnerHTML={{
               __html:
                 story?.story_description.length >= 400
@@ -433,14 +447,14 @@ export const StoryMain = ({ story }: Props) => {
                     : story?.story_description.substring(0, 400) + "..."
                   : story?.story_description,
             }}
-          ></Box>
+          ></DescriptionContent>
         )}
         <Stack direction={"row"} justifyContent={"center"}>
           <IconButton onClick={() => setShowMore(!showMore)} size="small">
             {showMore ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
           </IconButton>
         </Stack>
-      </Stack>
+      </DescriptionWrapper>
 
       <Stack
         display={{

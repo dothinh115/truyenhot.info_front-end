@@ -3,119 +3,132 @@ import CreateIcon from "@mui/icons-material/Create";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { Box, Stack, Typography } from "@mui/material";
 import Link from "next/link";
-
+import { styled } from "@mui/material/styles";
 type Props = {
   storiesData: {
     result: StoriesInCategoryInterface[];
   };
 };
 
+const UListStyled = styled("ul")(({}) => ({
+  margin: "0",
+  padding: "0",
+}));
+
+const ListItemStyled = styled("li")(({ theme }) => ({
+  display: "flex",
+  gap: "10px",
+  backgroundColor: theme.palette.background.secondary,
+  padding: theme.spacing(1),
+  borderWidth: "1px",
+  borderStyle: "dashed",
+  borderColor: theme.palette.secondary.main,
+  flexDirection: "row",
+  spacing: theme.spacing(1),
+  alignItems: "center",
+  marginBottom: theme.spacing(1),
+  borderRadius: theme.spacing(2),
+  overflow: "hidden",
+  [theme.breakpoints.up("xs")]: {
+    maxHeight: "100px",
+  },
+}));
+
+const ListItemInnerWrapper = styled(Stack)(({ theme }) => ({
+  flexDirection: "row",
+  alignItems: "center",
+  [theme.breakpoints.up("xs")]: {
+    width: "30%",
+  },
+  [theme.breakpoints.up("md")]: {
+    width: "20%",
+  },
+}));
+
+const ListItemInnerImg = styled("img")(({ theme }) => ({
+  width: "100%",
+  maxHeight: "90px",
+  objectFit: "cover",
+  borderRadius: theme.spacing(2),
+}));
+
+const ListItemInnerTitle = styled(Link)(({ theme }) => ({
+  fontSize: "18px",
+  color: theme.palette.text.link,
+  textDecoration: "none",
+  fontWeight: "bold",
+  [theme.breakpoints.up("xs")]: {
+    fontSize: "1em",
+  },
+  [theme.breakpoints.up("md")]: {
+    fontSize: "1.3em",
+  },
+}));
+
+const ListItemInnerAuthor = styled(Link)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  fontSize: "14px",
+  color: theme.palette.text.link,
+  textDecoration: "none",
+  [theme.breakpoints.up("xs")]: {
+    fontSize: ".9em",
+  },
+  [theme.breakpoints.up("md")]: {
+    fontSize: "1em",
+  },
+  "& svg": {
+    marginRight: theme.spacing(1),
+    fontSize: "20px",
+  },
+}));
+
+const ChapterNumber = styled(Typography)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  fontSize: "14px",
+  color: theme.palette.text.primary,
+  [theme.breakpoints.up("xs")]: {
+    fontSize: ".9em",
+  },
+  [theme.breakpoints.up("md")]: {
+    fontSize: "1em",
+  },
+  "& svg": {
+    marginRight: theme.spacing(1),
+    fontSize: "20px",
+  },
+}));
+
 export const RowStory = ({ storiesData }: Props) => {
   return (
     <>
-      <Box component={"ul"} m={0} p={0}>
+      <UListStyled>
         {storiesData?.result?.map((story: StoriesInCategoryInterface) => {
           return (
-            <Stack
-              component={"li"}
-              bgcolor={"#fff"}
-              p={1}
-              sx={{
-                border: "1px dashed #7986cba6",
-              }}
-              direction={"row"}
-              spacing={1}
-              alignItems={"center"}
-              mb={1}
-              key={story.story_code}
-              maxHeight={{
-                xs: "100px",
-              }}
-              borderRadius={"15px"}
-              overflow={"hidden"}
-            >
-              <Stack
-                width={{
-                  md: "20%",
-                  xs: "30%",
-                }}
-                direction={"row"}
-                alignItems={"center"}
-              >
-                <Box
-                  component={"img"}
-                  src={story.story_cover}
-                  width={"100%"}
-                  maxHeight={"90px"}
-                  sx={{
-                    objectFit: "cover",
-                  }}
-                  borderRadius={"15px"}
-                />
-              </Stack>
+            <ListItemStyled key={story._id}>
+              <ListItemInnerWrapper>
+                <ListItemInnerImg src={story.story_cover} />
+              </ListItemInnerWrapper>
               <Box width={"80%"}>
-                <Box
-                  component={Link}
-                  href={`/story/${story.story_code}`}
-                  fontSize={18}
-                  color={"#283593"}
-                  sx={{
-                    textDecoration: "none",
-                    fontSize: {
-                      md: "1.3em",
-                      xs: "1em",
-                    },
-                  }}
-                  fontWeight={"bold"}
-                >
+                <ListItemInnerTitle href={`/story/${story.story_code}`}>
                   {story.story_title}
-                </Box>
-                <Typography
-                  component={Link}
+                </ListItemInnerTitle>
+                <ListItemInnerAuthor
                   href={`/search/author?keywords=${story.story_author}`}
-                  display={"flex"}
-                  alignItems={"center"}
-                  fontSize={14}
-                  color={"#616161"}
-                  sx={{
-                    textDecoration: "none",
-                    fontSize: {
-                      md: "1em",
-                      xs: ".9em",
-                    },
-                    "& svg": {
-                      mr: 1,
-                      fontSize: "20px",
-                    },
-                  }}
                 >
                   <CreateIcon />
                   {story.story_author}
-                </Typography>
-                <Typography
-                  display={"flex"}
-                  alignItems={"center"}
-                  fontSize={14}
-                  color={"#616161"}
-                  sx={{
-                    fontSize: {
-                      md: "1em",
-                      xs: ".9em",
-                    },
-                    "& svg": {
-                      mr: 1,
-                      fontSize: "20px",
-                    },
-                  }}
-                >
+                </ListItemInnerAuthor>
+                <ChapterNumber>
                   <FormatListBulletedIcon />
                   {story._count + " chương"}
-                </Typography>
+                </ChapterNumber>
               </Box>
-            </Stack>
+            </ListItemStyled>
           );
         })}
-      </Box>
+      </UListStyled>
     </>
   );
 };

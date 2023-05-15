@@ -108,6 +108,7 @@ const SearchByTitlePage = ({ categories }: Props) => {
                   md: 30,
                   xs: 20,
                 }}
+                color={"text.primary"}
               >
                 Kết quả tìm kiếm từ khóa: {keywords}
               </Box>

@@ -13,7 +13,7 @@ const ListItemStyled = styled(ListItem)(() => ({
   },
 }));
 
-const RowWrapper = styled(Stack)(() => ({
+const RowWrapper = styled(Stack)(({ theme }) => ({
   flexDirection: "row",
   paddingTop: "0",
   paddingBottom: "0",
@@ -21,6 +21,9 @@ const RowWrapper = styled(Stack)(() => ({
   width: "100%",
   fontSize: "13.5",
   height: "28px",
+  "&>a": {
+    color: theme.palette.text.primary,
+  },
 }));
 
 const MainLink = styled(Link)(() => ({
@@ -55,7 +58,15 @@ export const ReadingStoriesHistory = (props: Props) => {
   return (
     <>
       <Box>
-        <Box component={"h3"} p={1} my={0} borderBottom={"1px dashed #ccc"}>
+        <Box
+          component={"h3"}
+          p={1}
+          my={0}
+          borderBottom={"1px dashed #ccc"}
+          sx={{
+            color: "text.primary",
+          }}
+        >
           Truyện đang đọc
         </Box>
         <Box>

@@ -1,15 +1,21 @@
 import { MainLayoutContext } from "@/layouts";
-import { Container, Stack } from "@mui/material";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import {
+  Container,
+  Stack,
+  Box,
+  Typography,
+  AppBar,
+  IconButton,
+} from "@mui/material";
 import { useContext, useEffect } from "react";
 import { Drawer } from "./drawer";
 import { SearchBar } from "./searchBar";
 import Link from "next/link";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 
 export function HeaderDesktop() {
-  const { mobileMenuOpen, setMobileMenuOpen } =
+  const { mobileMenuOpen, setMobileMenuOpen, setMode, mode } =
     useContext<any>(MainLayoutContext);
   useEffect(() => {
     if (mobileMenuOpen) {
@@ -24,7 +30,12 @@ export function HeaderDesktop() {
   return (
     <Box>
       <Drawer open={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} />
-      <AppBar position="static">
+      <AppBar
+        position="static"
+        sx={{
+          backgroundColor: "background.headfoot",
+        }}
+      >
         <Stack
           direction={"row"}
           justifyContent={"center"}
@@ -37,13 +48,15 @@ export function HeaderDesktop() {
               minHeight={"64px"}
               sx={{
                 p: 0,
+                width: "100%",
               }}
               justifyContent={"space-between"}
             >
               <Box
                 component={Link}
                 href="/"
-                sx={{ textDecoration: "none", color: "unset" }}
+                sx={{ textDecoration: "none", flexGrow: 1, display: "block" }}
+                color={"text.main"}
               >
                 <Typography
                   variant="h6"
@@ -54,8 +67,26 @@ export function HeaderDesktop() {
                   TRUYENHOT.INFO
                 </Typography>
               </Box>
+              <Stack
+                direction={"row"}
+                alignItems={"center"}
+                width={"30%"}
+                justifyContent={"flex-end"}
+              >
+                <IconButton
+                  onClick={() => {
+                    setMode(mode === "light" ? "dark" : "light");
 
-              <SearchBar />
+                    const themeData = {
+                      mode,
+                    };
+                    localStorage.setItem("theme", JSON.stringify(themeData));
+                  }}
+                >
+                  {mode === "light" ? <DarkModeIcon /> : <Brightness7Icon />}
+                </IconButton>
+                <SearchBar />
+              </Stack>
             </Stack>
           </Container>
         </Stack>

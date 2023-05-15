@@ -19,6 +19,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import { HotStoriesLoading } from "../loading";
 import { styled } from "@mui/material/styles";
+import { alpha } from "@mui/material";
 
 const BoxWrapper = styled(Link)(() => ({
   width: "100%",
@@ -46,8 +47,8 @@ const BoxTitle = styled(Box)(({ theme }) => ({
   left: 0,
   padding: "4px",
   fontSize: ".85em",
-  backgroundColor: "rgba(0,0,0, .4)",
-  color: theme.palette.primary.contrastText,
+  backgroundColor: alpha(theme.palette.background.imgFooter, 0.8),
+  color: theme.palette.text.main,
   textShadow: "0 0 10px primary.main",
   overflow: "hidden",
   whiteSpace: "nowrap",
@@ -122,7 +123,13 @@ export const HomeHotStories = ({ categories }: Props) => {
         gap={"10px"}
         justifyContent={"space-between"}
       >
-        <Box component={"h2"} m={0}>
+        <Box
+          component={"h2"}
+          m={0}
+          sx={{
+            color: "text.primary",
+          }}
+        >
           Truyện hot
           <Box
             component={Button}
@@ -159,7 +166,7 @@ export const HomeHotStories = ({ categories }: Props) => {
             input={
               <OutlinedInput
                 sx={{
-                  bgcolor: "#fff",
+                  bgcolor: "background.input",
                 }}
                 size="small"
                 label="Tất cả"

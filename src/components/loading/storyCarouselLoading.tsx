@@ -1,32 +1,33 @@
 import React from "react";
 import { Box } from "@mui/material";
+import { styled } from "@mui/material/styles";
+
+const Wrapper = styled(Box)(({ theme }) => ({
+  width: "100%",
+  height: "100%",
+  borderRadius: "5px",
+  overflow: "hidden",
+  animationFillMode: "forwards",
+  animationIterationCount: "infinite",
+  animationName: "story-list-loading",
+  animationTimingFunction: "linear",
+  background: "#f6f7f8",
+  backgroundImage: `linear-gradient(to right, ${theme.palette.background.loadingBack} 8%, ${theme.palette.background.loadingMove} 18%, ${theme.palette.background.loadingBack} 33%)`,
+  backgroundSize: "200%",
+  [theme.breakpoints.up("xs")]: {
+    animationDuration: "2s",
+  },
+  [theme.breakpoints.up("md")]: {
+    animationDuration: "1s",
+  },
+}));
 
 type Props = {};
 
 export const HotStoriesLoading = (props: Props) => {
   return (
     <>
-      <Box
-        width={"100%"}
-        height={"100%"}
-        bgcolor={"#dddddd"}
-        borderRadius={"5px"}
-        overflow={"hidden"}
-        sx={{
-          animationDuration: {
-            md: "1s",
-            xs: "2s",
-          },
-          animationFillMode: "forwards",
-          animationIterationCount: "infinite",
-          animationName: "story-list-loading",
-          animationTimingFunction: "linear",
-          background: "#f6f7f8",
-          backgroundImage:
-            "linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%)",
-          backgroundSize: "200%",
-        }}
-      >
+      <Wrapper>
         <Box width={"100%"} height={"180px"} position={"relative"}>
           <Box
             width={"100%"}
@@ -46,7 +47,7 @@ export const HotStoriesLoading = (props: Props) => {
             overflow={"hidden"}
           ></Box>
         </Box>
-      </Box>
+      </Wrapper>
     </>
   );
 };

@@ -2,10 +2,10 @@ import { MainLayout } from "@/layouts";
 import { MyAppProps } from "@/models";
 import { API } from "@/utils/config";
 import createEmotionCache from "@/utils/createEmotionCache";
-import theme from "@/utils/theme";
+import { getDesignTokens } from "@/utils/theme";
 import { CacheProvider } from "@emotion/react";
 import CssBaseline from "@mui/material/CssBaseline";
-import { ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Head from "next/head";
 import { SWRConfig } from "swr/_internal";
 import "../style/style.scss";
@@ -25,6 +25,7 @@ export default function App({
 }: MyAppProps) {
   const Layout = Component.Layout ?? MainLayout;
   const router = useRouter();
+
   useEffect(() => {
     router.events.on("routeChangeStart", NProgressStart);
     router.events.on("routeChangeComplete", NProgressDone);
@@ -36,25 +37,24 @@ export default function App({
       router.events.off("routeChangeError", NProgressDone);
     };
   }, []);
+
   return (
     <CacheProvider value={emotionCache}>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <SWRConfig
-          value={{
-            shouldRetryOnError: false,
-            revalidateOnFocus: false,
-            fetcher: (url) => API.get(url),
-          }}
-        >
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </SWRConfig>
-      </ThemeProvider>
+      <CssBaseline />
+      <SWRConfig
+        value={{
+          shouldRetryOnError: false,
+          revalidateOnFocus: false,
+          fetcher: (url) => API.get(url),
+        }}
+      >
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </SWRConfig>
     </CacheProvider>
   );
 }

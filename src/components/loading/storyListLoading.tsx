@@ -1,5 +1,28 @@
 import { Box } from "@mui/material";
+import { styled } from "@mui/material/styles";
 type Props = {};
+
+const LoadingWrapper = styled(Box)(({ theme }) => ({
+  [theme.breakpoints.up("xs")]: {
+    animationDuration: "2s",
+  },
+  [theme.breakpoints.up("md")]: {
+    animationDuration: "1s",
+  },
+  animationFillMode: "forwards",
+  animationIterationCount: "infinite",
+  animationName: "story-list-loading",
+  animationTimingFunction: "linear",
+  backgroundColor: theme.palette.background.loadingBack,
+  backgroundImage: `linear-gradient(to right, #eee 8%, #ddd 18%, #eee 33%)`,
+  backgroundSize: "200%",
+  height: "96px",
+  position: "relative",
+  "&>div": {
+    background: theme.palette.background.secondary,
+    position: "absolute",
+  },
+}));
 
 export const StoryListLoading = (props: Props) => {
   return (
@@ -13,28 +36,7 @@ export const StoryListLoading = (props: Props) => {
         borderRadius={"15px"}
         overflow={"hidden"}
       >
-        <Box
-          sx={{
-            animationDuration: {
-              md: "1s",
-              xs: "2s",
-            },
-            animationFillMode: "forwards",
-            animationIterationCount: "infinite",
-            animationName: "story-list-loading",
-            animationTimingFunction: "linear",
-            background: "#f6f7f8",
-            backgroundImage:
-              "linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%)",
-            backgroundSize: "200%",
-            height: "96px",
-            position: "relative",
-            "&>div": {
-              background: "#fff",
-              position: "absolute",
-            },
-          }}
-        >
+        <LoadingWrapper>
           <Box sx={{ top: 0, left: 0, right: 0, height: "10px" }}></Box>
           <Box sx={{ bottom: 0, left: 0, right: 0, height: "10px" }}></Box>
           <Box sx={{ top: 0, left: 0, bottom: 0, width: "10px" }}></Box>
@@ -133,7 +135,7 @@ export const StoryListLoading = (props: Props) => {
               },
             }}
           ></Box>
-        </Box>
+        </LoadingWrapper>
       </Box>
     </Box>
   );

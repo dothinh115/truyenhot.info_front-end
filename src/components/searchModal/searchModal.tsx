@@ -14,6 +14,7 @@ import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+
 type Props = {};
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -22,6 +23,21 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     padding: theme.spacing(2),
     width: "100%",
   },
+}));
+
+const LoadingAnimation = styled(Box)(({ theme }) => ({
+  width: "100%",
+  height: "50px",
+  borderRadius: theme.spacing(2),
+  marginBottom: theme.spacing(2),
+  animationDuration: "2s",
+  animationFillMode: "forwards",
+  animationIterationCount: "infinite",
+  animationName: "story-list-loading",
+  animationTimingFunction: "linear",
+  background: "#f6f7f8",
+  backgroundImage: `linear-gradient(to right, ${theme.palette.background.loadingBack} 8%, ${theme.palette.background.loadingMove} 18%, ${theme.palette.background.loadingBack} 33%)`,
+  backgroundSize: "200%",
 }));
 
 export const SearchModal = (props: Props) => {
@@ -74,29 +90,8 @@ export const SearchModal = (props: Props) => {
 
   const loadingRender = () => {
     let html = [];
-    for (let i = 0; i < 4; i++) {
-      html.push(
-        <Box
-          key={i}
-          width={"100%"}
-          height={"50px"}
-          borderRadius={"16px"}
-          mb={2}
-          sx={{
-            animationDuration: "2s",
-            animationFillMode: "forwards",
-            animationIterationCount: "infinite",
-            animationName: "story-list-loading",
-            animationTimingFunction: "linear",
-            background: "#f6f7f8",
-            backgroundImage:
-              "linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%)",
-            backgroundSize: "200%",
-          }}
-          maxHeight={"100vh"}
-          overflow={"hidden"}
-        ></Box>
-      );
+    for (let i = 0; i < 12; i++) {
+      html.push(<LoadingAnimation key={i}></LoadingAnimation>);
     }
     return html;
   };
@@ -105,7 +100,7 @@ export const SearchModal = (props: Props) => {
     <>
       <Box
         position={"fixed"}
-        bgcolor={"#fff"}
+        bgcolor={"background.default"}
         zIndex={100}
         width={"100%"}
         height={"100%"}
@@ -129,7 +124,7 @@ export const SearchModal = (props: Props) => {
               xs: "100%",
             },
             borderRadius: "5px",
-            backgroundColor: "rgba(255,255,255,.15)",
+            backgroundColor: "background.default",
           }}
           maxHeight={"100vh"}
         >
@@ -157,6 +152,7 @@ export const SearchModal = (props: Props) => {
                   autoComplete={"off"}
                   sx={{
                     maxHeight: "40px",
+                    color: "text.primary",
                     flexGrow: {
                       md: 0,
                       xs: 1,
@@ -168,7 +164,7 @@ export const SearchModal = (props: Props) => {
             <IconButton
               sx={{
                 "& svg": {
-                  color: "#000",
+                  color: "text.primary",
                 },
                 visibility: getValues("keywords") ? "visible" : "hidden",
               }}
@@ -186,7 +182,12 @@ export const SearchModal = (props: Props) => {
           {loading ? (
             loadingRender()
           ) : searchData?.result.length === 0 && getValues("keywords") ? (
-            <Stack direction={"row"} gap={2} justifyContent={"center"}>
+            <Stack
+              direction={"row"}
+              gap={2}
+              justifyContent={"center"}
+              color={"text.primary"}
+            >
               <SearchIcon />
               Không tìm thấy kết quả nào!
             </Stack>
@@ -221,14 +222,14 @@ export const SearchModal = (props: Props) => {
                       <Typography
                         component={"span"}
                         fontSize={"1.1em"}
-                        color={"rgba(0, 0, 0, .8)"}
+                        color={"text.link"}
                       >
                         {item.story_title}
                       </Typography>
                       <Typography
                         component={"span"}
                         fontSize={".9em"}
-                        color={"rgba(0, 0, 0, .6)"}
+                        color={"text.primary"}
                       >
                         {item._count} chương
                       </Typography>
@@ -237,7 +238,7 @@ export const SearchModal = (props: Props) => {
                   <IconButton
                     sx={{
                       "& svg": {
-                        color: "#000",
+                        color: "text.primary",
                       },
                     }}
                     onClick={() => {
@@ -259,6 +260,7 @@ export const SearchModal = (props: Props) => {
               justifyContent={"center"}
               sx={{
                 textDecoration: "none",
+                color: "text.link",
               }}
               component={Link}
               href={`/search/title?keywords=${getValues("keywords")}`}

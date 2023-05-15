@@ -29,10 +29,10 @@ const ChapterTitle = styled("h1")(({ theme }) => ({
   },
 }));
 
-const ChapterName = styled("h2")(() => ({
+const ChapterName = styled("h2")(({ theme }) => ({
   textAlign: "center",
   margin: "0",
-  color: "rgba(0, 0, 0, .55)",
+  color: theme.palette.text.primary,
   fontWeight: "500",
   fontSize: "1em",
 }));
@@ -52,6 +52,7 @@ const ChapterContent = styled(Box)(({ theme }) => ({
   "& img": {
     maxWidth: "100%",
   },
+  color: theme.palette.text.primary,
 }));
 
 const ChapterDetail = ({ chapterData }: Props) => {

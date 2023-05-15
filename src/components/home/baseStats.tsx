@@ -1,79 +1,80 @@
 import { BaseStatsInterface } from "@/models/home";
 import { Stack } from "@mui/material";
 import { Box } from "@mui/system";
+import { styled } from "@mui/material/styles";
 type Props = {
   stats?: BaseStatsInterface;
 };
+
+const Wrapper = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.background.default,
+  borderRadius: "15px",
+  overflow: "hidden",
+  borderWidth: "1px",
+  borderStyle: "dashed",
+  borderColor: theme.palette.secondary.main,
+  marginBottom: theme.spacing(2),
+  padding: "4px",
+}));
+
+const Heading = styled("h3")(({ theme }) => ({
+  margin: "0",
+  padding: theme.spacing(1),
+  borderBottomWidth: "1px",
+  borderBottomStyle: "dashed",
+  borderBottomColor: theme.palette.secondary.main,
+  color: theme.palette.text.main,
+  fontWeight: 500,
+  backgroundColor: theme.palette.background.main,
+  borderRadius: "10px 10px 0 0",
+}));
+
+const UList = styled("ul")(({ theme }) => ({
+  padding: "0",
+  margin: 0,
+}));
+
+const ListItem = styled("li")(({ theme }) => ({
+  padding: "0 4px",
+  display: "flex",
+  justifyContent: "space-between",
+  height: "30px",
+  borderBottomWidth: "1px",
+  borderBottomStyle: "dashed",
+  borderBottomColor: theme.palette.secondary.main,
+  lineHeight: "30px",
+  "&:last-of-type": {
+    borderRadius: "0 0 10px 10px",
+    borderBottom: "none",
+  },
+  color: theme.palette.text.primary,
+  backgroundColor: theme.palette.background.secondary,
+}));
 
 export const BaseStats = ({ stats }: Props) => {
   return (
     <>
       <Stack spacing={2}>
-        <Box
-          bgcolor={"#fff"}
-          borderRadius={"15px"}
-          overflow={"hidden"}
-          border={"1px dashed #7986cba6"}
-          mb={2}
-        >
-          <Box
-            component={"h3"}
-            m={"4px 4px 0 4px"}
-            px={2}
-            py={1}
-            color={"#fff"}
-            fontWeight={"500"}
-            bgcolor={"#7986cbc2"}
-            borderRadius={"10px 10px 0 0"}
-          >
-            Thống kê
-          </Box>
+        <Wrapper>
+          <Heading>Thống kê</Heading>
 
-          <Box
-            component={"ul"}
-            sx={{
-              p: 0,
-              my: 0,
-              mb: 0,
-              "& > li": {
-                listStyleType: "none",
-                px: 1,
-                m: 0,
-                borderBottom: "1px dashed #7986cba6",
-                height: "30px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                "&:last-of-type": {
-                  borderBottom: "none",
-                },
-                "& > a": {
-                  display: "block",
-                  height: "100%",
-                  lineHeight: "30px",
-                  textDecoration: "none",
-                  color: "#303f9f",
-                  textAlign: "center",
-                },
-              },
-            }}
-          >
-            <Box component={"li"}>
+          <UList>
+            <ListItem>
               <Box>Tổng số truyện:</Box>
               <Box>{stats?.totalStories}</Box>
-            </Box>
+            </ListItem>
 
-            <Box component={"li"}>
+            <ListItem>
               <Box>Số chương truyện:</Box>
               <Box>{stats?.totalChapters}</Box>
-            </Box>
+            </ListItem>
 
-            <Box component={"li"}>
+            <ListItem>
               <Box>Lượt xem:</Box>
               <Box>{stats?.totalViews}</Box>
-            </Box>
-          </Box>
-        </Box>
+            </ListItem>
+          </UList>
+        </Wrapper>
       </Stack>
     </>
   );

@@ -2,66 +2,86 @@ import { CategoryInterface } from "@/models/categories";
 import { Stack } from "@mui/material";
 import { Box } from "@mui/system";
 import Link from "next/link";
+import { styled } from "@mui/material/styles";
+
+const Wrapper = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.background.default,
+  borderRadius: "15px",
+  overflow: "hidden",
+  borderWidth: "1px",
+  borderStyle: "dashed",
+  borderColor: theme.palette.secondary.main,
+  marginBottom: theme.spacing(2),
+  padding: "4px",
+}));
+
+const Heading = styled("h3")(({ theme }) => ({
+  margin: "0",
+  padding: theme.spacing(1),
+  borderBottomWidth: "1px",
+  borderBottomStyle: "dashed",
+  borderBottomColor: theme.palette.secondary.main,
+  color: theme.palette.text.main,
+  fontWeight: 500,
+  backgroundColor: theme.palette.background.main,
+  borderRadius: "10px 10px 0 0",
+}));
+
+const UList = styled("ul")(() => ({
+  padding: "0",
+  margin: 0,
+}));
+
+const ListItem = styled("li")(({ theme }) => ({
+  listStyleType: "none",
+  display: "inline-block",
+  width: "50%",
+  margin: 0,
+  borderBottomWidth: "1px",
+  borderBottomStyle: "dashed",
+  borderBottomColor: theme.palette.secondary.main,
+  height: "30px",
+  backgroundColor: theme.palette.background.secondary,
+  "&:hover": "unset",
+  "& > a": {
+    display: "block",
+    height: "100%",
+    lineHeight: "30px",
+    textDecoration: "none",
+    color: theme.palette.text.link,
+    textAlign: "center",
+  },
+  "&:nth-of-type(odd)": {
+    borderRightWidth: "1px",
+    borderRightStyle: "dashed",
+    borderRightColor: theme.palette.secondary.main,
+    "&:last-of-type": {
+      borderBottom: "none",
+      borderRadius: "0 0 0 10px",
+    },
+  },
+  "&:nth-of-type(even)": {
+    "&:last-of-type": {
+      borderBottom: "none",
+      borderRadius: "0 0 10px 0",
+    },
+  },
+}));
 
 type Props = {
   categories: CategoryInterface[];
 };
+
 export const CategoriesSidebar = ({ categories }: Props) => {
   return (
     <Stack spacing={2}>
-      <Box
-        bgcolor={"#fff"}
-        borderRadius={"15px"}
-        overflow={"hidden"}
-        border={"1px dashed #7986cba6"}
-        mb={2}
-      >
-        <Box
-          component={"h3"}
-          m={"4px 4px 0 4px"}
-          px={2}
-          py={1}
-          borderBottom={"1px dashed #7986cba6"}
-          color={"#fff"}
-          fontWeight={"500"}
-          bgcolor={"#7986cbc2"}
-          borderRadius={"10px 10px 0 0"}
-        >
-          Thể loại
-        </Box>
+      <Wrapper>
+        <Heading>Thể loại</Heading>
 
-        <Box
-          component={"ul"}
-          sx={{
-            p: 0,
-            my: 0,
-            mb: 0,
-            "& > li": {
-              listStyleType: "none",
-              display: "inline-block",
-              width: "50%",
-              pl: 1,
-              m: 0,
-              borderBottom: "1px dashed #7986cba6",
-              height: "30px",
-              "&:hover": "unset",
-              "& > a": {
-                display: "block",
-                height: "100%",
-                lineHeight: "30px",
-                textDecoration: "none",
-                color: "#303f9f",
-                textAlign: "center",
-              },
-              "&:nth-of-type(odd)": {
-                borderRight: "1px dashed #7986cba6",
-              },
-            },
-          }}
-        >
+        <UList>
           {categories?.map((cate: CategoryInterface) => {
             return (
-              <Box key={cate.cate_id} component={"li"}>
+              <ListItem key={cate.cate_id}>
                 <Box
                   component={Link}
                   href={`/categories/${cate.cate_code}`}
@@ -69,11 +89,11 @@ export const CategoriesSidebar = ({ categories }: Props) => {
                 >
                   {cate.cate_title}
                 </Box>
-              </Box>
+              </ListItem>
             );
           })}
-        </Box>
-      </Box>
+        </UList>
+      </Wrapper>
     </Stack>
   );
 };

@@ -112,7 +112,13 @@ const CategoriesDetail = ({
                 md: "68%",
               }}
             >
-              <Box component={"h1"} m={0} fontWeight={"light"} fontSize={35}>
+              <Box
+                component={"h1"}
+                m={0}
+                fontWeight={"light"}
+                fontSize={35}
+                color={"text.primary"}
+              >
                 {cate_title}
               </Box>
               <Box className={"hr"} my={2} />

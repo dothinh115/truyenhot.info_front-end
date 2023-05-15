@@ -37,20 +37,22 @@ const ReloadButtonStyled = styled(Button)(() => ({
   ml: 1,
 }));
 
-const StackWrapper = styled(Stack)(() => ({
-  border: "1px dashed #7986cba6",
+const StackWrapper = styled(Stack)(({ theme }) => ({
+  borderWidth: "1px",
+  borderStyle: "dashed",
+  borderColor: theme.palette.secondary.main,
   borderRadius: "16px",
   overflow: "hidden",
-  backgroundColor: "#fff",
+  backgroundColor: theme.palette.background.default,
+  padding: "4px",
 }));
 
-const RowWrapper = styled(Stack)(() => ({
+const RowWrapper = styled(Stack)(({ theme }) => ({
   justifyContent: "space-between",
-  color: "#fff",
+  color: theme.palette.text.main,
   fontWeight: "500",
-  backgroundColor: "#7986cbc2",
+  backgroundColor: theme.palette.background.main,
   borderRadius: "10px 10px 0 0",
-  margin: "4px 4px 0 4px",
   padding: "8px 16px",
   "& div": {
     padding: "4px",
@@ -90,19 +92,32 @@ const ThirdRowHeading = styled(Stack)(({ theme }) => ({
   },
 }));
 
-const ItemRowWrapper = styled(Stack)(() => ({
+const ItemRowWrapper = styled(Stack)(({ theme }) => ({
   justifyContent: "space-between",
   flexWrap: "wrap",
-  borderBottom: "1px dashed #7986cba6",
+  borderBottomWidth: "1px",
+  borderBottomStyle: "dashed",
+  borderBottomColor: theme.palette.secondary.main,
+  color: theme.palette.text.primary,
   "&:last-of-type": {
     borderBottom: "none",
+    "&>div": {
+      "&:first-of-type": {
+        borderRadius: "0 0 0 10px",
+      },
+      "&:last-of-type": {
+        borderRadius: "0 0 10px 0",
+      },
+    },
   },
   "&>div": {
-    padding: "4px",
-    backgroundColor: "#fff",
+    backgroundColor: theme.palette.background.secondary,
+    paddingTop: "4px",
+    paddingBottom: "4px",
   },
   "& a": {
     textDecoration: "none",
+    color: theme.palette.text.link,
   },
 }));
 
@@ -211,7 +226,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
         gap={"10px"}
         justifyContent={"space-between"}
       >
-        <Box component={"h2"} m={0}>
+        <Box component={"h2"} m={0} sx={{ color: "text.primary" }}>
           Truyện mới cập nhật
           <ReloadButtonStyled
             type={"button"}
@@ -244,7 +259,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
             input={
               <OutlinedInput
                 sx={{
-                  bgcolor: "#fff",
+                  bgcolor: "background.input",
                 }}
                 size="small"
                 label="Tất cả"
@@ -307,7 +322,11 @@ export const IndexRecentStories = ({ categories }: Props) => {
                         </ItemMainLink>
                       </Stack>
                     </ItemFirstRow>
-                    <ItemSecondRow>
+                    <ItemSecondRow
+                      sx={{
+                        "&>a": { color: "info.main" },
+                      }}
+                    >
                       <Box
                         component={Link}
                         href={`/story/${story.story_code}/${story?.lastChapter?.chapter_code}`}

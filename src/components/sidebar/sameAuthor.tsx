@@ -9,6 +9,38 @@ import {
   ListItemText,
 } from "@mui/material";
 import Link from "next/link";
+import { styled } from "@mui/material/styles";
+
+const ListItemStyled = styled(ListItem)(({ theme }) => ({
+  padding: "0",
+  margin: "0",
+  "&:not(:last-of-type)": {
+    borderBottomWidth: "1px",
+    borderBottomStyle: "dashed",
+    borderBottomColor: theme.palette.secondary.main,
+  },
+}));
+
+const H3Styled = styled("h3")(({ theme }) => ({
+  padding: theme.spacing(1),
+  margin: "0",
+  borderBottomWidth: "1px",
+  borderBottomStyle: "dashed",
+  borderBottomColor: theme.palette.secondary.main,
+  color: theme.palette.text.primary,
+}));
+
+const ListItemTextStyled = styled(ListItemText)(({ theme }) => ({
+  margin: "0",
+  "& > span": {
+    fontSize: 14,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    color: theme.palette.text.primary,
+  },
+}));
+
 type Props = { sameAuthor: StoriesSearchResultInterface[] };
 
 export const SameAuthorSidebar = ({ sameAuthor }: Props) => {
@@ -16,25 +48,13 @@ export const SameAuthorSidebar = ({ sameAuthor }: Props) => {
     return (
       <>
         <Box>
-          <Box component={"h3"} p={1} my={0} borderBottom={"1px dashed #ccc"}>
-            Truyện cùng tác giả
-          </Box>
+          <H3Styled>Truyện cùng tác giả</H3Styled>
           <Box>
             <Box component={List} py={0} dense={true}>
               {sameAuthor?.map(
                 (story: StoriesSearchResultInterface, index: number) => {
                   return (
-                    <Box
-                      component={ListItem}
-                      p={0}
-                      m={0}
-                      key={story.story_code}
-                      sx={{
-                        "&:not(:last-of-type)": {
-                          borderBottom: "1px dashed #ccc",
-                        },
-                      }}
-                    >
+                    <ListItemStyled key={story._id}>
                       <ListItemButton
                         component={Link}
                         href={`/story/${story.story_code}`}
@@ -55,21 +75,9 @@ export const SameAuthorSidebar = ({ sameAuthor }: Props) => {
                           />
                         </Box>
 
-                        <Box
-                          component={ListItemText}
-                          primary={story.story_title}
-                          m={0}
-                          sx={{
-                            "& > span": {
-                              fontSize: 14,
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                            },
-                          }}
-                        />
+                        <ListItemTextStyled primary={story.story_title} />
                       </ListItemButton>
-                    </Box>
+                    </ListItemStyled>
                   );
                 }
               )}

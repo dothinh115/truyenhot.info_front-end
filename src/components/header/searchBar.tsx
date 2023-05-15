@@ -125,10 +125,6 @@ export const SearchBar = (props: Props) => {
         position={"relative"}
         direction={"row"}
         sx={{
-          width: {
-            md: "25%",
-            xs: "100%",
-          },
           display: {
             md: "flex",
             xs: "none",
@@ -163,6 +159,7 @@ export const SearchBar = (props: Props) => {
               autoComplete={"off"}
               sx={{
                 maxHeight: "40px",
+                color: "text.main",
                 flexGrow: {
                   md: 0,
                   xs: 1,

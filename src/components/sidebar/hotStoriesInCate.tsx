@@ -10,6 +10,28 @@ import {
   ListItemText,
 } from "@mui/material";
 import Link from "next/link";
+import { styled } from "@mui/material/styles";
+
+const ListItemStyled = styled(ListItem)(({ theme }) => ({
+  padding: "0",
+  margin: "0",
+  "&:not(:last-of-type)": {
+    borderBottomWidth: "1px",
+    borderBottomStyle: "dashed",
+    borderBottomColor: theme.palette.secondary.main,
+  },
+}));
+
+const ListItemTextStyled = styled(ListItemText)(({ theme }) => ({
+  margin: "0",
+  color: theme.palette.text.link,
+  "& > span": {
+    fontSize: 14,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  },
+}));
 
 type Props = {
   category: CategoryInterface;
@@ -26,6 +48,7 @@ export const HotStoriesInCate = ({ category, hotStoriesInCategory }: Props) => {
           my={0}
           borderBottom={"1px dashed #ccc"}
           textTransform={"uppercase"}
+          color={"text.primary"}
         >
           Truyện {category?.cate_title} Hot
         </Box>
@@ -34,17 +57,7 @@ export const HotStoriesInCate = ({ category, hotStoriesInCategory }: Props) => {
             {hotStoriesInCategory?.map(
               (story: HotStoriesInCategoriesInterface, index: number) => {
                 return (
-                  <Box
-                    component={ListItem}
-                    p={0}
-                    m={0}
-                    key={story.story_code}
-                    sx={{
-                      "&:not(:last-of-type)": {
-                        borderBottom: "1px dashed #ccc",
-                      },
-                    }}
-                  >
+                  <ListItemStyled key={story.story_code}>
                     <ListItemButton
                       component={Link}
                       href={`/story/${story.story_code}`}
@@ -65,21 +78,9 @@ export const HotStoriesInCate = ({ category, hotStoriesInCategory }: Props) => {
                         />
                       </Box>
 
-                      <Box
-                        component={ListItemText}
-                        primary={story.story_title}
-                        m={0}
-                        sx={{
-                          "& > span": {
-                            fontSize: 14,
-                            whiteSpace: "nowrap",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                          },
-                        }}
-                      />
+                      <ListItemTextStyled primary={story.story_title} />
                     </ListItemButton>
-                  </Box>
+                  </ListItemStyled>
                 );
               }
             )}

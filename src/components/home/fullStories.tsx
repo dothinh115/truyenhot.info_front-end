@@ -15,9 +15,10 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import Carousel from "better-react-carousel";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useSWR from "swr";
 import { FullStoriesLoading } from "../loading/fullStoriesLoading";
+import { alpha } from "@mui/material";
 
 const ITEM_HEIGHT = 36;
 const ITEM_PADDING_TOP = 8;
@@ -76,12 +77,12 @@ const ItemChapter = styled(Box)(({ theme }) => ({
   left: 0,
   padding: "4px",
   fontSize: ".85em",
-  backgroundColor: "rgba(0, 0, 0, .4)",
+  backgroundColor: alpha(theme.palette.background.imgFooter, 0.8),
   textShadow: `0 0 10px ${theme.palette.primary.main}`,
   maxHeight: "24px",
   overflow: "hidden",
   textAlign: "center",
-  color: theme.palette.primary.contrastText,
+  color: theme.palette.text.main,
 }));
 
 const ItemTitle = styled(Link)(({ theme }) => ({
@@ -89,7 +90,7 @@ const ItemTitle = styled(Link)(({ theme }) => ({
   fontSize: ".9em",
   display: "block",
   textAlign: "center",
-  color: theme.palette.primary.main,
+  color: alpha(theme.palette.text.link, 0.65),
   textShadow: "1px 1px 2px rgba(0, 0, 0, .05)",
   maxHeight: "38px",
   overflow: "hidden",
@@ -139,7 +140,13 @@ export const HomeFullStories = ({ categories }: Props) => {
   return (
     <>
       <BoxWrapper>
-        <Box component={"h2"} m={0}>
+        <Box
+          component={"h2"}
+          m={0}
+          sx={{
+            color: "text.primary",
+          }}
+        >
           Truyện đã hoàn thành
           <ReloadButtonStyled
             type={"button"}
@@ -172,7 +179,7 @@ export const HomeFullStories = ({ categories }: Props) => {
             input={
               <OutlinedInput
                 sx={{
-                  bgcolor: "#fff",
+                  bgcolor: "background.input",
                 }}
                 size="small"
                 label="Tất cả"
