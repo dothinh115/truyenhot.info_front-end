@@ -182,6 +182,7 @@ const ContainerStyled = styled(Box)(({ theme }) => ({
   borderStyle: "solid",
   borderColor: theme.palette.myBackground.main,
   borderRadius: "0 0 10px 10px",
+  overflow: "hidden",
 }));
 
 type Props = {
