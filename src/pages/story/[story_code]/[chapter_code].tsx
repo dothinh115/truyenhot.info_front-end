@@ -77,7 +77,6 @@ const ChapterDetail = ({ chapterData }: Props) => {
       const findIndex = readingStories.findIndex(
         (story: any) => story.story_code === chapterData?.story_code
       );
-      console.log(findIndex);
       if (findIndex !== -1) {
         readingStories = readingStories.filter(
           (item: any) => item.story_code !== chapterData?.story_code

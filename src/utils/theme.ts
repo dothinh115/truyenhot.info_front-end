@@ -105,7 +105,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             main: indigo[300],
           },
           myBackground: {
-            default: grey[900],
+            default: grey[800],
             paper: grey[900],
             //những dòng trong bảng
             secondary: grey[700],
@@ -126,7 +126,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
           myText: {
             //màu text chính
             primary: grey[200],
-            secondary: grey[400],
+            secondary: grey[300],
             //màu text heading
             main: "#fff",
             link: "#fff", //light: #303f9f

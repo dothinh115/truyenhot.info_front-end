@@ -51,6 +51,7 @@ export const StoryChapterPicker = ({ chapterData, chapterListData }: Props) => {
         href={`/story/${chapterData?.story_code}/${chapterData?.prevChapter}`}
         sx={{
           backgroundColor: "myBackground.main",
+          color: "myText.main",
         }}
         variant="contained"
         size="small"
