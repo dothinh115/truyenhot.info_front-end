@@ -24,11 +24,9 @@ import { useContext } from "react";
 type Props = {
   categories: CategoryInterface[];
   stats: BaseStatsInterface;
-  hotStories: HotStoriesInterface[];
-  fullStories: FullStoriesInterface[];
 };
 
-const Index = ({ categories, stats, hotStories, fullStories }: Props) => {
+const Index = ({ categories, stats }: Props) => {
   useContext<any>(MainLayoutContext);
   const breadCrumbs = [
     <Stack
@@ -60,7 +58,7 @@ const Index = ({ categories, stats, hotStories, fullStories }: Props) => {
       <MainBreadcrumbs links={breadCrumbs} />
       <Stack direction={"row"} justifyContent={"center"} mt={4}>
         <Container maxWidth={"md"}>
-          <HomeHotStories categories={categories} hotStories={hotStories} />
+          <HomeHotStories categories={categories} />
           <Stack
             direction={"row"}
             gap={"15px"}
@@ -89,7 +87,7 @@ const Index = ({ categories, stats, hotStories, fullStories }: Props) => {
               <BaseStats stats={stats} />
             </Box>
           </Stack>
-          <HomeFullStories categories={categories} fullStories={fullStories} />
+          <HomeFullStories categories={categories} />
         </Container>
       </Stack>
     </>
@@ -100,12 +98,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   const revalidate = 1 * 60 * 60;
   const baseStatsResponse = await fetch(`${apiURL}/api/stats/getBaseStats`);
   const categoriesResponse = await fetch(`${apiURL}/api/categories/getAll`);
-  const hotStoriesResponse = await fetch(`${apiURL}/api/stories/getHotStories`);
-  const fullStoriesResponse = await fetch(
-    `${apiURL}/api/stories/getFullStories`
-  );
-  const hotStories = await hotStoriesResponse.json();
-  const fullStories = await fullStoriesResponse.json();
+
   const baseStats = await baseStatsResponse.json();
   const categories = await categoriesResponse.json();
 
@@ -113,8 +106,6 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     props: {
       categories: categories.result,
       stats: baseStats.result,
-      hotStories: hotStories.result,
-      fullStories: fullStories.result,
     },
     revalidate,
   };

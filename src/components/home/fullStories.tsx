@@ -96,10 +96,8 @@ const ItemTitle = styled(Link)(({ theme }) => ({
 
 type Props = {
   categories: CategoryInterface[];
-  fullStories: FullStoriesInterface[];
 };
-export const HomeFullStories = ({ categories, fullStories }: Props) => {
-  const [data, setData] = useState<FullStoriesInterface[]>(fullStories);
+export const HomeFullStories = ({ categories }: Props) => {
   const [cateValue, setCateValue] = useState<
     | {
         value: string;
@@ -116,7 +114,6 @@ export const HomeFullStories = ({ categories, fullStories }: Props) => {
     `/stories/getFullStories${cateValue ? "?category=" + cateValue.value : ""}`,
     {
       keepPreviousData: true,
-      revalidateOnMount: false,
     }
   );
   const carouselPreRender = () => {
@@ -138,9 +135,6 @@ export const HomeFullStories = ({ categories, fullStories }: Props) => {
     setCateValue(child?.props);
   };
 
-  useEffect(() => {
-    if (fullStoriesListData) setData(fullStoriesListData?.result);
-  }, [fullStoriesListData]);
   return (
     <>
       <BoxWrapper>
@@ -241,7 +235,7 @@ export const HomeFullStories = ({ categories, fullStories }: Props) => {
       >
         {fullStoriesValidating
           ? carouselPreRender()
-          : data?.map((story: FullStoriesInterface) => {
+          : fullStoriesListData?.result.map((story: FullStoriesInterface) => {
               return (
                 <Carousel.Item key={story._id}>
                   <ItemLinkWrapper href={`/story/${story.story_code}`}>

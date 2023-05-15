@@ -67,12 +67,9 @@ const MenuProps = {
 
 type Props = {
   categories: CategoryInterface[];
-  hotStories: HotStoriesInterface[];
 };
 
-export const HomeHotStories = ({ categories, hotStories }: Props) => {
-  const [data, setData] = useState<HotStoriesInterface[]>(hotStories);
-
+export const HomeHotStories = ({ categories }: Props) => {
   const [cateValue, setCateValue] = useState<
     | {
         value: string;
@@ -89,7 +86,6 @@ export const HomeHotStories = ({ categories, hotStories }: Props) => {
     `/stories/getHotStories${cateValue ? "?category=" + cateValue.value : ""}`,
     {
       keepPreviousData: true,
-      revalidateOnMount: false,
     }
   );
 
@@ -112,9 +108,6 @@ export const HomeHotStories = ({ categories, hotStories }: Props) => {
     setCateValue(child?.props);
   };
 
-  useEffect(() => {
-    if (hotStoriesList?.result) setData(hotStoriesList?.result);
-  }, [hotStoriesList]);
   return (
     <>
       <Stack
@@ -215,7 +208,7 @@ export const HomeHotStories = ({ categories, hotStories }: Props) => {
       >
         {hotStoriesValidating
           ? carouselPreRender()
-          : data?.map((story: HotStoriesInterface) => {
+          : hotStoriesList?.result.map((story: HotStoriesInterface) => {
               return (
                 <Carousel.Item key={story._id}>
                   <BoxWrapper href={`/story/${story.story_code}`}>
