@@ -18,11 +18,11 @@ const UListStyled = styled("ul")(({}) => ({
 const ListItemStyled = styled("li")(({ theme }) => ({
   display: "flex",
   gap: "10px",
-  backgroundColor: theme.palette.background.secondary, // eslint-disable-line no-console
+  backgroundColor: theme.palette.myBackground.secondary,
   padding: theme.spacing(1),
   borderWidth: "1px",
   borderStyle: "dashed",
-  borderColor: theme.palette.secondary.main,
+  borderColor: theme.palette.mySecondary.main,
   flexDirection: "row",
   spacing: theme.spacing(1),
   alignItems: "center",
@@ -54,7 +54,7 @@ const ListItemInnerImg = styled("img")(({ theme }) => ({
 
 const ListItemInnerTitle = styled(Link)(({ theme }) => ({
   fontSize: "18px",
-  color: theme.palette.text.link,
+  color: theme.palette.myText.link,
   textDecoration: "none",
   fontWeight: "bold",
   [theme.breakpoints.up("xs")]: {
@@ -69,7 +69,7 @@ const ListItemInnerAuthor = styled(Link)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   fontSize: "14px",
-  color: theme.palette.text.link,
+  color: theme.palette.myText.link,
   textDecoration: "none",
   [theme.breakpoints.up("xs")]: {
     fontSize: ".9em",
@@ -87,7 +87,7 @@ const ChapterNumber = styled(Typography)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   fontSize: "14px",
-  color: theme.palette.text.primary,
+  color: theme.palette.myText.primary,
   [theme.breakpoints.up("xs")]: {
     fontSize: ".9em",
   },

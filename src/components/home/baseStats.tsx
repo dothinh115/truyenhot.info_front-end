@@ -7,12 +7,12 @@ type Props = {
 };
 
 const Wrapper = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: theme.palette.myBackground.default,
   borderRadius: "15px",
   overflow: "hidden",
   borderWidth: "1px",
   borderStyle: "dashed",
-  borderColor: theme.palette.secondary.main,
+  borderColor: theme.palette.mySecondary.main,
   marginBottom: theme.spacing(2),
   padding: "4px",
 }));
@@ -22,10 +22,10 @@ const Heading = styled("h3")(({ theme }) => ({
   padding: theme.spacing(1),
   borderBottomWidth: "1px",
   borderBottomStyle: "dashed",
-  borderBottomColor: theme.palette.secondary.main,
-  color: theme.palette.text.main,
+  borderBottomColor: theme.palette.mySecondary.main,
+  color: theme.palette.myText.main,
   fontWeight: 500,
-  backgroundColor: theme.palette.background.main,
+  backgroundColor: theme.palette.myBackground.main,
   borderRadius: "10px 10px 0 0",
 }));
 
@@ -41,14 +41,14 @@ const ListItem = styled("li")(({ theme }) => ({
   height: "30px",
   borderBottomWidth: "1px",
   borderBottomStyle: "dashed",
-  borderBottomColor: theme.palette.secondary.main,
+  borderBottomColor: theme.palette.mySecondary.main,
   lineHeight: "30px",
   "&:last-of-type": {
     borderRadius: "0 0 10px 10px",
     borderBottom: "none",
   },
-  color: theme.palette.text.primary,
-  backgroundColor: theme.palette.background.secondary,
+  color: theme.palette.myText.primary,
+  backgroundColor: theme.palette.myBackground.secondary,
 }));
 
 export const BaseStats = ({ stats }: Props) => {

@@ -5,12 +5,12 @@ import Link from "next/link";
 import { styled } from "@mui/material/styles";
 
 const Wrapper = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: theme.palette.myBackground.default,
   borderRadius: "15px",
   overflow: "hidden",
   borderWidth: "1px",
   borderStyle: "dashed",
-  borderColor: theme.palette.secondary.main,
+  borderColor: theme.palette.mySecondary.main,
   marginBottom: theme.spacing(2),
   padding: "4px",
 }));
@@ -20,10 +20,10 @@ const Heading = styled("h3")(({ theme }) => ({
   padding: theme.spacing(1),
   borderBottomWidth: "1px",
   borderBottomStyle: "dashed",
-  borderBottomColor: theme.palette.secondary.main,
-  color: theme.palette.text.main,
+  borderBottomColor: theme.palette.mySecondary.main,
+  color: theme.palette.myText.main,
   fontWeight: 500,
-  backgroundColor: theme.palette.background.main,
+  backgroundColor: theme.palette.myBackground.main,
   borderRadius: "10px 10px 0 0",
 }));
 
@@ -39,22 +39,22 @@ const ListItem = styled("li")(({ theme }) => ({
   margin: 0,
   borderBottomWidth: "1px",
   borderBottomStyle: "dashed",
-  borderBottomColor: theme.palette.secondary.main,
+  borderBottomColor: theme.palette.mySecondary.main,
   height: "30px",
-  backgroundColor: theme.palette.background.secondary,
+  backgroundColor: theme.palette.myBackground.secondary,
   "&:hover": "unset",
   "& > a": {
     display: "block",
     height: "100%",
     lineHeight: "30px",
     textDecoration: "none",
-    color: theme.palette.text.link,
+    color: theme.palette.myText.link,
     textAlign: "center",
   },
   "&:nth-of-type(odd)": {
     borderRightWidth: "1px",
     borderRightStyle: "dashed",
-    borderRightColor: theme.palette.secondary.main,
+    borderRightColor: theme.palette.mySecondary.main,
     "&:last-of-type": {
       borderBottom: "none",
       borderRadius: "0 0 0 10px",

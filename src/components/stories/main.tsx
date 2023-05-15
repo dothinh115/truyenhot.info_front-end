@@ -126,7 +126,7 @@ const UListStyled = styled("ul")(({ theme }) => ({
   paddingLeft: "0",
   "& a ": {
     textDecoration: "none",
-    color: theme.palette.text.link,
+    color: theme.palette.myText.link,
   },
   "& > li > a, & > li > h4, & > li > p": {
     display: "inline-block",
@@ -144,7 +144,7 @@ const UListStyled = styled("ul")(({ theme }) => ({
     "&:not(:last-child)": {
       borderBottomWidth: "1px",
       borderBottomStyle: "dashed",
-      borderBottomColor: theme.palette.secondary.main,
+      borderBottomColor: theme.palette.mySecondary.main,
     },
     display: "flex",
     alignItems: "flex-start",
@@ -174,9 +174,9 @@ const UListStyled = styled("ul")(({ theme }) => ({
 const ChapterListWrapper = styled(Box)(({ theme }) => ({
   borderWidth: "1px",
   borderStyle: "dashed",
-  borderColor: theme.palette.secondary.main,
+  borderColor: theme.palette.mySecondary.main,
   borderRadius: theme.spacing(2),
-  backgroundColor: theme.palette.background.secondary,
+  backgroundColor: theme.palette.myBackground.secondary,
   margin: theme.spacing(2, 0),
   overflow: "hidden",
 }));
@@ -185,16 +185,16 @@ const ChapterListH3 = styled("h3")(({ theme }) => ({
   margin: "0",
   padding: "5px",
   paddingLeft: theme.spacing(2),
-  color: theme.palette.secondary.main,
+  color: theme.palette.mySecondary.main,
   borderBottomWidth: "1px",
   borderBottomStyle: "dashed",
-  borderBottomColor: theme.palette.secondary.main,
+  borderBottomColor: theme.palette.mySecondary.main,
 }));
 
 const ListStyled = styled(List)(({ theme }) => ({
   height: "100%",
   overflow: "auto",
-  backgroundColor: theme.palette.background.secondary,
+  backgroundColor: theme.palette.myBackground.secondary,
   overflowY: "auto",
   "&::-webkit-scrollbar": {
     borderRadius: theme.spacing(0, 2, 2, 0),
@@ -207,13 +207,13 @@ const ListStyled = styled(List)(({ theme }) => ({
   "&>li": {
     borderBottomWidth: "1px",
     borderBottomStyle: "dashed",
-    borderBottomColor: theme.palette.secondary.main,
+    borderBottomColor: theme.palette.mySecondary.main,
     padding: theme.spacing(1, 2),
     height: "35px",
     "&:last-of-type": {
       borderBottom: "none",
     },
-    color: theme.palette.text.primary,
+    color: theme.palette.myText.primary,
   },
   [theme.breakpoints.up("xs")]: {
     maxHeight: "100%",
@@ -226,29 +226,29 @@ const ListStyled = styled(List)(({ theme }) => ({
 const ULWrapper = styled(Stack)(({ theme }) => ({
   borderWidth: "1px",
   borderStyle: "dashed",
-  borderColor: theme.palette.secondary.main,
+  borderColor: theme.palette.mySecondary.main,
   padding: theme.spacing(1),
   borderRadius: theme.spacing(2),
-  backgroundColor: theme.palette.background.secondary,
+  backgroundColor: theme.palette.myBackground.secondary,
   flexGrow: 1,
 }));
 
 const DescriptionWrapper = styled(Stack)(({ theme }) => ({
   borderWidth: "1px",
   borderStyle: "dashed",
-  borderColor: theme.palette.secondary.main,
+  borderColor: theme.palette.mySecondary.main,
   margin: theme.spacing(2, 0),
   padding: theme.spacing(1),
-  backgroundColor: theme.palette.background.secondary,
+  backgroundColor: theme.palette.myBackground.secondary,
   borderRadius: theme.spacing(2),
 }));
 
 const DescriptionHeading = styled("h3")(({ theme }) => ({
   margin: "0",
-  color: theme.palette.secondary.main,
+  color: theme.palette.mySecondary.main,
   borderBottomWidth: "1px",
   borderBottomStyle: "dashed",
-  borderBottomColor: theme.palette.secondary.main,
+  borderBottomColor: theme.palette.mySecondary.main,
 }));
 
 const DescriptionContent = styled(Box)(({ theme }) => ({

@@ -7,7 +7,7 @@ const LoadingWrapper = styled(Box)(({ theme }) => ({
   animationIterationCount: "infinite",
   animationName: "story-list-loading",
   animationTimingFunction: "linear",
-  background: theme.palette.background.loading,
+  background: theme.palette.myBackground.loading,
   backgroundImage:
     "linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%)",
   backgroundSize: "200%",
@@ -24,7 +24,7 @@ const LoadingItem = styled(Box)(({ theme }) => ({
   position: "relative",
   height: "30px",
   "&>div": {
-    backgroundColor: theme.palette.background.loading,
+    backgroundColor: theme.palette.myBackground.loading,
     position: "absolute",
   },
 }));

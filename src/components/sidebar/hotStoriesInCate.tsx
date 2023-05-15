@@ -18,13 +18,13 @@ const ListItemStyled = styled(ListItem)(({ theme }) => ({
   "&:not(:last-of-type)": {
     borderBottomWidth: "1px",
     borderBottomStyle: "dashed",
-    borderBottomColor: theme.palette.secondary.main,
+    borderBottomColor: theme.palette.mySecondary.main,
   },
 }));
 
 const ListItemTextStyled = styled(ListItemText)(({ theme }) => ({
   margin: "0",
-  color: theme.palette.text.link,
+  color: theme.palette.myText.link,
   "& > span": {
     fontSize: 14,
     whiteSpace: "nowrap",
@@ -48,7 +48,7 @@ export const HotStoriesInCate = ({ category, hotStoriesInCategory }: Props) => {
           my={0}
           borderBottom={"1px dashed #ccc"}
           textTransform={"uppercase"}
-          color={"text.primary"}
+          color={"myText.primary"}
         >
           Truyện {category?.cate_title} Hot
         </Box>

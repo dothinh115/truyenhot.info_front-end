@@ -77,12 +77,12 @@ const ItemChapter = styled(Box)(({ theme }) => ({
   left: 0,
   padding: "4px",
   fontSize: ".85em",
-  backgroundColor: alpha(theme.palette.background.imgFooter, 0.8),
-  textShadow: `0 0 10px ${theme.palette.primary.main}`,
+  backgroundColor: alpha(theme.palette.myBackground.imgFooter, 0.8),
+  textShadow: `0 0 10px ${theme.palette.myPrimary.main}`,
   maxHeight: "24px",
   overflow: "hidden",
   textAlign: "center",
-  color: theme.palette.text.main,
+  color: theme.palette.myText.main,
 }));
 
 const ItemTitle = styled(Link)(({ theme }) => ({
@@ -90,7 +90,7 @@ const ItemTitle = styled(Link)(({ theme }) => ({
   fontSize: ".9em",
   display: "block",
   textAlign: "center",
-  color: alpha(theme.palette.text.link, 0.65),
+  color: alpha(theme.palette.myText.link, 0.65),
   textShadow: "1px 1px 2px rgba(0, 0, 0, .05)",
   maxHeight: "38px",
   overflow: "hidden",
@@ -144,7 +144,7 @@ export const HomeFullStories = ({ categories }: Props) => {
           component={"h2"}
           m={0}
           sx={{
-            color: "text.primary",
+            color: "myText.primary",
           }}
         >
           Truyện đã hoàn thành
@@ -179,7 +179,7 @@ export const HomeFullStories = ({ categories }: Props) => {
             input={
               <OutlinedInput
                 sx={{
-                  bgcolor: "background.input",
+                  bgcolor: "myBackground.input",
                 }}
                 size="small"
                 label="Tất cả"

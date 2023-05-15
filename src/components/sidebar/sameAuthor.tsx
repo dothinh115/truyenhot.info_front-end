@@ -17,7 +17,7 @@ const ListItemStyled = styled(ListItem)(({ theme }) => ({
   "&:not(:last-of-type)": {
     borderBottomWidth: "1px",
     borderBottomStyle: "dashed",
-    borderBottomColor: theme.palette.secondary.main,
+    borderBottomColor: theme.palette.mySecondary.main,
   },
 }));
 
@@ -26,8 +26,8 @@ const H3Styled = styled("h3")(({ theme }) => ({
   margin: "0",
   borderBottomWidth: "1px",
   borderBottomStyle: "dashed",
-  borderBottomColor: theme.palette.secondary.main,
-  color: theme.palette.text.primary,
+  borderBottomColor: theme.palette.mySecondary.main,
+  color: theme.palette.myText.primary,
 }));
 
 const ListItemTextStyled = styled(ListItemText)(({ theme }) => ({
@@ -37,7 +37,7 @@ const ListItemTextStyled = styled(ListItemText)(({ theme }) => ({
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
-    color: theme.palette.text.primary,
+    color: theme.palette.myText.primary,
   },
 }));
 

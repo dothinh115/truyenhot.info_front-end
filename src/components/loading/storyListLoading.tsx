@@ -13,13 +13,13 @@ const LoadingWrapper = styled(Box)(({ theme }) => ({
   animationIterationCount: "infinite",
   animationName: "story-list-loading",
   animationTimingFunction: "linear",
-  backgroundColor: theme.palette.background.loadingBack,
+  backgroundColor: theme.palette.myBackground.loadingBack,
   backgroundImage: `linear-gradient(to right, #eee 8%, #ddd 18%, #eee 33%)`,
   backgroundSize: "200%",
   height: "96px",
   position: "relative",
   "&>div": {
-    background: theme.palette.background.secondary,
+    background: theme.palette.myBackground.secondary,
     position: "absolute",
   },
 }));

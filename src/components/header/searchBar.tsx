@@ -159,7 +159,7 @@ export const SearchBar = (props: Props) => {
               autoComplete={"off"}
               sx={{
                 maxHeight: "40px",
-                color: "text.main",
+                color: "myText.main",
                 flexGrow: {
                   md: 0,
                   xs: 1,

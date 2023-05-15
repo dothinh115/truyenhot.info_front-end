@@ -12,7 +12,7 @@ const Wrapper = styled(Box)(({ theme }) => ({
   animationName: "story-list-loading",
   animationTimingFunction: "linear",
   background: "#f6f7f8",
-  backgroundImage: `linear-gradient(to right, ${theme.palette.background.loadingBack} 8%, ${theme.palette.background.loadingMove} 18%, ${theme.palette.background.loadingBack} 33%)`,
+  backgroundImage: `linear-gradient(to right, ${theme.palette.myBackground.loadingBack} 8%, ${theme.palette.myBackground.loadingMove} 18%, ${theme.palette.myBackground.loadingBack} 33%)`,
   backgroundSize: "200%",
   [theme.breakpoints.up("xs")]: {
     animationDuration: "2s",
@@ -41,7 +41,7 @@ export const HotStoriesLoading = (props: Props) => {
             bgcolor={"rgba(0,0,0, .4)"}
             color={"primary.contrastText"}
             sx={{
-              textShadow: "0 0 10px primary.main",
+              textShadow: "0 0 10px myPrimary.main",
             }}
             minHeight={"25px"}
             overflow={"hidden"}

@@ -1,7 +1,8 @@
 import { Noto_Sans } from "next/font/google";
-import { createTheme } from "@mui/material/styles";
+import { createTheme, ThemeOptions } from "@mui/material/styles";
 import { PaletteMode } from "@mui/material";
 import { deepOrange, grey, indigo } from "@mui/material/colors";
+import React from "react";
 
 export const noto = Noto_Sans({
   weight: ["300", "400", "500", "700"],
@@ -68,10 +69,10 @@ export const getDesignTokens = (mode: PaletteMode) => ({
     mode,
     ...(mode === "light"
       ? {
-          primary: {
+          myPrimary: {
             main: indigo[300],
           },
-          background: {
+          myBackground: {
             default: grey[200],
             paper: grey[100],
             //những dòng trong bảng
@@ -86,11 +87,11 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             loadingMove: grey[400],
           },
           // màu theme
-          secondary: {
+          mySecondary: {
             //màu border
             main: "#7986cbc2",
           },
-          text: {
+          myText: {
             //màu text chính
             primary: grey[800],
             secondary: grey[600],
@@ -100,12 +101,11 @@ export const getDesignTokens = (mode: PaletteMode) => ({
           },
         }
       : {
-          primary: {
+          myPrimary: {
             main: indigo[300],
           },
-          divider: deepOrange[700],
-          background: {
-            default: grey[800],
+          myBackground: {
+            default: grey[900],
             paper: grey[900],
             //những dòng trong bảng
             secondary: grey[700],
@@ -119,11 +119,11 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             loadingMove: grey[400],
           },
           // màu theme
-          secondary: {
+          mySecondary: {
             //màu border
             main: grey[300],
           },
-          text: {
+          myText: {
             //màu text chính
             primary: grey[200],
             secondary: grey[400],
@@ -134,3 +134,37 @@ export const getDesignTokens = (mode: PaletteMode) => ({
         }),
   },
 });
+
+declare module "@mui/material/styles" {
+  interface Palette {
+    myPrimary?: any;
+    myBackground?: any;
+    mySecondary?: any;
+    myText?: any;
+  }
+  interface ThemeOptions {
+    // text: {
+    //   primary: string;
+    //   secondary: string;
+    //   disabled: string;
+    //   main?: string;
+    //   link?: string;
+    // };
+    // background: {
+    //   default: string;
+    //   paper: string;
+    //   secondary?: string;
+    //   input?: string;
+    //   loading?: string;
+    //   main?: string;
+    //   headfoot?: string;
+    //   imgFooter?: string;
+    //   loadingBack?: string;
+    //   loadingMove?: string;
+    // };
+    myPrimary?: any;
+    myBackground?: any;
+    mySecondary?: any;
+    myText?: any;
+  }
+}

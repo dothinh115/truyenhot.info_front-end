@@ -12,13 +12,13 @@ const ListItemLoading = styled(ListItem)(({ theme }) => ({
   animationIterationCount: "infinite",
   animationName: "story-list-loading",
   animationTimingFunction: "linear",
-  background: theme.palette.background.loading,
+  background: theme.palette.myBackground.loading,
   backgroundImage:
     "linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%)",
   backgroundSize: "200%",
   position: "relative",
   "&>div": {
-    backgroundColor: theme.palette.background.secondary,
+    backgroundColor: theme.palette.myBackground.secondary,
     position: "absolute",
   },
   [theme.breakpoints.up("xs")]: {

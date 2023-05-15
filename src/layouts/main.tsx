@@ -69,7 +69,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
           height: "100%",
           top: 0,
           left: 0,
-          backgroundColor: "background.default",
+          backgroundColor: "myBackground.default",
           zIndex: 100,
           transition: ".5s",
         }}
@@ -136,7 +136,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
             minHeight={"100vh"}
             pb={{ md: 0, xs: 7 }}
             sx={{
-              backgroundColor: "background.default",
+              backgroundColor: "myBackground.default",
             }}
           >
             <HeaderSection />

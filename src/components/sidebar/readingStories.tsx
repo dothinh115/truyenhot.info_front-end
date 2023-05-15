@@ -22,7 +22,7 @@ const RowWrapper = styled(Stack)(({ theme }) => ({
   fontSize: "13.5",
   height: "28px",
   "&>a": {
-    color: theme.palette.text.primary,
+    color: theme.palette.myText.primary,
   },
 }));
 
@@ -64,7 +64,7 @@ export const ReadingStoriesHistory = (props: Props) => {
           my={0}
           borderBottom={"1px dashed #ccc"}
           sx={{
-            color: "text.primary",
+            color: "myText.primary",
           }}
         >
           Truyện đang đọc

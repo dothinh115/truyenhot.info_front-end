@@ -117,7 +117,7 @@ const CategoriesDetail = ({
                 m={0}
                 fontWeight={"light"}
                 fontSize={35}
-                color={"text.primary"}
+                color={"myText.primary"}
               >
                 {cate_title}
               </Box>

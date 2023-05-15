@@ -36,7 +36,7 @@ const LoadingAnimation = styled(Box)(({ theme }) => ({
   animationName: "story-list-loading",
   animationTimingFunction: "linear",
   background: "#f6f7f8",
-  backgroundImage: `linear-gradient(to right, ${theme.palette.background.loadingBack} 8%, ${theme.palette.background.loadingMove} 18%, ${theme.palette.background.loadingBack} 33%)`,
+  backgroundImage: `linear-gradient(to right, ${theme.palette.myBackground.loadingBack} 8%, ${theme.palette.myBackground.loadingMove} 18%, ${theme.palette.myBackground.loadingBack} 33%)`,
   backgroundSize: "200%",
 }));
 
@@ -100,7 +100,7 @@ export const SearchModal = (props: Props) => {
     <>
       <Box
         position={"fixed"}
-        bgcolor={"background.default"}
+        bgcolor={"myBackground.default"}
         zIndex={100}
         width={"100%"}
         height={"100%"}
@@ -124,7 +124,7 @@ export const SearchModal = (props: Props) => {
               xs: "100%",
             },
             borderRadius: "5px",
-            backgroundColor: "background.default",
+            backgroundColor: "myBackground.default",
           }}
           maxHeight={"100vh"}
         >
@@ -152,7 +152,7 @@ export const SearchModal = (props: Props) => {
                   autoComplete={"off"}
                   sx={{
                     maxHeight: "40px",
-                    color: "text.primary",
+                    color: "myText.primary",
                     flexGrow: {
                       md: 0,
                       xs: 1,
@@ -164,7 +164,7 @@ export const SearchModal = (props: Props) => {
             <IconButton
               sx={{
                 "& svg": {
-                  color: "text.primary",
+                  color: "myText.primary",
                 },
                 visibility: getValues("keywords") ? "visible" : "hidden",
               }}
@@ -186,7 +186,7 @@ export const SearchModal = (props: Props) => {
               direction={"row"}
               gap={2}
               justifyContent={"center"}
-              color={"text.primary"}
+              color={"myText.primary"}
             >
               <SearchIcon />
               Không tìm thấy kết quả nào!
@@ -222,14 +222,14 @@ export const SearchModal = (props: Props) => {
                       <Typography
                         component={"span"}
                         fontSize={"1.1em"}
-                        color={"text.link"}
+                        color={"myText.link"}
                       >
                         {item.story_title}
                       </Typography>
                       <Typography
                         component={"span"}
                         fontSize={".9em"}
-                        color={"text.primary"}
+                        color={"myText.primary"}
                       >
                         {item._count} chương
                       </Typography>
@@ -238,7 +238,7 @@ export const SearchModal = (props: Props) => {
                   <IconButton
                     sx={{
                       "& svg": {
-                        color: "text.primary",
+                        color: "myText.primary",
                       },
                     }}
                     onClick={() => {
@@ -260,7 +260,7 @@ export const SearchModal = (props: Props) => {
               justifyContent={"center"}
               sx={{
                 textDecoration: "none",
-                color: "text.link",
+                color: "myText.link",
               }}
               component={Link}
               href={`/search/title?keywords=${getValues("keywords")}`}

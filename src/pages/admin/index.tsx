@@ -10,7 +10,7 @@ type Props = {};
 const AdminIndex = (props: Props) => {
   return (
     <Stack direction={"row"} justifyContent={"center"}>
-      <Container maxWidth={"md"}>
+      {/* <Container maxWidth={"md"}>
         <Stack
           direction={"row"}
           justifyContent={"space-between"}
@@ -31,7 +31,7 @@ const AdminIndex = (props: Props) => {
             <AdminNoChapterStories />
           </Box>
         </Stack>
-      </Container>
+      </Container> */}
     </Stack>
   );
 };

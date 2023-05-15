@@ -27,7 +27,7 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
         zIndex={100}
         width={"100%"}
         height={"100%"}
-        bgcolor={"background.default"}
+        bgcolor={"myBackground.default"}
         p={0}
         maxHeight={"100vh"}
         overflow={"auto"}
@@ -74,7 +74,7 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
           <Box
             component={"h3"}
             sx={{
-              color: "text.primary",
+              color: "myText.primary",
             }}
           >
             Thể loại

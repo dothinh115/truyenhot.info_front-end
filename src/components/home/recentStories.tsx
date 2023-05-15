@@ -40,18 +40,18 @@ const ReloadButtonStyled = styled(Button)(() => ({
 const StackWrapper = styled(Stack)(({ theme }) => ({
   borderWidth: "1px",
   borderStyle: "dashed",
-  borderColor: theme.palette.secondary.main,
+  borderColor: theme.palette.mySecondary.main,
   borderRadius: "16px",
   overflow: "hidden",
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: theme.palette.myBackground.default,
   padding: "4px",
 }));
 
 const RowWrapper = styled(Stack)(({ theme }) => ({
   justifyContent: "space-between",
-  color: theme.palette.text.main,
+  color: theme.palette.myText.main,
   fontWeight: "500",
-  backgroundColor: theme.palette.background.main,
+  backgroundColor: theme.palette.myBackground.main,
   borderRadius: "10px 10px 0 0",
   padding: "8px 16px",
   "& div": {
@@ -97,8 +97,8 @@ const ItemRowWrapper = styled(Stack)(({ theme }) => ({
   flexWrap: "wrap",
   borderBottomWidth: "1px",
   borderBottomStyle: "dashed",
-  borderBottomColor: theme.palette.secondary.main,
-  color: theme.palette.text.primary,
+  borderBottomColor: theme.palette.mySecondary.main,
+  color: theme.palette.myText.primary,
   "&:last-of-type": {
     borderBottom: "none",
     "&>div": {
@@ -111,13 +111,13 @@ const ItemRowWrapper = styled(Stack)(({ theme }) => ({
     },
   },
   "&>div": {
-    backgroundColor: theme.palette.background.secondary,
+    backgroundColor: theme.palette.myBackground.secondary,
     paddingTop: "4px",
     paddingBottom: "4px",
   },
   "& a": {
     textDecoration: "none",
-    color: theme.palette.text.link,
+    color: theme.palette.myText.link,
   },
 }));
 
@@ -226,7 +226,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
         gap={"10px"}
         justifyContent={"space-between"}
       >
-        <Box component={"h2"} m={0} sx={{ color: "text.primary" }}>
+        <Box component={"h2"} m={0} sx={{ color: "myText.primary" }}>
           Truyện mới cập nhật
           <ReloadButtonStyled
             type={"button"}
@@ -259,7 +259,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
             input={
               <OutlinedInput
                 sx={{
-                  bgcolor: "background.input",
+                  bgcolor: "myBackground.input",
                 }}
                 size="small"
                 label="Tất cả"

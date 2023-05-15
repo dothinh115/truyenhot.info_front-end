@@ -33,7 +33,7 @@ export function HeaderDesktop() {
       <AppBar
         position="static"
         sx={{
-          backgroundColor: "background.headfoot",
+          backgroundColor: "myBackground.headfoot",
         }}
       >
         <Stack
@@ -56,7 +56,7 @@ export function HeaderDesktop() {
                 component={Link}
                 href="/"
                 sx={{ textDecoration: "none", flexGrow: 1, display: "block" }}
-                color={"text.main"}
+                color={"myText.main"}
               >
                 <Typography
                   variant="h6"

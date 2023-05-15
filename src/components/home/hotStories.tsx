@@ -47,9 +47,9 @@ const BoxTitle = styled(Box)(({ theme }) => ({
   left: 0,
   padding: "4px",
   fontSize: ".85em",
-  backgroundColor: alpha(theme.palette.background.imgFooter, 0.8),
-  color: theme.palette.text.main,
-  textShadow: "0 0 10px primary.main",
+  backgroundColor: alpha(theme.palette.myBackground.imgFooter, 0.8),
+  color: theme.palette.myText.main,
+  textShadow: "0 0 10px myPrimary.main",
   overflow: "hidden",
   whiteSpace: "nowrap",
   textOverflow: "ellipsis",
@@ -127,7 +127,7 @@ export const HomeHotStories = ({ categories }: Props) => {
           component={"h2"}
           m={0}
           sx={{
-            color: "text.primary",
+            color: "myText.primary",
           }}
         >
           Truyện hot
@@ -166,7 +166,7 @@ export const HomeHotStories = ({ categories }: Props) => {
             input={
               <OutlinedInput
                 sx={{
-                  bgcolor: "background.input",
+                  bgcolor: "myBackground.input",
                 }}
                 size="small"
                 label="Tất cả"
