@@ -15,7 +15,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { SelectChangeEvent } from "@mui/material/Select";
 import Carousel from "better-react-carousel";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useSWR from "swr";
 import { HotStoriesLoading } from "../loading";
 import { styled } from "@mui/material/styles";
@@ -132,6 +132,7 @@ export const HomeHotStories = ({ categories }: Props) => {
             ml={1}
             onClick={() => hotStoriesListMutate()}
             disabled={hotStoriesValidating ? true : false}
+            title="Reload"
           >
             {hotStoriesValidating ? (
               <CircularProgress size={"1.5em"} color="inherit" />
@@ -154,6 +155,7 @@ export const HomeHotStories = ({ categories }: Props) => {
             onChange={(event: SelectChangeEvent, child: any) =>
               handleChange(event, child)
             }
+            title="Chọn thể loại"
             input={
               <OutlinedInput
                 sx={{
@@ -211,7 +213,10 @@ export const HomeHotStories = ({ categories }: Props) => {
           : hotStoriesList?.result.map((story: HotStoriesInterface) => {
               return (
                 <Carousel.Item key={story._id}>
-                  <BoxWrapper href={`/story/${story.story_code}`}>
+                  <BoxWrapper
+                    href={`/story/${story.story_code}`}
+                    title={story.story_title}
+                  >
                     <BoxImg src={story.story_cover} alt={story.story_title} />
                     <BoxTitle>{story.story_title}</BoxTitle>
                   </BoxWrapper>

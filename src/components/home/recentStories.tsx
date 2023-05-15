@@ -217,6 +217,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
             type={"button"}
             onClick={() => recenUpdatetStoriesListMutate()}
             disabled={recentUpdateStoriesValidating ? true : false}
+            title="Reload"
           >
             {recentUpdateStoriesValidating ? (
               <CircularProgress size={"1.5em"} color="inherit" />
@@ -239,6 +240,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
             onChange={(event: SelectChangeEvent, child: any) =>
               handleChange(event, child)
             }
+            title="Chọn thể loại"
             input={
               <OutlinedInput
                 sx={{
@@ -297,7 +299,10 @@ export const IndexRecentStories = ({ categories }: Props) => {
                         >
                           <KeyboardArrowRightIcon />
                         </ItemIcon>
-                        <ItemMainLink href={`/story/${story.story_code}`}>
+                        <ItemMainLink
+                          href={`/story/${story.story_code}`}
+                          title={story.story_title}
+                        >
                           {story.story_title}
                         </ItemMainLink>
                       </Stack>
@@ -306,6 +311,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
                       <Box
                         component={Link}
                         href={`/story/${story.story_code}/${story?.lastChapter?.chapter_code}`}
+                        title={story?.lastChapter?.chapter_name}
                       >
                         {story?.lastChapter?.chapter_name}
                       </Box>

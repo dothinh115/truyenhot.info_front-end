@@ -145,6 +145,7 @@ export const HomeFullStories = ({ categories }: Props) => {
             type={"button"}
             onClick={() => fullStoriesListMutate()}
             disabled={fullStoriesValidating ? true : false}
+            title="Reload"
           >
             {fullStoriesValidating ? (
               <CircularProgress size={"1.5em"} color="inherit" />
@@ -167,6 +168,7 @@ export const HomeFullStories = ({ categories }: Props) => {
             onChange={(event: SelectChangeEvent, child: any) =>
               handleChange(event, child)
             }
+            title="Chọn thể loại"
             input={
               <OutlinedInput
                 sx={{

@@ -78,12 +78,16 @@ export const ReadingStoriesHistory = (props: Props) => {
                         />
                       </Box>
 
-                      <MainLink href={`/story/${story.story_code}`}>
+                      <MainLink
+                        href={`/story/${story.story_code}`}
+                        title={story.story_title}
+                      >
                         {story.story_title}
                       </MainLink>
 
                       <ChapterLink
                         href={`/story/${story.story_code}/${story.chapter_code}`}
+                        title={story?.chapter_name}
                       >
                         {story?.chapter_name
                           .replaceAll("Chương ", "C")

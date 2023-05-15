@@ -62,7 +62,11 @@ export const CategoriesSidebar = ({ categories }: Props) => {
           {categories?.map((cate: CategoryInterface) => {
             return (
               <Box key={cate.cate_id} component={"li"}>
-                <Box component={Link} href={`/categories/${cate.cate_code}`}>
+                <Box
+                  component={Link}
+                  href={`/categories/${cate.cate_code}`}
+                  title={cate.cate_title}
+                >
                   {cate.cate_title}
                 </Box>
               </Box>
