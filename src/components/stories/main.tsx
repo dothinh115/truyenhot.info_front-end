@@ -46,7 +46,7 @@ const Wrapper = styled("h2")(() => ({
   color: "rgba(0, 0, 0, .65)",
 }));
 
-const TitleWrapper = styled("h1")(() => ({
+const TitleWrapper = styled("h1")(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
   justifyContent: "center",
@@ -55,9 +55,15 @@ const TitleWrapper = styled("h1")(() => ({
   fontWeight: "500",
   letterSpacing: "-1px",
   wordSpacing: "2px",
-  margin: 0,
+  margin: "16px 0",
   padding: 0,
   color: "#606fc3",
+  [theme.breakpoints.up("xs")]: {
+    fontSize: "25px",
+  },
+  [theme.breakpoints.up("md")]: {
+    fontSize: "30px",
+  },
 }));
 
 const ViewedAndImgWrapper = styled(Box)(() => ({
@@ -251,28 +257,30 @@ export const StoryMain = ({ story }: Props) => {
       <Wrapper>THÔNG TIN TRUYỆN</Wrapper>
       <Box className={"hr"} />
 
+      <TitleWrapper>{story?.story_title}</TitleWrapper>
+
       <Stack
-        direction={{ md: "row-reverse", xs: "column-reverse" }}
+        direction={{ md: "row", xs: "column" }}
         justifyContent={"flex-end"}
-        mt={2}
         gap={"10px"}
       >
+        <ViewedAndImgWrapper>
+          <ImgWrapper>
+            <CoverImage src={story?.story_cover} alt={story?.story_title} />
+            <ViewStyled>
+              <RemoveRedEyeIcon />
+              <Box component={"span"}>{story?.story_view}</Box>
+            </ViewStyled>
+          </ImgWrapper>
+        </ViewedAndImgWrapper>
         <Stack flexGrow={1}>
-          <Box
-            display={{
-              md: "block",
-              xs: "none",
-              flexGrow: "1",
-            }}
-          >
-            <TitleWrapper>{story?.story_title}</TitleWrapper>
-          </Box>
           <Stack
             sx={{
               border: "1px dashed #7986cba6",
               padding: "8px",
               borderRadius: "16px",
               backgroundColor: "#fff",
+              flexGrow: 1,
             }}
           >
             <UListStyled>
@@ -341,52 +349,33 @@ export const StoryMain = ({ story }: Props) => {
                   )} trước`}</>
                 )}
               </Box>
-              <ButtonWrapper>
-                <Button
-                  variant="outlined"
-                  color="info"
-                  size="small"
-                  startIcon={<PlayCircleFilledIcon />}
-                  onClick={() =>
-                    router.push({
-                      pathname: `/story/[story_code]/[chapter_code]`,
-                      query: {
-                        story_code: story?.story_code,
-                        chapter_code: story?.start_chapter,
-                      },
-                    })
-                  }
-                >
-                  Đọc truyện
-                </Button>
-                <StoryReportButton
-                  open={reportModalOpen}
-                  setOpen={setReportModalOpen}
-                  story_code={story?.story_code}
-                />
-              </ButtonWrapper>
             </UListStyled>
           </Stack>
+          <ButtonWrapper>
+            <Button
+              variant="outlined"
+              color="info"
+              size="small"
+              startIcon={<PlayCircleFilledIcon />}
+              onClick={() =>
+                router.push({
+                  pathname: `/story/[story_code]/[chapter_code]`,
+                  query: {
+                    story_code: story?.story_code,
+                    chapter_code: story?.start_chapter,
+                  },
+                })
+              }
+            >
+              Đọc truyện
+            </Button>
+            <StoryReportButton
+              open={reportModalOpen}
+              setOpen={setReportModalOpen}
+              story_code={story?.story_code}
+            />
+          </ButtonWrapper>
         </Stack>
-
-        <ViewedAndImgWrapper>
-          <ImgWrapper>
-            <CoverImage src={story?.story_cover} alt={story?.story_title} />
-            <ViewStyled>
-              <RemoveRedEyeIcon />
-              <Box component={"span"}>{story?.story_view}</Box>
-            </ViewStyled>
-          </ImgWrapper>
-        </ViewedAndImgWrapper>
-
-        <Box
-          display={{
-            md: "none",
-            xs: "block",
-          }}
-        >
-          <TitleWrapper>{story?.story_title}</TitleWrapper>
-        </Box>
       </Stack>
 
       {/* <Stack direction={"row"} justifyContent={"center"}>

@@ -32,6 +32,7 @@ const MenuProps = {
 const BoxWrapper = styled(Box)(({ theme }) => ({
   display: "flex",
   gap: "10px",
+  marginTop: "16px",
   justifyContent: "space-between",
   [theme.breakpoints.up("xs")]: {
     flexDirection: "column",
