@@ -21,11 +21,11 @@ const ChapterTitle = styled("h1")(({ theme }) => ({
   margin: "0",
   [theme.breakpoints.up("xs")]: {
     fontWeight: "medium",
-    fontSize: "30px",
+    fontSize: "20px",
   },
   [theme.breakpoints.up("md")]: {
     fontWeight: "light",
-    fontSize: "40px",
+    fontSize: "30px",
   },
 }));
 
@@ -34,6 +34,7 @@ const ChapterName = styled("h2")(() => ({
   margin: "0",
   color: "rgba(0, 0, 0, .55)",
   fontWeight: "500",
+  fontSize: "1em",
 }));
 
 const ChapterContent = styled(Box)(({ theme }) => ({
