@@ -1,7 +1,7 @@
 import { Noto_Sans } from "next/font/google";
 import { createTheme, ThemeOptions } from "@mui/material/styles";
 import { PaletteMode } from "@mui/material";
-import { deepOrange, grey, indigo } from "@mui/material/colors";
+import { deepOrange, grey, indigo, blueGrey } from "@mui/material/colors";
 import React from "react";
 
 export const noto = Noto_Sans({
@@ -108,7 +108,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             default: grey[800],
             paper: grey[900],
             //những dòng trong bảng
-            secondary: grey[700],
+            secondary: "#323232",
             input: grey[600],
             loading: grey[900],
             //headding
