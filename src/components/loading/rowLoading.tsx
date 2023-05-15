@@ -13,8 +13,8 @@ const ListItemLoading = styled(ListItem)(({ theme }) => ({
   animationName: "story-list-loading",
   animationTimingFunction: "linear",
   background: theme.palette.myBackground.loading,
-  backgroundImage:
-    "linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%)",
+  backgroundImage: `linear-gradient(to right, ${theme.palette.myBackground.loadingBack} 8%, ${theme.palette.myBackground.loadingMove} 18%, ${theme.palette.myBackground.loadingBack} 33%)`,
+
   backgroundSize: "200%",
   position: "relative",
   "&>div": {

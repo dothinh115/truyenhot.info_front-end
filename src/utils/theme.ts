@@ -115,8 +115,8 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             main: "#7986cb",
             headfoot: "#7986cb",
             imgFooter: grey[600],
-            loadingBack: grey[300],
-            loadingMove: grey[400],
+            loadingBack: grey[600],
+            loadingMove: grey[700],
           },
           // màu theme
           mySecondary: {
