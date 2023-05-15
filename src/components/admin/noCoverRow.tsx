@@ -29,16 +29,16 @@ export const AdminNoCoverStoriesRow = ({ storyData, mutate }: Props) => {
           open: true,
           type: "error",
         });
-        return;
+      } else {
+        //hiện hình
+        const fileReader: FileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+        fileReader.onload = () => {
+          const img = fileReader?.result as string;
+          setImage(img);
+          setFile(file);
+        };
       }
-      //hiện hình
-      const fileReader: FileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-      fileReader.onload = () => {
-        const img = fileReader?.result as string;
-        setImage(img);
-        setFile(file);
-      };
     }
   };
 
