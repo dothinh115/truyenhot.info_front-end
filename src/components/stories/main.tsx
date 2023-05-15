@@ -59,6 +59,7 @@ const TitleWrapper = styled("h1")(({ theme }) => ({
   margin: "16px 0",
   padding: 0,
   color: "#606fc3",
+  textShadow: "1px 1px 1px rgba(255, 255, 255, .1)",
   [theme.breakpoints.up("xs")]: {
     fontSize: "25px",
   },
