@@ -110,7 +110,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             //những dòng trong bảng
             secondary: grey[800],
             input: grey[600],
-            loading: grey[900],
+            loading: grey[800],
             //headding
             main: "#7986cb",
             headfoot: "#7986cb",
