@@ -12,7 +12,7 @@ export const MainBreadcrumbs = ({ links }: Props) => {
     <Stack
       direction={"row"}
       justifyContent={"center"}
-      bgcolor={"myBackground.secondary"}
+      bgcolor={"myBackground.paper"}
       py={1}
     >
       <Container maxWidth={"md"}>

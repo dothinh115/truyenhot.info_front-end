@@ -106,9 +106,9 @@ export const getDesignTokens = (mode: PaletteMode) => ({
           },
           myBackground: {
             default: grey[800],
-            paper: grey[900],
+            paper: grey[700],
             //những dòng trong bảng
-            secondary: "#323232",
+            secondary: grey[800],
             input: grey[600],
             loading: grey[900],
             //headding
