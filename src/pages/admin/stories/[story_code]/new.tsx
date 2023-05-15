@@ -65,6 +65,9 @@ const AdminNewChapter = (props: Props) => {
   });
 
   const createChapterSubmitHandle = async (data: any) => {
+    if (data.chapter_code === "") {
+      delete data.chapter_code;
+    }
     try {
       await API.post(`/chapter/new/${story_code}`, data);
       setSnackbar({
