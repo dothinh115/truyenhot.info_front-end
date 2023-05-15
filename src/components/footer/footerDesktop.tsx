@@ -88,6 +88,9 @@ export const FooterDesktop = (props: Props) => {
                         mb: "4px",
                         bgcolor: "rgba(255, 255, 255, .85)",
                         cursor: "pointer",
+                        "& > span": {
+                          color: "#757575",
+                        },
                       }}
                     />
                   );

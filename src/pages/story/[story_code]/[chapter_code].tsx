@@ -50,7 +50,7 @@ const ChapterContent = styled(Box)(({ theme }) => ({
     margin: "auto",
     display: "block",
   },
-  color: theme.palette.myText.primary,
+  color: theme.palette.myText.secondary,
 }));
 
 const ChapterDetail = ({ chapterData }: Props) => {

@@ -76,12 +76,12 @@ export function HeaderDesktop() {
                 <IconButton
                   onClick={() => {
                     setMode(mode === "light" ? "dark" : "light");
-
                     const themeData = {
                       mode: mode === "light" ? "dark" : "light",
                     };
                     localStorage.setItem("theme", JSON.stringify(themeData));
                   }}
+                  sx={{ "& svg": { color: "myText.main" } }}
                 >
                   {mode === "light" ? <DarkModeIcon /> : <Brightness7Icon />}
                 </IconButton>

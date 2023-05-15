@@ -12,7 +12,7 @@ const Wrapper = styled(Box)(({ theme }) => ({
   borderStyle: "dashed",
   borderColor: theme.palette.mySecondary.main,
   marginBottom: theme.spacing(2),
-  padding: "4px",
+  padding: "6px",
 }));
 
 const Heading = styled("h3")(({ theme }) => ({
@@ -25,11 +25,18 @@ const Heading = styled("h3")(({ theme }) => ({
   fontWeight: 500,
   backgroundColor: theme.palette.myBackground.main,
   borderRadius: "10px 10px 0 0",
+  borderWidth: "1px 1px 0 1px",
+  borderStyle: "solid",
+  borderColor: theme.palette.mySecondary.main,
 }));
 
-const UList = styled("ul")(() => ({
+const UList = styled("ul")(({ theme }) => ({
   padding: "0",
   margin: 0,
+  borderWidth: "0 1px 1px 1px",
+  borderStyle: "solid",
+  borderColor: theme.palette.mySecondary.main,
+  borderRadius: "0 0 10px 10px",
 }));
 
 const ListItem = styled("li")(({ theme }) => ({

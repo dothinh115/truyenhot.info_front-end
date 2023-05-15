@@ -49,7 +49,9 @@ export const StoryChapterPicker = ({ chapterData, chapterListData }: Props) => {
       <Button
         component={Link}
         href={`/story/${chapterData?.story_code}/${chapterData?.prevChapter}`}
-        color="info"
+        sx={{
+          backgroundColor: "myBackground.main",
+        }}
         variant="contained"
         size="small"
         disabled={!chapterData?.prevChapter ? true : false}
@@ -89,7 +91,10 @@ export const StoryChapterPicker = ({ chapterData, chapterListData }: Props) => {
       <Button
         component={Link}
         href={`/story/${chapterData?.story_code}/${chapterData?.nextChapter}`}
-        color="info"
+        sx={{
+          backgroundColor: "myBackground.main",
+          color: "myText.main",
+        }}
         variant="contained"
         size="small"
         disabled={!chapterData?.nextChapter ? true : false}

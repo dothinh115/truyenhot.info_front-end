@@ -44,7 +44,7 @@ const StackWrapper = styled(Stack)(({ theme }) => ({
   borderRadius: "16px",
   overflow: "hidden",
   backgroundColor: theme.palette.myBackground.default,
-  padding: "4px",
+  padding: "6px",
 }));
 
 const RowWrapper = styled(Stack)(({ theme }) => ({
@@ -57,6 +57,9 @@ const RowWrapper = styled(Stack)(({ theme }) => ({
   "& div": {
     padding: "4px",
   },
+  borderWidth: "1px 1px 0 1px",
+  borderStyle: "solid",
+  borderColor: theme.palette.mySecondary.main,
 }));
 
 const FirstRowHeading = styled(Stack)(({ theme }) => ({
@@ -151,6 +154,8 @@ const ItemThirdRow = styled(Box)(({ theme }) => ({
     width: "15%",
     display: "block",
   },
+  paddingRight: "4px",
+  wordSpacing: "-1px",
 }));
 
 const ItemIcon = styled("span")(() => ({
@@ -168,6 +173,15 @@ const ItemMainLink = styled(Link)(() => ({
   overflow: "hidden",
   textOverflow: "ellipsis",
   letterSpacing: "-.5px",
+}));
+
+const ContainerStyled = styled(Box)(({ theme }) => ({
+  padding: "0",
+  margin: 0,
+  borderWidth: "0 1px 1px 1px",
+  borderStyle: "solid",
+  borderColor: theme.palette.mySecondary.main,
+  borderRadius: "0 0 10px 10px",
 }));
 
 type Props = {
@@ -287,67 +301,69 @@ export const IndexRecentStories = ({ categories }: Props) => {
           <ThirdRowHeading>UPDATE</ThirdRowHeading>
         </RowWrapper>
 
-        {recentUpdateStoriesValidating
-          ? preDataRender()
-          : recentUpdateStoriesList?.result?.map(
-              (story: RecentStoriesInterface, index: number) => {
-                if (story.lastChapter)
-                  story.lastChapter.chapter_name =
-                    story.lastChapter?.chapter_name
-                      .replaceAll("Chương ", "C")
-                      .replaceAll("Quyển ", "Q")
-                      .replaceAll(" - ", "-")
-                      .replaceAll("CHƯƠNG ", "C")
-                      .replaceAll("QUYỂN ", "Q");
-                return (
-                  <ItemRowWrapper key={story._id} direction={"row"}>
-                    <ItemFirstRow>
-                      <Stack direction={"row"} alignItems={"center"}>
-                        <ItemIcon
-                          sx={{
-                            color:
-                              (index + 1 === 1 && "error.main") ||
-                              (index + 1 === 2 && "success.main") ||
-                              (index + 1 === 3 && "info.main") ||
-                              "#ccc",
-                          }}
-                        >
-                          <KeyboardArrowRightIcon />
-                        </ItemIcon>
-                        <ItemMainLink
-                          href={`/story/${story.story_code}`}
-                          title={story.story_title}
-                        >
-                          {story.story_title}
-                        </ItemMainLink>
-                      </Stack>
-                    </ItemFirstRow>
-                    <ItemSecondRow
-                      sx={{
-                        "&>a": { color: "info.main" },
-                      }}
-                    >
-                      <Box
-                        component={Link}
-                        href={`/story/${story.story_code}/${story?.lastChapter?.chapter_code}`}
-                        title={story?.lastChapter?.chapter_name}
+        <ContainerStyled>
+          {recentUpdateStoriesValidating
+            ? preDataRender()
+            : recentUpdateStoriesList?.result?.map(
+                (story: RecentStoriesInterface, index: number) => {
+                  if (story.lastChapter)
+                    story.lastChapter.chapter_name =
+                      story.lastChapter?.chapter_name
+                        .replaceAll("Chương ", "C")
+                        .replaceAll("Quyển ", "Q")
+                        .replaceAll(" - ", "-")
+                        .replaceAll("CHƯƠNG ", "C")
+                        .replaceAll("QUYỂN ", "Q");
+                  return (
+                    <ItemRowWrapper key={story._id} direction={"row"}>
+                      <ItemFirstRow>
+                        <Stack direction={"row"} alignItems={"center"}>
+                          <ItemIcon
+                            sx={{
+                              color:
+                                (index + 1 === 1 && "error.main") ||
+                                (index + 1 === 2 && "success.main") ||
+                                (index + 1 === 3 && "info.main") ||
+                                "#ccc",
+                            }}
+                          >
+                            <KeyboardArrowRightIcon />
+                          </ItemIcon>
+                          <ItemMainLink
+                            href={`/story/${story.story_code}`}
+                            title={story.story_title}
+                          >
+                            {story.story_title}
+                          </ItemMainLink>
+                        </Stack>
+                      </ItemFirstRow>
+                      <ItemSecondRow
+                        sx={{
+                          "&>a": { color: "myText.link" },
+                        }}
                       >
-                        {story?.lastChapter?.chapter_name}
-                      </Box>
-                    </ItemSecondRow>
-                    <ItemThirdRow>
-                      {timeSince(
-                        Math.abs(
-                          new Date().valueOf() -
-                            new Date(story?.updated_at).valueOf()
-                        )
-                      )}{" "}
-                      trước
-                    </ItemThirdRow>
-                  </ItemRowWrapper>
-                );
-              }
-            )}
+                        <Box
+                          component={Link}
+                          href={`/story/${story.story_code}/${story?.lastChapter?.chapter_code}`}
+                          title={story?.lastChapter?.chapter_name}
+                        >
+                          {story?.lastChapter?.chapter_name}
+                        </Box>
+                      </ItemSecondRow>
+                      <ItemThirdRow>
+                        {timeSince(
+                          Math.abs(
+                            new Date().valueOf() -
+                              new Date(story?.updated_at).valueOf()
+                          )
+                        )}{" "}
+                        trước
+                      </ItemThirdRow>
+                    </ItemRowWrapper>
+                  );
+                }
+              )}
+        </ContainerStyled>
       </StackWrapper>
     </>
   );

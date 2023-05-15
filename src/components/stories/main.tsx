@@ -141,6 +141,7 @@ const UListStyled = styled("ul")(({ theme }) => ({
   },
   "& > li": {
     lineHeight: "30px",
+    color: theme.palette.myText.primary,
     "&:not(:last-child)": {
       borderBottomWidth: "1px",
       borderBottomStyle: "dashed",
@@ -150,7 +151,7 @@ const UListStyled = styled("ul")(({ theme }) => ({
     alignItems: "flex-start",
     "& h4": {
       alignItems: "center",
-      color: theme.palette.info.main,
+      color: theme.palette.myText.secondary,
       display: "inline-flex",
       "& svg": {
         color: theme.palette.info.main,
@@ -349,9 +350,9 @@ export const StoryMain = ({ story }: Props) => {
                         sx={{
                           mr: "4px",
                           cursor: "pointer",
-                          "&>span": { color: "#fff" },
+                          "&>span": { color: "myText.main" },
+                          backgroundColor: "myBackground.main",
                         }}
-                        color="primary"
                       />
                     );
                   })}
@@ -524,7 +525,6 @@ export const StoryMain = ({ story }: Props) => {
         <Pagination
           count={chapterListData?.pagination.pages}
           page={paginationPage}
-          color="primary"
           sx={{
             "& button": {
               m: "unset",

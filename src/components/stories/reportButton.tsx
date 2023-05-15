@@ -25,7 +25,7 @@ type Props = {
 };
 
 const style = {
-  backgroundColor: "#fff",
+  backgroundColor: "myBackground.default",
   border: "1px solid #ccc",
   borderRadius: "6px",
   position: "absolute",
@@ -97,7 +97,7 @@ export const StoryReportButton = ({ open, setOpen, story_code }: Props) => {
       {snackbar}
       <Modal open={open} onClose={openModalHandle}>
         <Box sx={style}>
-          <Box component={"h2"} p={0} m={0}>
+          <Box component={"h2"} p={0} m={0} sx={{ color: "myText.primary" }}>
             Report truyện lỗi
           </Box>
           <Box className="hr" my={1} />
