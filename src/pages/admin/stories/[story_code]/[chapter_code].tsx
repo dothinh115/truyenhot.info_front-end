@@ -200,37 +200,37 @@ const EditChapter = (props: Props) => {
                 />
               )}
             />
-            {chapterData?.result.chapter_title && (
-              <Controller
-                name={"chapter_title"}
-                control={control}
-                rules={{
-                  required: "Không được để trống",
-                }}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    sx={{
-                      mb: 1,
-                    }}
-                    fullWidth
-                    size="small"
-                    type="text"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    label={"Tiêu đề chương"}
-                    onChange={(event) => onChange(event.target.value)}
-                    value={value}
-                    error={!!errors.chapter_title?.message}
-                    helperText={
-                      errors.chapter_title?.message
-                        ? errors.chapter_title?.message
-                        : null
-                    }
-                  />
-                )}
-              />
-            )}
+
+            <Controller
+              name={"chapter_title"}
+              control={control}
+              rules={{
+                required: "Không được để trống",
+              }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  sx={{
+                    mb: 1,
+                  }}
+                  fullWidth
+                  size="small"
+                  type="text"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  label={"Tiêu đề chương"}
+                  onChange={(event) => onChange(event.target.value)}
+                  value={value}
+                  error={!!errors.chapter_title?.message}
+                  helperText={
+                    errors.chapter_title?.message
+                      ? errors.chapter_title?.message
+                      : null
+                  }
+                />
+              )}
+            />
+
             <Controller
               name={"chapter_content"}
               control={control}
