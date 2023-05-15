@@ -12,7 +12,7 @@ const Wrapper = styled(Box)(({ theme }) => ({
   borderStyle: "dashed",
   borderColor: theme.palette.mySecondary.main,
   marginBottom: theme.spacing(2),
-  padding: "6px",
+  padding: "4px",
 }));
 
 const Heading = styled("h3")(({ theme }) => ({

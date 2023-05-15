@@ -44,7 +44,7 @@ const StackWrapper = styled(Stack)(({ theme }) => ({
   borderRadius: "16px",
   overflow: "hidden",
   backgroundColor: theme.palette.myBackground.default,
-  padding: "6px",
+  padding: "4px",
 }));
 
 const RowWrapper = styled(Stack)(({ theme }) => ({
