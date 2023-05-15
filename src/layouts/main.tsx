@@ -2,15 +2,16 @@ import { SearchModal } from "@/components/searchModal";
 import { MainLayoutInterface } from "@/models";
 import { FooterSection, HeaderSection } from "@/sections";
 import { getDesignTokens } from "@/utils/theme";
-import { ThemeProvider } from "@material-ui/styles";
 import HomeSharpIcon from "@mui/icons-material/HomeSharp";
 import MenuSharpIcon from "@mui/icons-material/MenuSharp";
 import SearchSharpIcon from "@mui/icons-material/SearchSharp";
-import { Box, Stack, createTheme } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import Link from "next/link";
 import { createContext, useEffect, useState } from "react";
+import { createTheme } from "@mui/material/styles";
+import { ThemeProvider } from "@emotion/react";
 
 export const MainLayoutContext = createContext({});
 
@@ -30,6 +31,20 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
   //   []
   // );
 
+  const loadTheme = async () => {
+    let theme: any = localStorage.getItem("theme");
+    if (theme) {
+      theme = JSON.parse(theme);
+      setMode(theme.mode);
+
+      const loader: any = document.querySelector(".loader");
+      if (loader) {
+        loader.style.opacity = 0;
+        loader.style.visibility = "hidden";
+      }
+    }
+  };
+
   useEffect(() => {
     if (searchOpen) {
       (document.body.style.maxHeight = "100vh"),
@@ -40,8 +55,25 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
     }
   }, [searchOpen]);
 
+  useEffect(() => {
+    loadTheme();
+  }, []);
+
   return (
     <>
+      <Box
+        className="loader"
+        sx={{
+          position: "fixed",
+          width: "100%",
+          height: "100%",
+          top: 0,
+          left: 0,
+          backgroundColor: "background.default",
+          zIndex: 100,
+          transition: ".5s",
+        }}
+      ></Box>
       <ThemeProvider theme={theme}>
         <Box
           component={BottomNavigation}

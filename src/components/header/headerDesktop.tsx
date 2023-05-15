@@ -78,7 +78,7 @@ export function HeaderDesktop() {
                     setMode(mode === "light" ? "dark" : "light");
 
                     const themeData = {
-                      mode,
+                      mode: mode === "light" ? "dark" : "light",
                     };
                     localStorage.setItem("theme", JSON.stringify(themeData));
                   }}

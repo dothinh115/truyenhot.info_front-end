@@ -1,7 +1,7 @@
 import { Noto_Sans } from "next/font/google";
 import { createTheme } from "@mui/material/styles";
 import { PaletteMode } from "@mui/material";
-import { deepOrange, grey, indigo, yellow } from "@mui/material/colors";
+import { deepOrange, grey, indigo } from "@mui/material/colors";
 
 export const noto = Noto_Sans({
   weight: ["300", "400", "500", "700"],
@@ -93,7 +93,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
           text: {
             //màu text chính
             primary: grey[800],
-            secondary: grey[400],
+            secondary: grey[600],
             //màu text heading
             main: "#fff",
             link: "#303f9f",

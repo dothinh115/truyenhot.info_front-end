@@ -27,8 +27,9 @@ export const MainBreadcrumbs = ({ links }: Props) => {
               overflow: "hidden",
               textOverflow: "ellipsis",
               "& a": {
-                color: "text.link",
+                color: "text.secondary",
               },
+              color: "text.secondary",
             },
           }}
         >

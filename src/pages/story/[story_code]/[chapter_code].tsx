@@ -45,12 +45,10 @@ const ChapterContent = styled(Box)(({ theme }) => ({
     fontSize: "24px",
   },
   lineHeight: "2",
-  wordSpacing: ".3px",
-  "& figure": {
-    textAlign: "center",
-  },
   "& img": {
     maxWidth: "100%",
+    margin: "auto",
+    display: "block",
   },
   color: theme.palette.text.primary,
 }));
