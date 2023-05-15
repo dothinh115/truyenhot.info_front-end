@@ -125,11 +125,11 @@ export const getDesignTokens = (mode: PaletteMode) => ({
           },
           myText: {
             //màu text chính
-            primary: grey[200],
-            secondary: grey[300],
+            primary: grey[300],
+            secondary: grey[400],
             //màu text heading
             main: "#fff",
-            link: "#fff", //light: #303f9f
+            link: grey[300], //light: #303f9f
           },
         }),
   },
