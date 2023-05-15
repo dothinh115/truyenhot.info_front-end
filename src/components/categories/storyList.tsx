@@ -18,7 +18,7 @@ const UListStyled = styled("ul")(({}) => ({
 const ListItemStyled = styled("li")(({ theme }) => ({
   display: "flex",
   gap: "10px",
-  backgroundColor: theme.palette.background.secondary,
+  backgroundColor: theme.palette.background.secondary, // eslint-disable-line no-console
   padding: theme.spacing(1),
   borderWidth: "1px",
   borderStyle: "dashed",
