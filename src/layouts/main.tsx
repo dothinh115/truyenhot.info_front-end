@@ -36,12 +36,13 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
     if (theme) {
       theme = JSON.parse(theme);
       setMode(theme.mode);
-
-      const loader: any = document.querySelector(".loader");
-      if (loader) {
-        loader.style.opacity = 0;
-        loader.style.visibility = "hidden";
-      }
+    } else {
+      setMode("light");
+    }
+    const loader: any = document.querySelector(".loader");
+    if (loader) {
+      loader.style.opacity = 0;
+      loader.style.visibility = "hidden";
     }
   };
 
