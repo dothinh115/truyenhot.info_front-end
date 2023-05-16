@@ -10,6 +10,7 @@ import {
   Select,
   Stack,
   Typography,
+  IconButton,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Link from "next/link";
@@ -46,27 +47,14 @@ export const StoryChapterPicker = ({ chapterData, chapterListData }: Props) => {
   if (!chapterData) return null;
   return (
     <Stack direction={"row"} justifyContent={"center"} spacing={1} my={2}>
-      <Button
-        component={Link}
+      <IconButton
+        LinkComponent={Link}
         href={`/story/${chapterData?.story_code}/${chapterData?.prevChapter}`}
-        sx={{
-          backgroundColor: "myBackground.main",
-          color: "myText.main",
-        }}
-        variant="contained"
-        size="small"
         disabled={!chapterData?.prevChapter ? true : false}
+        color="primary"
       >
         <ArrowBackIcon />
-        <Typography
-          display={{
-            md: "block",
-            xs: "none",
-          }}
-        >
-          Chương trước
-        </Typography>
-      </Button>
+      </IconButton>
       {
         <FormControl sx={{ m: 1, width: 300 }}>
           <InputLabel>Chọn chương</InputLabel>
@@ -79,6 +67,7 @@ export const StoryChapterPicker = ({ chapterData, chapterListData }: Props) => {
             onChange={(event, child) => handleChange(event, child)}
             input={<OutlinedInput label="Chọn chương" />}
             MenuProps={MenuProps}
+            size="small"
           >
             {chapterListData?.map((chapter: any) => (
               <MenuItem key={chapter._id} value={chapter.chapter_code}>
@@ -89,27 +78,14 @@ export const StoryChapterPicker = ({ chapterData, chapterListData }: Props) => {
         </FormControl>
       }
 
-      <Button
-        component={Link}
+      <IconButton
+        LinkComponent={Link}
         href={`/story/${chapterData?.story_code}/${chapterData?.nextChapter}`}
-        sx={{
-          backgroundColor: "myBackground.main",
-          color: "myText.main",
-        }}
-        variant="contained"
-        size="small"
         disabled={!chapterData?.nextChapter ? true : false}
+        color="primary"
       >
-        <Typography
-          display={{
-            md: "block",
-            xs: "none",
-          }}
-        >
-          Chương sau
-        </Typography>
         <ArrowForwardIcon />
-      </Button>
+      </IconButton>
     </Stack>
   );
 };
