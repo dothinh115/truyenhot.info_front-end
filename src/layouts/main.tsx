@@ -39,22 +39,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
     } else {
       setMode("light");
     }
-    const loader: any = document.querySelector(".loader");
-    if (loader) {
-      loader.style.opacity = 0;
-      loader.style.visibility = "hidden";
-    }
   };
-
-  useEffect(() => {
-    if (searchOpen) {
-      (document.body.style.maxHeight = "100vh"),
-        (document.body.style.overflow = "hidden");
-    } else {
-      document.body.style.maxHeight = "unset";
-      document.body.style.overflow = "unset";
-    }
-  }, [searchOpen]);
 
   useEffect(() => {
     loadTheme();
@@ -62,19 +47,6 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
 
   return (
     <>
-      <Box
-        className="loader"
-        sx={{
-          position: "fixed",
-          width: "100%",
-          height: "100%",
-          top: 0,
-          left: 0,
-          backgroundColor: "myBackground.default",
-          zIndex: 100,
-          transition: ".5s",
-        }}
-      ></Box>
       <ThemeProvider theme={theme}>
         <Box
           component={BottomNavigation}
@@ -138,6 +110,8 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
             pb={{ md: 0, xs: 7 }}
             sx={{
               backgroundColor: "myBackground.default",
+              maxHeight: searchOpen || mobileMenuOpen ? "100vh" : "unset",
+              overflow: searchOpen || mobileMenuOpen ? "hidden" : "auto",
             }}
           >
             <HeaderSection />
