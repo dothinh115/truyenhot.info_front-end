@@ -90,7 +90,7 @@ const ItemTitle = styled(Link)(({ theme }) => ({
   fontSize: ".9em",
   display: "block",
   textAlign: "center",
-  color: alpha(theme.palette.myText.link, 0.65),
+  color: theme.palette.myText.link,
   textShadow: "1px 1px 2px rgba(0, 0, 0, .05)",
   maxHeight: "38px",
   overflow: "hidden",

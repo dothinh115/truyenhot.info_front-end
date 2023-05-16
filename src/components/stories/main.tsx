@@ -58,7 +58,7 @@ const TitleWrapper = styled("h1")(({ theme }) => ({
   wordSpacing: "2px",
   margin: "16px 0",
   padding: 0,
-  color: "#606fc3",
+  color: theme.palette.myText.heading,
   textShadow: "0px 1px 1px rgba(255, 255, 255, .2)",
   [theme.breakpoints.up("xs")]: {
     fontSize: "25px",
@@ -187,7 +187,7 @@ const ChapterListH3 = styled("h3")(({ theme }) => ({
   margin: "0",
   padding: "5px",
   paddingLeft: theme.spacing(2),
-  color: theme.palette.mySecondary.main,
+  color: theme.palette.myText.heading,
   borderBottomWidth: "1px",
   borderBottomStyle: "dashed",
   borderBottomColor: theme.palette.mySecondary.main,
@@ -247,10 +247,10 @@ const DescriptionWrapper = styled(Stack)(({ theme }) => ({
 
 const DescriptionHeading = styled("h3")(({ theme }) => ({
   margin: "0",
-  color: theme.palette.mySecondary.main,
+  color: theme.palette.myText.heading,
   borderBottomWidth: "1px",
   borderBottomStyle: "dashed",
-  borderBottomColor: theme.palette.mySecondary.main,
+  borderBottomColor: theme.palette.myBackground.main,
 }));
 
 const DescriptionContent = styled(Box)(({ theme }) => ({

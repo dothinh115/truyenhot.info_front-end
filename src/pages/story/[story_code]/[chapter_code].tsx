@@ -17,9 +17,8 @@ type Props = {
 
 const ChapterTitle = styled("h1")(({ theme }) => ({
   textAlign: "center",
-  color: "#606fc3",
+  color: theme.palette.myText.heading,
   margin: "0",
-  textShadow: "0px 1px 1px rgba(255, 255, 255, .2)",
   [theme.breakpoints.up("xs")]: {
     fontWeight: "medium",
     fontSize: "20px",

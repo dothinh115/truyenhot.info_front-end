@@ -81,7 +81,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             loading: "#fff",
             //headding
             main: "#7986cbc2",
-            headfoot: "#7986cb",
+            headfoot: indigo[300],
             imgFooter: grey[700],
             loadingBack: grey[300],
             loadingMove: grey[400],
@@ -98,7 +98,10 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             secondary: grey[700],
             //màu text heading
             main: "#fff",
-            link: "#303f9f",
+            //màu link
+            link: indigo[500],
+            //màu heading ko có nền
+            heading: indigo[300],
           },
         }
       : {
@@ -113,8 +116,8 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             input: grey[600],
             loading: grey[800],
             //headding
-            main: "#7986cb",
-            headfoot: "#7986cb",
+            main: indigo[300],
+            headfoot: indigo[300],
             imgFooter: grey[600],
             loadingBack: grey[600],
             loadingMove: grey[700],
@@ -131,7 +134,11 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             secondary: grey[400],
             //màu text heading
             main: "#fff",
-            link: grey[300], //light: #303f9f
+            //màu link
+            link: indigo[100],
+
+            //màu heading ko có nền
+            heading: indigo[100],
           },
         }),
   },

@@ -120,7 +120,6 @@ const ItemRowWrapper = styled(Stack)(({ theme }) => ({
   },
   "& a": {
     textDecoration: "none",
-    color: theme.palette.myText.link,
   },
 }));
 
@@ -141,6 +140,9 @@ const ItemSecondRow = styled(Box)(({ theme }) => ({
   },
   [theme.breakpoints.up("md")]: {
     width: "15%",
+  },
+  "& > a ": {
+    color: theme.palette.myText.link,
   },
 }));
 
@@ -168,11 +170,12 @@ const ItemIcon = styled("span")(() => ({
   },
 }));
 
-const ItemMainLink = styled(Link)(() => ({
+const ItemMainLink = styled(Link)(({ theme }) => ({
   lineHeight: "20px",
   whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",
+  color: theme.palette.myText.link,
 }));
 
 const ContainerStyled = styled(Box)(({ theme }) => ({
@@ -338,11 +341,7 @@ export const IndexRecentStories = ({ categories }: Props) => {
                           </ItemMainLink>
                         </Stack>
                       </ItemFirstRow>
-                      <ItemSecondRow
-                        sx={{
-                          "&>a": { color: "myText.link" },
-                        }}
-                      >
+                      <ItemSecondRow>
                         <Box
                           component={Link}
                           href={`/story/${story.story_code}/${story?.lastChapter?.chapter_code}`}
