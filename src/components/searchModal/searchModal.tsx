@@ -53,7 +53,6 @@ export const SearchModal = (props: Props) => {
   const { setSearchOpen, searchOpen } = useContext<any>(MainLayoutContext);
   const [loading, setLoading] = useState<boolean>(false);
   const timeout = useRef<any>(null);
-  const inputElement = useRef<HTMLInputElement>(null);
   const searchBodyElement = useRef<HTMLDivElement>(null);
   const [searchData, setSearchData] = useState<SearchDataInterface | null>(
     null
@@ -87,9 +86,6 @@ export const SearchModal = (props: Props) => {
   useEffect(() => {
     if (searchOpen && searchBodyElement?.current) {
       searchBodyElement?.current.scroll({ top: 0 });
-    }
-    if (searchOpen && inputElement?.current) {
-      inputElement.current.click();
     }
   }, [searchOpen]);
 
@@ -155,7 +151,6 @@ export const SearchModal = (props: Props) => {
                   placeholder="Tìm kiếm"
                   size="small"
                   autoComplete={"off"}
-                  ref={inputElement}
                   sx={{
                     maxHeight: "40px",
                     color: "myText.primary",
