@@ -46,12 +46,19 @@ export const StoryChapterPicker = ({ chapterData, chapterListData }: Props) => {
   };
   if (!chapterData) return null;
   return (
-    <Stack direction={"row"} justifyContent={"center"} spacing={1} my={2}>
+    <Stack
+      direction={"row"}
+      justifyContent={"center"}
+      spacing={1}
+      my={2}
+      alignItems={"center"}
+    >
       <IconButton
         LinkComponent={Link}
         href={`/story/${chapterData?.story_code}/${chapterData?.prevChapter}`}
         disabled={!chapterData?.prevChapter ? true : false}
         color="primary"
+        size="large"
       >
         <ArrowBackIcon />
       </IconButton>
@@ -79,6 +86,7 @@ export const StoryChapterPicker = ({ chapterData, chapterListData }: Props) => {
       }
 
       <IconButton
+        size="large"
         LinkComponent={Link}
         href={`/story/${chapterData?.story_code}/${chapterData?.nextChapter}`}
         disabled={!chapterData?.nextChapter ? true : false}
