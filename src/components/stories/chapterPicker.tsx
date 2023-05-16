@@ -60,7 +60,7 @@ export const StoryChapterPicker = ({ chapterData, chapterListData }: Props) => {
         color="primary"
         size="large"
       >
-        <ArrowBackIcon />
+        <ArrowBackIcon fontSize="inherit" />
       </IconButton>
       {
         <FormControl sx={{ m: 1, width: 300 }}>
@@ -92,7 +92,7 @@ export const StoryChapterPicker = ({ chapterData, chapterListData }: Props) => {
         disabled={!chapterData?.nextChapter ? true : false}
         color="primary"
       >
-        <ArrowForwardIcon />
+        <ArrowForwardIcon fontSize="inherit" />
       </IconButton>
     </Stack>
   );

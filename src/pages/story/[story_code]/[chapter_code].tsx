@@ -35,6 +35,7 @@ const ChapterName = styled("h2")(({ theme }) => ({
   color: theme.palette.myText.primary,
   fontWeight: "500",
   fontSize: "1em",
+  minHeight: "21px",
 }));
 
 const ChapterContent = styled(Box)(({ theme }) => ({
