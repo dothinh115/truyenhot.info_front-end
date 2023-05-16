@@ -50,12 +50,12 @@ const StackWrapper = styled(Stack)(({ theme }) => ({
 const RowWrapper = styled(Stack)(({ theme }) => ({
   justifyContent: "space-between",
   color: theme.palette.myText.main,
-  fontWeight: "500",
+  fontWeight: "600",
   backgroundColor: theme.palette.myBackground.main,
   borderRadius: "10px 10px 0 0",
-  padding: "8px 16px",
+  padding: "8px",
   "& div": {
-    padding: "4px",
+    padding: "4px 0",
   },
   borderWidth: "1px 1px 0 1px",
   borderStyle: "solid",
@@ -134,6 +134,7 @@ const ItemFirstRow = styled(Box)(({ theme }) => ({
 }));
 
 const ItemSecondRow = styled(Box)(({ theme }) => ({
+  padding: "4px",
   textAlign: "right",
   [theme.breakpoints.up("xs")]: {
     width: "20%",
@@ -172,7 +173,6 @@ const ItemMainLink = styled(Link)(() => ({
   whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",
-  letterSpacing: "-.5px",
 }));
 
 const ContainerStyled = styled(Box)(({ theme }) => ({

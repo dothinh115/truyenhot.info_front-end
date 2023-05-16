@@ -19,7 +19,7 @@ const ChapterTitle = styled("h1")(({ theme }) => ({
   textAlign: "center",
   color: "#606fc3",
   margin: "0",
-  textShadow: "1px 1px 1px rgba(255, 255, 255, .1)",
+  textShadow: "0px 1px 1px rgba(255, 255, 255, .2)",
   [theme.breakpoints.up("xs")]: {
     fontWeight: "medium",
     fontSize: "20px",

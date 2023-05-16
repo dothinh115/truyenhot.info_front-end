@@ -90,6 +90,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
           mySecondary: {
             //màu border
             main: "#7986cbc2",
+            borderBottom: "#ccc",
           },
           myText: {
             //màu text chính
@@ -121,7 +122,8 @@ export const getDesignTokens = (mode: PaletteMode) => ({
           // màu theme
           mySecondary: {
             //màu border
-            main: grey[300],
+            main: "#7986cbc2",
+            borderBottom: "#7986cbc2",
           },
           myText: {
             //màu text chính

@@ -17,7 +17,7 @@ const ListItemStyled = styled(ListItem)(({ theme }) => ({
   "&:not(:last-of-type)": {
     borderBottomWidth: "1px",
     borderBottomStyle: "dashed",
-    borderBottomColor: theme.palette.mySecondary.main,
+    borderBottomColor: theme.palette.mySecondary.borderBottom,
   },
 }));
 

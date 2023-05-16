@@ -59,7 +59,7 @@ const TitleWrapper = styled("h1")(({ theme }) => ({
   margin: "16px 0",
   padding: 0,
   color: "#606fc3",
-  textShadow: "1px 1px 1px rgba(255, 255, 255, .1)",
+  textShadow: "0px 1px 1px rgba(255, 255, 255, .2)",
   [theme.breakpoints.up("xs")]: {
     fontSize: "25px",
   },
@@ -256,7 +256,7 @@ const DescriptionHeading = styled("h3")(({ theme }) => ({
 const DescriptionContent = styled(Box)(({ theme }) => ({
   fontSize: "13px",
   marginTop: theme.spacing(1),
-  color: theme.palette.text.primary,
+  color: theme.palette.myText.primary,
 }));
 
 type Props = {
