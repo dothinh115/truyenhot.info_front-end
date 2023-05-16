@@ -155,13 +155,13 @@ export const HomeHotStories = ({ categories }: Props) => {
             xs: "100%",
           }}
         >
-          <InputLabel size="small">Tất cả</InputLabel>
           <Select
             size="small"
             value={cateValue ? cateValue.value : ""}
             onChange={(event: SelectChangeEvent, child: any) =>
               handleChange(event, child)
             }
+            displayEmpty
             title="Chọn thể loại"
             input={
               <OutlinedInput
@@ -169,7 +169,6 @@ export const HomeHotStories = ({ categories }: Props) => {
                   bgcolor: "myBackground.input",
                 }}
                 size="small"
-                label="Tất cả"
               />
             }
             MenuProps={MenuProps}
