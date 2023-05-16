@@ -27,10 +27,14 @@ export const MainBreadcrumbs = ({ links }: Props) => {
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
-              "& a": {
+              "&>a, &>span": {
                 color: "myText.secondary",
+                fontSize: ".9em",
               },
               color: "myText.secondary",
+              "&.MuiBreadcrumbs-separator": {
+                margin: "0",
+              },
             },
           }}
         >
