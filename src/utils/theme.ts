@@ -145,25 +145,6 @@ declare module "@mui/material/styles" {
     myText?: any;
   }
   interface ThemeOptions {
-    // text: {
-    //   primary: string;
-    //   secondary: string;
-    //   disabled: string;
-    //   main?: string;
-    //   link?: string;
-    // };
-    // background: {
-    //   default: string;
-    //   paper: string;
-    //   secondary?: string;
-    //   input?: string;
-    //   loading?: string;
-    //   main?: string;
-    //   headfoot?: string;
-    //   imgFooter?: string;
-    //   loadingBack?: string;
-    //   loadingMove?: string;
-    // };
     myPrimary?: any;
     myBackground?: any;
     mySecondary?: any;

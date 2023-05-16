@@ -14,6 +14,7 @@ export const MainBreadcrumbs = ({ links }: Props) => {
       justifyContent={"center"}
       bgcolor={"myBackground.paper"}
       py={1}
+      sx={{ transition: "all .2s" }}
     >
       <Container maxWidth={"md"}>
         <Breadcrumbs

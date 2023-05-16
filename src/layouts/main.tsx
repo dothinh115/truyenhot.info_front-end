@@ -112,6 +112,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
               backgroundColor: "myBackground.default",
               maxHeight: searchOpen || mobileMenuOpen ? "100vh" : "unset",
               overflow: searchOpen || mobileMenuOpen ? "hidden" : "auto",
+              transition: "all .2s linear",
             }}
           >
             <HeaderSection />
