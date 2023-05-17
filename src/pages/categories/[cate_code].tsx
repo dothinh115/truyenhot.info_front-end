@@ -122,7 +122,7 @@ const CategoriesDetail = ({
                 {cate_title}
               </Box>
               <Box className={"hr"} my={2} />
-              {!storiesIsValidating ? (
+              {storiesIsValidating ? (
                 cateListPreRender()
               ) : (
                 <RowStory storiesData={storiesData} />
