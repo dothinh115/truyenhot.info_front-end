@@ -212,7 +212,7 @@ const ListStyled = styled(List)(({ theme }) => ({
     borderBottomStyle: "dashed",
     borderBottomColor: theme.palette.mySecondary.main,
     padding: theme.spacing(0, 2),
-    minHeight: "35px",
+    minHeight: "37px",
     "&:last-of-type": {
       borderBottom: "none",
     },

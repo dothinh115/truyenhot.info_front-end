@@ -6,7 +6,7 @@ type Props = {};
 
 const ListItemLoading = styled(ListItem)(({ theme }) => ({
   borderBottom: "1px dashed #ccc",
-  height: "45px",
+  height: "37px",
   padding: 0,
   animationFillMode: "forwards",
   animationIterationCount: "infinite",
