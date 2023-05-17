@@ -19,10 +19,9 @@ import { useContext } from "react";
 
 type Props = {
   categories: CategoryInterface[];
-  stats: BaseStatsInterface;
 };
 
-const Index = ({ categories, stats }: Props) => {
+const Index = ({ categories }: Props) => {
   useContext<any>(MainLayoutContext);
   const breadCrumbs = [
     <Stack
@@ -80,7 +79,7 @@ const Index = ({ categories, stats }: Props) => {
             >
               <ReadingStoriesHistory />
               <CategoriesSidebar categories={categories} />
-              <BaseStats stats={stats} />
+              <BaseStats />
             </Box>
           </Stack>
           <HomeFullStories categories={categories} />
@@ -92,16 +91,13 @@ const Index = ({ categories, stats }: Props) => {
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const revalidate = 1 * 60 * 60;
-  const baseStatsResponse = await fetch(`${apiURL}/api/stats/getBaseStats`);
   const categoriesResponse = await fetch(`${apiURL}/api/categories/getAll`);
 
-  const baseStats = await baseStatsResponse.json();
   const categories = await categoriesResponse.json();
 
   return {
     props: {
       categories: categories.result,
-      stats: baseStats.result,
     },
     revalidate,
   };

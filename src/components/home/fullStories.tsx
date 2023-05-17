@@ -19,7 +19,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import { FullStoriesLoading } from "../loading/fullStoriesLoading";
 import { alpha } from "@mui/material";
-
+import Image from "next/image";
 const ITEM_HEIGHT = 36;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -60,12 +60,6 @@ const ItemLinkWrapper = styled(Link)(() => ({
   display: "block",
   borderRadius: "5px",
   overflow: "hidden",
-}));
-
-const ItemImg = styled("img")(() => ({
-  width: "100%",
-  height: "100%",
-  objectFit: "cover",
 }));
 
 const ItemChapter = styled(Box)(({ theme }) => ({
@@ -248,7 +242,12 @@ export const HomeFullStories = ({ categories }: Props) => {
               return (
                 <Carousel.Item key={story._id}>
                   <ItemLinkWrapper href={`/story/${story.story_code}`}>
-                    <ItemImg src={story.story_cover} alt={story.story_title} />
+                    <Image
+                      fill={true}
+                      sizes="cover"
+                      src={story.story_cover}
+                      alt={story.story_title}
+                    />
                     <ItemChapter>Full - {story._count} chương</ItemChapter>
                   </ItemLinkWrapper>
                   <ItemTitle href={`/story/${story.story_code}`}>

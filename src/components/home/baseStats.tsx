@@ -2,9 +2,10 @@ import { BaseStatsInterface } from "@/models/home";
 import { Stack } from "@mui/material";
 import { Box } from "@mui/system";
 import { styled } from "@mui/material/styles";
-type Props = {
-  stats?: BaseStatsInterface;
-};
+import useSWR from "swr";
+import CircularProgress from "@mui/material/CircularProgress";
+
+type Props = {};
 
 const Wrapper = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.myBackground.default,
@@ -58,7 +59,9 @@ const ListItem = styled("li")(({ theme }) => ({
   backgroundColor: theme.palette.myBackground.secondary,
 }));
 
-export const BaseStats = ({ stats }: Props) => {
+export const BaseStats = (props: Props) => {
+  const { data: baseStatsData, isValidating: baseStatsIsValidating } =
+    useSWR(`/stats/getBaseStats`);
   return (
     <>
       <Stack spacing={2}>
@@ -68,17 +71,35 @@ export const BaseStats = ({ stats }: Props) => {
           <UList>
             <ListItem>
               <Box>Tổng số truyện:</Box>
-              <Box>{stats?.totalStories}</Box>
+              <Box>
+                {baseStatsIsValidating ? (
+                  <CircularProgress size={"1em"} />
+                ) : (
+                  baseStatsData?.result.totalStories
+                )}
+              </Box>
             </ListItem>
 
             <ListItem>
               <Box>Số chương truyện:</Box>
-              <Box>{stats?.totalChapters}</Box>
+              <Box>
+                {baseStatsIsValidating ? (
+                  <CircularProgress size={"1em"} />
+                ) : (
+                  baseStatsData?.result.totalChapters
+                )}
+              </Box>
             </ListItem>
 
             <ListItem>
               <Box>Lượt xem:</Box>
-              <Box>{stats?.totalViews}</Box>
+              <Box>
+                {baseStatsIsValidating ? (
+                  <CircularProgress size={"1em"} />
+                ) : (
+                  baseStatsData?.result.totalViews
+                )}
+              </Box>
             </ListItem>
           </UList>
         </Wrapper>

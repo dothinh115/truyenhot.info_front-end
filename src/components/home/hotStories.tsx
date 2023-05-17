@@ -20,7 +20,7 @@ import useSWR from "swr";
 import { HotStoriesLoading } from "../loading";
 import { styled } from "@mui/material/styles";
 import { alpha } from "@mui/material";
-
+import Image from "next/image";
 const BoxWrapper = styled(Link)(() => ({
   width: "100%",
   padding: 0,
@@ -30,12 +30,6 @@ const BoxWrapper = styled(Link)(() => ({
   display: "block",
   borderRadius: "5px",
   overflow: "hidden",
-}));
-
-const BoxImg = styled("img")(() => ({
-  width: "100%",
-  height: "100%",
-  objectFit: "cover",
 }));
 
 const BoxTitle = styled(Box)(({ theme }) => ({
@@ -223,7 +217,12 @@ export const HomeHotStories = ({ categories }: Props) => {
                     href={`/story/${story.story_code}`}
                     title={story.story_title}
                   >
-                    <BoxImg src={story.story_cover} alt={story.story_title} />
+                    <Image
+                      fill={true}
+                      sizes="cover"
+                      src={story.story_cover}
+                      alt={story.story_title}
+                    />
                     <BoxTitle>{story.story_title}</BoxTitle>
                   </BoxWrapper>
                 </Carousel.Item>
