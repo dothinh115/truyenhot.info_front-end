@@ -198,6 +198,7 @@ const ListStyled = styled(List)(({ theme }) => ({
   overflow: "auto",
   backgroundColor: theme.palette.myBackground.secondary,
   overflowY: "auto",
+  padding: 0,
   "&::-webkit-scrollbar": {
     borderRadius: theme.spacing(0, 2, 2, 0),
     backgroundColor: "transparent",
@@ -210,8 +211,8 @@ const ListStyled = styled(List)(({ theme }) => ({
     borderBottomWidth: "1px",
     borderBottomStyle: "dashed",
     borderBottomColor: theme.palette.mySecondary.main,
-    padding: theme.spacing(1, 2),
-    height: "35px",
+    padding: theme.spacing(0, 2),
+    minHeight: "35px",
     "&:last-of-type": {
       borderBottom: "none",
     },
