@@ -39,6 +39,7 @@ const WrapperHeadding = styled("h4")(({ theme }) => ({
   margin: theme.spacing(1, 0),
   borderBottom: `1px dashed ${theme.palette.mySecondary.borderBottom}`,
   paddingBottom: theme.spacing(1),
+  width: "100%",
 }));
 
 export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
@@ -107,11 +108,11 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
             />
           </Wrapper>
           <Wrapper alignItems={"flex-start"}>
+            <WrapperHeadding>Thể loại</WrapperHeadding>
             <Box
               maxHeight={cateShow ? "unset" : "95px"}
               overflow={cateShow ? "unset" : "hidden"}
             >
-              <WrapperHeadding>Thể loại</WrapperHeadding>
               {categoriesList?.result.map((cate: CategoryInterface) => {
                 return (
                   <Chip

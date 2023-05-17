@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, alpha } from "@mui/material";
 import { styled } from "@mui/material/styles";
 type Props = {};
 
@@ -14,28 +14,27 @@ const LoadingWrapper = styled(Box)(({ theme }) => ({
   animationName: "story-list-loading",
   animationTimingFunction: "linear",
   backgroundColor: theme.palette.myBackground.loadingBack,
-  backgroundImage: `linear-gradient(to right, #eee 8%, #ddd 18%, #eee 33%)`,
+  backgroundImage: `linear-gradient(to right, ${theme.palette.myBackground.loadingBack} 8%, ${theme.palette.myBackground.loadingMove} 18%, ${theme.palette.myBackground.loadingBack} 33%)`,
   backgroundSize: "200%",
-  height: "96px",
+  height: "100px",
   position: "relative",
   "&>div": {
     background: theme.palette.myBackground.secondary,
     position: "absolute",
   },
 }));
+const LoadingItem = styled(Box)(({ theme }) => ({
+  boxShadow: `0 0 2px ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
+  marginBottom: theme.spacing(1),
+  minHeight: "88px",
+  borderRadius: theme.spacing(2),
+  overflow: "hidden",
+}));
 
 export const StoryListLoading = (props: Props) => {
   return (
     <Box m={0} p={0}>
-      <Box
-        sx={{
-          border: "1px dashed #7986cba6",
-        }}
-        mb={1}
-        minHeight={"88px"}
-        borderRadius={"15px"}
-        overflow={"hidden"}
-      >
+      <LoadingItem>
         <LoadingWrapper>
           <Box sx={{ top: 0, left: 0, right: 0, height: "10px" }}></Box>
           <Box sx={{ bottom: 0, left: 0, right: 0, height: "10px" }}></Box>
@@ -136,7 +135,7 @@ export const StoryListLoading = (props: Props) => {
             }}
           ></Box>
         </LoadingWrapper>
-      </Box>
+      </LoadingItem>
     </Box>
   );
 };

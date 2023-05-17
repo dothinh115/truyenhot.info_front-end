@@ -27,9 +27,7 @@ const ListItemStyled = styled("li")(({ theme }) => ({
   marginBottom: theme.spacing(1),
   borderRadius: theme.spacing(2),
   overflow: "hidden",
-  [theme.breakpoints.up("xs")]: {
-    maxHeight: "100px",
-  },
+  minHeight: "100px",
 }));
 
 const ListItemInnerWrapper = styled(Stack)(({ theme }) => ({
@@ -45,7 +43,7 @@ const ListItemInnerWrapper = styled(Stack)(({ theme }) => ({
 
 const ListItemInnerImg = styled("img")(({ theme }) => ({
   width: "100%",
-  maxHeight: "90px",
+  height: "90px",
   objectFit: "cover",
   borderRadius: theme.spacing(2),
 }));
