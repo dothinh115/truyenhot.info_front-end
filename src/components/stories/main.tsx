@@ -22,6 +22,7 @@ import {
   List,
   ListItemIcon,
   Stack,
+  alpha,
 } from "@mui/material";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -174,9 +175,7 @@ const UListStyled = styled("ul")(({ theme }) => ({
 }));
 
 const ChapterListWrapper = styled(Box)(({ theme }) => ({
-  borderWidth: "1px",
-  borderStyle: "dashed",
-  borderColor: theme.palette.mySecondary.main,
+  boxShadow: `0 0 2px ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
   borderRadius: theme.spacing(2),
   backgroundColor: theme.palette.myBackground.secondary,
   margin: theme.spacing(2, 0),
@@ -227,9 +226,7 @@ const ListStyled = styled(List)(({ theme }) => ({
 }));
 
 const ULWrapper = styled(Stack)(({ theme }) => ({
-  borderWidth: "1px",
-  borderStyle: "dashed",
-  borderColor: theme.palette.mySecondary.main,
+  boxShadow: `0 0 2px ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
   padding: theme.spacing(1),
   borderRadius: theme.spacing(2),
   backgroundColor: theme.palette.myBackground.secondary,
@@ -237,9 +234,7 @@ const ULWrapper = styled(Stack)(({ theme }) => ({
 }));
 
 const DescriptionWrapper = styled(Stack)(({ theme }) => ({
-  borderWidth: "1px",
-  borderStyle: "dashed",
-  borderColor: theme.palette.mySecondary.main,
+  boxShadow: `0 0 2px ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
   margin: theme.spacing(2, 0),
   padding: theme.spacing(1),
   backgroundColor: theme.palette.myBackground.secondary,

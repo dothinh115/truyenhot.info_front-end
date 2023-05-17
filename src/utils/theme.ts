@@ -91,6 +91,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             //màu border
             main: "#7986cbc2",
             borderBottom: "#ccc",
+            boxShadow: grey[900],
           },
           myText: {
             //màu text chính
@@ -127,6 +128,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             //màu border
             main: "#7986cbc2",
             borderBottom: "#7986cbc2",
+            boxShadow: grey[100],
           },
           myText: {
             //màu text chính
