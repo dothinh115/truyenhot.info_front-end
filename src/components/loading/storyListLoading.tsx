@@ -122,7 +122,7 @@ export const StoryListLoading = (props: Props) => {
           ></Box>
           <Box
             sx={{
-              height: "10px",
+              height: "12px",
               top: "calc(10px + 24px + 10px + 12px + 10px + 12px)",
               left: {
                 md: "20%",
