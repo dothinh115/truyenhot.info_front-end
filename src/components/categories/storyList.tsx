@@ -1,7 +1,7 @@
 import { StoriesInCategoryInterface } from "@/models/categories";
 import CreateIcon from "@mui/icons-material/Create";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography, alpha } from "@mui/material";
 import Link from "next/link";
 import { styled } from "@mui/material/styles";
 type Props = {
@@ -20,9 +20,7 @@ const ListItemStyled = styled("li")(({ theme }) => ({
   gap: "10px",
   backgroundColor: theme.palette.myBackground.secondary,
   padding: theme.spacing(1),
-  borderWidth: "1px",
-  borderStyle: "dashed",
-  borderColor: theme.palette.mySecondary.main,
+  boxShadow: `0 0 2px ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
   flexDirection: "row",
   spacing: theme.spacing(1),
   alignItems: "center",
@@ -80,6 +78,7 @@ const ListItemInnerAuthor = styled(Link)(({ theme }) => ({
   "& svg": {
     marginRight: theme.spacing(1),
     fontSize: "20px",
+    color: theme.palette.myText.primary,
   },
 }));
 

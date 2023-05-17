@@ -31,6 +31,7 @@ const Heading = styled("h3")(({ theme }) => ({
   borderWidth: "1px 1px 0 1px",
   borderStyle: "solid",
   borderColor: theme.palette.myBackground.main,
+  textTransform: "uppercase",
 }));
 
 const UList = styled("ul")(({ theme }) => ({

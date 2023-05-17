@@ -122,6 +122,7 @@ export const HomeHotStories = ({ categories }: Props) => {
           m={0}
           sx={{
             color: "myText.primary",
+            textTransform: "uppercase",
           }}
         >
           Truyện hot

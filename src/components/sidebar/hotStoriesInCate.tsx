@@ -33,6 +33,14 @@ const ListItemTextStyled = styled(ListItemText)(({ theme }) => ({
   },
 }));
 
+const Headding = styled("h3")(({ theme }) => ({
+  padding: theme.spacing(1),
+  margin: theme.spacing(0),
+  borderBottom: `1px dashed ${theme.palette.mySecondary.borderBottom}`,
+  textTransform: "uppercase",
+  color: theme.palette.myText.primary,
+}));
+
 type Props = {
   category: CategoryInterface;
   hotStoriesInCategory: HotStoriesInCategoriesInterface[];
@@ -42,16 +50,7 @@ export const HotStoriesInCate = ({ category, hotStoriesInCategory }: Props) => {
   return (
     <>
       <Box>
-        <Box
-          component={"h3"}
-          p={1}
-          my={0}
-          borderBottom={"1px dashed #ccc"}
-          textTransform={"uppercase"}
-          color={"myText.primary"}
-        >
-          Truyện {category?.cate_title} Hot
-        </Box>
+        <Headding>Truyện {category?.cate_title} Hot</Headding>
         <Box>
           <Box component={List} py={0} dense={true}>
             {hotStoriesInCategory?.map(

@@ -26,8 +26,9 @@ const H3Styled = styled("h3")(({ theme }) => ({
   margin: "0",
   borderBottomWidth: "1px",
   borderBottomStyle: "dashed",
-  borderBottomColor: theme.palette.mySecondary.main,
+  borderBottomColor: theme.palette.mySecondary.borderBottom,
   color: theme.palette.myText.primary,
+  textTransform: "uppercase",
 }));
 
 const ListItemTextStyled = styled(ListItemText)(({ theme }) => ({

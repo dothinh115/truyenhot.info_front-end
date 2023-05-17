@@ -65,6 +65,7 @@ export const ReadingStoriesHistory = (props: Props) => {
           borderBottom={"1px dashed #ccc"}
           sx={{
             color: "myText.primary",
+            textTransform: "uppercase",
           }}
         >
           Truyện đang đọc

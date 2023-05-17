@@ -139,6 +139,7 @@ export const HomeFullStories = ({ categories }: Props) => {
           m={0}
           sx={{
             color: "myText.primary",
+            textTransform: "uppercase",
           }}
         >
           Truyện đã hoàn thành

@@ -25,13 +25,20 @@ type Props = {
 
 const Wrapper = styled(Stack)(({ theme }) => ({
   flexDirection: "row",
-  margin: "8px 0",
+  margin: theme.spacing(1, 0),
   color: theme.palette.myText.primary,
   backgroundColor: theme.palette.myBackground.secondary,
   padding: "8px",
   borderRadius: "16px",
   boxShadow: `0 0 2px ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
   flexWrap: "wrap",
+}));
+
+const WrapperHeadding = styled("h4")(({ theme }) => ({
+  color: theme.palette.myText.primary,
+  margin: theme.spacing(1, 0),
+  borderBottom: `1px dashed ${theme.palette.mySecondary.borderBottom}`,
+  paddingBottom: theme.spacing(1),
 }));
 
 export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
@@ -104,6 +111,7 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
               maxHeight={cateShow ? "unset" : "95px"}
               overflow={cateShow ? "unset" : "hidden"}
             >
+              <WrapperHeadding>Thể loại</WrapperHeadding>
               {categoriesList?.result.map((cate: CategoryInterface) => {
                 return (
                   <Chip

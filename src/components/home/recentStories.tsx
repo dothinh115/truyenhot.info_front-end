@@ -244,7 +244,11 @@ export const IndexRecentStories = ({ categories }: Props) => {
         gap={"10px"}
         justifyContent={"space-between"}
       >
-        <Box component={"h2"} m={0} sx={{ color: "myText.primary" }}>
+        <Box
+          component={"h2"}
+          m={0}
+          sx={{ color: "myText.primary", textTransform: "uppercase" }}
+        >
           Truyện mới cập nhật
           <ReloadButtonStyled
             type={"button"}
