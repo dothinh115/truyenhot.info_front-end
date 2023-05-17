@@ -1,12 +1,5 @@
 import { MainLayoutContext } from "@/layouts";
-import {
-  Container,
-  Stack,
-  Box,
-  Typography,
-  AppBar,
-  IconButton,
-} from "@mui/material";
+import { Container, Stack, Box, AppBar, IconButton } from "@mui/material";
 import { useContext, useEffect, useRef } from "react";
 import { Drawer } from "./drawer";
 import { SearchBar } from "./searchBar";
@@ -18,23 +11,49 @@ import { styled } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 
 const AppBarStyled = styled(AppBar)(({ theme }) => ({
+  position: "static",
   backgroundColor: theme.palette.myBackground.headfoot,
   height: "50px",
-  position: "fixed",
-  width: "100%",
-  top: 0,
-  left: 0,
-  zIndex: 50,
 }));
 
 export function Header() {
   const { mobileMenuOpen, setMobileMenuOpen, setMode, mode, setSearchOpen } =
     useContext<any>(MainLayoutContext);
 
+  const appBarEl = useRef<HTMLDivElement>(null);
+  const yOffset = useRef<number>(0);
+
+  const scrollHandle = () => {
+    setTimeout(() => {
+      yOffset.current = window.pageYOffset;
+    }, 200);
+
+    if (window.pageYOffset >= 50 && appBarEl?.current) {
+      if (window.pageYOffset > yOffset.current + 100) {
+        appBarEl?.current!.classList.remove("appbar-fixed");
+      }
+      if (window.pageYOffset <= yOffset.current) {
+        appBarEl?.current!.classList.add("appbar-fixed");
+      }
+    } else {
+      appBarEl?.current!.classList.remove("appbar-fixed");
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", scrollHandle);
+    return () => {
+      window.removeEventListener("scroll", scrollHandle);
+    };
+  });
+
+  useEffect(() => {
+    scrollHandle();
+  }, [mode]);
   return (
     <>
       <Drawer open={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} />
-      <AppBarStyled>
+      <AppBarStyled ref={appBarEl}>
         <Stack
           direction={"row"}
           justifyContent={"center"}
@@ -74,6 +93,12 @@ export function Header() {
               >
                 <IconButton
                   size="small"
+                  sx={{
+                    display: {
+                      md: "inline-flex",
+                      xs: "none",
+                    },
+                  }}
                   onClick={() => {
                     setMode(mode === "light" ? "dark" : "light");
                     const themeData = {

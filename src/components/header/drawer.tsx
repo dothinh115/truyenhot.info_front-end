@@ -5,7 +5,9 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import { Box, Button, Chip, IconButton, Stack } from "@mui/material";
 import Link from "next/link";
-import { useContext, useState } from "react";
+import { useState, useContext } from "react";
+import Switch from "@mui/material/Switch";
+
 import useSWR from "swr";
 type Props = {
   open: boolean;
@@ -14,7 +16,7 @@ type Props = {
 
 export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
   const [cateShow, setCateShow] = useState<boolean>(false);
-
+  const { mode, setMode } = useContext<any>(MainLayoutContext);
   const { data: categoriesList } = useSWR(`/categories/getAll`, {
     dedupingInterval: 60 * 60 * 24,
   });
@@ -75,9 +77,34 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
               color: "myText.primary",
             }}
           >
+            Giao diện
+          </Box>
+          <Box className={"hr"} />
+          <Stack
+            direction={"row"}
+            my={1}
+            sx={{
+              color: "myText.primary",
+            }}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
+            <Box component={"span"}>Giao diện tối</Box>
+            <Switch
+              checked={mode === "dark" ? true : false}
+              color="primary"
+              onClick={() => setMode(mode === "light" ? "dark" : "light")}
+            />
+          </Stack>
+          <Box
+            component={"h3"}
+            sx={{
+              color: "myText.primary",
+            }}
+          >
             Thể loại
           </Box>
-          <Box className={"hr"} my={2} />
+          <Box className={"hr"} />
           <Box
             my={2}
             maxHeight={cateShow ? "unset" : "80px"}
@@ -110,8 +137,6 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
               {cateShow ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
             </Button>
           </Stack>
-
-          <Box className={"hr"} my={2} />
         </Stack>
       </Box>
     </>

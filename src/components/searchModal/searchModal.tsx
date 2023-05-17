@@ -178,7 +178,7 @@ export const SearchModal = (props: Props) => {
             </IconButton>
           </Stack>
         </Stack>
-        <Box className={"hr"} my={2} />
+        <Box className={"hr"} my={1} />
         <Stack maxHeight={"100%"} overflow={"auto"}>
           {loading ? (
             loadingRender()

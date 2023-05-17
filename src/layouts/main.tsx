@@ -55,7 +55,6 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
           <Stack
             minHeight={"100vh"}
             pb={{ md: 0, xs: 7 }}
-            pt={"50px"}
             sx={{
               backgroundColor: "myBackground.default",
               maxHeight: searchOpen || mobileMenuOpen ? "100vh" : "unset",
