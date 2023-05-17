@@ -18,8 +18,6 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
   const { data: categoriesList } = useSWR(`/categories/getAll`, {
     dedupingInterval: 60 * 60 * 24,
   });
-  const { setNavitionValue } = useContext<any>(MainLayoutContext);
-
   return (
     <>
       <Box
@@ -55,7 +53,6 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
             <IconButton
               onClick={() => {
                 setMobileMenuOpen(false);
-                setNavitionValue("");
               }}
               size="small"
               color="secondary"

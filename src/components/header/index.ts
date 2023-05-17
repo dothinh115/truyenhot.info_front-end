@@ -1,3 +1,3 @@
-export * from "./headerDesktop";
+export * from "./header";
 export * from "./drawer";
 export * from "./searchBar";
