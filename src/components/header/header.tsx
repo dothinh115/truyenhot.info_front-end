@@ -29,7 +29,7 @@ export function Header() {
     }, 200);
 
     if (window.pageYOffset >= 50 && appBarEl?.current) {
-      if (window.pageYOffset > yOffset.current + 100) {
+      if (window.pageYOffset > yOffset.current) {
         appBarEl?.current!.classList.remove("appbar-fixed");
       }
       if (window.pageYOffset < yOffset.current) {
