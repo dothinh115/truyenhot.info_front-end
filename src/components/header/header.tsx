@@ -18,38 +18,23 @@ import { styled } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 
 const AppBarStyled = styled(AppBar)(({ theme }) => ({
-  position: "static",
   backgroundColor: theme.palette.myBackground.headfoot,
   height: "50px",
+  position: "fixed",
+  width: "100%",
+  top: 0,
+  left: 0,
+  zIndex: 50,
 }));
 
 export function Header() {
   const { mobileMenuOpen, setMobileMenuOpen, setMode, mode, setSearchOpen } =
     useContext<any>(MainLayoutContext);
 
-  const appBarEl = useRef<HTMLDivElement>(null);
-  const yOffset = useRef<number>(0);
-
-  const scrollHandle = () => {
-    yOffset.current = window.pageYOffset;
-    if (yOffset.current >= 50 && appBarEl?.current) {
-      appBarEl.current.classList.add("appbar-fixed");
-    } else {
-      appBarEl?.current!.classList.remove("appbar-fixed");
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", scrollHandle);
-    return () => {
-      window.removeEventListener("scroll", scrollHandle);
-    };
-  }, []);
-
   return (
     <>
       <Drawer open={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} />
-      <AppBarStyled ref={appBarEl}>
+      <AppBarStyled>
         <Stack
           direction={"row"}
           justifyContent={"center"}

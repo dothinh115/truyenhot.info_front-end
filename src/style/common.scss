@@ -15,14 +15,6 @@ a {
   border-bottom: 1px solid #9e9e9e;
 }
 
-.appbar-fixed {
-  position: fixed;
-  width: 100%;
-  height: 50px;
-  top: 0;
-  left: 0;
-}
-
 @keyframes row-loading {
   from {
     left: -130%;

@@ -33,6 +33,7 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
         sx={{
           transition: "left .2s ease",
         }}
+        top={0}
       >
         <Stack
           direction={"row"}
