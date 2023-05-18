@@ -53,7 +53,7 @@ export const SearchModal = (props: Props) => {
   const { setSearchOpen, searchOpen } = useContext<any>(MainLayoutContext);
   const [loading, setLoading] = useState<boolean>(false);
   const timeout = useRef<any>(null);
-  const inputEl = useRef<HTMLFormElement>(null);
+  const inputEl = useRef<HTMLDivElement>(null);
   const searchBodyElement = useRef<HTMLDivElement>(null);
   const [searchData, setSearchData] = useState<SearchDataInterface | null>(
     null
@@ -100,19 +100,19 @@ export const SearchModal = (props: Props) => {
 
   const scrollHandle = () => {
     console.log(searchBodyElement?.current!.scrollTop);
-    if (searchBodyElement?.current!.scrollTop > 42) {
+    if (searchBodyElement?.current!.scrollTop > 74) {
       if (inputEl?.current) {
         inputEl!.current.style.position = "fixed";
         inputEl!.current.style.top = "0";
         inputEl!.current.style.left = "0";
         inputEl!.current.style.width = "100%";
         inputEl!.current.style.zIndex = "50";
-        inputEl!.current.style.padding = "0 8px";
+        inputEl!.current.style.padding = "12px 8px";
       }
     } else {
       if (inputEl?.current) {
         inputEl!.current.style.position = "static";
-        inputEl!.current.style.padding = "0";
+        inputEl!.current.style.padding = "8px 0";
       }
     }
   };
@@ -159,67 +159,75 @@ export const SearchModal = (props: Props) => {
         overflow={"auto"}
       >
         <Stack
-          component={"form"}
-          position={"relative"}
           direction={"row"}
           ref={inputEl}
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
+          py={1}
           sx={{
-            width: {
-              md: "25%",
-              xs: "100%",
-            },
             backgroundColor: "myBackground.default",
           }}
         >
-          <IconButton onClick={() => setSearchOpen(false)}>
-            <ArrowBackIosIcon />
-          </IconButton>
           <Stack
+            component={"form"}
+            position={"relative"}
             direction={"row"}
-            border={"1px solid #ccc"}
-            width={"100%"}
-            borderRadius={"16px"}
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+            sx={{
+              width: {
+                md: "25%",
+                xs: "100%",
+              },
+              backgroundColor: "myBackground.default",
+            }}
           >
-            <Controller
-              name={"keywords"}
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <StyledInputBase
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    onChange(e);
-                    onChangeHandle(e);
-                  }}
-                  value={value}
-                  placeholder="Tìm kiếm"
-                  size="small"
-                  autoComplete={"off"}
-                  sx={{
-                    maxHeight: "40px",
-                    color: "myText.primary",
-                    flexGrow: {
-                      md: 0,
-                      xs: 1,
-                    },
-                  }}
-                />
-              )}
-            />
-            <IconButton
-              sx={{
-                "& svg": {
-                  color: "myText.primary",
-                },
-                visibility: getValues("keywords") ? "visible" : "hidden",
-              }}
-              onClick={() => {
-                reset({ keywords: "" });
-              }}
-            >
-              <ClearIcon />
+            <IconButton onClick={() => setSearchOpen(false)}>
+              <ArrowBackIosIcon />
             </IconButton>
+            <Stack
+              direction={"row"}
+              border={"1px solid #ccc"}
+              width={"100%"}
+              borderRadius={"16px"}
+            >
+              <Controller
+                name={"keywords"}
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <StyledInputBase
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      onChange(e);
+                      onChangeHandle(e);
+                    }}
+                    value={value}
+                    placeholder="Tìm kiếm"
+                    size="small"
+                    autoComplete={"off"}
+                    sx={{
+                      maxHeight: "40px",
+                      color: "myText.primary",
+                      flexGrow: {
+                        md: 0,
+                        xs: 1,
+                      },
+                    }}
+                  />
+                )}
+              />
+              <IconButton
+                sx={{
+                  "& svg": {
+                    color: "myText.primary",
+                  },
+                  visibility: getValues("keywords") ? "visible" : "hidden",
+                }}
+                onClick={() => {
+                  reset({ keywords: "" });
+                }}
+              >
+                <ClearIcon />
+              </IconButton>
+            </Stack>
           </Stack>
         </Stack>
 
