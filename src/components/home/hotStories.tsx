@@ -201,7 +201,14 @@ export const HomeHotStories = ({ categories }: Props) => {
             loop: true,
           },
           {
-            breakpoint: 500,
+            breakpoint: 428,
+            cols: 3,
+            rows: 2,
+            gap: 10,
+            loop: true,
+          },
+          {
+            breakpoint: 390,
             cols: 2,
             rows: 2,
             gap: 10,

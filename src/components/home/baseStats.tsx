@@ -1,8 +1,7 @@
-import { BaseStatsInterface } from "@/models/home";
-import { Stack, alpha, Box } from "@mui/material";
+import { Box, Stack, alpha } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import { styled } from "@mui/material/styles";
 import useSWR from "swr";
-import CircularProgress from "@mui/material/CircularProgress";
 
 type Props = {};
 
@@ -27,7 +26,7 @@ const Heading = styled("h3")(({ theme }) => ({
   fontSize: "14px",
 }));
 
-const UList = styled("ul")(({ theme }) => ({
+const UList = styled("ul")(() => ({
   padding: "0",
   margin: 0,
 }));

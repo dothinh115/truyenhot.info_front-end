@@ -229,7 +229,7 @@ export const HomeFullStories = ({ categories }: Props) => {
             loop: true,
           },
           {
-            breakpoint: 400,
+            breakpoint: 428,
             cols: 3,
             rows: 4,
             gap: 10,

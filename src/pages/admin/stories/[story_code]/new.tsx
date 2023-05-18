@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
 import { useRef } from "react";
+import { AdminLayout } from "@/layouts";
 
 type Props = {};
 interface ChapterCreateInterface {
@@ -317,5 +318,7 @@ const AdminNewChapter = (props: Props) => {
     </>
   );
 };
+
+AdminNewChapter.Layout = AdminLayout;
 
 export default AdminNewChapter;
