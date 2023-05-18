@@ -57,16 +57,14 @@ export const SearchModal = (props: Props) => {
   const [searchData, setSearchData] = useState<SearchDataInterface | null>(
     null
   );
+  const [resultMess, setResultmess] = useState<string>(
+    "Nhập tên truyện hoặc tên tác giả"
+  );
 
   const onChangeHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
     clearTimeout(timeout.current);
     const value = e.currentTarget.value;
-
-    if (value === "") {
-      reset({ keywords: "" });
-      setSearchData(null);
-    }
-
+    if (value === "") reset({ keywords: "" });
     timeout.current = setTimeout(async () => {
       if (value !== "") {
         setLoading(true);
@@ -75,6 +73,14 @@ export const SearchModal = (props: Props) => {
             `/search/storyTitle?keywords=${value}`
           );
           setSearchData(searchResponse);
+          setResultmess("");
+          if (searchResponse?.result.length === 0) {
+            const authorSearchResponse: any = await API.get(
+              `/search/storyAuthor?keywords=${value}`
+            );
+            setSearchData(authorSearchResponse);
+            setResultmess(`Tìm theo tác giả`);
+          }
         } catch (error) {
         } finally {
           setLoading(false);
@@ -88,6 +94,19 @@ export const SearchModal = (props: Props) => {
       searchBodyElement?.current.scroll({ top: 0 });
     }
   }, [searchOpen]);
+
+  useEffect(() => {
+    if (searchData?.result.length === 0)
+      setResultmess("Không tìm thấy kết quả nào");
+  }, [searchData]);
+
+  useEffect(() => {
+    if (getValues("keywords") === "") {
+      reset({ keywords: "" });
+      setSearchData(null);
+      setResultmess("Nhập tên truyện hoặc tên tác giả");
+    }
+  }, [getValues("keywords")]);
 
   const loadingRender = () => {
     let html = [];
@@ -109,8 +128,8 @@ export const SearchModal = (props: Props) => {
         top={searchOpen ? "0" : "100%"}
         left={0}
         sx={{ transition: "top .2s" }}
-        pb={13}
         ref={searchBodyElement}
+        overflow={"auto"}
       >
         <Stack
           component={"form"}
@@ -127,7 +146,6 @@ export const SearchModal = (props: Props) => {
             borderRadius: "5px",
             backgroundColor: "myBackground.default",
           }}
-          maxHeight={"100vh"}
         >
           <IconButton onClick={() => setSearchOpen(false)}>
             <ArrowBackIosIcon />
@@ -171,7 +189,6 @@ export const SearchModal = (props: Props) => {
               }}
               onClick={() => {
                 reset({ keywords: "" });
-                setSearchData(null);
               }}
             >
               <ClearIcon />
@@ -179,79 +196,82 @@ export const SearchModal = (props: Props) => {
           </Stack>
         </Stack>
         <Box className={"hr"} my={1} />
-        <Stack maxHeight={"100%"} overflow={"auto"}>
-          {loading ? (
-            loadingRender()
-          ) : searchData?.result.length === 0 && getValues("keywords") ? (
-            <Stack
-              direction={"row"}
-              gap={2}
-              justifyContent={"center"}
-              color={"myText.primary"}
-            >
-              <SearchIcon />
-              Không tìm thấy kết quả nào!
-            </Stack>
-          ) : (
-            searchData?.result.map((item: StoriesSearchResultInterface) => {
-              return (
-                <Stack
-                  key={item._id}
-                  component={Link}
-                  href={`/story/${item.story_code}`}
-                  sx={{ textDecoration: "none" }}
-                  direction={"row"}
-                  justifyContent={"space-between"}
-                  alignItems={"center"}
-                  mb={2}
-                  onClick={() => {
-                    setSearchOpen(false);
-                  }}
-                >
-                  <Stack direction={"row"} alignItems={"center"}>
-                    <Box
-                      component={"img"}
-                      alt={item.story_title}
-                      src={item.story_cover}
-                      width={"35px"}
-                      height={"35px"}
-                      mr={1}
-                      borderRadius={"5px"}
-                      sx={{ objectFit: "cover" }}
-                    />
-                    <Stack p={0} m={0}>
-                      <Typography
-                        component={"span"}
-                        fontSize={"1.1em"}
-                        color={"myText.link"}
-                      >
-                        {item.story_title}
-                      </Typography>
-                      <Typography
-                        component={"span"}
-                        fontSize={".9em"}
-                        color={"myText.primary"}
-                      >
-                        {item._count} chương
-                      </Typography>
-                    </Stack>
-                  </Stack>
-                  <IconButton
-                    sx={{
-                      "& svg": {
-                        color: "myText.primary",
-                      },
-                    }}
+        {resultMess && (
+          <Stack
+            direction={"row"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            my={2}
+            sx={{
+              color: "myText.primary",
+            }}
+          >
+            <SearchIcon />
+            {resultMess}
+          </Stack>
+        )}
+
+        <Stack>
+          {loading
+            ? loadingRender()
+            : searchData?.result.map((item: StoriesSearchResultInterface) => {
+                return (
+                  <Stack
+                    key={item._id}
+                    component={Link}
+                    href={`/story/${item.story_code}`}
+                    sx={{ textDecoration: "none" }}
+                    direction={"row"}
+                    justifyContent={"space-between"}
+                    alignItems={"center"}
+                    mb={2}
                     onClick={() => {
-                      reset({ keywords: "" });
+                      setSearchOpen(false);
                     }}
                   >
-                    <ArrowForwardIcon />
-                  </IconButton>
-                </Stack>
-              );
-            })
-          )}
+                    <Stack direction={"row"} alignItems={"center"}>
+                      <Box
+                        component={"img"}
+                        alt={item.story_title}
+                        src={item.story_cover}
+                        width={"35px"}
+                        height={"35px"}
+                        mr={1}
+                        borderRadius={"5px"}
+                        sx={{ objectFit: "cover" }}
+                      />
+                      <Stack p={0} m={0}>
+                        <Typography
+                          component={"span"}
+                          fontSize={"1.1em"}
+                          color={"myText.link"}
+                        >
+                          {item.story_title}
+                        </Typography>
+                        <Typography
+                          component={"span"}
+                          fontSize={".9em"}
+                          color={"myText.primary"}
+                        >
+                          {item._count} chương
+                        </Typography>
+                      </Stack>
+                    </Stack>
+                    <IconButton
+                      sx={{
+                        "& svg": {
+                          color: "myText.primary",
+                        },
+                      }}
+                      onClick={() => {
+                        reset({ keywords: "" });
+                      }}
+                    >
+                      <ArrowForwardIcon />
+                    </IconButton>
+                  </Stack>
+                );
+              })}
 
           {searchData?.pagination?.pages &&
           searchData?.pagination?.pages > 1 &&
