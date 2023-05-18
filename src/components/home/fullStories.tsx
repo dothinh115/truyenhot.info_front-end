@@ -248,6 +248,7 @@ export const HomeFullStories = ({ categories }: Props) => {
                       sizes="cover"
                       src={story.story_cover}
                       alt={story.story_title}
+                      priority
                     />
                     <ItemChapter>Full - {story._count} chương</ItemChapter>
                   </ItemLinkWrapper>

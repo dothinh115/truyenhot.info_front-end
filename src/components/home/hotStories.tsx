@@ -223,6 +223,7 @@ export const HomeHotStories = ({ categories }: Props) => {
                       sizes="cover"
                       src={story.story_cover}
                       alt={story.story_title}
+                      priority
                     />
                     <BoxTitle>{story.story_title}</BoxTitle>
                   </BoxWrapper>

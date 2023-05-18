@@ -53,6 +53,7 @@ export const SearchModal = (props: Props) => {
   const { setSearchOpen, searchOpen } = useContext<any>(MainLayoutContext);
   const [loading, setLoading] = useState<boolean>(false);
   const timeout = useRef<any>(null);
+  const inputEl = useRef<HTMLFormElement>(null);
   const searchBodyElement = useRef<HTMLDivElement>(null);
   const [searchData, setSearchData] = useState<SearchDataInterface | null>(
     null
@@ -89,6 +90,33 @@ export const SearchModal = (props: Props) => {
     }, 500);
   };
 
+  const loadingRender = () => {
+    let html = [];
+    for (let i = 0; i < 12; i++) {
+      html.push(<LoadingAnimation key={i}></LoadingAnimation>);
+    }
+    return html;
+  };
+
+  const scrollHandle = () => {
+    console.log(searchBodyElement?.current!.scrollTop);
+    if (searchBodyElement?.current!.scrollTop > 42) {
+      if (inputEl?.current) {
+        inputEl!.current.style.position = "fixed";
+        inputEl!.current.style.top = "0";
+        inputEl!.current.style.left = "0";
+        inputEl!.current.style.width = "100%";
+        inputEl!.current.style.zIndex = "50";
+        inputEl!.current.style.padding = "0 8px";
+      }
+    } else {
+      if (inputEl?.current) {
+        inputEl!.current.style.position = "static";
+        inputEl!.current.style.padding = "0";
+      }
+    }
+  };
+
   useEffect(() => {
     if (searchOpen && searchBodyElement?.current) {
       searchBodyElement?.current.scroll({ top: 0 });
@@ -108,13 +136,12 @@ export const SearchModal = (props: Props) => {
     }
   }, [getValues("keywords")]);
 
-  const loadingRender = () => {
-    let html = [];
-    for (let i = 0; i < 12; i++) {
-      html.push(<LoadingAnimation key={i}></LoadingAnimation>);
-    }
-    return html;
-  };
+  useEffect(() => {
+    searchBodyElement?.current!.addEventListener("scroll", scrollHandle);
+    return () => {
+      searchBodyElement?.current!.removeEventListener("scroll", scrollHandle);
+    };
+  }, []);
 
   return (
     <>
@@ -135,6 +162,7 @@ export const SearchModal = (props: Props) => {
           component={"form"}
           position={"relative"}
           direction={"row"}
+          ref={inputEl}
           onSubmit={(e) => {
             e.preventDefault();
           }}
@@ -143,7 +171,6 @@ export const SearchModal = (props: Props) => {
               md: "25%",
               xs: "100%",
             },
-            borderRadius: "5px",
             backgroundColor: "myBackground.default",
           }}
         >
@@ -195,7 +222,7 @@ export const SearchModal = (props: Props) => {
             </IconButton>
           </Stack>
         </Stack>
-        <Box className={"hr"} my={1} />
+
         {resultMess && (
           <Stack
             direction={"row"}
