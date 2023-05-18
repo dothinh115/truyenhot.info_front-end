@@ -1,42 +1,30 @@
 import { CategoryInterface } from "@/models/categories";
-import { Stack } from "@mui/material";
-import { Box } from "@mui/system";
+import { Stack, alpha, Box } from "@mui/material";
 import Link from "next/link";
 import { styled } from "@mui/material/styles";
 
 const Wrapper = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.myBackground.default,
-  borderRadius: "15px",
+  borderRadius: theme.spacing(1),
   overflow: "hidden",
-  borderWidth: "1px",
-  borderStyle: "dashed",
-  borderColor: theme.palette.mySecondary.main,
   marginBottom: theme.spacing(2),
-  padding: "4px",
+  boxShadow: `0 0 2px ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
 }));
 
 const Heading = styled("h3")(({ theme }) => ({
   margin: "0",
   padding: theme.spacing(1),
-  borderBottomWidth: "1px",
-  borderBottomStyle: "dashed",
-  borderBottomColor: theme.palette.mySecondary.main,
   color: theme.palette.myText.main,
-  fontWeight: 500,
+  fontWeight: 600,
   backgroundColor: theme.palette.myBackground.main,
-  borderRadius: "10px 10px 0 0",
-  borderWidth: "1px 1px 0 1px",
-  borderStyle: "solid",
-  borderColor: theme.palette.myBackground.main,
+  borderBottom: `1px dashed ${theme.palette.mySecondary.main}`,
+  textTransform: "uppercase",
+  fontSize: "14px",
 }));
 
 const UList = styled("ul")(({ theme }) => ({
   padding: "0",
   margin: 0,
-  borderWidth: "0 1px 1px 1px",
-  borderStyle: "solid",
-  borderColor: theme.palette.myBackground.main,
-  borderRadius: "0 0 10px 10px",
+  backgroundColor: theme.palette.myBackground.secondary,
 }));
 
 const ListItem = styled("li")(({ theme }) => ({
@@ -48,8 +36,6 @@ const ListItem = styled("li")(({ theme }) => ({
   borderBottomStyle: "dashed",
   borderBottomColor: theme.palette.mySecondary.main,
   height: "30px",
-  backgroundColor: theme.palette.myBackground.secondary,
-  "&:hover": "unset",
   "& > a": {
     display: "block",
     height: "100%",
@@ -64,13 +50,6 @@ const ListItem = styled("li")(({ theme }) => ({
     borderRightColor: theme.palette.mySecondary.main,
     "&:last-of-type": {
       borderBottom: "none",
-      borderRadius: "0 0 0 10px",
-    },
-  },
-  "&:nth-of-type(even)": {
-    "&:last-of-type": {
-      borderBottom: "none",
-      borderRadius: "0 0 10px 0",
     },
   },
 }));

@@ -3,19 +3,11 @@ import { CategoryInterface } from "@/models/categories";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
-import {
-  Box,
-  Button,
-  Chip,
-  IconButton,
-  Stack,
-  Divider,
-  alpha,
-} from "@mui/material";
-import Link from "next/link";
-import { useState, useContext } from "react";
+import { Box, Button, Chip, IconButton, Stack, alpha } from "@mui/material";
 import Switch from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
+import Link from "next/link";
+import { useContext, useState } from "react";
 import useSWR from "swr";
 
 type Props = {
