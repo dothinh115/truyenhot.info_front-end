@@ -103,6 +103,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             link: indigo[500],
             //màu heading ko có nền
             heading: indigo[300],
+            footerLink: "#fff",
           },
         }
       : {
@@ -141,6 +142,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
 
             //màu heading ko có nền
             heading: indigo[100],
+            footerLink: "#fff",
           },
         }),
   },

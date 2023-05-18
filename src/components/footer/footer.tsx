@@ -8,7 +8,7 @@ import Link from "next/link";
 
 type Props = {};
 
-export const FooterDesktop = (props: Props) => {
+export const Footer = (props: Props) => {
   const { data: categoriesList } = useSWR(`/categories/getAll`, {
     dedupingInterval: 60 * 60 * 24,
   });
@@ -48,12 +48,28 @@ export const FooterDesktop = (props: Props) => {
                   <InfoIcon />
                   <Box component={"span"}>Giới thiệu</Box>
                 </Stack>
-                <Typography sx={{ fontSize: ".9em" }}>
-                  Website Truyện Hot - là trang đọc truyện chữ online hàng đầu
-                  Việt Nam với nhiều thể loại truyện đam mỹ, truyện ngôn tình,
-                  truyện sắc chọn lọc dành cho độc giả yêu thích. <br />
-                  <br /> Truyện hot luôn cập nhật những bộ truyện mới nhất, với
-                  tốc độ nhanh nhất, chúc các bạn có trải nghiệm vui vẻ!
+                <Typography
+                  sx={{
+                    fontSize: ".9em",
+                    "& > a": {
+                      color: "myText.footerLink",
+                      textDecoration: "none",
+                    },
+                  }}
+                >
+                  Website Truyện Hot - là trang{" "}
+                  <Link href={`/`}>đọc truyện</Link>,{" "}
+                  <Link href={`/`}>đọc truyện chữ</Link> online hàng đầu Việt
+                  Nam với nhiều thể loại <Link href={`/`}>truyện đam mỹ</Link>,{" "}
+                  <Link href={`/`}>truyện ngôn tình</Link>,{" "}
+                  <Link href={`/`}>truyện sắc</Link>,{" "}
+                  <Link href={`/`}>truyện linh dị</Link>,{" "}
+                  <Link href={`/`}>truyện xuyên không</Link>,{" "}
+                  <Link href={`/`}>truyện trọng sinh</Link> chọn lọc dành cho
+                  độc giả yêu thích. <br />
+                  <br /> Truyện hot luôn cập nhật những bộ{" "}
+                  <Link href={`/`}>truyện mới nhất</Link>, với tốc độ nhanh
+                  nhất, chúc các bạn có trải nghiệm vui vẻ!
                   <br />
                   <br />
                   Liên hệ quảng cáo: 0978.481.071 | 0966.982.720
