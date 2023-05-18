@@ -40,6 +40,12 @@ export function Header() {
     }
   };
 
+  const changeModeHandle = () => {
+    if (window.pageYOffset >= 50 && appBarEl?.current) {
+      appBarEl?.current!.classList.add("appbar-fixed");
+    }
+  };
+
   useEffect(() => {
     window.addEventListener("scroll", scrollHandle);
     return () => {
@@ -48,7 +54,7 @@ export function Header() {
   });
 
   useEffect(() => {
-    scrollHandle();
+    changeModeHandle();
   }, [mode]);
   return (
     <>
