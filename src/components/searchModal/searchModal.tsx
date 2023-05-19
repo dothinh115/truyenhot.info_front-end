@@ -46,7 +46,7 @@ const ModalInner = styled(Box)(({ theme }) => ({
   zIndex: 100,
   padding: theme.spacing(1),
   overflow: "hidden",
-  paddingBottom: "80px",
+  paddingBottom: theme.spacing(18),
   [theme.breakpoints.up("xs")]: {
     top: "0",
     left: "0",
@@ -67,6 +67,38 @@ const ModalInner = styled(Box)(({ theme }) => ({
   },
 }));
 
+const FormStyled = styled("form")(({ theme }) => ({
+  display: "flex",
+  position: "relative",
+  width: "100%",
+  backgroundColor: theme.palette.myBackground.default,
+  gap: "10px",
+}));
+
+const ResultList = styled(Stack)(() => ({
+  maxHeight: "100%",
+  "&::-webkit-scrollbar": {
+    borderRadius: "0 16px 16px 0",
+    backgroundColor: "transparent",
+    width: "5px",
+  },
+  "&::-webkit-scrollbar-thumb": {
+    background: "#7986cba6",
+  },
+  overflow: "auto",
+}));
+
+const ResultItem = styled(Link)(({ theme }) => ({
+  display: "flex",
+  textDecoration: "none",
+  backgroundColor: theme.palette.myBackground.secondary,
+  marginBottom: "8px",
+  borderRadius: "16px",
+  padding: "4px 8px",
+  justifyContent: "space-between",
+  alignItems: "center",
+}));
+
 export const SearchModal = (props: Props) => {
   const { control, reset, getValues } = useForm<{
     keywords: string;
@@ -80,8 +112,6 @@ export const SearchModal = (props: Props) => {
   const { setSearchOpen, searchOpen } = useContext<any>(MainLayoutContext);
   const [loading, setLoading] = useState<boolean>(false);
   const timeout = useRef<any>(null);
-  const inputEl = useRef<HTMLDivElement>(null);
-  const searchBodyElement = useRef<HTMLDivElement>(null);
   const [searchData, setSearchData] = useState<SearchDataInterface | null>(
     null
   );
@@ -101,7 +131,7 @@ export const SearchModal = (props: Props) => {
             `/search/storyTitle?keywords=${value}`
           );
           setSearchData(searchResponse);
-          setResultmess("");
+          setResultmess("Tìm theo tên truyện");
           if (searchResponse?.result.length === 0) {
             const authorSearchResponse: any = await API.get(
               `/search/storyAuthor?keywords=${value}`
@@ -128,12 +158,6 @@ export const SearchModal = (props: Props) => {
   const onCloseHandle = () => setSearchOpen(!searchOpen);
 
   useEffect(() => {
-    if (searchOpen && searchBodyElement?.current) {
-      searchBodyElement?.current.scroll({ top: 0 });
-    }
-  }, [searchOpen]);
-
-  useEffect(() => {
     if (searchData?.result.length === 0)
       setResultmess("Không tìm thấy kết quả nào");
   }, [searchData]);
@@ -149,27 +173,18 @@ export const SearchModal = (props: Props) => {
   return (
     <>
       <Modal open={searchOpen} onClose={onCloseHandle}>
-        <ModalInner ref={searchBodyElement}>
+        <ModalInner>
           <Stack
             direction={"row"}
-            ref={inputEl}
             py={1}
             sx={{
               backgroundColor: "myBackground.default",
             }}
             width={"100%"}
           >
-            <Stack
-              component={"form"}
-              position={"relative"}
-              direction={"row"}
+            <FormStyled
               onSubmit={(e) => {
                 e.preventDefault();
-              }}
-              sx={{
-                width: "100%",
-                backgroundColor: "myBackground.default",
-                gap: "10px",
               }}
             >
               <IconButton
@@ -224,8 +239,10 @@ export const SearchModal = (props: Props) => {
                   <ClearIcon />
                 </IconButton>
               </Stack>
-            </Stack>
+            </FormStyled>
           </Stack>
+
+          <Box className="hr" my={1} />
 
           {resultMess && (
             <Stack
@@ -242,38 +259,14 @@ export const SearchModal = (props: Props) => {
             </Stack>
           )}
 
-          <Stack
-            sx={{
-              maxHeight: "100%",
-              "&::-webkit-scrollbar": {
-                borderRadius: "0 16px 16px 0",
-                backgroundColor: "transparent",
-                width: "5px",
-              },
-              "&::-webkit-scrollbar-thumb": {
-                background: "#7986cba6",
-              },
-            }}
-            overflow={"auto"}
-          >
+          <ResultList>
             {loading
               ? loadingRender()
               : searchData?.result.map((item: StoriesSearchResultInterface) => {
                   return (
-                    <Stack
+                    <ResultItem
                       key={item._id}
-                      component={Link}
                       href={`/story/${item.story_code}`}
-                      sx={{
-                        textDecoration: "none",
-                        backgroundColor: "myBackground.secondary",
-                        marginBottom: "8px",
-                        borderRadius: "16px",
-                        padding: "4px 8px",
-                      }}
-                      direction={"row"}
-                      justifyContent={"space-between"}
-                      alignItems={"center"}
                       onClick={() => {
                         setSearchOpen(false);
                       }}
@@ -318,7 +311,7 @@ export const SearchModal = (props: Props) => {
                       >
                         <ArrowForwardIcon />
                       </IconButton>
-                    </Stack>
+                    </ResultItem>
                   );
                 })}
 
@@ -341,7 +334,7 @@ export const SearchModal = (props: Props) => {
                 Xem thêm kết quả
               </Stack>
             ) : null}
-          </Stack>
+          </ResultList>
         </ModalInner>
       </Modal>
     </>

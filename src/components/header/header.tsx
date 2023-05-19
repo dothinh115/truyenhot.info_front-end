@@ -135,7 +135,7 @@ export function Header() {
   }, []);
   return (
     <>
-      <Drawer open={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} />
+      <Drawer />
       <AppBarStyled ref={appBarEl}>
         <Stack
           direction={"row"}
