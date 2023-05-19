@@ -2,19 +2,16 @@ import { ChapterDataInterface, ChapterListInterface } from "@/models/chapters";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import {
-  Button,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   OutlinedInput,
   Select,
   Stack,
-  Typography,
-  IconButton,
 } from "@mui/material";
-import CircularProgress from "@mui/material/CircularProgress";
-import Link from "next/link";
 import { SelectChangeEvent } from "@mui/material/Select";
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 type Props = {
@@ -64,7 +61,6 @@ export const StoryChapterPicker = ({ chapterData, chapterListData }: Props) => {
       </IconButton>
       {
         <FormControl sx={{ m: 1, width: 300 }}>
-          <InputLabel>Chọn chương</InputLabel>
           <Select
             value={
               chapterData?.chapter_code && chapterListData
@@ -72,9 +68,12 @@ export const StoryChapterPicker = ({ chapterData, chapterListData }: Props) => {
                 : ""
             }
             onChange={(event, child) => handleChange(event, child)}
-            input={<OutlinedInput label="Chọn chương" />}
+            input={<OutlinedInput />}
             MenuProps={MenuProps}
             size="small"
+            sx={{
+              backgroundColor: "myBackground.secondary",
+            }}
           >
             {chapterListData?.map((chapter: any) => (
               <MenuItem key={chapter._id} value={chapter.chapter_code}>

@@ -73,7 +73,7 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             main: indigo[300],
           },
           myBackground: {
-            default: grey[100],
+            default: grey[200],
             paper: grey[300],
             //những dòng trong bảng
             secondary: "#fff",
