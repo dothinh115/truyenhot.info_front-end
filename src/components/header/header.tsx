@@ -36,7 +36,7 @@ const AppBarStyled = styled(AppBar)(({ theme }) => ({
 
 const DropdownMenu = styled(Box)(({ theme }) => ({
   position: "absolute",
-  width: "200px",
+  width: "250px",
   right: 0,
   top: "100%",
   backgroundColor: theme.palette.myBackground.secondary,
