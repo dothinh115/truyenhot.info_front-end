@@ -245,6 +245,14 @@ export const SearchModal = (props: Props) => {
           <Stack
             sx={{
               maxHeight: "100%",
+              "&::-webkit-scrollbar": {
+                borderRadius: "0 16px 16px 0",
+                backgroundColor: "transparent",
+                width: "5px",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                background: "#7986cba6",
+              },
             }}
             overflow={"auto"}
           >
