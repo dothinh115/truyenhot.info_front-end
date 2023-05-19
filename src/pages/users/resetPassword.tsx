@@ -16,8 +16,6 @@ import { useRouter } from "next/router";
 import { API } from "@/utils/config";
 type Props = {};
 
-const emailPattern = new RegExp(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/);
-
 const ResetPassword = (props: Props) => {
   const [message, setMessage] = useState<string>("");
   const [showReset, setShowReset] = useState<boolean>(false);
@@ -185,10 +183,6 @@ const ResetPassword = (props: Props) => {
             control={control}
             rules={{
               required: "Không được để trống",
-              pattern: {
-                value: emailPattern,
-                message: "Email phải đúng định dạng!",
-              },
             }}
             render={({ field: { onChange, value } }) => (
               <TextField

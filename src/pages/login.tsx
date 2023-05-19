@@ -9,8 +9,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 type Props = {};
 
-const emailPattern = new RegExp(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/);
-
 const Login = (props: Props) => {
   const { login } = useAuth({
     revalidateOnMount: false,
@@ -56,10 +54,6 @@ const Login = (props: Props) => {
           control={control}
           rules={{
             required: "Không được để trống",
-            pattern: {
-              value: emailPattern,
-              message: "Email phải đúng định dạng!",
-            },
           }}
           render={({ field: { onChange, value } }) => (
             <TextField
