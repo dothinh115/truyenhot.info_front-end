@@ -1,5 +1,7 @@
+import { Seo } from "@/components";
 import { LoginLayout } from "@/layouts";
 import { API } from "@/utils/config";
+import { thumbnailUrl } from "@/utils/variables";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -89,141 +91,155 @@ const ResetPassword = (props: Props) => {
   }, [token]);
 
   return (
-    <Box
-      component={"form"}
-      onSubmit={
-        showReset ? rsHandleSubmit(rsSubmitHandle) : handleSubmit(submitHandle)
-      }
-    >
-      <Box
-        component={"h2"}
-        my={0}
-        py={1}
-        sx={{
-          borderBottom: "1px solid #eee",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+    <>
+      <Seo
+        data={{
+          title: `Quên mật khẩu - truyenhot.info`,
+          description: `Quên mật khẩu - Đọc truyện online, đọc truyện chữ, truyện hay, truyện hot. Luôn cập nhật truyện nhanh nhất.`,
+          url: `https//truyenhot.info/login`,
+          thumbnailUrl,
         }}
+      />
+      <Box
+        component={"form"}
+        onSubmit={
+          showReset
+            ? rsHandleSubmit(rsSubmitHandle)
+            : handleSubmit(submitHandle)
+        }
       >
-        {showReset ? "Đặt lại mật khẩu " : "Quên mật khẩu"}
-        <IconButton LinkComponent={Link} href="/">
-          <CloseIcon />
-        </IconButton>
-      </Box>
-      <Divider />
-      {showReset ? (
-        <>
-          <Controller
-            name={"password"}
-            control={rsControl}
-            rules={{
-              required: "Không được để trống",
-            }}
-            render={({ field: { onChange, value } }) => (
-              <TextField
-                type="password"
-                fullWidth
-                label={"Password"}
-                onChange={onChange}
-                value={value}
-                error={!!rsErrors?.password}
-                helperText={
-                  rsErrors.password?.message ? rsErrors.password?.message : null
-                }
-                sx={{ my: 1 }}
-                size="small"
-              />
-            )}
-          />
-          <Controller
-            name={"passwordConfirm"}
-            control={rsControl}
-            rules={{
-              required: "Không được để trống",
-              validate: (val: string) => {
-                if (watch("password") !== val) {
-                  return "Nhập lại mật khẩu không đúng";
-                }
-              },
-            }}
-            render={({ field: { onChange, value } }) => (
-              <TextField
-                type="password"
-                fullWidth
-                label={"Nhập lại password"}
-                onChange={onChange}
-                value={value}
-                error={!!rsErrors?.passwordConfirm}
-                helperText={
-                  rsErrors.passwordConfirm?.message
-                    ? rsErrors.passwordConfirm?.message
-                    : null
-                }
-                sx={{ my: 1 }}
-                size="small"
-              />
-            )}
-          />
-          <Divider />
-
-          <Button
-            color="success"
-            type="submit"
-            size="small"
-            variant="contained"
-            endIcon={<ArrowCircleRightIcon />}
-            fullWidth
-          >
-            Đặt lại
-          </Button>
-        </>
-      ) : message ? (
-        <Box my={2} fontSize={"13px"}>
-          {message}
+        <Box
+          component={"h2"}
+          my={0}
+          py={1}
+          sx={{
+            borderBottom: "1px solid #eee",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          {showReset ? "Đặt lại mật khẩu " : "Quên mật khẩu"}
+          <IconButton LinkComponent={Link} href="/">
+            <CloseIcon />
+          </IconButton>
         </Box>
-      ) : (
-        <Stack>
-          <Controller
-            name={"email"}
-            control={control}
-            rules={{
-              required: "Không được để trống",
-            }}
-            render={({ field: { onChange, value } }) => (
-              <TextField
-                fullWidth
-                label={"Email"}
-                onChange={onChange}
-                value={value}
-                error={!!errors?.email}
-                helperText={
-                  errors.email?.message
-                    ? errors.email?.message
-                    : "Nhập email đã đăng ký"
-                }
-                sx={{ my: 1 }}
-                size="small"
-              />
-            )}
-          />
-          <Button fullWidth size="small" color="success" variant="contained">
-            Gửi
-          </Button>
-        </Stack>
-      )}
+        <Divider />
+        {showReset ? (
+          <>
+            <Controller
+              name={"password"}
+              control={rsControl}
+              rules={{
+                required: "Không được để trống",
+              }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  type="password"
+                  fullWidth
+                  label={"Password"}
+                  onChange={onChange}
+                  value={value}
+                  error={!!rsErrors?.password}
+                  helperText={
+                    rsErrors.password?.message
+                      ? rsErrors.password?.message
+                      : null
+                  }
+                  sx={{ my: 1 }}
+                  size="small"
+                />
+              )}
+            />
+            <Controller
+              name={"passwordConfirm"}
+              control={rsControl}
+              rules={{
+                required: "Không được để trống",
+                validate: (val: string) => {
+                  if (watch("password") !== val) {
+                    return "Nhập lại mật khẩu không đúng";
+                  }
+                },
+              }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  type="password"
+                  fullWidth
+                  label={"Nhập lại password"}
+                  onChange={onChange}
+                  value={value}
+                  error={!!rsErrors?.passwordConfirm}
+                  helperText={
+                    rsErrors.passwordConfirm?.message
+                      ? rsErrors.passwordConfirm?.message
+                      : null
+                  }
+                  sx={{ my: 1 }}
+                  size="small"
+                />
+              )}
+            />
+            <Divider />
 
-      <Box
-        my={1}
-        sx={{
-          fontSize: "13px",
-        }}
-      >
-        <Divider sx={{ my: 2 }} />
-        Bạn có thể dùng mẫu sau để đặt lại mật khẩu, bạn sẽ nhận được một email
-        với nội dung hướng dẫn đặt lại mật khẩu.
+            <Button
+              color="success"
+              type="submit"
+              size="small"
+              variant="contained"
+              endIcon={<ArrowCircleRightIcon />}
+              fullWidth
+            >
+              Đặt lại
+            </Button>
+          </>
+        ) : message ? (
+          <Box my={2} fontSize={"13px"}>
+            {message}
+          </Box>
+        ) : (
+          <Stack>
+            <Controller
+              name={"email"}
+              control={control}
+              rules={{
+                required: "Không được để trống",
+              }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  label={"Email"}
+                  onChange={onChange}
+                  value={value}
+                  error={!!errors?.email}
+                  helperText={
+                    errors.email?.message
+                      ? errors.email?.message
+                      : "Nhập email đã đăng ký"
+                  }
+                  sx={{ my: 1 }}
+                  size="small"
+                />
+              )}
+            />
+            <Button fullWidth size="small" color="success" variant="contained">
+              Gửi
+            </Button>
+          </Stack>
+        )}
+
+        <Box
+          my={1}
+          sx={{
+            fontSize: "13px",
+          }}
+        >
+          <Divider sx={{ my: 2 }} />
+          Bạn có thể dùng mẫu sau để đặt lại mật khẩu, bạn sẽ nhận được một
+          email với nội dung hướng dẫn đặt lại mật khẩu.
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

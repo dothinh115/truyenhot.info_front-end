@@ -14,6 +14,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
+import { Seo } from "@/components";
+import { thumbnailUrl } from "@/utils/variables";
 
 type Props = {};
 const emailPattern = new RegExp(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/);
@@ -79,144 +81,156 @@ const Register = (props: Props) => {
   }, [countdown]);
 
   return (
-    <Box component={"form"} onSubmit={handleSubmit(submitHandle)}>
-      <Box
-        component={"h2"}
-        my={0}
-        py={1}
-        sx={{
-          borderBottom: "1px solid #eee",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+    <>
+      <Seo
+        data={{
+          title: `Đăng ký - truyenhot.info`,
+          description: `Đăng ký - Đọc truyện online, đọc truyện chữ, truyện hay, truyện hot. Luôn cập nhật truyện nhanh nhất.`,
+          url: `https//truyenhot.info/login`,
+          thumbnailUrl,
         }}
-      >
-        Đăng ký
-        <IconButton LinkComponent={Link} href="/">
-          <CloseIcon />
-        </IconButton>
-      </Box>
-      {message ? (
-        <Box my={2}>
-          {message}
-          <Button
-            fullWidth
-            size="small"
-            variant="contained"
-            sx={{ mt: 1 }}
-            color="success"
-            disabled={countdown !== 0 ? true : false}
-            onClick={() => resendActiveRequest()}
-          >
-            Gửi lại link kích hoạt ({countdown})
-          </Button>
+      />
+      <Box component={"form"} onSubmit={handleSubmit(submitHandle)}>
+        <Box
+          component={"h2"}
+          my={0}
+          py={1}
+          sx={{
+            borderBottom: "1px solid #eee",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          Đăng ký
+          <IconButton LinkComponent={Link} href="/">
+            <CloseIcon />
+          </IconButton>
         </Box>
-      ) : (
-        <>
-          <Box py={1}>
-            <Controller
-              name={"email"}
-              control={control}
-              rules={{
-                required: "Không được để trống",
-                pattern: {
-                  value: emailPattern,
-                  message: "Email phải đúng định dạng!",
-                },
-              }}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  fullWidth
-                  label={"Email"}
-                  onChange={onChange}
-                  value={value}
-                  error={!!errors?.email}
-                  helperText={
-                    errors.email?.message ? errors.email?.message : null
-                  }
-                  size="small"
-                />
-              )}
-            />
-          </Box>
-          <Box py={1}>
-            <Controller
-              name={"user_name"}
-              control={control}
-              rules={{
-                required: "Không được để trống",
-              }}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  fullWidth
-                  label={"Username"}
-                  onChange={onChange}
-                  value={value}
-                  error={!!errors?.user_name}
-                  helperText={
-                    errors.user_name?.message ? errors.user_name?.message : null
-                  }
-                  size="small"
-                />
-              )}
-            />
-          </Box>
-          <Box py={1}>
-            <Controller
-              name={"password"}
-              control={control}
-              rules={{
-                required: "Không được để trống",
-              }}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  fullWidth
-                  type="password"
-                  label={"Password"}
-                  onChange={onChange}
-                  value={value}
-                  error={!!errors.password?.message}
-                  helperText={
-                    errors.password?.message ? errors.password?.message : null
-                  }
-                  size="small"
-                />
-              )}
-            />
-          </Box>
-          <Divider />
-          <Box textAlign={"right"} my={1}>
+        {message ? (
+          <Box my={2}>
+            {message}
             <Button
-              type="submit"
-              variant="contained"
+              fullWidth
               size="small"
-              disabled={isSubmitting ? true : false}
+              variant="contained"
+              sx={{ mt: 1 }}
               color="success"
-              startIcon={
-                isSubmitting ? (
-                  <CircularProgress color="inherit" size={"1em"} />
-                ) : null
-              }
+              disabled={countdown !== 0 ? true : false}
+              onClick={() => resendActiveRequest()}
             >
-              Đăng ký
+              Gửi lại link kích hoạt ({countdown})
             </Button>
           </Box>
-        </>
-      )}
-      <Divider />
-      <Typography
-        my={1}
-        sx={{
-          fontSize: "13px",
-          textAlign: "center",
-          "& > a ": {
-            textDecoration: "none",
-          },
-        }}
-      >
-        Đã có tài khoản? <Link href={"/login"}>Đăng nhập</Link>
-      </Typography>
-    </Box>
+        ) : (
+          <>
+            <Box py={1}>
+              <Controller
+                name={"email"}
+                control={control}
+                rules={{
+                  required: "Không được để trống",
+                  pattern: {
+                    value: emailPattern,
+                    message: "Email phải đúng định dạng!",
+                  },
+                }}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    fullWidth
+                    label={"Email"}
+                    onChange={onChange}
+                    value={value}
+                    error={!!errors?.email}
+                    helperText={
+                      errors.email?.message ? errors.email?.message : null
+                    }
+                    size="small"
+                  />
+                )}
+              />
+            </Box>
+            <Box py={1}>
+              <Controller
+                name={"user_name"}
+                control={control}
+                rules={{
+                  required: "Không được để trống",
+                }}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    fullWidth
+                    label={"Username"}
+                    onChange={onChange}
+                    value={value}
+                    error={!!errors?.user_name}
+                    helperText={
+                      errors.user_name?.message
+                        ? errors.user_name?.message
+                        : null
+                    }
+                    size="small"
+                  />
+                )}
+              />
+            </Box>
+            <Box py={1}>
+              <Controller
+                name={"password"}
+                control={control}
+                rules={{
+                  required: "Không được để trống",
+                }}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    fullWidth
+                    type="password"
+                    label={"Password"}
+                    onChange={onChange}
+                    value={value}
+                    error={!!errors.password?.message}
+                    helperText={
+                      errors.password?.message ? errors.password?.message : null
+                    }
+                    size="small"
+                  />
+                )}
+              />
+            </Box>
+            <Divider />
+            <Box textAlign={"right"} my={1}>
+              <Button
+                type="submit"
+                variant="contained"
+                size="small"
+                disabled={isSubmitting ? true : false}
+                color="success"
+                startIcon={
+                  isSubmitting ? (
+                    <CircularProgress color="inherit" size={"1em"} />
+                  ) : null
+                }
+              >
+                Đăng ký
+              </Button>
+            </Box>
+          </>
+        )}
+        <Divider />
+        <Typography
+          my={1}
+          sx={{
+            fontSize: "13px",
+            textAlign: "center",
+            "& > a ": {
+              textDecoration: "none",
+            },
+          }}
+        >
+          Đã có tài khoản? <Link href={"/login"}>Đăng nhập</Link>
+        </Typography>
+      </Box>
+    </>
   );
 };
 

@@ -6,6 +6,7 @@ import { CategoriesSidebar, HotStoriesInCate } from "@/components/sidebar";
 import { CategoryInterface } from "@/models/categories";
 import { HotStoriesInCategoriesInterface } from "@/models/search";
 import { apiURL } from "@/utils/config";
+import { thumbnailUrl } from "@/utils/variables";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import HomeIcon from "@mui/icons-material/Home";
@@ -99,7 +100,7 @@ const CategoriesDetail = ({
           title: `Truyện ${cate_title} - truyenhot.info`,
           description: `Truyện ${cate_title} - Đọc truyện online, đọc truyện chữ, truyện hay, truyện hot. Luôn cập nhật truyện nhanh nhất.`,
           url: `https//truyenhot.info/categories/${cate_code}`,
-          thumbnailUrl: `${apiURL}/api/public/images/thumnail/thumbnail.jpg`,
+          thumbnailUrl,
         }}
       />
       <MainBreadcrumbs links={breadCrumbs} />

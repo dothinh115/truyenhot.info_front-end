@@ -7,6 +7,7 @@ import { StoriesSearchResultInterface } from "@/models/search";
 import { StoryInterface } from "@/models/stories";
 import { StorySection } from "@/sections";
 import { API, apiURL } from "@/utils/config";
+import { thumbnailUrl } from "@/utils/variables";
 import HomeIcon from "@mui/icons-material/Home";
 import { Box, Container, Stack } from "@mui/material";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
@@ -63,7 +64,7 @@ const StoryDetail = ({ story, categories, sameAuthor }: Props) => {
           title: `${story?.story_title} - truyenhot.info`,
           description: `${story?.story_title} - Đọc truyện online, đọc truyện chữ, truyện hay, truyện hot. Luôn cập nhật truyện nhanh nhất.`,
           url: `https//truyenhot.info/story/${story?.story_code}`,
-          thumbnailUrl: `${apiURL}/api/public/images/thumnail/thumbnail.jpg`,
+          thumbnailUrl,
         }}
       />
       <MainBreadcrumbs links={breadCrumbs} />

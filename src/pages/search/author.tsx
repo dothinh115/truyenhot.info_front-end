@@ -5,6 +5,7 @@ import { StoryListLoading } from "@/components/loading";
 import { CategoriesSidebar } from "@/components/sidebar";
 import { CategoryInterface } from "@/models/categories";
 import { apiURL } from "@/utils/config";
+import { thumbnailUrl } from "@/utils/variables";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import HomeIcon from "@mui/icons-material/Home";
@@ -88,7 +89,7 @@ const SearchByAuthorPage = ({ categories }: Props) => {
           title: `Tìm kiếm: ${keywords}`,
           description: `Kết quả tìm kiếm từ khóa ${keywords} tại truyenhot.info. Chúc bạn có những phút giây thư giãn!`,
           url: `https//truyenhot.info/search/author?keywords=${keywords}`,
-          thumbnailUrl: `${apiURL}/api/public/images/thumnail/thumbnail.jpg`,
+          thumbnailUrl,
         }}
       />
       <MainBreadcrumbs links={breadCrumbs} />

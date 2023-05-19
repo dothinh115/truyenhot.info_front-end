@@ -4,6 +4,7 @@ import { StoryChapterPicker, StoryReportButton } from "@/components/stories";
 import { ChapterDataInterface, ChapterListInterface } from "@/models/chapters";
 import { ChapterSection } from "@/sections";
 import { apiURL } from "@/utils/config";
+import { thumbnailUrl } from "@/utils/variables";
 import HomeIcon from "@mui/icons-material/Home";
 import { Box, Container, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -150,7 +151,7 @@ const ChapterDetail = ({ chapterData }: Props) => {
             chapterData?.chapter_title ? `: ${chapterData?.chapter_title}` : ""
           } : ${chapterData?.chapter_content.substring(0, 320)}`,
           url: `https//truyenhot.info/story/${chapterData?.story_code}/${chapterData?.chapter_code}`,
-          thumbnailUrl: `${apiURL}/api/public/images/thumnail/thumbnail.jpg`,
+          thumbnailUrl,
         }}
       />
       <MainBreadcrumbs links={breadCrumbs} />

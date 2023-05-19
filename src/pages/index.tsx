@@ -10,6 +10,7 @@ import { CategoriesSidebar, ReadingStoriesHistory } from "@/components/sidebar";
 import { MainLayoutContext } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
 import { apiURL } from "@/utils/config";
+import { thumbnailUrl } from "@/utils/variables";
 import HomeIcon from "@mui/icons-material/Home";
 import { Box, Container, Stack } from "@mui/material";
 import { GetStaticProps } from "next";
@@ -46,7 +47,7 @@ const Index = ({ categories }: Props) => {
           title: `Đọc truyện online, truyện hay, truyện hot, truyện full, truyện mới nhất, truyenhot.info`,
           description: `Đọc truyện online, đọc truyện chữ, truyện hay, truyện hot. Luôn cập nhật truyện nhanh nhất.`,
           url: `https//truyenhot.info`,
-          thumbnailUrl: `${apiURL}/api/public/images/thumnail/thumbnail.jpg`,
+          thumbnailUrl,
         }}
       />
       <MainBreadcrumbs links={breadCrumbs} />
