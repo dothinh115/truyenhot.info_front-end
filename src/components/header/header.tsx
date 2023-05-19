@@ -1,5 +1,16 @@
 import { MainLayoutContext } from "@/layouts";
-import { Container, Stack, Box, AppBar, IconButton } from "@mui/material";
+import {
+  Container,
+  Stack,
+  Box,
+  AppBar,
+  IconButton,
+  alpha,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 import { useContext, useEffect, useRef } from "react";
 import { Drawer } from "./drawer";
 import { SearchBar } from "./searchBar";
@@ -9,6 +20,11 @@ import Brightness7Icon from "@mui/icons-material/Brightness7";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
+import PersonIcon from "@mui/icons-material/Person";
+import LoginIcon from "@mui/icons-material/Login";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
+import { useAuth } from "@/hooks/auth";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 
 const AppBarStyled = styled(AppBar)(({ theme }) => ({
   position: "static",
@@ -16,12 +32,42 @@ const AppBarStyled = styled(AppBar)(({ theme }) => ({
   height: "50px",
 }));
 
+const DropdownMenu = styled(Box)(({ theme }) => ({
+  position: "absolute",
+  width: "200px",
+  right: 0,
+  top: "100%",
+  backgroundColor: theme.palette.myBackground.secondary,
+  boxShadow: `0 0 2px ${alpha(theme.palette.mySecondary.boxShadow, 0.4)}`,
+  zIndex: 10,
+  display: "none",
+  borderRadius: theme.spacing(2),
+}));
+
+const ListStyled = styled(List)(({ theme }) => ({
+  padding: 0,
+  "& > *": {
+    padding: "8px",
+    borderBottom: `1px solid ${alpha(
+      theme.palette.mySecondary.boxShadow,
+      0.3
+    )}`,
+
+    "& *": {
+      color: theme.palette.myText.primary,
+    },
+  },
+}));
+
 export function Header() {
   const { mobileMenuOpen, setMobileMenuOpen, setMode, mode, setSearchOpen } =
     useContext<any>(MainLayoutContext);
+  const { profile, logout } = useAuth();
 
   const appBarEl = useRef<HTMLDivElement>(null);
   const yOffset = useRef<number>(0);
+  const menuDropDown = useRef<HTMLDivElement>(null);
+  const menuDropDownButton = useRef<HTMLButtonElement>(null);
 
   const scrollHandle = () => {
     setTimeout(() => {
@@ -46,6 +92,28 @@ export function Header() {
     }
   };
 
+  const dropDownMenuHandle = (event: { target: any }) => {
+    if (
+      event.target.parentNode === menuDropDownButton?.current ||
+      event.target === menuDropDownButton?.current ||
+      event.target.parentNode?.parentNode === menuDropDownButton?.current
+    ) {
+      if (
+        menuDropDown?.current &&
+        menuDropDown!.current.style.display === "block"
+      ) {
+        menuDropDown!.current.style.display = "none";
+      } else {
+        if (menuDropDown?.current)
+          menuDropDown!.current.style.display = "block";
+      }
+    } else {
+      if (menuDropDown?.current) {
+        menuDropDown!.current.style.display = "none";
+      }
+    }
+  };
+
   useEffect(() => {
     window.addEventListener("scroll", scrollHandle);
     return () => {
@@ -56,6 +124,13 @@ export function Header() {
   useEffect(() => {
     changeModeHandle();
   }, [mode]);
+
+  useEffect(() => {
+    window.addEventListener("click", dropDownMenuHandle);
+    return () => {
+      window.removeEventListener("click", dropDownMenuHandle);
+    };
+  }, []);
   return (
     <>
       <Drawer open={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} />
@@ -76,20 +151,28 @@ export function Header() {
               }}
               justifyContent={"space-between"}
             >
-              <Box
-                component={Link}
-                href="/"
-                sx={{ textDecoration: "none", flexGrow: 1, display: "block" }}
-                color={"myText.main"}
-                fontSize={"16px"}
-              >
-                TRUYENHOT.INFO
-              </Box>
+              <Stack direction={"row"} alignItems={"center"} gap={"10px"}>
+                <Box
+                  component={Link}
+                  href="/"
+                  sx={{
+                    textDecoration: "none",
+                    flexGrow: 1,
+                    display: "block",
+                  }}
+                  color={"myText.main"}
+                  fontSize={"16px"}
+                >
+                  TRUYENHOT.INFO
+                </Box>
+                <SearchBar />
+              </Stack>
               <Stack
                 direction={"row"}
                 alignItems={"center"}
                 width={"30%"}
                 justifyContent={"flex-end"}
+                gap={"10px"}
                 sx={{
                   "& > button": {
                     marginLeft: "8px",
@@ -115,6 +198,70 @@ export function Header() {
                 >
                   {mode === "light" ? <DarkModeIcon /> : <Brightness7Icon />}
                 </IconButton>
+                <Box
+                  sx={{
+                    position: "relative",
+                    display: {
+                      md: "inline-flex",
+                      xs: "none",
+                    },
+                  }}
+                >
+                  <IconButton ref={menuDropDownButton}>
+                    <PersonIcon />
+                  </IconButton>
+                  <DropdownMenu ref={menuDropDown}>
+                    <ListStyled>
+                      {profile ? (
+                        <>
+                          <ListItemButton onClick={() => logout()}>
+                            <ListItemIcon
+                              sx={{ minWidth: "unset", marginRight: "8px" }}
+                            >
+                              <ExitToAppIcon />
+                            </ListItemIcon>
+                            <ListItemText
+                              primary="Đăng xuất"
+                              sx={{
+                                textAlign: "right",
+                              }}
+                            />
+                          </ListItemButton>
+                        </>
+                      ) : (
+                        <>
+                          <ListItemButton LinkComponent={Link} href="/login">
+                            <ListItemIcon
+                              sx={{ minWidth: "unset", marginRight: "8px" }}
+                            >
+                              <LoginIcon />
+                            </ListItemIcon>
+                            <ListItemText
+                              primary="Đăng nhập"
+                              sx={{
+                                textAlign: "right",
+                              }}
+                            />
+                          </ListItemButton>
+
+                          <ListItemButton LinkComponent={Link} href="/register">
+                            <ListItemIcon
+                              sx={{ minWidth: "unset", marginRight: "8px" }}
+                            >
+                              <HowToRegIcon />
+                            </ListItemIcon>
+                            <ListItemText
+                              primary="Đăng ký"
+                              sx={{
+                                textAlign: "right",
+                              }}
+                            />
+                          </ListItemButton>
+                        </>
+                      )}
+                    </ListStyled>
+                  </DropdownMenu>
+                </Box>
 
                 <IconButton
                   size="small"
@@ -140,7 +287,6 @@ export function Header() {
                 >
                   <MenuIcon />
                 </IconButton>
-                <SearchBar />
               </Stack>
             </Stack>
           </Container>

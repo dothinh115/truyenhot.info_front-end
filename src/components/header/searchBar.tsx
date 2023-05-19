@@ -129,7 +129,7 @@ export const SearchBar = (props: Props) => {
             md: "flex",
             xs: "none",
           },
-
+          width: "200px",
           borderRadius: "5px",
           backgroundColor: "rgba(255,255,255,.15)",
         }}

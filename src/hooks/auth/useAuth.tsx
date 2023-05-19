@@ -10,20 +10,20 @@ export const useAuth = (option?: SWRConfiguration) => {
     mutate,
   } = useSWR("/users/profile", {
     revalidateOnFocus: false,
-    dedupingInterval: 1000 * 60 * 60,
+    dedupingInterval: 1000 * 60 * 60, //1 giờ mới đi call lại
     ...option,
   });
 
   const firstLoading = profile === undefined && error === undefined;
 
   const login = async (payload: LoginPayloadInterface) => {
-    const a = await API.post("/signIn", payload);
+    await API.post("/signIn", payload);
     mutate();
   };
 
   const logout = async () => {
     await API.get("/signOut");
-    mutate({}, false);
+    window.location.reload();
   };
 
   return {

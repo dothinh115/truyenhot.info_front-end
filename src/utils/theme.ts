@@ -1,8 +1,7 @@
-import { Noto_Sans } from "next/font/google";
-import { createTheme, ThemeOptions } from "@mui/material/styles";
 import { PaletteMode } from "@mui/material";
-import { deepOrange, grey, indigo, blueGrey } from "@mui/material/colors";
-import React from "react";
+import { grey, indigo } from "@mui/material/colors";
+import { createTheme } from "@mui/material/styles";
+import { Noto_Sans } from "next/font/google";
 
 export const noto = Noto_Sans({
   weight: ["300", "400", "500", "700"],

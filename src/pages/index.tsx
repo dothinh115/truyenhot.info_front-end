@@ -9,7 +9,6 @@ import {
 import { CategoriesSidebar, ReadingStoriesHistory } from "@/components/sidebar";
 import { MainLayoutContext } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
-import { BaseStatsInterface } from "@/models/home";
 import { apiURL } from "@/utils/config";
 import HomeIcon from "@mui/icons-material/Home";
 import { Box, Container, Stack } from "@mui/material";

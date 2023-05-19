@@ -137,9 +137,12 @@ export const SearchModal = (props: Props) => {
   }, [getValues("keywords")]);
 
   useEffect(() => {
-    searchBodyElement?.current!.addEventListener("scroll", scrollHandle);
+    if (searchBodyElement?.current)
+      searchBodyElement?.current!.addEventListener("scroll", scrollHandle);
+
     return () => {
-      searchBodyElement?.current!.removeEventListener("scroll", scrollHandle);
+      if (searchBodyElement?.current)
+        searchBodyElement?.current!.removeEventListener("scroll", scrollHandle);
     };
   }, []);
 

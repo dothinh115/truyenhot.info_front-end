@@ -1,10 +1,15 @@
 import { useAuth } from "@/hooks/auth";
 import { LoginLayout } from "@/layouts";
 import { LoginPayloadInterface } from "@/models/auth";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, Stack, Divider } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
+import CircularProgress from "@mui/material/CircularProgress";
+import Link from "next/link";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 type Props = {};
+
+const emailPattern = new RegExp(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/);
 
 const Login = (props: Props) => {
   const { login } = useAuth({
@@ -14,7 +19,8 @@ const Login = (props: Props) => {
   const {
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
+    setError,
   } = useForm<LoginPayloadInterface>({
     mode: "onChange",
     defaultValues: {
@@ -28,13 +34,14 @@ const Login = (props: Props) => {
       await login(data);
     } catch (error) {
       console.log(error);
+      setError("password", { message: "Email hoặc password không đúng!" });
     }
   };
 
   return (
     <Box component={"form"} onSubmit={handleSubmit(submitHandle)}>
       <Box
-        component={"h1"}
+        component={"h2"}
         m={0}
         mb={1}
         sx={{
@@ -49,6 +56,10 @@ const Login = (props: Props) => {
           control={control}
           rules={{
             required: "Không được để trống",
+            pattern: {
+              value: emailPattern,
+              message: "Email phải đúng định dạng!",
+            },
           }}
           render={({ field: { onChange, value } }) => (
             <TextField
@@ -58,6 +69,7 @@ const Login = (props: Props) => {
               value={value}
               error={!!errors?.email}
               helperText={errors.email?.message ? errors.email?.message : null}
+              size="small"
             />
           )}
         />
@@ -80,15 +92,51 @@ const Login = (props: Props) => {
               helperText={
                 errors.password?.message ? errors.password?.message : null
               }
+              size="small"
             />
           )}
         />
       </Box>
-      <Box textAlign={"right"}>
-        <Button type="submit" variant="contained">
-          Submit
+      <Stack
+        direction={"row"}
+        justifyContent={"space-between"}
+        my={1}
+        alignItems={"center"}
+      >
+        <Box
+          component={Link}
+          href={"/users/resetPassword"}
+          sx={{ textDecoration: "none" }}
+        >
+          Quên mật khẩu
+        </Box>
+        <Button
+          type="submit"
+          variant="contained"
+          size="small"
+          color="success"
+          disabled={isSubmitting ? true : false}
+          startIcon={
+            isSubmitting ? (
+              <CircularProgress color="inherit" size={"1em"} />
+            ) : null
+          }
+        >
+          Đăng nhập
         </Button>
-      </Box>
+      </Stack>
+      <Divider />
+      <Button
+        LinkComponent={Link}
+        href="/"
+        variant="contained"
+        sx={{ mt: 1 }}
+        startIcon={<ArrowBackIcon color="inherit" />}
+        size="small"
+        fullWidth
+      >
+        Về trang chủ
+      </Button>
     </Box>
   );
 };

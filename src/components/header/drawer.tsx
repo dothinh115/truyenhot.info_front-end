@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/auth";
 import { MainLayoutContext } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -37,6 +38,7 @@ const WrapperHeadding = styled("h4")(({ theme }) => ({
 export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
   const [cateShow, setCateShow] = useState<boolean>(false);
   const { mode, setMode } = useContext<any>(MainLayoutContext);
+  const { profile, logout } = useAuth();
   const { data: categoriesList } = useSWR(`/categories/getAll`, {
     dedupingInterval: 60 * 60 * 24,
   });
@@ -91,6 +93,57 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
           <Box>TRUYENHOT.INFO</Box>
         </Stack>
         <Stack height={"100%"} p={1} pt={"50px"}>
+          <Wrapper
+            justifyContent={"space-between"}
+            alignItems={"center"}
+            sx={{
+              p: 2,
+              "& > div": {
+                "& a": {
+                  textDecoration: "none",
+                  color: "myText.primary",
+                },
+              },
+            }}
+          >
+            {profile ? (
+              <>
+                <Box width={"100%"} textAlign={"center"}>
+                  <Box
+                    component={"p"}
+                    m={0}
+                    sx={{
+                      cursor: "pointer",
+                    }}
+                    onClick={() => logout()}
+                  >
+                    Đăng xuất
+                  </Box>
+                </Box>
+              </>
+            ) : (
+              <>
+                <Box
+                  sx={{
+                    width: "50%",
+                    textAlign: "center",
+                    borderRight: "1px solid #eee",
+                  }}
+                >
+                  <Link href={"/login"}>Đăng nhập</Link>
+                </Box>
+                <Box
+                  sx={{
+                    width: "50%",
+                    textAlign: "center",
+                  }}
+                >
+                  <Link href={"/register"}>Đăng ký</Link>
+                </Box>
+              </>
+            )}
+          </Wrapper>
+
           <Wrapper justifyContent={"space-between"} alignItems={"center"}>
             <Box component={"span"}>Giao diện tối</Box>
             <Switch

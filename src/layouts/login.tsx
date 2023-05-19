@@ -1,7 +1,5 @@
-import { AdminLoading } from "@/components/loading/index";
 import { useAuth } from "@/hooks/auth";
 import { LoginLayoutInterface } from "@/models";
-import { PermissionVariables } from "@/utils/config";
 import { Stack } from "@mui/material";
 import { Container } from "@mui/system";
 import { useRouter } from "next/router";
@@ -13,20 +11,17 @@ export const LoginLayout = ({ children }: LoginLayoutInterface) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (
-      !isValidating &&
-      profile &&
-      profile?.result.permission > PermissionVariables.Editors
-    )
-      router.push("/admin");
-    else if (!isValidating && profile) router.push("/");
-  }, [profile, isValidating]);
-
-  if (!firstLoading && profile) {
-    return <AdminLoading open={isValidating} />;
-  } else {
+    if (profile) router.push("/");
+  }, [profile]);
+  if (profile) return null;
+  else
     return (
-      <Stack alignItems={"center"}>
+      <Stack
+        alignItems={"center"}
+        sx={{
+          backgroundColor: "#424242",
+        }}
+      >
         <Container maxWidth="xs">
           <Stack minHeight={"100vh"}>
             <Stack my={3} flexGrow={1} justifyContent={"center"}>
@@ -46,5 +41,4 @@ export const LoginLayout = ({ children }: LoginLayoutInterface) => {
         </Container>
       </Stack>
     );
-  }
 };

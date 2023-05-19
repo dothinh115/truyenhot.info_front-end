@@ -37,10 +37,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
           (res as NextApiResponse)
             .status(200)
             .json({ message: "Đăng nhập thành công!" });
-        } catch (error) {
+        } catch (error: any) {
           (res as NextApiResponse)
             .status(400)
-            .json({ message: "Something went wrong!" });
+            .json({ message: "something went wrong" });
         }
       });
       resolve(true);
