@@ -1,11 +1,19 @@
 import { LoginLayout } from "@/layouts";
 import { API } from "@/utils/config";
-import { Box, Button, Divider, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  TextField,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Controller, useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CloseIcon from "@mui/icons-material/Close";
 
 type Props = {};
 const emailPattern = new RegExp(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/);
@@ -74,13 +82,19 @@ const Register = (props: Props) => {
     <Box component={"form"} onSubmit={handleSubmit(submitHandle)}>
       <Box
         component={"h2"}
-        m={0}
-        mb={1}
+        my={0}
+        py={1}
         sx={{
           borderBottom: "1px solid #eee",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
         Đăng ký
+        <IconButton LinkComponent={Link} href="/">
+          <CloseIcon />
+        </IconButton>
       </Box>
       {message ? (
         <Box my={2}>
@@ -190,17 +204,18 @@ const Register = (props: Props) => {
         </>
       )}
       <Divider />
-      <Button
-        LinkComponent={Link}
-        href="/"
-        variant="contained"
-        sx={{ mt: 1 }}
-        startIcon={<ArrowBackIcon color="inherit" />}
-        size="small"
-        fullWidth
+      <Typography
+        my={1}
+        sx={{
+          fontSize: "13px",
+          textAlign: "center",
+          "& > a ": {
+            textDecoration: "none",
+          },
+        }}
       >
-        Về trang chủ
-      </Button>
+        Đã có tài khoản? <Link href={"/login"}>Đăng nhập</Link>
+      </Typography>
     </Box>
   );
 };

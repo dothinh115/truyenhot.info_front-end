@@ -1,19 +1,20 @@
 import { LoginLayout } from "@/layouts";
+import { API } from "@/utils/config";
+import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
-  Divider,
-  TextField,
   Button,
-  Stack,
+  Divider,
   IconButton,
+  Stack,
+  TextField,
 } from "@mui/material";
 import Link from "next/link";
-import { Controller, useForm } from "react-hook-form";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useEffect, useState } from "react";
-import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import { useRouter } from "next/router";
-import { API } from "@/utils/config";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+
 type Props = {};
 
 const ResetPassword = (props: Props) => {
@@ -96,12 +97,19 @@ const ResetPassword = (props: Props) => {
     >
       <Box
         component={"h2"}
+        my={0}
+        py={1}
         sx={{
-          color: "myText.primary",
+          borderBottom: "1px solid #eee",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
-        m={0}
       >
         {showReset ? "Đặt lại mật khẩu " : "Quên mật khẩu"}
+        <IconButton LinkComponent={Link} href="/">
+          <CloseIcon />
+        </IconButton>
       </Box>
       <Divider />
       {showReset ? (
@@ -158,26 +166,24 @@ const ResetPassword = (props: Props) => {
             )}
           />
           <Divider />
-          <Box textAlign={"right"} my={1}>
-            <Button
-              color="success"
-              type="submit"
-              size="small"
-              variant="contained"
-              endIcon={<ArrowCircleRightIcon />}
-            >
-              Đặt lại
-            </Button>
-          </Box>
+
+          <Button
+            color="success"
+            type="submit"
+            size="small"
+            variant="contained"
+            endIcon={<ArrowCircleRightIcon />}
+            fullWidth
+          >
+            Đặt lại
+          </Button>
         </>
       ) : message ? (
-        <Box my={2}>{message}</Box>
+        <Box my={2} fontSize={"13px"}>
+          {message}
+        </Box>
       ) : (
-        <Stack
-          direction={"row"}
-          justifyContent={"space-between"}
-          alignContent={"center"}
-        >
+        <Stack>
           <Controller
             name={"email"}
             control={control}
@@ -192,33 +198,31 @@ const ResetPassword = (props: Props) => {
                 value={value}
                 error={!!errors?.email}
                 helperText={
-                  errors.email?.message ? errors.email?.message : null
+                  errors.email?.message
+                    ? errors.email?.message
+                    : "Nhập email đã đăng ký"
                 }
                 sx={{ my: 1 }}
                 size="small"
               />
             )}
           />
-          <Stack direction={"row"} alignItems={"center"}>
-            <IconButton color="success" type="submit">
-              <ArrowCircleRightIcon />
-            </IconButton>
-          </Stack>
+          <Button fullWidth size="small" color="success" variant="contained">
+            Gửi
+          </Button>
         </Stack>
       )}
 
-      <Divider />
-      <Button
-        LinkComponent={Link}
-        href="/"
-        variant="contained"
-        sx={{ mt: 1 }}
-        startIcon={<ArrowBackIcon color="inherit" />}
-        size="small"
-        fullWidth
+      <Box
+        my={1}
+        sx={{
+          fontSize: "13px",
+        }}
       >
-        Về trang chủ
-      </Button>
+        <Divider sx={{ my: 2 }} />
+        Bạn có thể dùng mẫu sau để đặt lại mật khẩu, bạn sẽ nhận được một email
+        với nội dung hướng dẫn đặt lại mật khẩu.
+      </Box>
     </Box>
   );
 };

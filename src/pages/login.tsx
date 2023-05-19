@@ -1,12 +1,19 @@
 import { useAuth } from "@/hooks/auth";
 import { LoginLayout } from "@/layouts";
 import { LoginPayloadInterface } from "@/models/auth";
-import { Box, Button, TextField, Stack, Divider } from "@mui/material";
-import { Controller, useForm } from "react-hook-form";
+import CloseIcon from "@mui/icons-material/Close";
+import {
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Link from "next/link";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
+import { Controller, useForm } from "react-hook-form";
 type Props = {};
 
 const Login = (props: Props) => {
@@ -40,13 +47,19 @@ const Login = (props: Props) => {
     <Box component={"form"} onSubmit={handleSubmit(submitHandle)}>
       <Box
         component={"h2"}
-        m={0}
-        mb={1}
+        my={0}
+        py={1}
         sx={{
           borderBottom: "1px solid #eee",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
         Đăng nhập
+        <IconButton LinkComponent={Link} href="/">
+          <CloseIcon />
+        </IconButton>
       </Box>
       <Box py={1}>
         <Controller
@@ -100,7 +113,7 @@ const Login = (props: Props) => {
         <Box
           component={Link}
           href={"/users/resetPassword"}
-          sx={{ textDecoration: "none" }}
+          sx={{ textDecoration: "none", fontSize: "13px" }}
         >
           Quên mật khẩu
         </Box>
@@ -120,17 +133,18 @@ const Login = (props: Props) => {
         </Button>
       </Stack>
       <Divider />
-      <Button
-        LinkComponent={Link}
-        href="/"
-        variant="contained"
-        sx={{ mt: 1 }}
-        startIcon={<ArrowBackIcon color="inherit" />}
-        size="small"
-        fullWidth
+      <Typography
+        my={1}
+        sx={{
+          fontSize: "13px",
+          textAlign: "center",
+          "& > a ": {
+            textDecoration: "none",
+          },
+        }}
       >
-        Về trang chủ
-      </Button>
+        Chưa có tài khoản? <Link href={"/register"}>Đăng ký</Link>
+      </Typography>
     </Box>
   );
 };

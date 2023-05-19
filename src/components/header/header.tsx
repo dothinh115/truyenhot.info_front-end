@@ -42,6 +42,7 @@ const DropdownMenu = styled(Box)(({ theme }) => ({
   zIndex: 10,
   display: "none",
   borderRadius: theme.spacing(2),
+  overflow: "hidden",
 }));
 
 const ListStyled = styled(List)(({ theme }) => ({
@@ -50,9 +51,8 @@ const ListStyled = styled(List)(({ theme }) => ({
     padding: "8px",
     borderBottom: `1px solid ${alpha(
       theme.palette.mySecondary.boxShadow,
-      0.3
+      0.1
     )}`,
-
     "& *": {
       color: theme.palette.myText.primary,
     },
@@ -220,12 +220,7 @@ export function Header() {
                             >
                               <ExitToAppIcon />
                             </ListItemIcon>
-                            <ListItemText
-                              primary="Đăng xuất"
-                              sx={{
-                                textAlign: "right",
-                              }}
-                            />
+                            <ListItemText primary="Đăng xuất" />
                           </ListItemButton>
                         </>
                       ) : (
@@ -236,12 +231,7 @@ export function Header() {
                             >
                               <LoginIcon />
                             </ListItemIcon>
-                            <ListItemText
-                              primary="Đăng nhập"
-                              sx={{
-                                textAlign: "right",
-                              }}
-                            />
+                            <ListItemText primary="Đăng nhập" />
                           </ListItemButton>
 
                           <ListItemButton LinkComponent={Link} href="/register">
@@ -250,12 +240,7 @@ export function Header() {
                             >
                               <HowToRegIcon />
                             </ListItemIcon>
-                            <ListItemText
-                              primary="Đăng ký"
-                              sx={{
-                                textAlign: "right",
-                              }}
-                            />
+                            <ListItemText primary="Đăng ký" />
                           </ListItemButton>
                         </>
                       )}
