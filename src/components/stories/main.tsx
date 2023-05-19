@@ -194,7 +194,6 @@ const ChapterListH3 = styled("h3")(({ theme }) => ({
 
 const ListStyled = styled(List)(({ theme }) => ({
   height: "100%",
-  overflow: "auto",
   backgroundColor: theme.palette.myBackground.secondary,
   overflowY: "auto",
   padding: 0,

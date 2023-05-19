@@ -165,7 +165,6 @@ export function Header() {
                 >
                   TRUYENHOT.INFO
                 </Box>
-                <SearchBar />
               </Stack>
               <Stack
                 direction={"row"}
@@ -180,6 +179,9 @@ export function Header() {
                   "& svg": { color: "myText.main" },
                 }}
               >
+                <IconButton size="small" onClick={() => setSearchOpen(true)}>
+                  <SearchIcon />
+                </IconButton>
                 <IconButton
                   size="small"
                   sx={{
@@ -248,18 +250,6 @@ export function Header() {
                   </DropdownMenu>
                 </Box>
 
-                <IconButton
-                  size="small"
-                  sx={{
-                    display: {
-                      md: "none",
-                      xs: "inline-flex",
-                    },
-                  }}
-                  onClick={() => setSearchOpen(true)}
-                >
-                  <SearchIcon />
-                </IconButton>
                 <IconButton
                   size="small"
                   sx={{
