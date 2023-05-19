@@ -10,6 +10,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  ListItem,
 } from "@mui/material";
 import { useContext, useEffect, useRef } from "react";
 import { Drawer } from "./drawer";
@@ -25,6 +26,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import { useAuth } from "@/hooks/auth";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const AppBarStyled = styled(AppBar)(({ theme }) => ({
   position: "static",
@@ -216,6 +218,23 @@ export function Header() {
                     <ListStyled>
                       {profile ? (
                         <>
+                          <ListItem>
+                            <ListItemIcon
+                              sx={{ minWidth: "unset", marginRight: "8px" }}
+                            >
+                              <AccountCircleIcon />
+                            </ListItemIcon>
+                            <ListItemText
+                              sx={{
+                                "&>span": {
+                                  whiteSpace: "nowrap",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                },
+                              }}
+                              primary={profile.result.email}
+                            />
+                          </ListItem>
                           <ListItemButton onClick={() => logout()}>
                             <ListItemIcon
                               sx={{ minWidth: "unset", marginRight: "8px" }}

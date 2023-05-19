@@ -108,7 +108,19 @@ export const Drawer = ({ open, setMobileMenuOpen }: Props) => {
           >
             {profile ? (
               <>
-                <Box width={"100%"} textAlign={"center"}>
+                <Box
+                  sx={{
+                    width: "70%",
+                    textAlign: "center",
+                    borderRight: "1px solid #eee",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {profile.result.email}
+                </Box>
+                <Box width={"30%"} textAlign={"center"}>
                   <Box
                     component={"p"}
                     m={0}
