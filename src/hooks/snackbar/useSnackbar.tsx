@@ -31,7 +31,7 @@ export const useSnackbar = () => {
       autoHideDuration={6000}
       open={snackbarOpen.open}
       onClose={handleClose}
-      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      anchorOrigin={{ vertical: "top", horizontal: "left" }}
     >
       <Alert onClose={handleClose} severity={snackbarOpen.type}>
         {snackbarOpen.message}

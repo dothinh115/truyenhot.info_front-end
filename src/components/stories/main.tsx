@@ -10,7 +10,6 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import FolderIcon from "@mui/icons-material/Folder";
 import PersonIcon from "@mui/icons-material/Person";
-import PlayCircleFilledIcon from "@mui/icons-material/PlayCircleFilled";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import StarIcon from "@mui/icons-material/Star";
 import UpdateIcon from "@mui/icons-material/Update";
@@ -38,6 +37,8 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { RowLoading } from "../loading";
 import { StoryReportButton } from "./reportButton";
+import ModeCommentIcon from "@mui/icons-material/ModeComment";
+import { StoryLikeButton } from "./likeButton";
 
 const Wrapper = styled("h2")(({ theme }) => ({
   display: "flex",
@@ -114,18 +115,29 @@ const ViewStyled = styled(Stack)(() => ({
   },
 }));
 
-const ButtonWrapper = styled(Stack)(() => ({
+const ButtonWrapper = styled(Stack)(({ theme }) => ({
   flexDirection: "row",
   justifyContent: "center",
   alignItems: "center",
-  gap: "8px",
-  marginTop: "8px",
+  width: "100%",
+  borderTop: `1px dashed ${alpha(theme.palette.mySecondary.borderBottom, 1)}`,
+  "&>button": {
+    padding: "8px 4px",
+    fontSize: ".8em",
+    flexGrow: 1,
+    width: "calc(100%/3)",
+    borderRadius: "0px",
+    "& > span": {
+      marginRight: "3px",
+    },
+  },
 }));
 
 const UListStyled = styled("ul")(({ theme }) => ({
   margin: 0,
   listStyleType: "none",
   paddingLeft: "0",
+  flexGrow: 1,
   "& a ": {
     textDecoration: "none",
     color: theme.palette.myText.link,
@@ -142,6 +154,7 @@ const UListStyled = styled("ul")(({ theme }) => ({
     marginBottom: "0",
   },
   "& > li": {
+    padding: "4px",
     lineHeight: "30px",
     color: theme.palette.myText.primary,
     "&:not(:last-child)": {
@@ -226,10 +239,10 @@ const ListStyled = styled(List)(({ theme }) => ({
 
 const ULWrapper = styled(Stack)(({ theme }) => ({
   boxShadow: `0 0 2px ${alpha(theme.palette.mySecondary.boxShadow, 0.1)}`,
-  padding: theme.spacing(1),
   borderRadius: theme.spacing(2),
   backgroundColor: theme.palette.myBackground.secondary,
   flexGrow: 1,
+  overflow: "hidden",
 }));
 
 const DescriptionWrapper = styled(Stack)(({ theme }) => ({
@@ -263,6 +276,12 @@ export const StoryMain = ({ story }: Props) => {
   const { story_code, page } = router?.query;
   const [paginationPage, setPaginationPage] = useState<number>(1);
   const [reportModalOpen, setReportModalOpen] = useState<boolean>(false);
+  const { data: likeNumberData, mutate: likeNumberMutate } = useSWR(
+    `/like/getLikeNumber/${story?.story_code}`,
+    {
+      revalidateOnMount: false,
+    }
+  );
   const {
     data: chapterListData,
     mutate: chapterListMutate,
@@ -283,7 +302,10 @@ export const StoryMain = ({ story }: Props) => {
 
   useEffect(() => {
     if (page) setPaginationPage(+page);
-    if (story) chapterListMutate();
+    if (story) {
+      chapterListMutate();
+      likeNumberMutate();
+    }
   }, [story, page]);
 
   useEffect(() => {
@@ -382,32 +404,30 @@ export const StoryMain = ({ story }: Props) => {
                   )} trước`}</>
                 )}
               </Box>
+              <Box component={"li"}>
+                <Box component={"h4"}>
+                  <StarIcon />
+                  Số lượt thích:
+                </Box>
+                {likeNumberData?.result?.number}
+              </Box>
             </UListStyled>
+            <ButtonWrapper>
+              <StoryLikeButton
+                story_code={story?.story_code}
+                likeNumberMutate={likeNumberMutate}
+              />
+
+              <Button color="secondary" startIcon={<ModeCommentIcon />}>
+                bình luận
+              </Button>
+              <StoryReportButton
+                open={reportModalOpen}
+                setOpen={setReportModalOpen}
+                story_code={story?.story_code}
+              />
+            </ButtonWrapper>
           </ULWrapper>
-          <ButtonWrapper>
-            <Button
-              variant="outlined"
-              color="info"
-              size="small"
-              startIcon={<PlayCircleFilledIcon />}
-              onClick={() =>
-                router.push({
-                  pathname: `/story/[story_code]/[chapter_code]`,
-                  query: {
-                    story_code: story?.story_code,
-                    chapter_code: story?.start_chapter,
-                  },
-                })
-              }
-            >
-              Đọc truyện
-            </Button>
-            <StoryReportButton
-              open={reportModalOpen}
-              setOpen={setReportModalOpen}
-              story_code={story?.story_code}
-            />
-          </ButtonWrapper>
         </Stack>
       </Stack>
 

@@ -193,11 +193,9 @@ export const StoryReportButton = ({ open, setOpen, story_code }: Props) => {
         </Box>
       </Modal>
       <Button
-        startIcon={<ReportIcon />}
-        variant="outlined"
         color={"error"}
+        startIcon={<ReportIcon />}
         onClick={openModalHandle}
-        size="small"
       >
         Báo cáo lỗi
       </Button>

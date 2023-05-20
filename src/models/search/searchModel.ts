@@ -12,6 +12,7 @@ export interface StoriesSearchResultInterface {
   story_cover: string;
   story_code: string;
   _count: number;
+  _like: number;
 }
 
 export interface HotStoriesInCategoriesInterface {

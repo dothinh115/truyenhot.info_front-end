@@ -4,6 +4,7 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { Box, Stack, Typography, alpha } from "@mui/material";
 import Link from "next/link";
 import { styled } from "@mui/material/styles";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 type Props = {
   storiesData: {
     result: StoriesInCategoryInterface[];
@@ -80,7 +81,16 @@ const ListItemInnerAuthor = styled(Link)(({ theme }) => ({
   },
 }));
 
-const ChapterNumber = styled(Typography)(({ theme }) => ({
+const ChapterInfoWrapper = styled(Box)(({ theme }) => ({
+  display: "flex",
+  gap: theme.spacing(0.5),
+  "&>p:not(:last-of-type)": {
+    borderRight: `1px solid ${alpha(theme.palette.mySecondary.boxShadow, 0.5)}`,
+    paddingRight: theme.spacing(0.5),
+  },
+}));
+
+const ChapterInfo = styled(Typography)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   fontSize: "14px",
@@ -107,7 +117,7 @@ export const RowStory = ({ storiesData }: Props) => {
               <ListItemInnerWrapper>
                 <ListItemInnerImg src={story.story_cover} />
               </ListItemInnerWrapper>
-              <Box width={"80%"}>
+              <Stack width={"80%"} gap={"4px"}>
                 <ListItemInnerTitle href={`/story/${story.story_code}`}>
                   {story.story_title}
                 </ListItemInnerTitle>
@@ -117,11 +127,18 @@ export const RowStory = ({ storiesData }: Props) => {
                   <CreateIcon />
                   {story.story_author}
                 </ListItemInnerAuthor>
-                <ChapterNumber>
-                  <FormatListBulletedIcon />
-                  {story._count + " chương"}
-                </ChapterNumber>
-              </Box>
+                <ChapterInfoWrapper>
+                  <ChapterInfo>
+                    <FormatListBulletedIcon />
+                    {story._count + " chương"}
+                  </ChapterInfo>
+
+                  <ChapterInfo>
+                    <FavoriteIcon />
+                    {story._like + " lượt thích"}
+                  </ChapterInfo>
+                </ChapterInfoWrapper>
+              </Stack>
             </ListItemStyled>
           );
         })}

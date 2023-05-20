@@ -5,7 +5,6 @@ export interface LoginPayloadInterface {
 
 export interface LoginResponseInterface {
   _id: string;
-  user_id: number;
   user_name: string;
   email: string;
   avatar: string;

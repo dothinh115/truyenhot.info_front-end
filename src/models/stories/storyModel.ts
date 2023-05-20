@@ -3,7 +3,6 @@ import { CategoryInterface } from "../categories";
 export interface StoryInterface {
   _id: string;
   story_title: string;
-  story_rating: number;
   story_description?: string;
   story_author: string;
   story_status: string;
