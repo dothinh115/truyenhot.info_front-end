@@ -25,6 +25,7 @@ import { useAuth } from "@/hooks/auth";
 import { useSnackbar } from "@/hooks/snackbar";
 import { timeSince } from "@/utils/function";
 import { useRouter } from "next/router";
+import { TransitionGroup } from "react-transition-group";
 
 const ModalInner = styled(Stack)(({ theme }) => ({
   position: "fixed",
@@ -158,7 +159,7 @@ export const StoryCommentButton = ({ story_code }: Props) => {
     <>
       {snackbar}
       <Modal open={open} onClose={closeHandle}>
-        <Fade in={open}>
+        <Fade in={open} unmountOnExit>
           <ModalInner>
             <HeaddingStyled>
               <Box

@@ -12,7 +12,7 @@ import {
   Stack,
   alpha,
   Modal,
-  Fade,
+  Slide,
 } from "@mui/material";
 import Switch from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
@@ -81,7 +81,7 @@ export const Drawer = (props: Props) => {
   return (
     <>
       <Modal open={mobileMenuOpen} onClose={closeHandle}>
-        <Fade in={mobileMenuOpen}>
+        <Slide direction="left" in={mobileMenuOpen} unmountOnExit>
           <ModalInner>
             <ModalMainHeadding>
               <Box>
@@ -211,7 +211,7 @@ export const Drawer = (props: Props) => {
               </Wrapper>
             </Stack>
           </ModalInner>
-        </Fade>
+        </Slide>
       </Modal>
     </>
   );

@@ -171,7 +171,7 @@ export const SearchModal = (props: Props) => {
   return (
     <>
       <Modal open={searchOpen} onClose={onCloseHandle}>
-        <Fade in={searchOpen}>
+        <Fade in={searchOpen} unmountOnExit>
           <ModalInner>
             <Stack
               direction={"row"}
