@@ -40,13 +40,12 @@ const LoadingAnimation = styled(Box)(({ theme }) => ({
   backgroundSize: "200%",
 }));
 
-const ModalInner = styled(Box)(({ theme }) => ({
+const ModalInner = styled(Stack)(({ theme }) => ({
   position: "fixed",
   backgroundColor: theme.palette.myBackground.default,
   zIndex: 100,
   padding: theme.spacing(1),
   overflow: "hidden",
-  paddingBottom: theme.spacing(18),
   [theme.breakpoints.up("xs")]: {
     top: "0",
     left: "0",
@@ -59,7 +58,7 @@ const ModalInner = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up("md")]: {
     top: "50%",
     left: "50%",
-    width: "30%",
+    width: "40%",
     height: "80%",
     borderRadius: theme.spacing(2),
     transform: "translate(-50%, -50%)",
@@ -74,8 +73,7 @@ const FormStyled = styled("form")(({ theme }) => ({
   backgroundColor: theme.palette.myBackground.default,
 }));
 
-const ResultList = styled(Stack)(() => ({
-  maxHeight: "100%",
+const ResultList = styled(Box)(() => ({
   "&::-webkit-scrollbar": {
     borderRadius: "0 16px 16px 0",
     backgroundColor: "transparent",
@@ -85,6 +83,7 @@ const ResultList = styled(Stack)(() => ({
     background: "#7986cba6",
   },
   overflow: "auto",
+  width: "100%",
 }));
 
 const ResultItem = styled(Link)(({ theme }) => ({

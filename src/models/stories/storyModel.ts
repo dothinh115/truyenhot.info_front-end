@@ -84,3 +84,17 @@ export interface NumberOfLikeInterface {
 interface NumberOfLikeResultInterface {
   number: boolean;
 }
+
+export interface CommentDataInterface {
+  _id: string;
+  story_code: string;
+  comment_content: string;
+  created_at: Date;
+  author: CommentAuthorInterface;
+}
+
+interface CommentAuthorInterface {
+  _id: string;
+  user_name: string;
+  email: string;
+}

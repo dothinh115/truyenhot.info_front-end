@@ -154,8 +154,8 @@ const UListStyled = styled("ul")(({ theme }) => ({
   },
   "& > li": {
     padding: "4px",
-    lineHeight: "30px",
     color: theme.palette.myText.primary,
+    minHeight: "30px",
     "&:not(:last-child)": {
       borderBottomWidth: "1px",
       borderBottomStyle: "dashed",
@@ -177,6 +177,9 @@ const UListStyled = styled("ul")(({ theme }) => ({
         display: "inline-block",
         width: "60px",
       },
+    },
+    "&>span>a": {
+      marginBottom: "4px",
     },
   },
   "& > li > ul": {
@@ -421,7 +424,7 @@ export const StoryMain = ({ story }: Props) => {
                 likeNumberMutate={likeNumberMutate}
               />
 
-              <StoryCommentButton />
+              <StoryCommentButton story_code={story?.story_code} />
               <StoryReportButton
                 open={reportModalOpen}
                 setOpen={setReportModalOpen}
