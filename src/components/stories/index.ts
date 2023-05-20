@@ -3,3 +3,4 @@ export * from "./sidebar";
 export * from "./reportButton";
 export * from "./chapterPicker";
 export * from "./likeButton";
+export * from "./commentButton";

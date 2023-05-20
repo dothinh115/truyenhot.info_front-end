@@ -66,3 +66,21 @@ export interface ReadingStoriesInterface {
   chapter_code: string;
   chapter_name: string;
 }
+
+export interface CheckIfLikedInterface {
+  message: string;
+  result: CheckIfLikedResultInterface;
+}
+
+interface CheckIfLikedResultInterface {
+  like: boolean;
+}
+
+export interface NumberOfLikeInterface {
+  message: string;
+  result: NumberOfLikeResultInterface;
+}
+
+interface NumberOfLikeResultInterface {
+  number: boolean;
+}

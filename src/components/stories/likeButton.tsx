@@ -3,9 +3,9 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Button } from "@mui/material";
 import { useAuth } from "@/hooks/auth";
-import useSWR from "swr";
 import { API } from "@/utils/config";
 import { useRouter } from "next/router";
+import { CheckIfLikedInterface } from "@/models/stories";
 type Props = {
   story_code: string;
   likeNumberMutate: () => void;
@@ -15,12 +15,9 @@ export const StoryLikeButton = ({ story_code, likeNumberMutate }: Props) => {
   const { profile } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-  const { data: checkIfLikedData, mutate: checkIfLikedMutate } = useSWR(
-    `/like/checkIfLiked/${story_code}`,
-    {
-      revalidateOnMount: false,
-    }
-  );
+
+  const [checkIfLikedData, setCheckIfLikedData] =
+    useState<CheckIfLikedInterface>();
 
   const likeHandle = async () => {
     if (!profile) {
@@ -34,7 +31,7 @@ export const StoryLikeButton = ({ story_code, likeNumberMutate }: Props) => {
       } else {
         await API.get(`/like/new/${story_code}`);
       }
-      checkIfLikedMutate();
+      checkIfLikedHandle();
     } catch (error: any) {
       console.log(error);
     } finally {
@@ -43,8 +40,17 @@ export const StoryLikeButton = ({ story_code, likeNumberMutate }: Props) => {
     }
   };
 
+  const checkIfLikedHandle = async () => {
+    try {
+      const response: any = await API.get(`/like/checkIfLiked/${story_code}`);
+      setCheckIfLikedData(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    if (profile && story_code) checkIfLikedMutate();
+    if (profile && story_code) checkIfLikedHandle();
   }, [profile, story_code]);
 
   return (
@@ -57,7 +63,7 @@ export const StoryLikeButton = ({ story_code, likeNumberMutate }: Props) => {
           <FavoriteBorderIcon />
         )
       }
-      onClick={likeHandle}
+      onClick={() => likeHandle()}
       variant={checkIfLikedData?.result.like ? "contained" : "text"}
       disabled={loading ? true : false}
     >

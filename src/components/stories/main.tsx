@@ -8,6 +8,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import FolderIcon from "@mui/icons-material/Folder";
 import PersonIcon from "@mui/icons-material/Person";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
@@ -15,7 +16,6 @@ import StarIcon from "@mui/icons-material/Star";
 import UpdateIcon from "@mui/icons-material/Update";
 import {
   Box,
-  Button,
   Chip,
   IconButton,
   List,
@@ -36,10 +36,9 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { RowLoading } from "../loading";
-import { StoryReportButton } from "./reportButton";
-import ModeCommentIcon from "@mui/icons-material/ModeComment";
+import { StoryCommentButton } from "./commentButton";
 import { StoryLikeButton } from "./likeButton";
-
+import { StoryReportButton } from "./reportButton";
 const Wrapper = styled("h2")(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
@@ -173,7 +172,6 @@ const UListStyled = styled("ul")(({ theme }) => ({
         height: "20px",
         width: "20px",
         marginRight: "8px",
-        marginTop: "2px",
       },
       "& span": {
         display: "inline-block",
@@ -302,10 +300,6 @@ export const StoryMain = ({ story }: Props) => {
 
   useEffect(() => {
     if (page) setPaginationPage(+page);
-    if (story) {
-      chapterListMutate();
-      likeNumberMutate();
-    }
   }, [story, page]);
 
   useEffect(() => {
@@ -314,6 +308,15 @@ export const StoryMain = ({ story }: Props) => {
         .replaceAll("<div text-align: justify; >", "")
         .replaceAll("</div>", "");
   }, [story?.story_description]);
+
+  useEffect(() => {
+    if (story) {
+      chapterListMutate();
+      likeNumberMutate();
+    }
+  }, []);
+
+  if (!story || !likeNumberData) return null;
 
   return (
     <>
@@ -406,7 +409,7 @@ export const StoryMain = ({ story }: Props) => {
               </Box>
               <Box component={"li"}>
                 <Box component={"h4"}>
-                  <StarIcon />
+                  <FavoriteIcon />
                   Số lượt thích:
                 </Box>
                 {likeNumberData?.result?.number}
@@ -418,9 +421,7 @@ export const StoryMain = ({ story }: Props) => {
                 likeNumberMutate={likeNumberMutate}
               />
 
-              <Button color="secondary" startIcon={<ModeCommentIcon />}>
-                bình luận
-              </Button>
+              <StoryCommentButton />
               <StoryReportButton
                 open={reportModalOpen}
                 setOpen={setReportModalOpen}
