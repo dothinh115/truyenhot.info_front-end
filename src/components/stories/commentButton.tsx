@@ -9,6 +9,7 @@ import SendIcon from "@mui/icons-material/Send";
 import {
   Box,
   Button,
+  Collapse,
   Fade,
   IconButton,
   Modal,
@@ -21,6 +22,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { TransitionGroup } from "react-transition-group";
 import useSWRInfinite from "swr/infinite";
 import { StoryCommentRow } from "../comment";
 
@@ -160,18 +162,22 @@ export const StoryCommentButton = ({ story_code }: Props) => {
             </HeaddingStyled>
 
             <CommentRowWrapper ref={commentWrapper}>
-              {data?.map((group: any) => {
-                return group?.result.map((comment: CommentDataInterface) => {
-                  return (
-                    <StoryCommentRow
-                      key={comment._id}
-                      comment={comment}
-                      setSnackbar={setSnackbar}
-                      mutate={mutate}
-                    />
-                  );
-                });
-              })}
+              <TransitionGroup>
+                {data?.map((group: any) => {
+                  return group?.result.map((comment: CommentDataInterface) => {
+                    return (
+                      <Collapse key={comment._id}>
+                        <StoryCommentRow
+                          key={comment._id}
+                          comment={comment}
+                          setSnackbar={setSnackbar}
+                          mutate={mutate}
+                        />
+                      </Collapse>
+                    );
+                  });
+                })}
+              </TransitionGroup>
               {data && size < data[0]?.pagination.pages ? (
                 <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
                   <Button
