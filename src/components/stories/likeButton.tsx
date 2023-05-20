@@ -64,7 +64,7 @@ export const StoryLikeButton = ({
       } finally {
         likeNumberMutate();
       }
-    }, 500);
+    }, 300);
   };
 
   const checkIfLikedHandle = async () => {
