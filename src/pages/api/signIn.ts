@@ -38,9 +38,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             .status(200)
             .json({ message: "Đăng nhập thành công!" });
         } catch (error: any) {
-          (res as NextApiResponse)
-            .status(400)
-            .json({ message: "something went wrong" });
+          const { message } = JSON.parse(body);
+          (res as NextApiResponse).status(400).json({ message });
         }
       });
       resolve(true);

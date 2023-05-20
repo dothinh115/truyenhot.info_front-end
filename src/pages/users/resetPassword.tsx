@@ -1,7 +1,7 @@
 import { Seo } from "@/components";
 import { LoginLayout } from "@/layouts";
 import { API } from "@/utils/config";
-import { thumbnailUrl } from "@/utils/variables";
+import { emailPatter, thumbnailUrl } from "@/utils/variables";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -19,6 +19,8 @@ import { Controller, useForm } from "react-hook-form";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 type Props = {};
+
+const emailPattern = new RegExp(emailPatter);
 
 const ResetPassword = (props: Props) => {
   const [message, setMessage] = useState<string>("");
@@ -144,7 +146,7 @@ const ResetPassword = (props: Props) => {
                 <TextField
                   type="password"
                   fullWidth
-                  label={"Password"}
+                  label={"Mật khẩu"}
                   onChange={onChange}
                   value={value}
                   error={!!rsErrors?.password}
@@ -173,7 +175,7 @@ const ResetPassword = (props: Props) => {
                 <TextField
                   type="password"
                   fullWidth
-                  label={"Nhập lại password"}
+                  label={"Nhập lại mật khẩu"}
                   onChange={onChange}
                   value={value}
                   error={!!rsErrors?.passwordConfirm}
@@ -211,6 +213,10 @@ const ResetPassword = (props: Props) => {
               control={control}
               rules={{
                 required: "Không được để trống",
+                pattern: {
+                  value: emailPattern,
+                  message: "Email phải đúng định dạng!",
+                },
               }}
               render={({ field: { onChange, value } }) => (
                 <TextField
@@ -229,7 +235,13 @@ const ResetPassword = (props: Props) => {
                 />
               )}
             />
-            <Button fullWidth size="small" color="success" variant="contained">
+            <Button
+              fullWidth
+              size="small"
+              color="success"
+              variant="contained"
+              type="submit"
+            >
               Gửi
             </Button>
           </Stack>

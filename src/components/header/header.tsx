@@ -53,7 +53,7 @@ const ListStyled = styled(List)(({ theme }) => ({
     padding: "8px",
     borderBottom: `1px solid ${alpha(
       theme.palette.mySecondary.boxShadow,
-      0.1
+      0.2
     )}`,
     "& *": {
       color: theme.palette.myText.primary,

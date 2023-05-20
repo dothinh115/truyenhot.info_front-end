@@ -2,7 +2,7 @@ import { Seo } from "@/components";
 import { useAuth } from "@/hooks/auth";
 import { LoginLayout } from "@/layouts";
 import { LoginPayloadInterface } from "@/models/auth";
-import { thumbnailUrl } from "@/utils/variables";
+import { emailPatter, thumbnailUrl } from "@/utils/variables";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
@@ -17,6 +17,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 type Props = {};
+const emailPattern = new RegExp(emailPatter);
 
 const Login = (props: Props) => {
   const { login } = useAuth({
@@ -39,9 +40,9 @@ const Login = (props: Props) => {
   const submitHandle = async (data: any) => {
     try {
       await login(data);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      setError("password", { message: "Email hoặc password không đúng!" });
+      setError("password", { message: error.response?.data.message });
     }
   };
 
@@ -78,6 +79,10 @@ const Login = (props: Props) => {
             control={control}
             rules={{
               required: "Không được để trống",
+              pattern: {
+                value: emailPattern,
+                message: "Email phải đúng định dạng!",
+              },
             }}
             render={({ field: { onChange, value } }) => (
               <TextField

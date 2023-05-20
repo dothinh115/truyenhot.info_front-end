@@ -16,10 +16,11 @@ import Link from "next/link";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
 import { Seo } from "@/components";
-import { thumbnailUrl } from "@/utils/variables";
+import { emailPatter, thumbnailUrl } from "@/utils/variables";
 
 type Props = {};
-const emailPattern = new RegExp(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/);
+
+const emailPattern = new RegExp(emailPatter);
 
 const Register = (props: Props) => {
   const [message, setMessage] = useState<string>("");
@@ -30,16 +31,19 @@ const Register = (props: Props) => {
     formState: { errors, isSubmitting },
     setError,
     getValues,
+    watch,
   } = useForm<{
     email: string;
     user_name: string;
     password: string;
+    passwordConfirm: string;
   }>({
     mode: "onChange",
     defaultValues: {
       email: "",
       user_name: "",
       password: "",
+      passwordConfirm: "",
     },
   });
 
@@ -91,7 +95,15 @@ const Register = (props: Props) => {
           thumbnailUrl,
         }}
       />
-      <Box component={"form"} onSubmit={handleSubmit(submitHandle)}>
+      <Box
+        component={"form"}
+        onSubmit={handleSubmit(submitHandle)}
+        sx={{
+          "&>div": {
+            mb: 1,
+          },
+        }}
+      >
         <Box
           component={"h2"}
           my={0}
@@ -130,79 +142,103 @@ const Register = (props: Props) => {
           </Box>
         ) : (
           <>
-            <Box py={1}>
-              <Controller
-                name={"user_name"}
-                control={control}
-                rules={{
-                  required: "Không được để trống",
-                }}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    fullWidth
-                    label={"Tên"}
-                    onChange={onChange}
-                    value={value}
-                    error={!!errors?.user_name}
-                    helperText={
-                      errors.user_name?.message
-                        ? errors.user_name?.message
-                        : "Đây là tên sẽ hiển thị khi bạn bình luận"
-                    }
-                    size="small"
-                  />
-                )}
-              />
-            </Box>
-            <Box py={1}>
-              <Controller
-                name={"email"}
-                control={control}
-                rules={{
-                  required: "Không được để trống",
-                  pattern: {
-                    value: emailPattern,
-                    message: "Email phải đúng định dạng!",
-                  },
-                }}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    fullWidth
-                    label={"Email"}
-                    onChange={onChange}
-                    value={value}
-                    error={!!errors?.email}
-                    helperText={
-                      errors.email?.message ? errors.email?.message : null
-                    }
-                    size="small"
-                  />
-                )}
-              />
-            </Box>
-            <Box py={1}>
-              <Controller
-                name={"password"}
-                control={control}
-                rules={{
-                  required: "Không được để trống",
-                }}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    fullWidth
-                    type="password"
-                    label={"Mật khẩu"}
-                    onChange={onChange}
-                    value={value}
-                    error={!!errors.password?.message}
-                    helperText={
-                      errors.password?.message ? errors.password?.message : null
-                    }
-                    size="small"
-                  />
-                )}
-              />
-            </Box>
+            <Controller
+              name={"user_name"}
+              control={control}
+              rules={{
+                required: "Không được để trống",
+              }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  label={"Tên"}
+                  onChange={onChange}
+                  value={value}
+                  error={!!errors?.user_name}
+                  helperText={
+                    errors.user_name?.message
+                      ? errors.user_name?.message
+                      : "Đây là tên sẽ hiển thị khi bạn bình luận"
+                  }
+                  size="small"
+                />
+              )}
+            />
+
+            <Controller
+              name={"email"}
+              control={control}
+              rules={{
+                required: "Không được để trống",
+                pattern: {
+                  value: emailPattern,
+                  message: "Email phải đúng định dạng!",
+                },
+              }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  label={"Email"}
+                  onChange={onChange}
+                  value={value}
+                  error={!!errors?.email}
+                  helperText={
+                    errors.email?.message ? errors.email?.message : null
+                  }
+                  size="small"
+                />
+              )}
+            />
+
+            <Controller
+              name={"password"}
+              control={control}
+              rules={{
+                required: "Không được để trống",
+              }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  type="password"
+                  label={"Mật khẩu"}
+                  onChange={onChange}
+                  value={value}
+                  error={!!errors.password?.message}
+                  helperText={
+                    errors.password?.message ? errors.password?.message : null
+                  }
+                  size="small"
+                />
+              )}
+            />
+            <Controller
+              name={"passwordConfirm"}
+              control={control}
+              rules={{
+                required: "Không được để trống",
+                validate: (val: string) => {
+                  if (watch("password") !== val) {
+                    return "Nhập lại mật khẩu không đúng";
+                  }
+                },
+              }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  type="password"
+                  fullWidth
+                  label={"Nhập lại mật khẩu"}
+                  onChange={onChange}
+                  value={value}
+                  error={!!errors?.passwordConfirm}
+                  helperText={
+                    errors.passwordConfirm?.message
+                      ? errors.passwordConfirm?.message
+                      : null
+                  }
+                  size="small"
+                />
+              )}
+            />
 
             <Button
               type="submit"
