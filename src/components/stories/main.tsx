@@ -39,6 +39,8 @@ import { RowLoading } from "../loading";
 import { StoryCommentButton } from "./commentButton";
 import { StoryLikeButton } from "./likeButton";
 import { StoryReportButton } from "./reportButton";
+import CircularProgress from "@mui/material/CircularProgress";
+
 const Wrapper = styled("h2")(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
@@ -277,12 +279,13 @@ export const StoryMain = ({ story }: Props) => {
   const { story_code, page } = router?.query;
   const [paginationPage, setPaginationPage] = useState<number>(1);
   const [reportModalOpen, setReportModalOpen] = useState<boolean>(false);
-  const { data: likeNumberData, mutate: likeNumberMutate } = useSWR(
-    `/like/getLikeNumber/${story?.story_code}`,
-    {
-      revalidateOnMount: false,
-    }
-  );
+  const {
+    data: likeNumberData,
+    mutate: likeNumberMutate,
+    isValidating: likeNumberIsValidating,
+  } = useSWR(`/like/getLikeNumber/${story?.story_code}`, {
+    revalidateOnMount: false,
+  });
   const {
     data: chapterListData,
     mutate: chapterListMutate,
@@ -318,8 +321,6 @@ export const StoryMain = ({ story }: Props) => {
       likeNumberMutate();
     }
   }, []);
-
-  if (!story || !likeNumberData) return null;
 
   return (
     <>
@@ -415,7 +416,11 @@ export const StoryMain = ({ story }: Props) => {
                   <FavoriteIcon />
                   Số lượt thích:
                 </Box>
-                {likeNumberData?.result?.number}
+                {likeNumberIsValidating ? (
+                  <CircularProgress size={"1em"} />
+                ) : (
+                  likeNumberData?.result?.number
+                )}
               </Box>
             </UListStyled>
             <ButtonWrapper>

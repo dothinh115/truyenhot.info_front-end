@@ -1,29 +1,11 @@
 import { useAuth } from "@/hooks/auth";
-import { useSnackbar } from "@/hooks/snackbar";
 import { CommentDataInterface } from "@/models/stories";
 import { API, PermissionVariables } from "@/utils/config";
-import { strip_tags, timeSince } from "@/utils/function";
-import CloseIcon from "@mui/icons-material/Close";
+import { timeSince } from "@/utils/function";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ModeCommentIcon from "@mui/icons-material/ModeComment";
-import SendIcon from "@mui/icons-material/Send";
-import {
-  Box,
-  Button,
-  Fade,
-  IconButton,
-  Modal,
-  Stack,
-  TextField,
-  alpha,
-  styled,
-} from "@mui/material";
-import CircularProgress from "@mui/material/CircularProgress";
-import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import useSWRInfinite from "swr/infinite";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Box, IconButton, Stack, styled } from "@mui/material";
+import { useState } from "react";
 const CommentRow = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(1),
   gap: theme.spacing(0.5),
