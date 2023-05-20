@@ -95,6 +95,8 @@ export const StoryCommentButton = ({ story_code }: Props) => {
     control,
     formState: { errors, isSubmitting },
     reset,
+    getValues,
+    setValue,
   } = useForm<{ comment_content: string }>({
     mode: "onChange",
     defaultValues: {
@@ -216,6 +218,21 @@ export const StoryCommentButton = ({ story_code }: Props) => {
                   <TextField
                     fullWidth
                     onChange={onChange}
+                    onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => {
+                      if (window.innerWidth > 430) {
+                        if (event.key === "Enter" || event.keyCode === 13) {
+                          if (!event.altKey) {
+                            event.preventDefault();
+                            handleSubmit(submitHandle)();
+                          } else {
+                            setValue(
+                              "comment_content",
+                              `${getValues("comment_content")}\n`
+                            );
+                          }
+                        }
+                      }
+                    }}
                     value={value.replace(/↵/g, "\n")}
                     maxRows={4}
                     multiline
