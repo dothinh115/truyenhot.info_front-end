@@ -7,6 +7,7 @@ import {
   TextField,
   IconButton,
   Typography,
+  Stack,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Controller, useForm } from "react-hook-form";
@@ -102,8 +103,13 @@ const Register = (props: Props) => {
             alignItems: "center",
           }}
         >
-          Đăng ký
-          <IconButton LinkComponent={Link} href="/">
+          <Stack direction={"row"} gap={"5px"} alignItems={"center"}>
+            <IconButton LinkComponent={Link} href="/login">
+              <ArrowBackIcon />
+            </IconButton>
+            Đăng ký
+          </Stack>
+          <IconButton LinkComponent={Link} href="/" color="error">
             <CloseIcon />
           </IconButton>
         </Box>
@@ -124,6 +130,30 @@ const Register = (props: Props) => {
           </Box>
         ) : (
           <>
+            <Box py={1}>
+              <Controller
+                name={"user_name"}
+                control={control}
+                rules={{
+                  required: "Không được để trống",
+                }}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    fullWidth
+                    label={"Tên"}
+                    onChange={onChange}
+                    value={value}
+                    error={!!errors?.user_name}
+                    helperText={
+                      errors.user_name?.message
+                        ? errors.user_name?.message
+                        : "Đây là tên sẽ hiển thị khi bạn bình luận"
+                    }
+                    size="small"
+                  />
+                )}
+              />
+            </Box>
             <Box py={1}>
               <Controller
                 name={"email"}
@@ -152,30 +182,6 @@ const Register = (props: Props) => {
             </Box>
             <Box py={1}>
               <Controller
-                name={"user_name"}
-                control={control}
-                rules={{
-                  required: "Không được để trống",
-                }}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    fullWidth
-                    label={"Username"}
-                    onChange={onChange}
-                    value={value}
-                    error={!!errors?.user_name}
-                    helperText={
-                      errors.user_name?.message
-                        ? errors.user_name?.message
-                        : null
-                    }
-                    size="small"
-                  />
-                )}
-              />
-            </Box>
-            <Box py={1}>
-              <Controller
                 name={"password"}
                 control={control}
                 rules={{
@@ -185,7 +191,7 @@ const Register = (props: Props) => {
                   <TextField
                     fullWidth
                     type="password"
-                    label={"Password"}
+                    label={"Mật khẩu"}
                     onChange={onChange}
                     value={value}
                     error={!!errors.password?.message}
@@ -197,23 +203,25 @@ const Register = (props: Props) => {
                 )}
               />
             </Box>
-            <Divider />
-            <Box textAlign={"right"} my={1}>
-              <Button
-                type="submit"
-                variant="contained"
-                size="small"
-                disabled={isSubmitting ? true : false}
-                color="success"
-                startIcon={
-                  isSubmitting ? (
-                    <CircularProgress color="inherit" size={"1em"} />
-                  ) : null
-                }
-              >
-                Đăng ký
-              </Button>
-            </Box>
+
+            <Button
+              type="submit"
+              variant="contained"
+              size="small"
+              disabled={isSubmitting ? true : false}
+              color="success"
+              fullWidth
+              startIcon={
+                isSubmitting ? (
+                  <CircularProgress color="inherit" size={"1em"} />
+                ) : null
+              }
+              sx={{
+                my: 1,
+              }}
+            >
+              Đăng ký
+            </Button>
           </>
         )}
         <Divider />

@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 type Props = {};
 
@@ -119,8 +120,14 @@ const ResetPassword = (props: Props) => {
             alignItems: "center",
           }}
         >
-          {showReset ? "Đặt lại mật khẩu " : "Quên mật khẩu"}
-          <IconButton LinkComponent={Link} href="/">
+          <Stack direction={"row"} gap={"5px"} alignItems={"center"}>
+            <IconButton LinkComponent={Link} href="/login">
+              <ArrowBackIcon />
+            </IconButton>
+            {showReset ? "Đặt lại mật khẩu " : "Quên mật khẩu"}
+          </Stack>
+
+          <IconButton LinkComponent={Link} href="/" color="error">
             <CloseIcon />
           </IconButton>
         </Box>

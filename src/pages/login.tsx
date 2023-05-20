@@ -68,7 +68,7 @@ const Login = (props: Props) => {
           }}
         >
           Đăng nhập
-          <IconButton LinkComponent={Link} href="/">
+          <IconButton LinkComponent={Link} href="/" color="error">
             <CloseIcon />
           </IconButton>
         </Box>
@@ -105,7 +105,7 @@ const Login = (props: Props) => {
               <TextField
                 fullWidth
                 type="password"
-                label={"Password"}
+                label={"Mật khẩu"}
                 onChange={onChange}
                 value={value}
                 error={!!errors.password?.message}
