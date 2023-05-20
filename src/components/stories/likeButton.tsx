@@ -60,11 +60,8 @@ export const StoryLikeButton = ({
         } else {
           await API.get(`/like/new/${story_code}`);
         }
-      } catch (error: any) {
-      } finally {
-        likeNumberMutate();
-      }
-    }, 300);
+      } catch (error: any) {}
+    }, 500);
   };
 
   const checkIfLikedHandle = async () => {
