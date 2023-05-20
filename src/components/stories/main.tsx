@@ -121,7 +121,6 @@ const ButtonWrapper = styled(Stack)(({ theme }) => ({
   justifyContent: "center",
   alignItems: "center",
   width: "100%",
-  borderTop: `1px dashed ${alpha(theme.palette.mySecondary.borderBottom, 1)}`,
   "&>button": {
     padding: "8px 4px",
     fontSize: ".8em",
