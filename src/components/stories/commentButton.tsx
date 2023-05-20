@@ -11,6 +11,7 @@ import {
   alpha,
   Modal,
   styled,
+  Fade,
   TextField,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -24,6 +25,7 @@ import { useAuth } from "@/hooks/auth";
 import { useSnackbar } from "@/hooks/snackbar";
 import { timeSince } from "@/utils/function";
 import { useRouter } from "next/router";
+
 const ModalInner = styled(Stack)(({ theme }) => ({
   position: "fixed",
   backgroundColor: theme.palette.myBackground.default,
@@ -156,143 +158,145 @@ export const StoryCommentButton = ({ story_code }: Props) => {
     <>
       {snackbar}
       <Modal open={open} onClose={closeHandle}>
-        <ModalInner>
-          <HeaddingStyled>
-            <Box
-              component={"h2"}
-              sx={{
-                margin: 0,
-                color: "myText.primary",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "8px",
-              }}
-            >
-              Bình luận
-              <IconButton onClick={closeHandle}>
-                <CloseIcon />
-              </IconButton>
-            </Box>
-          </HeaddingStyled>
-
-          <CommentRowWrapper ref={commentWrapper}>
-            {data?.map((group: any) => {
-              return group?.result.map((comment: CommentDataInterface) => {
-                return (
-                  <CommentRow key={comment._id}>
-                    <Box sx={{ flexGrow: 1 }}>
-                      <Box
-                        component={"h4"}
-                        sx={{ color: "myText.primary", margin: 0 }}
-                      >
-                        {comment?.author.user_name}
-                      </Box>
-                      <Box sx={{ color: "myText.primary" }}>
-                        {comment?.comment_content}
-                      </Box>
-                    </Box>
-                    {profile?.result._id === comment.author._id && (
-                      <IconButton
-                        color="error"
-                        sx={{
-                          width: "40px",
-                          height: "40px",
-                          position: "absolute",
-                          top: "2px",
-                          right: "2px",
-                        }}
-                        onClick={() => deleteHandle(comment?._id)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    )}
-                    <Box
-                      width={"100%"}
-                      textAlign={"right"}
-                      sx={{ color: "myText.primary", fontSize: ".8em" }}
-                    >
-                      {`${timeSince(
-                        Math.abs(
-                          new Date().valueOf() -
-                            new Date(comment?.created_at).valueOf()
-                        )
-                      )} trước`}
-                    </Box>
-                  </CommentRow>
-                );
-              });
-            })}
-            {data && size < data[0]?.pagination.pages ? (
+        <Fade in={open}>
+          <ModalInner>
+            <HeaddingStyled>
               <Box
-                textAlign={"center"}
-                onClick={() => setSize(size + 1)}
-                sx={{ color: "myText.primary" }}
-              >
-                <Button size="small">Tải thêm bình luận cũ</Button>
-              </Box>
-            ) : !data || data[0].result.length === 0 ? (
-              <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
-                Chưa có bình luận nào
-              </Box>
-            ) : (
-              <>
-                <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
-                  Bạn đã xem hết bình luận
-                </Box>
-              </>
-            )}
-          </CommentRowWrapper>
-
-          <Box
-            component={"form"}
-            onSubmit={handleSubmit(submitHandle)}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <Controller
-              name={"comment_content"}
-              control={control}
-              rules={{
-                required: "Không được để trống",
-              }}
-              render={({ field: { onChange, value } }) => (
-                <TextField
-                  fullWidth
-                  onChange={onChange}
-                  value={value}
-                  placeholder={
-                    profile
-                      ? "Viết bình luận..."
-                      : "Bạn cần đăng nhập để bình luận"
-                  }
-                  error={!!errors?.comment_content}
-                  sx={{ my: 1, backgroundColor: "myBackground.secondary" }}
-                  size="small"
-                  disabled={profile ? false : true}
-                  onClick={() => {
-                    if (!profile)
-                      router.push(`/login?backTo=${window.location.href}`);
-                  }}
-                />
-              )}
-            />
-            {profile && (
-              <IconButton
-                type="submit"
-                size="large"
+                component={"h2"}
                 sx={{
-                  height: "40px",
-                  width: "40px",
+                  margin: 0,
+                  color: "myText.primary",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "8px",
                 }}
               >
-                <SendIcon />
-              </IconButton>
-            )}
-          </Box>
-        </ModalInner>
+                Bình luận
+                <IconButton onClick={closeHandle}>
+                  <CloseIcon />
+                </IconButton>
+              </Box>
+            </HeaddingStyled>
+
+            <CommentRowWrapper ref={commentWrapper}>
+              {data?.map((group: any) => {
+                return group?.result.map((comment: CommentDataInterface) => {
+                  return (
+                    <CommentRow key={comment._id}>
+                      <Box sx={{ flexGrow: 1 }}>
+                        <Box
+                          component={"h4"}
+                          sx={{ color: "myText.primary", margin: 0 }}
+                        >
+                          {comment?.author.user_name}
+                        </Box>
+                        <Box sx={{ color: "myText.primary" }}>
+                          {comment?.comment_content}
+                        </Box>
+                      </Box>
+                      {profile?.result._id === comment.author._id && (
+                        <IconButton
+                          color="error"
+                          sx={{
+                            width: "40px",
+                            height: "40px",
+                            position: "absolute",
+                            top: "2px",
+                            right: "2px",
+                          }}
+                          onClick={() => deleteHandle(comment?._id)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      )}
+                      <Box
+                        width={"100%"}
+                        textAlign={"right"}
+                        sx={{ color: "myText.primary", fontSize: ".8em" }}
+                      >
+                        {`${timeSince(
+                          Math.abs(
+                            new Date().valueOf() -
+                              new Date(comment?.created_at).valueOf()
+                          )
+                        )} trước`}
+                      </Box>
+                    </CommentRow>
+                  );
+                });
+              })}
+              {data && size < data[0]?.pagination.pages ? (
+                <Box
+                  textAlign={"center"}
+                  onClick={() => setSize(size + 1)}
+                  sx={{ color: "myText.primary" }}
+                >
+                  <Button size="small">Tải thêm bình luận cũ</Button>
+                </Box>
+              ) : !data || data[0].result.length === 0 ? (
+                <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
+                  Chưa có bình luận nào
+                </Box>
+              ) : (
+                <>
+                  <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
+                    Bạn đã xem hết bình luận
+                  </Box>
+                </>
+              )}
+            </CommentRowWrapper>
+
+            <Box
+              component={"form"}
+              onSubmit={handleSubmit(submitHandle)}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Controller
+                name={"comment_content"}
+                control={control}
+                rules={{
+                  required: "Không được để trống",
+                }}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    fullWidth
+                    onChange={onChange}
+                    value={value}
+                    placeholder={
+                      profile
+                        ? "Viết bình luận..."
+                        : "Bạn cần đăng nhập để bình luận"
+                    }
+                    error={!!errors?.comment_content}
+                    sx={{ my: 1, backgroundColor: "myBackground.secondary" }}
+                    size="small"
+                    disabled={profile ? false : true}
+                    onClick={() => {
+                      if (!profile)
+                        router.push(`/login?backTo=${window.location.href}`);
+                    }}
+                  />
+                )}
+              />
+              {profile && (
+                <IconButton
+                  type="submit"
+                  size="large"
+                  sx={{
+                    height: "40px",
+                    width: "40px",
+                  }}
+                >
+                  <SendIcon />
+                </IconButton>
+              )}
+            </Box>
+          </ModalInner>
+        </Fade>
       </Modal>
 
       <Button

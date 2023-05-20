@@ -8,7 +8,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ClearIcon from "@mui/icons-material/Clear";
 import SearchIcon from "@mui/icons-material/Search";
-import { Box, IconButton, Stack, Typography, Modal } from "@mui/material";
+import { Box, IconButton, Stack, Typography, Modal, Fade } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
@@ -171,169 +171,173 @@ export const SearchModal = (props: Props) => {
   return (
     <>
       <Modal open={searchOpen} onClose={onCloseHandle}>
-        <ModalInner>
-          <Stack
-            direction={"row"}
-            py={1}
-            sx={{
-              backgroundColor: "myBackground.default",
-            }}
-            width={"100%"}
-          >
-            <FormStyled
-              onSubmit={(e) => {
-                e.preventDefault();
-              }}
-            >
-              <IconButton
-                sx={{ width: "42px", height: "42px" }}
-                onClick={() => setSearchOpen(false)}
-                size="small"
-              >
-                <ArrowBackIosIcon />
-              </IconButton>
-              <Stack
-                direction={"row"}
-                border={"1px solid #ccc"}
-                flexGrow={1}
-                borderRadius={"16px"}
-                overflow={"hidden"}
-                sx={{
-                  backgroundColor: "myBackground.secondary",
-                }}
-              >
-                <Controller
-                  name={"keywords"}
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <StyledInputBase
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        onChange(e);
-                        onChangeHandle(e);
-                      }}
-                      value={value}
-                      placeholder="Tìm kiếm"
-                      size="small"
-                      autoComplete={"off"}
-                      sx={{
-                        maxHeight: "40px",
-                        color: "myText.primary",
-                        flexGrow: 1,
-                      }}
-                    />
-                  )}
-                />
-                <IconButton
-                  sx={{
-                    "& svg": {
-                      color: "myText.primary",
-                    },
-                    visibility: getValues("keywords") ? "visible" : "hidden",
-                  }}
-                  onClick={() => {
-                    reset({ keywords: "" });
-                  }}
-                >
-                  <ClearIcon />
-                </IconButton>
-              </Stack>
-            </FormStyled>
-          </Stack>
-
-          <Box className="hr" my={1} />
-
-          {resultMess && (
+        <Fade in={searchOpen}>
+          <ModalInner>
             <Stack
               direction={"row"}
-              justifyContent={"center"}
-              alignItems={"center"}
-              my={2}
+              py={1}
               sx={{
-                color: "myText.primary",
+                backgroundColor: "myBackground.default",
               }}
+              width={"100%"}
             >
-              <SearchIcon />
-              {resultMess}
-            </Stack>
-          )}
-
-          <ResultList>
-            {loading
-              ? loadingRender()
-              : searchData?.result.map((item: StoriesSearchResultInterface) => {
-                  return (
-                    <ResultItem
-                      key={item._id}
-                      href={`/story/${item.story_code}`}
-                      onClick={() => {
-                        setSearchOpen(false);
-                      }}
-                    >
-                      <Stack direction={"row"} alignItems={"center"}>
-                        <Box
-                          component={"img"}
-                          alt={item.story_title}
-                          src={item.story_cover}
-                          width={"35px"}
-                          height={"35px"}
-                          mr={1}
-                          borderRadius={"5px"}
-                          sx={{ objectFit: "cover" }}
-                        />
-                        <Stack p={0} m={0}>
-                          <Typography
-                            component={"span"}
-                            fontSize={"1.1em"}
-                            color={"myText.link"}
-                          >
-                            {item.story_title}
-                          </Typography>
-                          <Typography
-                            component={"span"}
-                            fontSize={".9em"}
-                            color={"myText.primary"}
-                          >
-                            {item._count} chương
-                          </Typography>
-                        </Stack>
-                      </Stack>
-                      <IconButton
+              <FormStyled
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                <IconButton
+                  sx={{ width: "42px", height: "42px" }}
+                  onClick={() => setSearchOpen(false)}
+                  size="small"
+                >
+                  <ArrowBackIosIcon />
+                </IconButton>
+                <Stack
+                  direction={"row"}
+                  border={"1px solid #ccc"}
+                  flexGrow={1}
+                  borderRadius={"16px"}
+                  overflow={"hidden"}
+                  sx={{
+                    backgroundColor: "myBackground.secondary",
+                  }}
+                >
+                  <Controller
+                    name={"keywords"}
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <StyledInputBase
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          onChange(e);
+                          onChangeHandle(e);
+                        }}
+                        value={value}
+                        placeholder="Tìm kiếm"
+                        size="small"
+                        autoComplete={"off"}
                         sx={{
-                          "& svg": {
-                            color: "myText.primary",
-                          },
+                          maxHeight: "40px",
+                          color: "myText.primary",
+                          flexGrow: 1,
                         }}
-                        onClick={() => {
-                          reset({ keywords: "" });
-                        }}
-                      >
-                        <ArrowForwardIcon />
-                      </IconButton>
-                    </ResultItem>
-                  );
-                })}
+                      />
+                    )}
+                  />
+                  <IconButton
+                    sx={{
+                      "& svg": {
+                        color: "myText.primary",
+                      },
+                      visibility: getValues("keywords") ? "visible" : "hidden",
+                    }}
+                    onClick={() => {
+                      reset({ keywords: "" });
+                    }}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </Stack>
+              </FormStyled>
+            </Stack>
 
-            {searchData?.pagination?.pages &&
-            searchData?.pagination?.pages > 1 &&
-            !loading ? (
+            <Box className="hr" my={1} />
+
+            {resultMess && (
               <Stack
                 direction={"row"}
                 justifyContent={"center"}
+                alignItems={"center"}
+                my={2}
                 sx={{
-                  textDecoration: "none",
-                  color: "myText.link",
-                }}
-                component={Link}
-                href={`/search/title?keywords=${getValues("keywords")}`}
-                onClick={() => {
-                  setSearchOpen(false);
+                  color: "myText.primary",
                 }}
               >
-                Xem thêm kết quả
+                <SearchIcon />
+                {resultMess}
               </Stack>
-            ) : null}
-          </ResultList>
-        </ModalInner>
+            )}
+
+            <ResultList>
+              {loading
+                ? loadingRender()
+                : searchData?.result.map(
+                    (item: StoriesSearchResultInterface) => {
+                      return (
+                        <ResultItem
+                          key={item._id}
+                          href={`/story/${item.story_code}`}
+                          onClick={() => {
+                            setSearchOpen(false);
+                          }}
+                        >
+                          <Stack direction={"row"} alignItems={"center"}>
+                            <Box
+                              component={"img"}
+                              alt={item.story_title}
+                              src={item.story_cover}
+                              width={"35px"}
+                              height={"35px"}
+                              mr={1}
+                              borderRadius={"5px"}
+                              sx={{ objectFit: "cover" }}
+                            />
+                            <Stack p={0} m={0}>
+                              <Typography
+                                component={"span"}
+                                fontSize={"1.1em"}
+                                color={"myText.link"}
+                              >
+                                {item.story_title}
+                              </Typography>
+                              <Typography
+                                component={"span"}
+                                fontSize={".9em"}
+                                color={"myText.primary"}
+                              >
+                                {item._count} chương
+                              </Typography>
+                            </Stack>
+                          </Stack>
+                          <IconButton
+                            sx={{
+                              "& svg": {
+                                color: "myText.primary",
+                              },
+                            }}
+                            onClick={() => {
+                              reset({ keywords: "" });
+                            }}
+                          >
+                            <ArrowForwardIcon />
+                          </IconButton>
+                        </ResultItem>
+                      );
+                    }
+                  )}
+
+              {searchData?.pagination?.pages &&
+              searchData?.pagination?.pages > 1 &&
+              !loading ? (
+                <Stack
+                  direction={"row"}
+                  justifyContent={"center"}
+                  sx={{
+                    textDecoration: "none",
+                    color: "myText.link",
+                  }}
+                  component={Link}
+                  href={`/search/title?keywords=${getValues("keywords")}`}
+                  onClick={() => {
+                    setSearchOpen(false);
+                  }}
+                >
+                  Xem thêm kết quả
+                </Stack>
+              ) : null}
+            </ResultList>
+          </ModalInner>
+        </Fade>
       </Modal>
     </>
   );
