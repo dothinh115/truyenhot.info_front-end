@@ -17,7 +17,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { Controller, useForm } from "react-hook-form";
 import SendIcon from "@mui/icons-material/Send";
-import { API } from "@/utils/config";
+import { API, PermissionVariables } from "@/utils/config";
 import useSWRInfinite from "swr/infinite";
 import { CommentDataInterface } from "@/models/stories";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -196,7 +196,9 @@ export const StoryCommentButton = ({ story_code }: Props) => {
                           {comment?.comment_content}
                         </Box>
                       </Box>
-                      {profile?.result._id === comment.author._id && (
+                      {(profile?.result._id === comment.author._id ||
+                        profile?.result.permission >
+                          PermissionVariables.Editors) && (
                         <IconButton
                           color="error"
                           sx={{
