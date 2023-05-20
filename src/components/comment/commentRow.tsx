@@ -109,7 +109,7 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
           sx={{
             color: "myText.primary",
             fontSize: ".8em",
-            marginLeft: "5px",
+            marginLeft: "16px",
             marginTop: "5px",
           }}
         >
