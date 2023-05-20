@@ -25,7 +25,7 @@ import { useAuth } from "@/hooks/auth";
 import { useSnackbar } from "@/hooks/snackbar";
 import { timeSince } from "@/utils/function";
 import { useRouter } from "next/router";
-import { TransitionGroup } from "react-transition-group";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const ModalInner = styled(Stack)(({ theme }) => ({
   position: "fixed",
@@ -78,8 +78,8 @@ const CommentRowWrapper = styled(Box)(({ theme }) => ({
 }));
 
 const CommentRow = styled(Stack)(({ theme }) => ({
-  backgroundColor: theme.palette.myBackground.secondary,
-  borderRadius: theme.spacing(2),
+  //   backgroundColor: theme.palette.myBackground.secondary,
+  //   borderRadius: theme.spacing(2),
   padding: theme.spacing(1),
   gap: theme.spacing(0.5),
   marginBottom: theme.spacing(1),
@@ -99,7 +99,7 @@ export const StoryCommentButton = ({ story_code }: Props) => {
     if (pageIndex === 0) pageIndex = 1;
     return `/comments/getCommentsByStoryCode/${story_code}?page=${pageIndex}`;
   };
-  const { data, size, setSize, mutate } = useSWRInfinite(getKey, {
+  const { data, size, setSize, mutate, isValidating } = useSWRInfinite(getKey, {
     revalidateOnMount: false,
   });
   const { snackbar, setSnackbar } = useSnackbar();
@@ -185,57 +185,81 @@ export const StoryCommentButton = ({ story_code }: Props) => {
                 return group?.result.map((comment: CommentDataInterface) => {
                   return (
                     <CommentRow key={comment._id}>
-                      <Box sx={{ flexGrow: 1 }}>
+                      <Stack
+                        direction={"row"}
+                        sx={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                        }}
+                      >
                         <Box
-                          component={"h4"}
-                          sx={{ color: "myText.primary", margin: 0 }}
+                          sx={{
+                            color: "myText.primary",
+                            display: "inline-block",
+                            backgroundColor: "myBackground.secondary",
+                            padding: "8px 16px",
+                            borderRadius: "16px",
+                          }}
                         >
-                          {comment?.author.user_name}
-                        </Box>
-                        <Box sx={{ color: "myText.primary" }}>
+                          <Box
+                            component={"h4"}
+                            sx={{
+                              color: "myText.heading",
+                              margin: 0,
+                            }}
+                          >
+                            {comment?.author.user_name}
+                          </Box>
                           {comment?.comment_content}
                         </Box>
-                      </Box>
-                      {(profile?.result._id === comment.author._id ||
-                        profile?.result.permission >
-                          PermissionVariables.Editors) && (
-                        <IconButton
-                          color="error"
+                        <Box
                           sx={{
-                            width: "40px",
-                            height: "40px",
-                            position: "absolute",
-                            top: "2px",
-                            right: "2px",
+                            color: "myText.primary",
+                            fontSize: ".8em",
+                            display: "inline-block",
+                            marginLeft: "5px",
                           }}
-                          onClick={() => deleteHandle(comment?._id)}
                         >
-                          <DeleteIcon />
-                        </IconButton>
-                      )}
-                      <Box
-                        width={"100%"}
-                        textAlign={"right"}
-                        sx={{ color: "myText.primary", fontSize: ".8em" }}
-                      >
-                        {`${timeSince(
-                          Math.abs(
-                            new Date().valueOf() -
-                              new Date(comment?.created_at).valueOf()
-                          )
-                        )} trước`}
-                      </Box>
+                          {`${timeSince(
+                            Math.abs(
+                              new Date().valueOf() -
+                                new Date(comment?.created_at).valueOf()
+                            )
+                          )} trước`}
+                          {(profile?.result._id === comment.author._id ||
+                            profile?.result.permission >
+                              PermissionVariables.Editors) && (
+                            <IconButton
+                              color="error"
+                              sx={{
+                                width: "40px",
+                                height: "40px",
+                              }}
+                              onClick={() => deleteHandle(comment?._id)}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          )}
+                        </Box>
+                      </Stack>
                     </CommentRow>
                   );
                 });
               })}
               {data && size < data[0]?.pagination.pages ? (
-                <Box
-                  textAlign={"center"}
-                  onClick={() => setSize(size + 1)}
-                  sx={{ color: "myText.primary" }}
-                >
-                  <Button size="small">Tải thêm bình luận cũ</Button>
+                <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
+                  <Button
+                    size="small"
+                    onClick={() => setSize(size + 1)}
+                    disabled={isValidating ? true : false}
+                    startIcon={
+                      isValidating ? (
+                        <CircularProgress color="inherit" size={"1em"} />
+                      ) : null
+                    }
+                  >
+                    Tải thêm bình luận cũ
+                  </Button>
                 </Box>
               ) : !data || data[0].result.length === 0 ? (
                 <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
