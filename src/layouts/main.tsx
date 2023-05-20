@@ -15,14 +15,6 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
   const [mode, setMode] = useState<"light" | "dark">("light");
 
   const theme = createTheme(getDesignTokens(mode));
-  // const colorMode = useMemo(
-  //   () => ({
-  //     toggleColorMode: () => {
-  //       setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
-  //     },
-  //   }),
-  //   []
-  // );
 
   const loadTheme = async () => {
     let theme: any = localStorage.getItem("theme");
@@ -56,8 +48,6 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
             minHeight={"100vh"}
             sx={{
               backgroundColor: "myBackground.default",
-              maxHeight: searchOpen || mobileMenuOpen ? "100vh" : "unset",
-              overflow: searchOpen || mobileMenuOpen ? "hidden" : "auto",
               transition: "all .2s linear",
             }}
           >

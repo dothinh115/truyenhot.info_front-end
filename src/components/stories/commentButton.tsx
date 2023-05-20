@@ -42,7 +42,7 @@ const ModalInner = styled(Stack)(({ theme }) => ({
   [theme.breakpoints.up("md")]: {
     top: "50%",
     left: "50%",
-    width: "50%",
+    width: "40%",
     height: "80%",
     borderRadius: theme.spacing(2),
     transform: "translate(-50%, -50%)",
