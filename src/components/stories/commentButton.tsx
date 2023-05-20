@@ -1,10 +1,9 @@
 import { useAuth } from "@/hooks/auth";
 import { useSnackbar } from "@/hooks/snackbar";
 import { CommentDataInterface } from "@/models/stories";
-import { API, PermissionVariables } from "@/utils/config";
-import { strip_tags, timeSince } from "@/utils/function";
+import { API } from "@/utils/config";
+import { strip_tags } from "@/utils/function";
 import CloseIcon from "@mui/icons-material/Close";
-import DeleteIcon from "@mui/icons-material/Delete";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
 import SendIcon from "@mui/icons-material/Send";
 import {
@@ -23,6 +22,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWRInfinite from "swr/infinite";
+import { StoryCommentRow } from "../comment";
 
 const ModalInner = styled(Stack)(({ theme }) => ({
   position: "fixed",
@@ -72,16 +72,6 @@ const CommentRowWrapper = styled(Box)(({ theme }) => ({
   "&::-webkit-scrollbar-thumb": {
     background: "#7986cba6",
   },
-}));
-
-const CommentRow = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(1),
-  gap: theme.spacing(0.5),
-  marginBottom: theme.spacing(1),
-  flexDirection: "row",
-  alignItems: "center",
-  flexWrap: "wrap",
-  position: "relative",
 }));
 
 type Props = {
@@ -139,20 +129,6 @@ export const StoryCommentButton = ({ story_code }: Props) => {
     }
   };
 
-  const deleteHandle = async (_id: string) => {
-    try {
-      await API.delete(`/comments/delete/${_id}`);
-      setSnackbar({
-        message: "Xóa comment thành công!",
-        open: true,
-        type: "success",
-      });
-      mutate();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     if (story_code && open) mutate();
   }, [open]);
@@ -185,70 +161,12 @@ export const StoryCommentButton = ({ story_code }: Props) => {
               {data?.map((group: any) => {
                 return group?.result.map((comment: CommentDataInterface) => {
                   return (
-                    <CommentRow key={comment._id}>
-                      <Stack
-                        direction={"row"}
-                        sx={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            color: "myText.primary",
-                            display: "inline-block",
-                            backgroundColor: "myBackground.secondary",
-                            padding: "8px 16px",
-                            borderRadius: "16px",
-                            minWidth: "150px",
-                          }}
-                        >
-                          <Box
-                            component={"h4"}
-                            sx={{
-                              color: "myText.heading",
-                              margin: 0,
-                            }}
-                          >
-                            {comment?.author.user_name}
-                          </Box>
-                          <Box
-                            dangerouslySetInnerHTML={{
-                              __html: comment?.comment_content,
-                            }}
-                          />
-                        </Box>
-                        <Box
-                          sx={{
-                            color: "myText.primary",
-                            fontSize: ".8em",
-                            display: "inline-block",
-                            marginLeft: "5px",
-                          }}
-                        >
-                          {`${timeSince(
-                            Math.abs(
-                              new Date().valueOf() -
-                                new Date(comment?.created_at).valueOf()
-                            )
-                          )} trước`}
-                          {(profile?.result._id === comment.author._id ||
-                            profile?.result.permission >
-                              PermissionVariables.Editors) && (
-                            <IconButton
-                              color="error"
-                              sx={{
-                                width: "40px",
-                                height: "40px",
-                              }}
-                              onClick={() => deleteHandle(comment?._id)}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          )}
-                        </Box>
-                      </Stack>
-                    </CommentRow>
+                    <StoryCommentRow
+                      key={comment._id}
+                      comment={comment}
+                      setSnackbar={setSnackbar}
+                      mutate={mutate}
+                    />
                   );
                 });
               })}
