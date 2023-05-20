@@ -72,7 +72,6 @@ const FormStyled = styled("form")(({ theme }) => ({
   position: "relative",
   width: "100%",
   backgroundColor: theme.palette.myBackground.default,
-  gap: "10px",
 }));
 
 const ResultList = styled(Stack)(() => ({
