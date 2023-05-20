@@ -61,7 +61,7 @@ const CommentRowWrapper = styled(Box)(({ theme }) => ({
   width: "100%",
   borderBottom: `1px dashed ${alpha(theme.palette.mySecondary.boxShadow, 0.8)}`,
   flexGrow: 1,
-  padding: theme.spacing(2, 1),
+  padding: 0,
   margin: theme.spacing(0.5, 0),
   overflow: "auto",
   "&::-webkit-scrollbar": {
@@ -242,7 +242,13 @@ export const StoryCommentButton = ({ story_code }: Props) => {
                         : "Bạn cần đăng nhập để bình luận"
                     }
                     error={!!errors?.comment_content}
-                    sx={{ my: 1, backgroundColor: "myBackground.secondary" }}
+                    sx={{
+                      my: 1,
+                      backgroundColor: "myBackground.secondary",
+                      "& textarea": {
+                        fontSize: ".9em",
+                      },
+                    }}
                     size="small"
                     disabled={profile ? false : true}
                     onClick={() => {

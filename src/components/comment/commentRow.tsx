@@ -6,8 +6,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Box, IconButton, Stack, styled } from "@mui/material";
 import { useState } from "react";
+
 const CommentRow = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(1),
+  padding: theme.spacing(0.5, 0),
   gap: theme.spacing(0.5),
   marginBottom: theme.spacing(1),
   flexDirection: "row",
@@ -15,6 +16,16 @@ const CommentRow = styled(Stack)(({ theme }) => ({
   flexWrap: "wrap",
   position: "relative",
 }));
+
+const CommentRowContentWrapper = styled(Box)(({ theme }) => ({
+  color: theme.palette.myText.primary,
+  display: "inline-block",
+  backgroundColor: theme.palette.myBackground.secondary,
+  padding: theme.spacing(1, 2),
+  borderRadius: theme.spacing(2),
+  minWidth: "150px",
+}));
+
 type Props = {
   comment: CommentDataInterface;
   setSnackbar: (...args: any) => void;
@@ -48,18 +59,9 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
           alignItems: "center",
         }}
       >
-        <Box
-          sx={{
-            color: "myText.primary",
-            display: "inline-block",
-            backgroundColor: "myBackground.secondary",
-            padding: "8px 16px",
-            borderRadius: "16px",
-            minWidth: "150px",
-          }}
-        >
+        <CommentRowContentWrapper>
           <Box
-            component={"h4"}
+            component={"h3"}
             sx={{
               color: "myText.heading",
               margin: 0,
@@ -75,30 +77,35 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
                   : comment?.comment_content,
             }}
           />
-          {comment?.comment_content.length > 400 && !show && (
-            <Box textAlign={"right"}>
+
+          <Box
+            textAlign={"right"}
+            sx={{
+              color: "myText.primary",
+              fontSize: ".8em",
+            }}
+          >
+            {comment?.comment_content.length > 400 && !show && (
               <IconButton size="small" onClick={() => setShow(true)}>
                 <ExpandMoreIcon />
               </IconButton>
-            </Box>
-          )}
-        </Box>
+            )}
+            {`${timeSince(
+              Math.abs(
+                new Date().valueOf() - new Date(comment?.created_at).valueOf()
+              )
+            )} trước`}
+          </Box>
+        </CommentRowContentWrapper>
 
-        <Box
-          sx={{
-            color: "myText.primary",
-            fontSize: ".8em",
-            display: "inline-block",
-            marginLeft: "5px",
-          }}
-        >
-          {`${timeSince(
-            Math.abs(
-              new Date().valueOf() - new Date(comment?.created_at).valueOf()
-            )
-          )} trước`}
-          {(profile?.result._id === comment.author._id ||
-            profile?.result.permission > PermissionVariables.Editors) && (
+        {(profile?.result._id === comment.author._id ||
+          profile?.result.permission > PermissionVariables.Editors) && (
+          <Box
+            sx={{
+              display: "inline-block",
+              marginLeft: "5px",
+            }}
+          >
             <IconButton
               color="error"
               sx={{
@@ -109,8 +116,8 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
             >
               <DeleteIcon />
             </IconButton>
-          )}
-        </Box>
+          </Box>
+        )}
       </Stack>
     </CommentRow>
   );
