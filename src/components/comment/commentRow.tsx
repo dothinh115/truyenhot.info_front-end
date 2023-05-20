@@ -17,12 +17,16 @@ const CommentRow = styled(Stack)(({ theme }) => ({
   position: "relative",
 }));
 
-const CommentRowContentWrapper = styled(Box)(({ theme }) => ({
+const CommentRowContentWrapper = styled(Stack)(({ theme }) => ({
+  display: "inline-flex",
+}));
+
+const CommentRowContentInner = styled(Stack)(({ theme }) => ({
   color: theme.palette.myText.primary,
-  display: "inline-block",
   backgroundColor: theme.palette.myBackground.secondary,
   padding: theme.spacing(1, 2),
   borderRadius: theme.spacing(2),
+  width: "100%",
   minWidth: "150px",
 }));
 
@@ -52,73 +56,70 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
 
   return (
     <CommentRow>
-      <Stack
-        direction={"row"}
-        sx={{
-          display: "inline-flex",
-          alignItems: "center",
-        }}
-      >
-        <CommentRowContentWrapper>
-          <Box
-            component={"h3"}
-            sx={{
-              color: "myText.heading",
-              margin: 0,
-            }}
-          >
-            {comment?.author.user_name}
-          </Box>
-          <Box
-            dangerouslySetInnerHTML={{
-              __html:
-                comment?.comment_content.length > 400 && !show
-                  ? comment?.comment_content.substring(0, 400) + " ..."
-                  : comment?.comment_content,
-            }}
-          />
-
-          <Box
-            textAlign={"right"}
-            sx={{
-              color: "myText.primary",
-              fontSize: ".8em",
-            }}
-          >
-            {comment?.comment_content.length > 400 && !show && (
-              <IconButton size="small" onClick={() => setShow(true)}>
-                <ExpandMoreIcon />
-              </IconButton>
-            )}
-            {`${timeSince(
-              Math.abs(
-                new Date().valueOf() - new Date(comment?.created_at).valueOf()
-              )
-            )} trước`}
-          </Box>
-        </CommentRowContentWrapper>
-
-        {(profile?.result._id === comment.author._id ||
-          profile?.result.permission > PermissionVariables.Editors) && (
-          <Box
-            sx={{
-              display: "inline-block",
-              marginLeft: "5px",
-            }}
-          >
-            <IconButton
-              color="error"
+      <CommentRowContentWrapper>
+        <Stack direction={"row"} width={"100%"} alignItems={"center"}>
+          <CommentRowContentInner>
+            <Box
+              component={"h3"}
               sx={{
-                width: "40px",
-                height: "40px",
+                color: "myText.heading",
+                margin: 0,
               }}
-              onClick={() => deleteHandle(comment?._id)}
             >
-              <DeleteIcon />
-            </IconButton>
-          </Box>
-        )}
-      </Stack>
+              {comment?.author.user_name}
+            </Box>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html:
+                  comment?.comment_content.length > 400 && !show
+                    ? comment?.comment_content.substring(0, 400) + " ..."
+                    : comment?.comment_content,
+              }}
+            />
+            <Box textAlign={"right"}>
+              {comment?.comment_content.length > 400 && !show && (
+                <IconButton size="small" onClick={() => setShow(true)}>
+                  <ExpandMoreIcon />
+                </IconButton>
+              )}
+            </Box>
+          </CommentRowContentInner>
+          {(profile?.result._id === comment.author._id ||
+            profile?.result.permission > PermissionVariables.Editors) && (
+            <Box
+              sx={{
+                display: "inline-block",
+                marginLeft: "5px",
+              }}
+            >
+              <IconButton
+                color="error"
+                sx={{
+                  width: "40px",
+                  height: "40px",
+                }}
+                onClick={() => deleteHandle(comment?._id)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Box>
+          )}
+        </Stack>
+        <Box
+          sx={{
+            color: "myText.primary",
+            fontSize: ".8em",
+            marginLeft: "5px",
+            marginTop: "5px",
+          }}
+        >
+          {`${timeSince(
+            Math.abs(
+              new Date().valueOf() - new Date(comment?.created_at).valueOf()
+            )
+          )} trước`}
+        </Box>
+      </CommentRowContentWrapper>
     </CommentRow>
   );
 };

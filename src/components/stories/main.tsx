@@ -416,17 +416,14 @@ export const StoryMain = ({ story }: Props) => {
                   <FavoriteIcon />
                   Số lượt thích:
                 </Box>
-                {likeNumberIsValidating ? (
-                  <CircularProgress size={"1em"} />
-                ) : (
-                  likeNumberData?.result?.number
-                )}
+                {likeNumberData?.result?.number}
               </Box>
             </UListStyled>
             <ButtonWrapper>
               <StoryLikeButton
                 story_code={story?.story_code}
                 likeNumberMutate={likeNumberMutate}
+                likeNumberData={likeNumberData}
               />
 
               <StoryCommentButton story_code={story?.story_code} />

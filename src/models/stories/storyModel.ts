@@ -68,7 +68,7 @@ export interface ReadingStoriesInterface {
 }
 
 export interface CheckIfLikedInterface {
-  message: string;
+  message?: string;
   result: CheckIfLikedResultInterface;
 }
 
