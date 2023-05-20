@@ -36,3 +36,11 @@ export const timeSince = (seconds: number) => {
   }
   return Math.floor(seconds) + " giây";
 };
+
+export const strip_tags = (html: string, ...args: any[]) => {
+  return html
+    .replace(/<(\/?)(\w+)[^>]*\/?>/g, (_, endMark, tag) => {
+      return args.includes(tag) ? "<" + endMark + tag + ">" : "";
+    })
+    .replace(/<!--.*?-->/g, "");
+};

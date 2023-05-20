@@ -1,31 +1,28 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useAuth } from "@/hooks/auth";
+import { useSnackbar } from "@/hooks/snackbar";
+import { CommentDataInterface } from "@/models/stories";
+import { API, PermissionVariables } from "@/utils/config";
+import { strip_tags, timeSince } from "@/utils/function";
+import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
+import SendIcon from "@mui/icons-material/Send";
 import {
   Box,
   Button,
-  Chip,
-  IconButton,
-  List,
-  ListItemIcon,
-  Stack,
-  alpha,
-  Modal,
-  styled,
   Fade,
+  IconButton,
+  Modal,
+  Stack,
   TextField,
+  alpha,
+  styled,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import { Controller, useForm } from "react-hook-form";
-import SendIcon from "@mui/icons-material/Send";
-import { API, PermissionVariables } from "@/utils/config";
-import useSWRInfinite from "swr/infinite";
-import { CommentDataInterface } from "@/models/stories";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useAuth } from "@/hooks/auth";
-import { useSnackbar } from "@/hooks/snackbar";
-import { timeSince } from "@/utils/function";
-import { useRouter } from "next/router";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import useSWRInfinite from "swr/infinite";
 
 const ModalInner = styled(Stack)(({ theme }) => ({
   position: "fixed",
@@ -78,8 +75,6 @@ const CommentRowWrapper = styled(Box)(({ theme }) => ({
 }));
 
 const CommentRow = styled(Stack)(({ theme }) => ({
-  //   backgroundColor: theme.palette.myBackground.secondary,
-  //   borderRadius: theme.spacing(2),
   padding: theme.spacing(1),
   gap: theme.spacing(0.5),
   marginBottom: theme.spacing(1),
@@ -120,9 +115,15 @@ export const StoryCommentButton = ({ story_code }: Props) => {
   const router = useRouter();
 
   const submitHandle = async (data: { comment_content: string }) => {
+    const comment_content = strip_tags(
+      data.comment_content,
+      "b",
+      "i",
+      "u"
+    ).replaceAll("\n", "<br/>");
     try {
       await API.post(`/comments/new/${story_code}`, {
-        comment_content: data.comment_content,
+        comment_content,
       });
       reset({
         comment_content: "",
@@ -199,6 +200,7 @@ export const StoryCommentButton = ({ story_code }: Props) => {
                             backgroundColor: "myBackground.secondary",
                             padding: "8px 16px",
                             borderRadius: "16px",
+                            minWidth: "150px",
                           }}
                         >
                           <Box
@@ -210,7 +212,11 @@ export const StoryCommentButton = ({ story_code }: Props) => {
                           >
                             {comment?.author.user_name}
                           </Box>
-                          {comment?.comment_content}
+                          <Box
+                            dangerouslySetInnerHTML={{
+                              __html: comment?.comment_content,
+                            }}
+                          />
                         </Box>
                         <Box
                           sx={{
@@ -292,7 +298,9 @@ export const StoryCommentButton = ({ story_code }: Props) => {
                   <TextField
                     fullWidth
                     onChange={onChange}
-                    value={value}
+                    value={value.replace(/↵/g, "\n")}
+                    maxRows={4}
+                    multiline
                     placeholder={
                       profile
                         ? "Viết bình luận..."
@@ -317,6 +325,7 @@ export const StoryCommentButton = ({ story_code }: Props) => {
                     height: "40px",
                     width: "40px",
                   }}
+                  disabled={isSubmitting ? true : false}
                 >
                   <SendIcon />
                 </IconButton>
