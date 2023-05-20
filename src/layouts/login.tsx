@@ -10,8 +10,11 @@ export const LoginLayout = ({ children }: LoginLayoutInterface) => {
 
   const router = useRouter();
 
+  const { backTo } = router.query;
+
   useEffect(() => {
-    if (profile) router.push("/");
+    if (profile)
+      router.push(backTo && typeof backTo === "string" ? backTo : "/");
   }, [profile]);
   if (profile) return null;
   else

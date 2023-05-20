@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 type Props = {};
 const emailPattern = new RegExp(emailPatter);
@@ -23,6 +24,9 @@ const Login = (props: Props) => {
   const { login } = useAuth({
     revalidateOnMount: false,
   });
+  const router = useRouter();
+
+  const { backTo } = router.query;
 
   const {
     handleSubmit,
@@ -69,7 +73,11 @@ const Login = (props: Props) => {
           }}
         >
           Đăng nhập
-          <IconButton LinkComponent={Link} href="/" color="error">
+          <IconButton
+            LinkComponent={Link}
+            href={backTo && typeof backTo === "string" ? backTo : "/"}
+            color="error"
+          >
             <CloseIcon />
           </IconButton>
         </Box>

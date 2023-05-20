@@ -273,7 +273,8 @@ export const StoryCommentButton = ({ story_code }: Props) => {
                   size="small"
                   disabled={profile ? false : true}
                   onClick={() => {
-                    if (!profile) router.push("/login");
+                    if (!profile)
+                      router.push(`/login?backTo=${window.location.href}`);
                   }}
                 />
               )}

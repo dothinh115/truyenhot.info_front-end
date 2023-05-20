@@ -21,7 +21,7 @@ export const StoryLikeButton = ({ story_code, likeNumberMutate }: Props) => {
 
   const likeHandle = async () => {
     if (!profile) {
-      router.push("/login");
+      router.push(`/login?backTo=${window.location.href}`);
       return;
     }
     try {
