@@ -282,7 +282,10 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
                       <ListItemIcon color="error">
                         <DeleteIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Xóa" />
+                      <ListItemText
+                        sx={{ color: "myText.primary" }}
+                        primary="Xóa"
+                      />
                     </ListItemButton>
 
                     <ListItemButton
@@ -297,7 +300,10 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
                       <ListItemIcon>
                         <EditIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Sửa" />
+                      <ListItemText
+                        primary="Sửa"
+                        sx={{ color: "myText.primary" }}
+                      />
                     </ListItemButton>
                   </List>
                 </MenuDropdownWrapper>
