@@ -231,10 +231,7 @@ export const StoryCommentButton = ({ story_code }: Props) => {
                             event.preventDefault();
                             handleSubmit(submitHandle)();
                           } else {
-                            setValue(
-                              "comment_content",
-                              `${getValues("comment_content")}\n`
-                            );
+                            setValue("comment_content", `${value}\n`);
                           }
                         }
                       }

@@ -62,7 +62,7 @@ const ListStyled = styled(List)(({ theme }) => ({
 }));
 
 export function Header() {
-  const { mobileMenuOpen, setMobileMenuOpen, setMode, mode, setSearchOpen } =
+  const { setMobileMenuOpen, setMode, mode, setSearchOpen } =
     useContext<any>(MainLayoutContext);
   const { profile, logout } = useAuth();
 
@@ -95,22 +95,14 @@ export function Header() {
   };
 
   const dropDownMenuHandle = (event: { target: any }) => {
-    if (
-      event.target.parentNode === menuDropDownButton?.current ||
-      event.target === menuDropDownButton?.current ||
-      event.target.parentNode?.parentNode === menuDropDownButton?.current
-    ) {
-      if (
-        menuDropDown?.current &&
-        menuDropDown!.current.style.display === "block"
-      ) {
-        menuDropDown!.current.style.display = "none";
-      } else {
-        if (menuDropDown?.current)
+    if (menuDropDown?.current && menuDropDownButton?.current) {
+      if (menuDropDownButton?.current?.contains(event.target)) {
+        if (menuDropDown!.current.style.display === "block") {
+          menuDropDown!.current.style.display = "none";
+        } else {
           menuDropDown!.current.style.display = "block";
-      }
-    } else {
-      if (menuDropDown?.current) {
+        }
+      } else {
         menuDropDown!.current.style.display = "none";
       }
     }
