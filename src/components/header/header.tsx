@@ -38,7 +38,7 @@ const DropdownMenu = styled(Box)(({ theme }) => ({
   position: "absolute",
   width: "250px",
   right: 0,
-  top: "100%",
+  top: "calc(100% + 5px)",
   backgroundColor: theme.palette.myBackground.secondary,
   boxShadow: `0 0 2px ${alpha(theme.palette.mySecondary.boxShadow, 0.4)}`,
   zIndex: 10,

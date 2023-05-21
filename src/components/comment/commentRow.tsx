@@ -15,6 +15,9 @@ import {
   styled,
   alpha,
   TextField,
+  Divider,
+  Button,
+  Link,
 } from "@mui/material";
 import { useState, useRef, useEffect } from "react";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -23,6 +26,7 @@ import { Controller, useForm } from "react-hook-form";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CircularProgress from "@mui/material/CircularProgress";
+import ReplyIcon from "@mui/icons-material/Reply";
 
 const CommentRow = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(0.5, 0),
@@ -150,15 +154,54 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
       >
         <Stack direction={"row"} width={"100%"} alignItems={"center"}>
           <CommentRowContentInner>
-            <Box
-              component={"h3"}
-              sx={{
-                color: "myText.heading",
-                margin: 0,
-              }}
-            >
-              {comment?.author.user_name}
-            </Box>
+            <Stack direction={"row"} justifyContent={"space-between"}>
+              <Box>
+                <Box
+                  component={"span"}
+                  sx={{
+                    color: "myText.heading",
+                    margin: 0,
+                    fontSize: "1.1em",
+                    fontWeight: "bold",
+                    marginRight: "5px",
+                  }}
+                >
+                  {comment?.author.user_name}
+                </Box>
+                <Box
+                  component={"span"}
+                  sx={{ color: "myText.primary", fontSize: ".9em" }}
+                >
+                  (
+                  {`${timeSince(
+                    Math.abs(
+                      new Date().valueOf() -
+                        new Date(comment?.created_at).valueOf()
+                    )
+                  )} trước`}
+                  )
+                </Box>
+              </Box>
+              <Link
+                underline="none"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSnackbar({
+                    message: "Chức năng đang phát triển!",
+                    open: true,
+                    type: "info",
+                  });
+                }}
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  cursor: "pointer",
+                }}
+              >
+                <ReplyIcon fontSize="small" /> Trả lời
+              </Link>
+            </Stack>
+            <Divider />
             {editing ? (
               <>
                 <Controller
@@ -241,6 +284,7 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
                         ? comment?.comment_content.substring(0, 400) + " ..."
                         : comment?.comment_content,
                   }}
+                  my={"4px"}
                 />
                 <Box textAlign={"right"}>
                   {comment?.comment_content.length > 400 && !show && (
@@ -310,20 +354,6 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
               </Box>
             )}
         </Stack>
-        <Box
-          sx={{
-            color: "myText.primary",
-            fontSize: ".8em",
-            marginLeft: "16px",
-            marginTop: "5px",
-          }}
-        >
-          {`${timeSince(
-            Math.abs(
-              new Date().valueOf() - new Date(comment?.created_at).valueOf()
-            )
-          )} trước`}
-        </Box>
       </CommentRowContentWrapper>
     </CommentRow>
   );

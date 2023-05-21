@@ -54,17 +54,15 @@ const ModalInner = styled(Stack)(({ theme }) => ({
 
 const HeaddingStyled = styled(Box)(({ theme }) => ({
   width: "100%",
-  borderBottom: `1px dashed ${alpha(theme.palette.mySecondary.boxShadow, 0.8)}`,
   top: 0,
   left: 0,
 }));
 
 const CommentRowWrapper = styled(Box)(({ theme }) => ({
   width: "100%",
-  borderBottom: `1px dashed ${alpha(theme.palette.mySecondary.boxShadow, 0.8)}`,
   flexGrow: 1,
   padding: 0,
-  margin: theme.spacing(0.5, 0),
+  margin: theme.spacing(2, 0),
   overflow: "auto",
   "&::-webkit-scrollbar": {
     borderRadius: "0 16px 16px 0",
@@ -160,6 +158,7 @@ export const StoryCommentButton = ({ story_code }: Props) => {
                 </IconButton>
               </Box>
             </HeaddingStyled>
+            <Box className="hr" />
 
             <CommentRowWrapper ref={commentWrapper}>
               <TransitionGroup>
@@ -205,7 +204,7 @@ export const StoryCommentButton = ({ story_code }: Props) => {
                 </>
               )}
             </CommentRowWrapper>
-
+            <Box className={"hr"} />
             <Box
               component={"form"}
               onSubmit={handleSubmit(submitHandle)}
@@ -237,7 +236,6 @@ export const StoryCommentButton = ({ story_code }: Props) => {
                       }
                     }}
                     value={value.replace(/↵/g, "\n")}
-                    maxRows={4}
                     multiline
                     placeholder={
                       profile
