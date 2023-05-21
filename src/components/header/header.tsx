@@ -238,7 +238,14 @@ export function Header() {
                         </>
                       ) : (
                         <>
-                          <ListItemButton LinkComponent={Link} href="/login">
+                          <ListItemButton
+                            LinkComponent={Link}
+                            href={`/login${
+                              typeof window !== "undefined"
+                                ? `?backTo=${window.location.href}`
+                                : ""
+                            }`}
+                          >
                             <ListItemIcon
                               sx={{ minWidth: "unset", marginRight: "8px" }}
                             >
