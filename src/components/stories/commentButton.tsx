@@ -246,9 +246,6 @@ export const StoryCommentButton = ({ story_code }: Props) => {
                     sx={{
                       my: 1,
                       backgroundColor: "myBackground.secondary",
-                      "& textarea": {
-                        fontSize: ".9em",
-                      },
                     }}
                     size="small"
                     disabled={profile ? false : true}
