@@ -22,11 +22,12 @@ export const Form = ({ defaultValues, children, onSubmit, sx }: Props) => {
       <Box
         component={"form"}
         sx={sx}
-        onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
-          event.preventDefault();
-          handleSubmit(onSubmit)();
-          reset(defaultValues);
-        }}
+        onSubmit={() =>
+          handleSubmit(() => {
+            onSubmit();
+            reset(defaultValues);
+          })
+        }
       >
         <CommentFormContext.Provider value={{ onSubmit }}>
           <FormProvider {...methods}>{children}</FormProvider>

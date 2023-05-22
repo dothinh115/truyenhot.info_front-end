@@ -26,13 +26,11 @@ import {
   alpha,
   styled,
 } from "@mui/material";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useEffect, useRef, useState } from "react";
+import useSWRInfinite from "swr/infinite";
 import { Form } from "./form";
 import { FormItemInput } from "./formItem";
 import { StorySubCommentRow } from "./subCommentRow";
-import useSWRInfinite from "swr/infinite";
-import { CommentLoading } from "../loading";
 const CommentRowWrapper = styled(Stack)(({ theme }) => ({
   marginBottom: theme.spacing(1),
 }));
@@ -104,14 +102,12 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
     size,
     setSize,
     mutate: subCmtMutate,
-    isLoading,
   } = useSWRInfinite(getKey);
 
   const [show, setShow] = useState<boolean>(false);
   const menuDropdownIcon = useRef<HTMLButtonElement>(null);
   const menuDropdown = useRef<HTMLDivElement>(null);
   const [editing, setEditing] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
   const [replying, setReplying] = useState<boolean>(false);
 
   const deleteHandle = async (_id: string) => {
@@ -147,7 +143,6 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
       "i",
       "u"
     ).replaceAll("\n", "<br/>");
-    setLoading(true);
     try {
       setEditing(false);
       await API.put(`/comments/edit/${comment._id}`, {
@@ -161,8 +156,6 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
       mutate();
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -173,19 +166,15 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
       "i",
       "u"
     ).replaceAll("\n", "<br/>");
-    setLoading(true);
     try {
-      setEditing(false);
+      setReplying(false);
       await API.post(`/comments/sub/new/${comment._id}`, {
         comment_content,
       });
       await mutate();
       await subCmtMutate();
-      console.log(size, comment.totalSubCmtPages);
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -284,22 +273,15 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
                 </Form>
               ) : (
                 <>
-                  {loading ? (
-                    <Box my={"4px"}>
-                      <CircularProgress size={"1em"} />
-                    </Box>
-                  ) : (
-                    <Box
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          comment?.comment_content.length > 400 && !show
-                            ? comment?.comment_content.substring(0, 400) +
-                              " ..."
-                            : comment?.comment_content,
-                      }}
-                      my={"4px"}
-                    />
-                  )}
+                  <Box
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        comment?.comment_content.length > 400 && !show
+                          ? comment?.comment_content.substring(0, 400) + " ..."
+                          : comment?.comment_content,
+                    }}
+                    my={"4px"}
+                  />
 
                   <Box textAlign={"right"}>
                     {comment?.comment_content.length > 400 && !show && (
