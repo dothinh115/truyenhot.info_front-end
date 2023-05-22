@@ -26,11 +26,13 @@ import { useAuth } from "@/hooks/auth";
 import { Form } from "./form";
 import { FormItemInput } from "./formItem";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useRouter } from "next/router";
 
 type Props = {
   subCmtData: SubCommentDataInterface;
   setSnackbar: any;
   mutate: any;
+  setReplying: any;
 };
 
 const defaultValues = {
@@ -38,13 +40,11 @@ const defaultValues = {
 };
 
 const SubCommentWrapper = styled(Stack)(({ theme }) => ({
-  marginLeft: "5%",
   flexDirection: "row",
-  width: "95%",
+  width: "100%",
   alignItems: "center",
   paddingBottom: theme.spacing(0.5),
-  borderLeft: `1px solid ${alpha(theme.palette.mySecondary.boxShadow, 0.4)}`,
-  paddingLeft: theme.spacing(1),
+  // borderLeft: `1px solid ${alpha(theme.palette.mySecondary.boxShadow, 0.4)}`,
 }));
 
 const SubCommentInner = styled(Stack)(({ theme }) => ({
@@ -72,6 +72,7 @@ export const StorySubCommentRow = ({
   subCmtData,
   setSnackbar,
   mutate,
+  setReplying,
 }: Props) => {
   const { profile } = useAuth();
   const menuDropdownIcon = useRef<HTMLButtonElement>(null);
@@ -80,6 +81,7 @@ export const StorySubCommentRow = ({
   const [editing, setEditing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const router = useRouter();
   const menuDropdownClickHandle = (event: { target: any }) => {
     if (menuDropdown?.current) {
       if (menuDropdownIcon?.current?.contains(event.target)) {

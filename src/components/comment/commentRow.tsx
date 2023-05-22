@@ -109,7 +109,7 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
   const menuDropdown = useRef<HTMLDivElement>(null);
   const [editing, setEditing] = useState<boolean>(false);
   const [replying, setReplying] = useState<boolean>(false);
-
+  const commentWrapperEle = useRef<HTMLDivElement>(null);
   const deleteHandle = async (_id: string) => {
     try {
       await API.delete(`/comments/delete/${_id}`);
@@ -178,6 +178,9 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
     }
   };
 
+  const showReplyFooter =
+    (subCmtData && subCmtData[0]?.result.length !== 0) || replying;
+
   useEffect(() => {
     window.addEventListener("click", menuDropdownClickHandle);
     return () => {
@@ -186,7 +189,7 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
   }, []);
 
   return (
-    <CommentRowWrapper>
+    <CommentRowWrapper ref={commentWrapperEle}>
       <CommentRow>
         <CommentRowContentWrapper
           sx={{
@@ -349,77 +352,93 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
           </Stack>
         </CommentRowContentWrapper>
       </CommentRow>
-      {replying && (
-        <ReplyInputWrapper>
-          <Form
-            defaultValues={defaultReplyValues}
-            onSubmit={replySubmitHandle}
+
+      {showReplyFooter && (
+        <Stack direction={"row"}>
+          <Box
+            width={"5%"}
+            textAlign={"right"}
             sx={{
-              display: "flex",
+              color: "myText.primary",
             }}
           >
             <SubdirectoryArrowRightIcon />
-            <FormItemInput
-              name="reply_comment_content"
-              disabled={profile ? false : true}
-              placeholder={`Trả lời ${comment?.author.user_name}...`}
-            />
-            <Stack
-              direction={"row"}
-              alignItems={"center"}
-              justifyContent={"flex-end"}
-              sx={{
-                fontSize: ".8em",
-              }}
-              gap={"5px"}
-            >
-              <IconButton
-                size="small"
-                color="error"
-                onClick={() => setReplying(false)}
+          </Box>
+          <Box width={"95%"}>
+            {replying && (
+              <ReplyInputWrapper>
+                <Form
+                  defaultValues={defaultReplyValues}
+                  onSubmit={replySubmitHandle}
+                  sx={{
+                    display: "flex",
+                  }}
+                >
+                  <FormItemInput
+                    name="reply_comment_content"
+                    disabled={profile ? false : true}
+                    placeholder={`Trả lời ${comment?.author.user_name}...`}
+                  />
+                  <Stack
+                    direction={"row"}
+                    alignItems={"center"}
+                    justifyContent={"flex-end"}
+                    sx={{
+                      fontSize: ".8em",
+                    }}
+                    gap={"5px"}
+                  >
+                    <IconButton
+                      size="small"
+                      color="error"
+                      onClick={() => setReplying(false)}
+                    >
+                      <CancelIcon />
+                    </IconButton>
+                    <IconButton size="small" color="success" type="submit">
+                      <CheckCircleIcon />
+                    </IconButton>
+                  </Stack>
+                </Form>
+              </ReplyInputWrapper>
+            )}
+
+            {subCmtData &&
+              subCmtData[0]?.result.length !== 0 &&
+              subCmtData.map((group: any) => {
+                return group?.result.map((sub: SubCommentDataInterface) => {
+                  return (
+                    <StorySubCommentRow
+                      key={sub._id}
+                      subCmtData={sub}
+                      setSnackbar={setSnackbar}
+                      mutate={subCmtMutate}
+                      setReplying={setReplying}
+                    />
+                  );
+                });
+              })}
+
+            {size < comment.totalSubCmtPages && (
+              <Link
+                underline="none"
+                sx={{
+                  cursor: "pointer",
+                  marginLeft: "5%",
+                  display: "flex",
+                  alignItem: "center",
+                }}
+                onClick={(event: React.MouseEvent<HTMLAnchorElement>) => {
+                  event.preventDefault();
+                  setSize(size + 1);
+                }}
               >
-                <CancelIcon />
-              </IconButton>
-              <IconButton size="small" color="success" type="submit">
-                <CheckCircleIcon />
-              </IconButton>
-            </Stack>
-          </Form>
-        </ReplyInputWrapper>
-      )}
-
-      {subCmtData &&
-        subCmtData?.length !== 0 &&
-        subCmtData.map((group: any) => {
-          return group?.result.map((sub: SubCommentDataInterface) => {
-            return (
-              <StorySubCommentRow
-                key={sub._id}
-                subCmtData={sub}
-                setSnackbar={setSnackbar}
-                mutate={subCmtMutate}
-              />
-            );
-          });
-        })}
-
-      {size < comment.totalSubCmtPages && (
-        <Link
-          underline="none"
-          sx={{
-            cursor: "pointer",
-            marginLeft: "5%",
-            display: "flex",
-            alignItem: "center",
-          }}
-          onClick={(event: React.MouseEvent<HTMLAnchorElement>) => {
-            event.preventDefault();
-            setSize(size + 1);
-          }}
-        >
-          <ExpandMoreIcon />
-          Xem thêm bình luận cũ
-        </Link>
+                <ExpandMoreIcon />
+                Xem thêm bình luận cũ
+              </Link>
+            )}
+          </Box>
+        </Stack>
       )}
     </CommentRowWrapper>
   );
