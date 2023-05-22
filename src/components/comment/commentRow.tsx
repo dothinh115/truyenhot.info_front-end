@@ -354,7 +354,7 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
       </CommentRow>
 
       {showReplyFooter && (
-        <Stack direction={"row"}>
+        <Stack direction={"row"} gap={"4px"}>
           <Box
             width={"5%"}
             textAlign={"right"}
