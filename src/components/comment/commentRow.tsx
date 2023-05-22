@@ -354,9 +354,9 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
       </CommentRow>
 
       {showReplyFooter && (
-        <Stack direction={"row"} gap={"4px"}>
+        <Stack direction={"row"}>
           <Box
-            width={"5%"}
+            minWidth={"30px"}
             textAlign={"right"}
             sx={{
               color: "myText.primary",
@@ -364,7 +364,11 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
           >
             <SubdirectoryArrowRightIcon />
           </Box>
-          <Box width={"95%"}>
+          <Box
+            sx={{
+              flexGrow: 1,
+            }}
+          >
             {replying && (
               <ReplyInputWrapper>
                 <Form
