@@ -43,7 +43,6 @@ const SubCommentWrapper = styled(Stack)(({ theme }) => ({
   width: "100%",
   alignItems: "center",
   paddingBottom: theme.spacing(0.5),
-  // borderLeft: `1px solid ${alpha(theme.palette.mySecondary.boxShadow, 0.4)}`,
 }));
 
 const SubCommentInner = styled(Stack)(({ theme }) => ({
@@ -145,7 +144,11 @@ export const StorySubCommentRow = ({
                 marginRight: "5px",
               }}
             >
-              {subCmtData?.author.user_name}
+              {`${subCmtData?.author.user_name} đã trả lời ${
+                subCmtData.to._id === subCmtData?.author._id
+                  ? "chính mình"
+                  : subCmtData.to.user_name
+              }`}
             </Box>
             <Box
               component={"span"}

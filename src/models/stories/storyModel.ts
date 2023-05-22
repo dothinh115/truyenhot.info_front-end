@@ -100,6 +100,12 @@ export interface SubCommentDataInterface {
   comment_content: string;
   created_at: Date;
   author: CommentAuthorInterface;
+  to: SubCommentReplyToInterface;
+}
+
+interface SubCommentReplyToInterface {
+  _id: string;
+  user_name: string;
 }
 
 interface CommentAuthorInterface {

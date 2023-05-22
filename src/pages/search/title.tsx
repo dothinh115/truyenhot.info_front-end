@@ -124,9 +124,6 @@ const SearchByTitlePage = ({ categories }: Props) => {
                   count={searchData?.pagination?.pages}
                   page={paginationPage}
                   color="primary"
-                  showFirstButton={true}
-                  showLastButton={true}
-                  siblingCount={2}
                   onChange={(e, p) =>
                     router.push(
                       {
