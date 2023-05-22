@@ -234,34 +234,44 @@ export const StorySubCommentRow = ({
           </>
         )}
       </SubCommentInner>
-      {(profile?.result._id === subCmtData.author._id ||
-        profile?.result.permission > PermissionVariables.Editors) &&
-        !editing && (
-          <Box
+
+      <Box
+        sx={{
+          display: "inline-block",
+          marginLeft: "5px",
+          position: "relative",
+        }}
+      >
+        <IconButton
+          sx={{
+            width: "40px",
+            height: "40px",
+          }}
+          ref={menuDropdownIcon}
+        >
+          <MoreHorizIcon />
+        </IconButton>
+        <MenuDropdownWrapper ref={menuDropdown}>
+          <List
+            dense={true}
             sx={{
-              display: "inline-block",
-              marginLeft: "5px",
-              position: "relative",
+              padding: 0,
             }}
           >
-            <IconButton
-              sx={{
-                width: "40px",
-                height: "40px",
-              }}
-              ref={menuDropdownIcon}
-            >
-              <MoreHorizIcon />
-            </IconButton>
-            <MenuDropdownWrapper ref={menuDropdown}>
-              <List
-                dense={true}
-                sx={{
-                  padding: 0,
-                }}
-              >
+            <ListItemButton onClick={() => setReplying(true)}>
+              <ListItemIcon>
+                <ReplyIcon />
+              </ListItemIcon>
+              <ListItemText
+                sx={{ color: "myText.primary" }}
+                primary="Trả lời"
+              />
+            </ListItemButton>
+            {(profile?.result._id === subCmtData.author._id ||
+              profile?.result.permission > PermissionVariables.Editors) && (
+              <>
                 <ListItemButton onClick={() => deleteHandle(subCmtData._id)}>
-                  <ListItemIcon color="error">
+                  <ListItemIcon>
                     <DeleteIcon />
                   </ListItemIcon>
                   <ListItemText
@@ -283,10 +293,11 @@ export const StorySubCommentRow = ({
                     sx={{ color: "myText.primary" }}
                   />
                 </ListItemButton>
-              </List>
-            </MenuDropdownWrapper>
-          </Box>
-        )}
+              </>
+            )}
+          </List>
+        </MenuDropdownWrapper>
+      </Box>
     </SubCommentWrapper>
   );
 };
