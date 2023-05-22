@@ -30,7 +30,6 @@ import { useRouter } from "next/router";
 
 type Props = {
   subCmtData: SubCommentDataInterface;
-  setSnackbar: any;
   mutate: any;
   setReplying: any;
 };
@@ -70,7 +69,6 @@ const MenuDropdownWrapper = styled(Box)(({ theme }) => ({
 
 export const StorySubCommentRow = ({
   subCmtData,
-  setSnackbar,
   mutate,
   setReplying,
 }: Props) => {
@@ -97,11 +95,7 @@ export const StorySubCommentRow = ({
   const deleteHandle = async (_id: string) => {
     try {
       await API.delete(`/comments/sub/delete/${_id}`);
-      setSnackbar({
-        message: "Xóa comment thành công!",
-        open: true,
-        type: "success",
-      });
+
       mutate();
     } catch (error) {
       console.log(error);
@@ -120,11 +114,6 @@ export const StorySubCommentRow = ({
       setEditing(false);
       await API.put(`/comments/sub/edit/${subCmtData._id}`, {
         comment_content,
-      });
-      setSnackbar({
-        message: "Sửa comment thành công!",
-        open: true,
-        type: "success",
       });
       mutate();
     } catch (error) {

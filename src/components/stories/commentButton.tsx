@@ -1,5 +1,4 @@
 import { useAuth } from "@/hooks/auth";
-import { useSnackbar } from "@/hooks/snackbar";
 import { CommentDataInterface } from "@/models/stories";
 import { API } from "@/utils/config";
 import { strip_tags } from "@/utils/function";

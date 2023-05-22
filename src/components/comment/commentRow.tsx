@@ -77,7 +77,6 @@ const ReplyInputWrapper = styled(Stack)(({ theme }) => ({
 
 type Props = {
   comment: CommentDataInterface;
-  setSnackbar: (...args: any) => void;
   mutate: () => void;
 };
 
@@ -89,7 +88,7 @@ const defaultReplyValues = {
   reply_comment_content: "",
 };
 
-export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
+export const StoryCommentRow = ({ comment, mutate }: Props) => {
   const { profile } = useAuth();
 
   const getKey = (pageIndex: number, previousPageData: any) => {
@@ -113,11 +112,6 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
   const deleteHandle = async (_id: string) => {
     try {
       await API.delete(`/comments/delete/${_id}`);
-      setSnackbar({
-        message: "Xóa comment thành công!",
-        open: true,
-        type: "success",
-      });
       mutate();
     } catch (error) {
       console.log(error);
@@ -147,11 +141,6 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
       setEditing(false);
       await API.put(`/comments/edit/${comment._id}`, {
         comment_content,
-      });
-      setSnackbar({
-        message: "Sửa comment thành công!",
-        open: true,
-        type: "success",
       });
       mutate();
     } catch (error) {
@@ -251,7 +240,10 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
                   <FormItemInput
                     name="comment_content"
                     disabled={profile ? false : true}
-                    defaultValue={comment?.comment_content}
+                    defaultValue={comment?.comment_content.replaceAll(
+                      "<br/>",
+                      "\n"
+                    )}
                   />
                   <Stack
                     direction={"row"}
@@ -427,7 +419,6 @@ export const StoryCommentRow = ({ comment, setSnackbar, mutate }: Props) => {
                     <StorySubCommentRow
                       key={sub._id}
                       subCmtData={sub}
-                      setSnackbar={setSnackbar}
                       mutate={subCmtMutate}
                       setReplying={setReplying}
                     />

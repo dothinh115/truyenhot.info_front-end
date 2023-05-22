@@ -1,5 +1,5 @@
-import { TextField } from "@mui/material";
-import React, { useContext, useEffect } from "react";
+import { TextField, Box } from "@mui/material";
+import { useContext, useEffect, useRef } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { CommentFormContext } from "./form";
 type Props = {
@@ -25,6 +25,7 @@ export const FormItemInput = ({
     reset,
   } = useFormContext();
   const { onSubmit } = useContext<any>(CommentFormContext);
+  const inputEle = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (defaultValue) setValue(name, defaultValue.replaceAll("<br>", "\n"));
   }, [defaultValue]);
@@ -39,16 +40,15 @@ export const FormItemInput = ({
         render={({ field: { onChange, value } }) => (
           <TextField
             fullWidth
+            ref={inputEle}
             onChange={onChange}
-            onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => {
+            onKeyDown={(event: any) => {
               if (window.innerWidth > 430) {
                 if (event.key === "Enter" || event.keyCode === 13) {
-                  if (!event.altKey) {
+                  if (event.altKey) {
                     event.preventDefault();
                     handleSubmit(onSubmit)();
                     reset({ [name]: "" });
-                  } else {
-                    setValue(name, `${value}\n`);
                   }
                 }
               }

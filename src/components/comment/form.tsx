@@ -32,6 +32,16 @@ export const Form = ({ defaultValues, children, onSubmit, sx }: Props) => {
           <FormProvider {...methods}>{children}</FormProvider>
         </CommentFormContext.Provider>
       </Box>
+      <Box
+        sx={{
+          width: "100%",
+          color: "myText.primary",
+          fontSize: ".8em",
+          marginLeft: "8px",
+        }}
+      >
+        Alt + Enter để gửi nhanh
+      </Box>
     </>
   );
 };
