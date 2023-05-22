@@ -93,7 +93,6 @@ export const StoryCommentButton = ({ story_code }: Props) => {
     useSWRInfinite(getKey, {
       revalidateOnMount: false,
     });
-  const { snackbar, setSnackbar } = useSnackbar();
   const [open, setOpen] = useState<boolean>(false);
   const commentWrapper = useRef<HTMLDivElement>(null);
 
@@ -148,7 +147,6 @@ export const StoryCommentButton = ({ story_code }: Props) => {
 
   return (
     <>
-      {snackbar}
       <Modal open={open} onClose={closeHandle}>
         <Fade in={open} unmountOnExit>
           <ModalInner>
@@ -179,7 +177,6 @@ export const StoryCommentButton = ({ story_code }: Props) => {
                     <StoryCommentRow
                       key={comment._id}
                       comment={comment}
-                      setSnackbar={setSnackbar}
                       mutate={mutate}
                     />
                   );
@@ -220,7 +217,7 @@ export const StoryCommentButton = ({ story_code }: Props) => {
               sx={{
                 display: "flex",
                 alignItems: "center",
-                my: 1,
+                marginTop: "8px",
               }}
             >
               <FormItemInput
