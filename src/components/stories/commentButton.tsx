@@ -9,22 +9,20 @@ import SendIcon from "@mui/icons-material/Send";
 import {
   Box,
   Button,
-  Collapse,
   Fade,
   IconButton,
   Modal,
   Stack,
-  TextField,
-  alpha,
   styled,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { TransitionGroup } from "react-transition-group";
 import useSWRInfinite from "swr/infinite";
 import { StoryCommentRow } from "../comment";
+import { Form } from "../comment/form";
+import { FormItemInput } from "../comment/formItem";
+import { CommentLoading } from "../loading";
 
 const ModalInner = styled(Stack)(({ theme }) => ({
   position: "fixed",
@@ -80,29 +78,25 @@ type Props = {
 
 export const StoryCommentButton = ({ story_code }: Props) => {
   const { profile } = useAuth();
+
   const getKey = (pageIndex: number, previousPageData: any) => {
-    if (pageIndex === 0) pageIndex = 1;
-    return `/comments/getCommentsByStoryCode/${story_code}?page=${pageIndex}`;
+    return `/comments/getCommentsByStoryCode/${story_code}?page=${
+      pageIndex + 1
+    }`;
   };
-  const { data, size, setSize, mutate, isValidating } = useSWRInfinite(getKey, {
-    revalidateOnMount: false,
-  });
+
+  const defaultValues = {
+    comment_content: "",
+  };
+
+  const { data, size, setSize, mutate, isValidating, isLoading } =
+    useSWRInfinite(getKey, {
+      revalidateOnMount: false,
+    });
   const { snackbar, setSnackbar } = useSnackbar();
   const [open, setOpen] = useState<boolean>(false);
   const commentWrapper = useRef<HTMLDivElement>(null);
-  const {
-    handleSubmit,
-    control,
-    formState: { errors, isSubmitting },
-    reset,
-    getValues,
-    setValue,
-  } = useForm<{ comment_content: string }>({
-    mode: "onChange",
-    defaultValues: {
-      comment_content: "",
-    },
-  });
+
   const closeHandle = () => setOpen(!open);
   const router = useRouter();
 
@@ -113,14 +107,17 @@ export const StoryCommentButton = ({ story_code }: Props) => {
       "i",
       "u"
     ).replaceAll("\n", "<br/>");
+    if (!profile)
+      router.push({
+        pathname: "/login",
+        query: {
+          backTo: router.asPath,
+        },
+      });
     try {
       await API.post(`/comments/new/${story_code}`, {
         comment_content,
       });
-      reset({
-        comment_content: "",
-      });
-      mutate();
       if (commentWrapper?.current) {
         commentWrapper?.current.scroll({
           top: 0,
@@ -128,12 +125,27 @@ export const StoryCommentButton = ({ story_code }: Props) => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      await mutate();
     }
   };
+
+  const LoadingAnimation = () => {
+    return <CommentLoading />;
+  };
+
+  useEffect(() => {
+    if (data && size > data[data.length - 1]?.pagination.pages && size !== 1) {
+      setSize(size - 1);
+    }
+  }, [data]);
 
   useEffect(() => {
     if (story_code && open) mutate();
   }, [open]);
+
+  if (isLoading) return LoadingAnimation();
+
   return (
     <>
       {snackbar}
@@ -161,23 +173,19 @@ export const StoryCommentButton = ({ story_code }: Props) => {
             <Box className="hr" />
 
             <CommentRowWrapper ref={commentWrapper}>
-              <TransitionGroup>
-                {data?.map((group: any) => {
-                  return group?.result.map((comment: CommentDataInterface) => {
-                    return (
-                      <Collapse key={comment._id}>
-                        <StoryCommentRow
-                          key={comment._id}
-                          comment={comment}
-                          setSnackbar={setSnackbar}
-                          mutate={mutate}
-                        />
-                      </Collapse>
-                    );
-                  });
-                })}
-              </TransitionGroup>
-              {data && size < data[0]?.pagination.pages ? (
+              {data?.map((group: any) => {
+                return group?.result.map((comment: CommentDataInterface) => {
+                  return (
+                    <StoryCommentRow
+                      key={comment._id}
+                      comment={comment}
+                      setSnackbar={setSnackbar}
+                      mutate={mutate}
+                    />
+                  );
+                });
+              })}
+              {data && size < data[data.length - 1]?.pagination.pages ? (
                 <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
                   <Button
                     size="small"
@@ -192,7 +200,7 @@ export const StoryCommentButton = ({ story_code }: Props) => {
                     Tải thêm bình luận cũ
                   </Button>
                 </Box>
-              ) : !data || data[0].result.length === 0 ? (
+              ) : !data || data[0]?.result.length === 0 ? (
                 <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
                   Chưa có bình luận nào
                 </Box>
@@ -205,56 +213,33 @@ export const StoryCommentButton = ({ story_code }: Props) => {
               )}
             </CommentRowWrapper>
             <Box className={"hr"} />
-            <Box
-              component={"form"}
-              onSubmit={handleSubmit(submitHandle)}
+
+            <Form
+              defaultValues={defaultValues}
+              onSubmit={submitHandle}
               sx={{
                 display: "flex",
                 alignItems: "center",
+                my: 1,
               }}
             >
-              <Controller
-                name={"comment_content"}
-                control={control}
-                rules={{
-                  required: "Không được để trống",
+              <FormItemInput
+                name="comment_content"
+                placeholder={
+                  profile
+                    ? "Viết bình luận..."
+                    : "Bạn cần đăng nhập để bình luận"
+                }
+                disabled={profile ? false : true}
+                onClick={() => {
+                  if (!profile)
+                    router.push({
+                      pathname: "/login",
+                      query: {
+                        backTo: router.asPath,
+                      },
+                    });
                 }}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    fullWidth
-                    onChange={onChange}
-                    onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => {
-                      if (window.innerWidth > 430) {
-                        if (event.key === "Enter" || event.keyCode === 13) {
-                          if (!event.altKey) {
-                            event.preventDefault();
-                            handleSubmit(submitHandle)();
-                          } else {
-                            setValue("comment_content", `${value}\n`);
-                          }
-                        }
-                      }
-                    }}
-                    value={value.replace(/↵/g, "\n")}
-                    multiline
-                    placeholder={
-                      profile
-                        ? "Viết bình luận..."
-                        : "Bạn cần đăng nhập để bình luận"
-                    }
-                    error={!!errors?.comment_content}
-                    sx={{
-                      my: 1,
-                      backgroundColor: "myBackground.secondary",
-                    }}
-                    size="small"
-                    disabled={profile ? false : true}
-                    onClick={() => {
-                      if (!profile)
-                        router.push(`/login?backTo=${window.location.href}`);
-                    }}
-                  />
-                )}
               />
               {profile && (
                 <IconButton
@@ -264,12 +249,11 @@ export const StoryCommentButton = ({ story_code }: Props) => {
                     height: "40px",
                     width: "40px",
                   }}
-                  disabled={isSubmitting ? true : false}
                 >
                   <SendIcon />
                 </IconButton>
               )}
-            </Box>
+            </Form>
           </ModalInner>
         </Fade>
       </Modal>

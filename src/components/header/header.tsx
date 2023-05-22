@@ -27,6 +27,7 @@ import HowToRegIcon from "@mui/icons-material/HowToReg";
 import { useAuth } from "@/hooks/auth";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useRouter } from "next/router";
 
 const AppBarStyled = styled(AppBar)(({ theme }) => ({
   position: "static",
@@ -70,7 +71,7 @@ export function Header() {
   const yOffset = useRef<number>(0);
   const menuDropDown = useRef<HTMLDivElement>(null);
   const menuDropDownButton = useRef<HTMLButtonElement>(null);
-
+  const router = useRouter();
   const scrollHandle = () => {
     setTimeout(() => {
       yOffset.current = window.pageYOffset;
@@ -239,12 +240,14 @@ export function Header() {
                       ) : (
                         <>
                           <ListItemButton
-                            LinkComponent={Link}
-                            href={`/login${
-                              typeof window !== "undefined"
-                                ? `?backTo=${window.location.href}`
-                                : ""
-                            }`}
+                            onClick={() =>
+                              router.push({
+                                pathname: "/login",
+                                query: {
+                                  backTo: router.asPath,
+                                },
+                              })
+                            }
                           >
                             <ListItemIcon
                               sx={{ minWidth: "unset", marginRight: "8px" }}

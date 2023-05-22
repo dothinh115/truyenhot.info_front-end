@@ -91,10 +91,18 @@ export interface CommentDataInterface {
   comment_content: string;
   created_at: Date;
   author: CommentAuthorInterface;
+  totalSubCmtPages: number;
+}
+
+export interface SubCommentDataInterface {
+  _id: string;
+  parent_id: string;
+  comment_content: string;
+  created_at: Date;
+  author: CommentAuthorInterface;
 }
 
 interface CommentAuthorInterface {
   _id: string;
   user_name: string;
-  email: string;
 }
