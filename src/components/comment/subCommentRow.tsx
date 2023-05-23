@@ -27,6 +27,7 @@ import { Form } from "./form";
 import { FormItemInput } from "./formItem";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/router";
+import { RichTextEditor } from "../richtext";
 
 type Props = {
   subCmtData: SubCommentDataInterface;
@@ -77,6 +78,7 @@ export const StorySubCommentRow = ({
   const [show, setShow] = useState<boolean>(false);
   const [editing, setEditing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [submitClick, setSubmitClick] = useState<boolean>(false);
 
   const menuDropdownClickHandle = (event: { target: any }) => {
     if (menuDropdown?.current) {
@@ -100,23 +102,19 @@ export const StorySubCommentRow = ({
     }
   };
 
-  const submitHandle = async (data: { comment_content: string }) => {
-    const comment_content = strip_tags(
-      data.comment_content,
-      "b",
-      "i",
-      "u"
-    ).replaceAll("\n", "<br/>");
+  const submitHandle = async (data: string) => {
+    const comment_content = strip_tags(data, "b", "i", "u", "br");
+    if (comment_content === "") return;
     setLoading(true);
     try {
       setEditing(false);
       await API.put(`/comments/sub/edit/${subCmtData._id}`, {
         comment_content,
       });
-      mutate();
     } catch (error) {
       console.log(error);
     } finally {
+      await mutate();
       setLoading(false);
     }
   };
@@ -162,18 +160,12 @@ export const StorySubCommentRow = ({
         </Stack>
         <Divider />
         {editing ? (
-          <Form
-            defaultValues={defaultValues}
-            onSubmit={submitHandle}
-            sx={{ my: 1 }}
-          >
-            <FormItemInput
-              name="comment_content"
-              disabled={profile ? false : true}
-              defaultValue={subCmtData?.comment_content.replaceAll(
-                "<br/>",
-                "\n"
-              )}
+          <>
+            <RichTextEditor
+              cb={submitHandle}
+              clicked={submitClick}
+              setClicked={setSubmitClick}
+              defaultValue={subCmtData.comment_content}
             />
             <Stack
               direction={"row"}
@@ -191,16 +183,20 @@ export const StorySubCommentRow = ({
               >
                 <CancelIcon />
               </IconButton>
-              <IconButton size="small" color="success" type="submit">
+              <IconButton
+                size="small"
+                color="success"
+                onClick={() => setSubmitClick(true)}
+              >
                 <CheckCircleIcon />
               </IconButton>
             </Stack>
-          </Form>
+          </>
         ) : (
           <>
             {loading ? (
-              <Box my={"4px"}>
-                <CircularProgress size={"1em"} />
+              <Box my={1}>
+                <CircularProgress size={"1em"} /> Đang cập nhật...
               </Box>
             ) : (
               <Box

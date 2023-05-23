@@ -13,15 +13,14 @@ import {
   Modal,
   Stack,
   styled,
+  Link,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import { MemorizedStoryCommentRow } from "../comment";
-import { Form } from "../comment/form";
-import { FormItemInput } from "../comment/formItem";
-import { CommentLoading } from "../loading";
+import { RichTextEditor } from "../richtext";
 
 const ModalInner = styled(Stack)(({ theme }) => ({
   position: "fixed",
@@ -84,27 +83,20 @@ export const StoryCommentButton = ({ story_code }: Props) => {
     }`;
   };
 
-  const defaultValues = {
-    comment_content: "",
-  };
-
   const { data, size, setSize, mutate, isValidating, isLoading } =
     useSWRInfinite(getKey, {
       revalidateOnMount: false,
     });
   const [open, setOpen] = useState<boolean>(false);
+  const [submitClicked, setSubmitClicked] = useState<boolean>(false);
   const commentWrapper = useRef<HTMLDivElement>(null);
 
   const closeHandle = () => setOpen(!open);
+
   const router = useRouter();
 
-  const submitHandle = async (data: { comment_content: string }) => {
-    const comment_content = strip_tags(
-      data.comment_content,
-      "b",
-      "i",
-      "u"
-    ).replaceAll("\n", "<br/>");
+  const submitHandle = async (data: string) => {
+    const comment_content = strip_tags(data, "b", "i", "u", "br");
     if (comment_content === "") return;
     if (!profile)
       router.push({
@@ -129,10 +121,6 @@ export const StoryCommentButton = ({ story_code }: Props) => {
     }
   };
 
-  const LoadingAnimation = () => {
-    return <CommentLoading />;
-  };
-
   useEffect(() => {
     if (data && size > data[data.length - 1]?.pagination.pages && size !== 1) {
       setSize(size - 1);
@@ -142,8 +130,6 @@ export const StoryCommentButton = ({ story_code }: Props) => {
   useEffect(() => {
     if (story_code && open) mutate();
   }, [open]);
-
-  if (isLoading) return LoadingAnimation();
 
   return (
     <>
@@ -210,47 +196,72 @@ export const StoryCommentButton = ({ story_code }: Props) => {
               )}
             </CommentRowWrapper>
             <Box className={"hr"} />
-
-            <Form
-              defaultValues={defaultValues}
-              onSubmit={submitHandle}
+            <Stack
+              direction={"row"}
+              gap={"5px"}
+              alignItems={"center"}
+              mt={1}
               sx={{
-                display: "flex",
-                alignItems: "center",
-                marginTop: "8px",
+                color: "myText.primary",
               }}
             >
-              <FormItemInput
-                name="comment_content"
-                placeholder={
-                  profile
-                    ? "Viết bình luận..."
-                    : "Bạn cần đăng nhập để bình luận"
-                }
-                disabled={profile ? false : true}
-                onClick={() => {
-                  if (!profile)
-                    router.push({
-                      pathname: "/login",
-                      query: {
-                        backTo: router.asPath,
-                      },
-                    });
-                }}
-              />
-              {profile && (
-                <IconButton
-                  type="submit"
-                  size="large"
-                  sx={{
-                    height: "40px",
-                    width: "40px",
-                  }}
-                >
-                  <SendIcon />
-                </IconButton>
+              {profile ? (
+                <>
+                  <RichTextEditor
+                    cb={submitHandle}
+                    clicked={submitClicked}
+                    setClicked={setSubmitClicked}
+                    placeholder="Viết bình luận..."
+                  />
+
+                  <IconButton
+                    type="submit"
+                    size="large"
+                    sx={{
+                      height: "40px",
+                      width: "40px",
+                    }}
+                    onClick={() => setSubmitClicked(true)}
+                  >
+                    <SendIcon />
+                  </IconButton>
+                </>
+              ) : (
+                <Box textAlign={"center"} width={"100%"}>
+                  Bạn cần{" "}
+                  {
+                    <Link
+                      underline="none"
+                      sx={{ cursor: "pointer" }}
+                      onClick={() =>
+                        router.push({
+                          pathname: "/login",
+                          query: {
+                            backTo: router.asPath,
+                          },
+                        })
+                      }
+                    >
+                      đăng nhập
+                    </Link>
+                  }{" "}
+                  để bình luận. Chưa có tài khoản?{" "}
+                  {
+                    <Link
+                      underline="none"
+                      sx={{ cursor: "pointer" }}
+                      onClick={() =>
+                        router.push({
+                          pathname: "/register",
+                        })
+                      }
+                    >
+                      Đăng ký
+                    </Link>
+                  }
+                </Box>
               )}
-            </Form>
+            </Stack>
           </ModalInner>
         </Fade>
       </Modal>

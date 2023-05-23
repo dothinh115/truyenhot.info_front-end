@@ -1,4 +1,4 @@
-import { TextField } from "@mui/material";
+import { TextField, Box, Button } from "@mui/material";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { CommentFormContext } from "./form";
@@ -43,7 +43,7 @@ export const FormItemInput = ({
 
   return (
     <>
-      <TextField
+      {/* <TextField
         fullWidth
         inputRef={inputEle}
         onChange={(event) => {
@@ -87,7 +87,21 @@ export const FormItemInput = ({
         disabled={disabled}
         onClick={onClick}
         defaultValue={defaultValue}
-      />
+      /> */}
+      <Box
+        contentEditable={true}
+        sx={{
+          width: "100%",
+          border: "1px solid #eee",
+          backgroundColor: "myBackground.paper",
+          borderRadius: "4px",
+          minHeight: "40px",
+          outline: "none",
+          color: "myText.primary",
+          padding: "4px",
+          lineHeight: "1em",
+        }}
+      ></Box>
     </>
   );
 };

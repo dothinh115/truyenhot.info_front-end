@@ -25,6 +25,11 @@ a {
   animation-fill-mode: forwards;
 }
 
+[contenteditable="true"]:empty:not(:focus)::before {
+  content: attr(data-placeholder);
+  opacity: 0.5;
+}
+
 @keyframes appbar-fixed {
   from {
     top: -100%;
