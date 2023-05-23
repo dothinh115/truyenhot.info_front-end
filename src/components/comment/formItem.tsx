@@ -1,4 +1,4 @@
-import { TextField, Box } from "@mui/material";
+import { TextField } from "@mui/material";
 import { useContext, useEffect, useRef } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { CommentFormContext } from "./form";
@@ -18,53 +18,66 @@ export const FormItemInput = ({
   defaultValue,
 }: Props) => {
   const {
-    control,
     handleSubmit,
     setValue,
     formState: { errors },
     reset,
+    setError,
+    clearErrors,
   } = useFormContext();
   const { onSubmit } = useContext<any>(CommentFormContext);
-  const inputEle = useRef<HTMLDivElement>(null);
+  const inputEle = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     if (defaultValue) setValue(name, defaultValue.replaceAll("<br>", "\n"));
   }, [defaultValue]);
   return (
     <>
-      <Controller
-        name={name}
-        control={control}
-        rules={{
-          required: "Không được để trống",
+      <TextField
+        fullWidth
+        inputRef={inputEle}
+        onChange={(event) => {
+          let { value } = event.target;
+          if (value === "") {
+            setError(name, { message: "Không được để trống" });
+          } else {
+            clearErrors(name);
+            setValue(name, value);
+          }
         }}
-        render={({ field: { onChange, value } }) => (
-          <TextField
-            fullWidth
-            ref={inputEle}
-            onChange={onChange}
-            onKeyDown={(event: any) => {
-              if (window.innerWidth > 430) {
-                if (event.key === "Enter" || event.keyCode === 13) {
-                  if (event.altKey) {
-                    event.preventDefault();
-                    handleSubmit(onSubmit)();
-                    reset({ [name]: "" });
-                  }
+        onKeyDown={(event: any) => {
+          let { value } = event.target;
+          if (window.innerWidth > 430) {
+            if (event.key === "Enter" || event.keyCode === 13) {
+              if (!event.altKey) {
+                event.preventDefault();
+                if (!errors[name]) {
+                  value = "";
+                  handleSubmit(onSubmit)();
+                  reset({ [name]: "" });
                 }
+              } else {
+                const cursorPos = inputEle?.current!.selectionStart;
+                const textBefore = value.substr(0, cursorPos);
+                const textAfter = value.substr(cursorPos, value.length);
+                event.target.value = `${textBefore}\n${textAfter}`;
+                event.target.style.overflow = "auto";
+                event.target.setSelectionRange(cursorPos + 1, cursorPos + 1);
+                event.target.blur();
+                event.target.focus();
               }
-            }}
-            value={value.replace(/↵/g, "\n")}
-            multiline
-            placeholder={placeholder}
-            error={!!errors?.comment_content}
-            sx={{
-              backgroundColor: "myBackground.secondary",
-            }}
-            size="small"
-            disabled={disabled}
-            onClick={onClick}
-          />
-        )}
+            }
+          }
+        }}
+        multiline
+        placeholder={placeholder}
+        error={!!errors?.[name]}
+        sx={{
+          backgroundColor: "myBackground.secondary",
+        }}
+        size="small"
+        maxRows={5}
+        disabled={disabled}
+        onClick={onClick}
       />
     </>
   );

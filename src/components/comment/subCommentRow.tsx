@@ -78,7 +78,6 @@ export const StorySubCommentRow = ({
   const [editing, setEditing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const router = useRouter();
   const menuDropdownClickHandle = (event: { target: any }) => {
     if (menuDropdown?.current) {
       if (menuDropdownIcon?.current?.contains(event.target)) {
@@ -144,11 +143,7 @@ export const StorySubCommentRow = ({
                 marginRight: "5px",
               }}
             >
-              {`${subCmtData?.author.user_name} đã trả lời ${
-                subCmtData.to._id === subCmtData?.author._id
-                  ? "chính mình"
-                  : subCmtData.to.user_name
-              }`}
+              {subCmtData?.author.user_name}
             </Box>
             <Box
               component={"span"}
@@ -293,3 +288,5 @@ export const StorySubCommentRow = ({
     </SubCommentWrapper>
   );
 };
+
+export const MemorizedStorySubCommentRow = React.memo(StorySubCommentRow);

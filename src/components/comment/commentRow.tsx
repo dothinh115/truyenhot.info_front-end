@@ -26,11 +26,11 @@ import {
   alpha,
   styled,
 } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import { Form } from "./form";
 import { FormItemInput } from "./formItem";
-import { StorySubCommentRow } from "./subCommentRow";
+import { MemorizedStorySubCommentRow } from "./subCommentRow";
 const CommentRowWrapper = styled(Stack)(({ theme }) => ({
   marginBottom: theme.spacing(1),
 }));
@@ -109,6 +109,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
   const [editing, setEditing] = useState<boolean>(false);
   const [replying, setReplying] = useState<boolean>(false);
   const commentWrapperEle = useRef<HTMLDivElement>(null);
+
   const deleteHandle = async (_id: string) => {
     try {
       await API.delete(`/comments/delete/${_id}`);
@@ -416,7 +417,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
               subCmtData.map((group: any) => {
                 return group?.result.map((sub: SubCommentDataInterface) => {
                   return (
-                    <StorySubCommentRow
+                    <MemorizedStorySubCommentRow
                       key={sub._id}
                       subCmtData={sub}
                       mutate={subCmtMutate}
@@ -450,3 +451,5 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
     </CommentRowWrapper>
   );
 };
+
+export const MemorizedStoryCommentRow = React.memo(StoryCommentRow);

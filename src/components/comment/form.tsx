@@ -40,7 +40,7 @@ export const Form = ({ defaultValues, children, onSubmit, sx }: Props) => {
           marginLeft: "8px",
         }}
       >
-        Alt + Enter để gửi nhanh
+        Alt + Enter để xuống hàng
       </Box>
     </>
   );

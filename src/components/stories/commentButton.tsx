@@ -18,7 +18,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
-import { StoryCommentRow } from "../comment";
+import { MemorizedStoryCommentRow } from "../comment";
 import { Form } from "../comment/form";
 import { FormItemInput } from "../comment/formItem";
 import { CommentLoading } from "../loading";
@@ -173,7 +173,7 @@ export const StoryCommentButton = ({ story_code }: Props) => {
               {data?.map((group: any) => {
                 return group?.result.map((comment: CommentDataInterface) => {
                   return (
-                    <StoryCommentRow
+                    <MemorizedStoryCommentRow
                       key={comment._id}
                       comment={comment}
                       mutate={mutate}
