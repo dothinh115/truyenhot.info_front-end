@@ -33,7 +33,6 @@ export const RichTextEditor = ({
   defaultValue,
 }: Props) => {
   const contentDiv = useRef<HTMLDivElement>();
-  const optionsDiv = useRef<HTMLDivElement>();
   const keyDown = (event: any) => {
     if (event.key === "Enter" || event.keyCode === 13) {
       event.preventDefault();
