@@ -18,6 +18,12 @@ const ContentEditableStyled = styled(Box)(({ theme }) => ({
   outline: "none",
   color: "myText.primary",
   padding: theme.spacing(1),
+  [theme.breakpoints.up("xs")]: {
+    fontSize: "16px",
+  },
+  [theme.breakpoints.up("md")]: {
+    fontSize: "14px",
+  },
 }));
 
 export const RichTextEditor = ({
