@@ -1,4 +1,4 @@
-import { Box, Button, alpha } from "@mui/material";
+import { Box, alpha } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useEffect, useRef } from "react";
 type Props = {
@@ -33,6 +33,7 @@ export const RichTextEditor = ({
   defaultValue,
 }: Props) => {
   const contentDiv = useRef<HTMLDivElement>();
+  const optionsDiv = useRef<HTMLDivElement>();
   const keyDown = (event: any) => {
     if (event.key === "Enter" || event.keyCode === 13) {
       event.preventDefault();
