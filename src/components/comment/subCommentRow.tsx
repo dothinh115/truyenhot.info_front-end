@@ -1,18 +1,5 @@
+import { useAuth } from "@/hooks/auth";
 import { SubCommentDataInterface } from "@/models/stories";
-import React, { useState, useRef, useEffect } from "react";
-import {
-  Box,
-  Divider,
-  IconButton,
-  Link,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Stack,
-  alpha,
-  styled,
-} from "@mui/material";
 import { API, PermissionVariables } from "@/utils/config";
 import { strip_tags, timeSince } from "@/utils/function";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -22,11 +9,20 @@ import EditIcon from "@mui/icons-material/Edit";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ReplyIcon from "@mui/icons-material/Reply";
-import { useAuth } from "@/hooks/auth";
-import { Form } from "./form";
-import { FormItemInput } from "./formItem";
+import {
+  Box,
+  Divider,
+  IconButton,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Stack,
+  alpha,
+  styled,
+} from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useRouter } from "next/router";
+import React, { useEffect, useRef, useState } from "react";
 import { RichTextEditor } from "../richtext";
 
 type Props = {
