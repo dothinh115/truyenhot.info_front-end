@@ -19,15 +19,7 @@ export const Form = ({ defaultValues, children, onSubmit, sx }: Props) => {
   const { handleSubmit, reset } = methods;
   return (
     <>
-      <Box
-        component={"form"}
-        sx={sx}
-        onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
-          event.preventDefault();
-          handleSubmit(onSubmit)();
-          reset(defaultValues);
-        }}
-      >
+      <Box component={"form"} sx={sx} onSubmit={handleSubmit(onSubmit)}>
         <CommentFormContext.Provider value={{ onSubmit }}>
           <FormProvider {...methods}>{children}</FormProvider>
         </CommentFormContext.Provider>

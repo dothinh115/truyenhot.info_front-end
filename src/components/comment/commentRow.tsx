@@ -138,6 +138,9 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
       "i",
       "u"
     ).replaceAll("\n", "<br/>");
+    if (comment_content === "") return;
+    console.log(comment_content);
+
     try {
       setEditing(false);
       await API.put(`/comments/edit/${comment._id}`, {
@@ -156,6 +159,8 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
       "i",
       "u"
     ).replaceAll("\n", "<br/>");
+    if (comment_content === "") return;
+    console.log(comment_content);
     try {
       setReplying(false);
       await API.post(`/comments/sub/new/${comment._id}`, {

@@ -105,6 +105,7 @@ export const StoryCommentButton = ({ story_code }: Props) => {
       "i",
       "u"
     ).replaceAll("\n", "<br/>");
+    if (comment_content === "") return;
     if (!profile)
       router.push({
         pathname: "/login",
