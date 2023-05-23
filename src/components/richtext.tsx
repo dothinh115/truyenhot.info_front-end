@@ -52,7 +52,7 @@ export const RichTextEditor = ({
   const keyDown = (event: any) => {
     if (event.key === "Enter" || event.keyCode === 13) {
       event.preventDefault();
-      if (event.altKey) {
+      if (event.altKey || event.shiftKey) {
         document.execCommand("insertLineBreak");
       } else {
         if (contentDiv?.current !== undefined) {

@@ -226,6 +226,15 @@ export const StoryCommentButton = ({ story_code }: Props) => {
                   >
                     <SendIcon />
                   </IconButton>
+                  <Box
+                    sx={{
+                      fontSize: ".8em",
+                      marginLeft: "4px",
+                      width: "100%",
+                    }}
+                  >
+                    Alt hoặc Shift + Enter để xuống hàng
+                  </Box>
                 </>
               ) : (
                 <Box textAlign={"center"} width={"100%"}>
