@@ -170,7 +170,10 @@ export const StorySubCommentRow = ({
             <FormItemInput
               name="comment_content"
               disabled={profile ? false : true}
-              defaultValue={subCmtData?.comment_content}
+              defaultValue={subCmtData?.comment_content.replaceAll(
+                "<br/>",
+                "\n"
+              )}
             />
             <Stack
               direction={"row"}

@@ -27,7 +27,7 @@ export const FormItemInput = ({
   const [val, setVal] = useState<string>("");
 
   useEffect(() => {
-    if (defaultValue) defaultValue = defaultValue.replaceAll("<br>", "\n");
+    if (defaultValue) defaultValue = defaultValue.replaceAll("<br/>", "\n");
   }, [defaultValue]);
 
   useEffect(() => {

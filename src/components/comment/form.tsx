@@ -16,7 +16,7 @@ export const Form = ({ defaultValues, children, onSubmit, sx }: Props) => {
     mode: "onChange",
     defaultValues,
   });
-  const { handleSubmit, reset } = methods;
+  const { handleSubmit } = methods;
   return (
     <>
       <Box component={"form"} sx={sx} onSubmit={handleSubmit(onSubmit)}>
