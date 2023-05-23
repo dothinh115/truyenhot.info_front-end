@@ -1,5 +1,5 @@
-import { Box, alpha, Stack, IconButton } from "@mui/material";
-import { useEffect, useRef } from "react";
+import { Box, alpha, Stack, IconButton, Button } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import FormatBoldIcon from "@mui/icons-material/FormatBold";
 import FormatItalicIcon from "@mui/icons-material/FormatItalic";
@@ -28,6 +28,16 @@ const ContentEditableStyled = styled(Box)(({ theme }) => ({
   },
 }));
 
+const IconButtonStyled = styled(Button)(({ theme }) => ({
+  width: "30px",
+  height: "30px",
+  padding: "4px",
+  minWidth: "unset",
+  "& > svg": {
+    fontSize: "1.3em",
+  },
+}));
+
 export const RichTextEditor = ({
   cb,
   clicked,
@@ -35,8 +45,10 @@ export const RichTextEditor = ({
   placeholder,
   defaultValue,
 }: Props) => {
+  const [bold, setBold] = useState<boolean>(false);
+  const [italic, setItalic] = useState<boolean>(false);
+  const [underline, setUnderline] = useState<boolean>(false);
   const contentDiv = useRef<HTMLDivElement>();
-
   const keyDown = (event: any) => {
     if (event.key === "Enter" || event.keyCode === 13) {
       event.preventDefault();
@@ -68,18 +80,36 @@ export const RichTextEditor = ({
   return (
     <>
       <Stack direction={"row"} gap={"5px"} mb={"4px"} width={"100%"}>
-        <IconButton size="small" onClick={() => document.execCommand("bold")}>
-          <FormatBoldIcon />
-        </IconButton>
-        <IconButton size="small" onClick={() => document.execCommand("italic")}>
-          <FormatItalicIcon />
-        </IconButton>
-        <IconButton
+        <IconButtonStyled
+          variant={bold ? "contained" : "text"}
           size="small"
-          onClick={() => document.execCommand("underline")}
+          onClick={() => {
+            document.execCommand("bold");
+            setBold(!bold);
+          }}
+        >
+          <FormatBoldIcon />
+        </IconButtonStyled>
+        <IconButtonStyled
+          variant={italic ? "contained" : "text"}
+          size="small"
+          onClick={() => {
+            document.execCommand("italic");
+            setItalic(!italic);
+          }}
+        >
+          <FormatItalicIcon />
+        </IconButtonStyled>
+        <IconButtonStyled
+          variant={underline ? "contained" : "text"}
+          size="small"
+          onClick={() => {
+            document.execCommand("underline");
+            setUnderline(!underline);
+          }}
         >
           <FormatUnderlinedIcon />
-        </IconButton>
+        </IconButtonStyled>
       </Stack>
 
       <Box flexGrow={1}>
