@@ -83,9 +83,15 @@ export const RichTextEditor = ({
         <IconButtonStyled
           variant={bold ? "contained" : "text"}
           size="small"
-          onClick={() => {
+          onTouchStart={() => {
             document.execCommand("bold");
             setBold(!bold);
+          }}
+          onClick={() => {
+            if (window.innerWidth > 428) {
+              document.execCommand("bold");
+              setBold(!bold);
+            }
           }}
         >
           <FormatBoldIcon />
@@ -93,9 +99,15 @@ export const RichTextEditor = ({
         <IconButtonStyled
           variant={italic ? "contained" : "text"}
           size="small"
-          onClick={() => {
+          onTouchStart={() => {
             document.execCommand("italic");
             setItalic(!italic);
+          }}
+          onClick={() => {
+            if (window.innerWidth > 428) {
+              document.execCommand("italic");
+              setItalic(!italic);
+            }
           }}
         >
           <FormatItalicIcon />
@@ -103,9 +115,15 @@ export const RichTextEditor = ({
         <IconButtonStyled
           variant={underline ? "contained" : "text"}
           size="small"
-          onClick={() => {
+          onTouchStart={() => {
             document.execCommand("underline");
             setUnderline(!underline);
+          }}
+          onClick={() => {
+            if (window.innerWidth > 428) {
+              document.execCommand("underline");
+              setUnderline(!underline);
+            }
           }}
         >
           <FormatUnderlinedIcon />
