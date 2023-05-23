@@ -1,6 +1,9 @@
-import { Box, alpha } from "@mui/material";
+import { Box, alpha, Stack, IconButton } from "@mui/material";
 import { useEffect, useRef } from "react";
 import { styled } from "@mui/material/styles";
+import FormatBoldIcon from "@mui/icons-material/FormatBold";
+import FormatItalicIcon from "@mui/icons-material/FormatItalic";
+import FormatUnderlinedIcon from "@mui/icons-material/FormatUnderlined";
 type Props = {
   cb: (data: string) => void;
   clicked: boolean;
@@ -10,7 +13,6 @@ type Props = {
 };
 
 const ContentEditableStyled = styled(Box)(({ theme }) => ({
-  width: "100%",
   border: `1px solid ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
   backgroundColor: theme.palette.myBackground.paper,
   borderRadius: theme.spacing(0.5),
@@ -64,12 +66,31 @@ export const RichTextEditor = ({
   }, [defaultValue]);
 
   return (
-    <ContentEditableStyled
-      contentEditable={true}
-      tabIndex={0}
-      onKeyDown={keyDown}
-      ref={contentDiv}
-      data-placeholder={placeholder}
-    ></ContentEditableStyled>
+    <>
+      <Stack direction={"row"} gap={"5px"} mb={"4px"} width={"100%"}>
+        <IconButton size="small" onClick={() => document.execCommand("bold")}>
+          <FormatBoldIcon />
+        </IconButton>
+        <IconButton size="small" onClick={() => document.execCommand("italic")}>
+          <FormatItalicIcon />
+        </IconButton>
+        <IconButton
+          size="small"
+          onClick={() => document.execCommand("underline")}
+        >
+          <FormatUnderlinedIcon />
+        </IconButton>
+      </Stack>
+
+      <Box flexGrow={1}>
+        <ContentEditableStyled
+          contentEditable={true}
+          tabIndex={0}
+          onKeyDown={keyDown}
+          ref={contentDiv}
+          data-placeholder={placeholder}
+        ></ContentEditableStyled>
+      </Box>
+    </>
   );
 };

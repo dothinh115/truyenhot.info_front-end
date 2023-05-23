@@ -203,6 +203,7 @@ export const StoryCommentButton = ({ story_code }: Props) => {
               mt={1}
               sx={{
                 color: "myText.primary",
+                flexWrap: "wrap",
               }}
             >
               {profile ? (
