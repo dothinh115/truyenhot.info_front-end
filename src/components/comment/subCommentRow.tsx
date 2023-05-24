@@ -23,7 +23,7 @@ import {
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import React, { useEffect, useRef, useState } from "react";
-import { RichTextEditor } from "../richtext";
+import { CmtInputEditor } from "./cmtInput";
 
 type Props = {
   subCmtData: SubCommentDataInterface;
@@ -157,7 +157,7 @@ export const StorySubCommentRow = ({
         <Divider />
         {editing ? (
           <>
-            <RichTextEditor
+            <CmtInputEditor
               cb={submitHandle}
               clicked={submitClick}
               setClicked={setSubmitClick}

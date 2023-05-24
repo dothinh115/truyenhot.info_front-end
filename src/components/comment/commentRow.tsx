@@ -29,8 +29,8 @@ import {
 import CircularProgress from "@mui/material/CircularProgress";
 import React, { useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
-import { RichTextEditor } from "../richtext";
 import { MemorizedStorySubCommentRow } from "./subCommentRow";
+import { CmtInputEditor } from "./cmtInput";
 
 const CommentRowWrapper = styled(Stack)(({ theme }) => ({
   marginBottom: theme.spacing(1),
@@ -231,7 +231,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
               <Divider />
               {editing ? (
                 <>
-                  <RichTextEditor
+                  <CmtInputEditor
                     cb={submitHandle}
                     clicked={editSubmitClicked}
                     setClicked={setEditSubmitClicked}
@@ -395,7 +395,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
           >
             {replying && (
               <ReplyInputWrapper>
-                <RichTextEditor
+                <CmtInputEditor
                   cb={replySubmitHandle}
                   clicked={replySubmitClicked}
                   setClicked={setReplySubmitClicked}
