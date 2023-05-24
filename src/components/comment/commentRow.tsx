@@ -30,9 +30,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 import React, { useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import { MemorizedStorySubCommentRow } from "./subCommentRow";
-import { CmtInputEditor } from "./cmtInput";
-import { EditorState, convertFromRaw } from "draft-js";
+import { convertFromRaw } from "draft-js";
 import { convertToHTML } from "draft-convert";
+import { CmtInputEditor } from "./cmtInput";
 
 const CommentRowWrapper = styled(Stack)(({ theme }) => ({
   marginBottom: theme.spacing(1),

@@ -33,10 +33,6 @@ type Props = {
   setReplying: any;
 };
 
-const defaultValues = {
-  comment_content: "",
-};
-
 const SubCommentWrapper = styled(Stack)(({ theme }) => ({
   flexDirection: "row",
   width: "100%",

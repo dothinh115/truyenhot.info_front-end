@@ -1,7 +1,6 @@
 import { useAuth } from "@/hooks/auth";
 import { CommentDataInterface } from "@/models/stories";
 import { API } from "@/utils/config";
-import { strip_tags } from "@/utils/function";
 import CloseIcon from "@mui/icons-material/Close";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
 import SendIcon from "@mui/icons-material/Send";
@@ -10,10 +9,10 @@ import {
   Button,
   Fade,
   IconButton,
+  Link,
   Modal,
   Stack,
   styled,
-  Link,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/router";
