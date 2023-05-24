@@ -24,6 +24,8 @@ import {
 import CircularProgress from "@mui/material/CircularProgress";
 import React, { useEffect, useRef, useState } from "react";
 import { CmtInputEditor } from "./cmtInput";
+import { convertToHTML } from "draft-convert";
+import { convertFromRaw } from "draft-js";
 
 type Props = {
   subCmtData: SubCommentDataInterface;
@@ -196,11 +198,15 @@ export const StorySubCommentRow = ({
               </Box>
             ) : (
               <Box
+                sx={{
+                  "& p": {
+                    margin: 0,
+                  },
+                }}
                 dangerouslySetInnerHTML={{
-                  __html:
-                    subCmtData?.comment_content.length > 400 && !show
-                      ? subCmtData?.comment_content.substring(0, 400) + " ..."
-                      : subCmtData?.comment_content,
+                  __html: convertToHTML(
+                    convertFromRaw(JSON.parse(subCmtData?.comment_content))
+                  ),
                 }}
                 my={"4px"}
               />

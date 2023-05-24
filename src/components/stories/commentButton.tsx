@@ -95,8 +95,6 @@ export const StoryCommentButton = ({ story_code }: Props) => {
   const router = useRouter();
 
   const submitHandle = async (data: string) => {
-    const comment_content = strip_tags(data, "b", "i", "u", "br");
-    if (comment_content === "") return;
     if (!profile)
       router.push({
         pathname: "/login",
@@ -106,7 +104,7 @@ export const StoryCommentButton = ({ story_code }: Props) => {
       });
     try {
       await API.post(`/comments/new/${story_code}`, {
-        comment_content,
+        comment_content: data,
       });
       if (commentWrapper?.current) {
         commentWrapper?.current.scroll({

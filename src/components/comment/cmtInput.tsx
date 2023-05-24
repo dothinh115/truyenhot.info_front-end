@@ -1,7 +1,16 @@
 import { Box, alpha } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useEffect, useRef, useState } from "react";
-import { Editor, EditorState } from "draft-js";
+import {
+  DraftHandleValue,
+  Editor,
+  EditorState,
+  Modifier,
+  SelectionState,
+  convertFromRaw,
+  convertToRaw,
+  getDefaultKeyBinding,
+} from "draft-js";
+import React, { useEffect, useRef, useState } from "react";
 
 type Props = {
   cb: (data: string) => void;
@@ -12,18 +21,21 @@ type Props = {
 };
 
 const ContentEditableStyled = styled(Box)(({ theme }) => ({
-  border: `1px solid ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
-  backgroundColor: theme.palette.myBackground.paper,
-  borderRadius: theme.spacing(0.5),
-  minHeight: theme.spacing(4),
-  outline: "none",
-  color: "myText.primary",
-  padding: theme.spacing(1),
-  [theme.breakpoints.up("xs")]: {
-    fontSize: "16px",
-  },
-  [theme.breakpoints.up("md")]: {
-    fontSize: "14px",
+  flexGrow: 1,
+  "&> .DraftEditor-root": {
+    border: `1px solid ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
+    backgroundColor: theme.palette.myBackground.paper,
+    borderRadius: theme.spacing(0.5),
+    minHeight: theme.spacing(4),
+    outline: "none",
+    color: theme.palette.myText.primary,
+    padding: theme.spacing(1),
+    [theme.breakpoints.up("xs")]: {
+      fontSize: theme.spacing(2),
+    },
+    [theme.breakpoints.up("md")]: {
+      fontSize: "14px",
+    },
   },
 }));
 
@@ -37,49 +49,96 @@ export const CmtInputEditor = ({
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
+  const editorRef = useRef<any>();
 
-  return <Editor editorState={editorState} onChange={setEditorState} />;
+  const myKeyBindingFn = (e: React.KeyboardEvent): string | null => {
+    if (e.key === "Enter") {
+      if (e.altKey || e.shiftKey) {
+        return "break-line";
+      } else {
+        return "send-cmt";
+      }
+    }
+    return getDefaultKeyBinding(e);
+  };
 
-  // const contentDiv = useRef<HTMLDivElement>();
-  // const keyDown = (event: any) => {
-  //   if (event.key === "Enter" || event.keyCode === 13) {
-  //     event.preventDefault();
-  //     if (event.altKey || event.shiftKey) {
-  //       document.execCommand("insertLineBreak");
-  //     } else {
-  //       if (contentDiv?.current !== undefined) {
-  //         const content = contentDiv.current?.innerHTML;
-  //         cb(content);
-  //         contentDiv.current!.innerHTML = "";
-  //       }
-  //     }
-  //   }
-  // };
+  const sendCmt = () => {
+    const value = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+    cb(value);
+  };
 
-  // useEffect(() => {
-  //   if (contentDiv?.current !== undefined) {
-  //     cb(contentDiv.current?.innerHTML);
-  //     contentDiv.current!.innerHTML = "";
-  //     setClicked(false);
-  //   }
-  // }, [clicked]);
+  const clearContent = () => {
+    const contentState = editorState.getCurrentContent();
+    const firstBlock = contentState.getFirstBlock();
+    const lastBlock = contentState.getLastBlock();
+    const allSelected = new SelectionState({
+      anchorKey: firstBlock.getKey(),
+      anchorOffset: 0,
+      focusKey: lastBlock.getKey(),
+      focusOffset: lastBlock.getLength(),
+      hasFocus: true,
+    });
+    const removeRange = Modifier.removeRange(
+      contentState,
+      allSelected,
+      "backward"
+    );
+    let modifier = EditorState.push(editorState, removeRange, "remove-range");
+    setEditorState(modifier);
+  };
 
-  // useEffect(() => {
-  //   if (defaultValue && contentDiv?.current)
-  //     contentDiv!.current!.innerHTML = defaultValue;
-  // }, [defaultValue]);
+  const handleKeyCommand = (command: string): DraftHandleValue => {
+    const contentState = editorState.getCurrentContent();
+    const selectionState = editorState.getSelection();
+    switch (command) {
+      case "break-line": {
+        const newContentState = Modifier.splitBlock(
+          contentState,
+          selectionState
+        );
+        setEditorState(
+          EditorState.push(editorState, newContentState, "split-block")
+        );
 
-  // return (
-  //   <>
-  //     <Box flexGrow={1}>
-  //       <ContentEditableStyled
-  //         contentEditable={true}
-  //         tabIndex={0}
-  //         onKeyDown={keyDown}
-  //         ref={contentDiv}
-  //         data-placeholder={placeholder}
-  //       ></ContentEditableStyled>
-  //     </Box>
-  //   </>
-  // );
+        return "handled";
+      }
+      case "send-cmt": {
+        const plainText = editorState.getCurrentContent().getPlainText();
+        if (plainText === "") return "not-handled";
+        sendCmt();
+        clearContent();
+        return "handled";
+      }
+      default: {
+        return "not-handled";
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (defaultValue) {
+      const parse = JSON.parse(defaultValue);
+      setEditorState(EditorState.createWithContent(convertFromRaw(parse)));
+    }
+  }, [defaultValue]);
+
+  useEffect(() => {
+    if (clicked) {
+      sendCmt();
+      setClicked(false);
+    }
+  }, [clicked]);
+
+  return (
+    <ContentEditableStyled onClick={() => editorRef.current?.focus()}>
+      <Editor
+        ref={editorRef}
+        editorState={editorState}
+        onChange={setEditorState}
+        handleKeyCommand={handleKeyCommand}
+        keyBindingFn={myKeyBindingFn}
+        placeholder={placeholder}
+      />
+    </ContentEditableStyled>
+  );
 };

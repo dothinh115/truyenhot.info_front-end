@@ -31,6 +31,8 @@ import React, { useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import { MemorizedStorySubCommentRow } from "./subCommentRow";
 import { CmtInputEditor } from "./cmtInput";
+import { EditorState, convertFromRaw } from "draft-js";
+import { convertToHTML } from "draft-convert";
 
 const CommentRowWrapper = styled(Stack)(({ theme }) => ({
   marginBottom: theme.spacing(1),
@@ -106,7 +108,6 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
   const [replySubmitClicked, setReplySubmitClicked] = useState<boolean>(false);
   const [editLoading, setEditLoading] = useState<boolean>(false);
   const [replyLoading, setReplyLoading] = useState<boolean>(false);
-
   const deleteHandle = async (_id: string) => {
     try {
       await API.delete(`/comments/delete/${_id}`);
@@ -271,12 +272,15 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
                   ) : (
                     <>
                       <Box
+                        sx={{
+                          "& p": {
+                            margin: 0,
+                          },
+                        }}
                         dangerouslySetInnerHTML={{
-                          __html:
-                            comment?.comment_content.length > 400 && !show
-                              ? comment?.comment_content.substring(0, 400) +
-                                " ..."
-                              : comment?.comment_content,
+                          __html: convertToHTML(
+                            convertFromRaw(JSON.parse(comment?.comment_content))
+                          ),
                         }}
                         my={"4px"}
                       />
