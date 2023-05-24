@@ -32,7 +32,7 @@ import useSWRInfinite from "swr/infinite";
 import { MemorizedStorySubCommentRow } from "./subCommentRow";
 import { convertFromRaw } from "draft-js";
 import { convertToHTML } from "draft-convert";
-import { CmtInputEditor } from "./cmtInput";
+import { CommentEditor } from "./commentEditor";
 
 const CommentRowWrapper = styled(Stack)(({ theme }) => ({
   marginBottom: theme.spacing(1),
@@ -232,7 +232,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
               <Divider />
               {editing ? (
                 <>
-                  <CmtInputEditor
+                  <CommentEditor
                     cb={submitHandle}
                     clicked={editSubmitClicked}
                     setClicked={setEditSubmitClicked}
@@ -399,7 +399,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
           >
             {replying && (
               <ReplyInputWrapper>
-                <CmtInputEditor
+                <CommentEditor
                   cb={replySubmitHandle}
                   clicked={replySubmitClicked}
                   setClicked={setReplySubmitClicked}

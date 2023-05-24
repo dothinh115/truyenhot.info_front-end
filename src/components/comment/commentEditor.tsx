@@ -39,7 +39,7 @@ const ContentEditableStyled = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const CmtInputEditor = ({
+export const CommentEditor = ({
   cb,
   clicked,
   setClicked,

@@ -18,7 +18,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
-import { CmtInputEditor, MemorizedStoryCommentRow } from "../comment";
+import { CommentEditor, MemorizedStoryCommentRow } from "../comment";
 
 const ModalInner = styled(Stack)(({ theme }) => ({
   position: "fixed",
@@ -204,7 +204,7 @@ export const StoryCommentButton = ({ story_code }: Props) => {
             >
               {profile ? (
                 <>
-                  <CmtInputEditor
+                  <CommentEditor
                     cb={submitHandle}
                     clicked={submitClicked}
                     setClicked={setSubmitClicked}
