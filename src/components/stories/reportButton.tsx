@@ -143,6 +143,7 @@ export const StoryReportButton = ({
               "&>div": {
                 mb: 2,
               },
+              my: 2,
             }}
           >
             <Controller
@@ -211,7 +212,6 @@ export const StoryReportButton = ({
                 )}
               />
             )}
-
             <Controller
               name={"report_description"}
               control={control}
@@ -234,7 +234,7 @@ export const StoryReportButton = ({
                   helperText={
                     errors.report_description?.message
                       ? errors.report_description?.message
-                      : "Mô tả ngắn gọn về lỗi, ví dụ như chương nào bị trống."
+                      : "Mô tả ngắn gọn về lỗi."
                   }
                 />
               )}
@@ -248,6 +248,13 @@ export const StoryReportButton = ({
             >
               Gửi
             </Button>
+          </Box>
+          <Box
+            sx={{
+              color: "myText.primary",
+            }}
+          >
+            Bọn mình rất cảm ơn về báo cáo của bạn!
           </Box>
 
           <Box className="hr" my={1} />
