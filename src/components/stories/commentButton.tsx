@@ -7,7 +7,6 @@ import SendIcon from "@mui/icons-material/Send";
 import {
   Box,
   Button,
-  Fade,
   IconButton,
   Link,
   Modal,
@@ -130,146 +129,144 @@ export const StoryCommentButton = ({ story_code }: Props) => {
   return (
     <>
       <Modal open={open} onClose={closeHandle}>
-        <Fade in={open} unmountOnExit>
-          <ModalInner>
-            <HeaddingStyled>
-              <Box
-                component={"h2"}
-                sx={{
-                  margin: 0,
-                  color: "myText.primary",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "8px",
-                }}
-              >
-                Bình luận
-                <IconButton onClick={closeHandle}>
-                  <CloseIcon />
-                </IconButton>
-              </Box>
-            </HeaddingStyled>
-            <Box className="hr" />
-
-            <CommentRowWrapper ref={commentWrapper}>
-              {data?.map((group: any) => {
-                return group?.result.map((comment: CommentDataInterface) => {
-                  return (
-                    <MemorizedStoryCommentRow
-                      key={comment._id}
-                      comment={comment}
-                      mutate={mutate}
-                    />
-                  );
-                });
-              })}
-              {data && size < data[data.length - 1]?.pagination.pages ? (
-                <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
-                  <Button
-                    size="small"
-                    onClick={() => setSize(size + 1)}
-                    disabled={isValidating ? true : false}
-                    startIcon={
-                      isValidating ? (
-                        <CircularProgress color="inherit" size={"1em"} />
-                      ) : null
-                    }
-                  >
-                    Tải thêm bình luận cũ
-                  </Button>
-                </Box>
-              ) : !data || data[0]?.result.length === 0 ? (
-                <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
-                  Chưa có bình luận nào
-                </Box>
-              ) : (
-                <>
-                  <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
-                    Bạn đã xem hết bình luận
-                  </Box>
-                </>
-              )}
-            </CommentRowWrapper>
-            <Box className={"hr"} />
-            <Stack
-              direction={"row"}
-              gap={"5px"}
-              alignItems={"center"}
-              mt={1}
+        <ModalInner>
+          <HeaddingStyled>
+            <Box
+              component={"h2"}
               sx={{
+                margin: 0,
                 color: "myText.primary",
-                flexWrap: "wrap",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "8px",
               }}
             >
-              {profile ? (
-                <>
-                  <CommentEditor
-                    cb={submitHandle}
-                    clicked={submitClicked}
-                    setClicked={setSubmitClicked}
-                    placeholder="Viết bình luận..."
-                  />
+              Bình luận
+              <IconButton onClick={closeHandle}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+          </HeaddingStyled>
+          <Box className="hr" />
 
-                  <IconButton
-                    type="submit"
-                    size="large"
-                    sx={{
-                      height: "40px",
-                      width: "40px",
-                    }}
-                    onClick={() => setSubmitClicked(true)}
-                  >
-                    <SendIcon />
-                  </IconButton>
-                  <Box
-                    sx={{
-                      fontSize: ".8em",
-                      marginLeft: "4px",
-                      width: "100%",
-                    }}
-                  >
-                    Alt hoặc Shift + Enter để xuống hàng
-                  </Box>
-                </>
-              ) : (
-                <Box textAlign={"center"} width={"100%"}>
-                  Bạn cần{" "}
-                  {
-                    <Link
-                      underline="none"
-                      sx={{ cursor: "pointer" }}
-                      onClick={() =>
-                        router.push({
-                          pathname: "/login",
-                          query: {
-                            backTo: router.asPath,
-                          },
-                        })
-                      }
-                    >
-                      đăng nhập
-                    </Link>
-                  }{" "}
-                  để bình luận. Chưa có tài khoản?{" "}
-                  {
-                    <Link
-                      underline="none"
-                      sx={{ cursor: "pointer" }}
-                      onClick={() =>
-                        router.push({
-                          pathname: "/register",
-                        })
-                      }
-                    >
-                      Đăng ký
-                    </Link>
+          <CommentRowWrapper ref={commentWrapper}>
+            {data?.map((group: any) => {
+              return group?.result.map((comment: CommentDataInterface) => {
+                return (
+                  <MemorizedStoryCommentRow
+                    key={comment._id}
+                    comment={comment}
+                    mutate={mutate}
+                  />
+                );
+              });
+            })}
+            {data && size < data[data.length - 1]?.pagination.pages ? (
+              <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
+                <Button
+                  size="small"
+                  onClick={() => setSize(size + 1)}
+                  disabled={isValidating ? true : false}
+                  startIcon={
+                    isValidating ? (
+                      <CircularProgress color="inherit" size={"1em"} />
+                    ) : null
                   }
+                >
+                  Tải thêm bình luận cũ
+                </Button>
+              </Box>
+            ) : !data || data[0]?.result.length === 0 ? (
+              <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
+                Chưa có bình luận nào
+              </Box>
+            ) : (
+              <>
+                <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
+                  Bạn đã xem hết bình luận
                 </Box>
-              )}
-            </Stack>
-          </ModalInner>
-        </Fade>
+              </>
+            )}
+          </CommentRowWrapper>
+          <Box className={"hr"} />
+          <Stack
+            direction={"row"}
+            gap={"5px"}
+            alignItems={"center"}
+            mt={1}
+            sx={{
+              color: "myText.primary",
+              flexWrap: "wrap",
+            }}
+          >
+            {profile ? (
+              <>
+                <CommentEditor
+                  cb={submitHandle}
+                  clicked={submitClicked}
+                  setClicked={setSubmitClicked}
+                  placeholder="Viết bình luận..."
+                />
+
+                <IconButton
+                  type="submit"
+                  size="large"
+                  sx={{
+                    height: "40px",
+                    width: "40px",
+                  }}
+                  onClick={() => setSubmitClicked(true)}
+                >
+                  <SendIcon />
+                </IconButton>
+                <Box
+                  sx={{
+                    fontSize: ".8em",
+                    marginLeft: "4px",
+                    width: "100%",
+                  }}
+                >
+                  Alt hoặc Shift + Enter để xuống hàng
+                </Box>
+              </>
+            ) : (
+              <Box textAlign={"center"} width={"100%"}>
+                Bạn cần{" "}
+                {
+                  <Link
+                    underline="none"
+                    sx={{ cursor: "pointer" }}
+                    onClick={() =>
+                      router.push({
+                        pathname: "/login",
+                        query: {
+                          backTo: router.asPath,
+                        },
+                      })
+                    }
+                  >
+                    đăng nhập
+                  </Link>
+                }{" "}
+                để bình luận. Chưa có tài khoản?{" "}
+                {
+                  <Link
+                    underline="none"
+                    sx={{ cursor: "pointer" }}
+                    onClick={() =>
+                      router.push({
+                        pathname: "/register",
+                      })
+                    }
+                  >
+                    Đăng ký
+                  </Link>
+                }
+              </Box>
+            )}
+          </Stack>
+        </ModalInner>
       </Modal>
 
       <Button

@@ -68,6 +68,7 @@ const Index = ({ categories }: Props) => {
                 md: "70%",
                 xs: "100%",
               }}
+              maxWidth={{ md: "70%", xs: "100%" }}
             >
               <IndexRecentStories categories={categories} />
             </Box>

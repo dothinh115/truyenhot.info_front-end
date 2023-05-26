@@ -1,38 +1,38 @@
+import { useAuth } from "@/hooks/auth";
 import { MainLayoutContext } from "@/layouts";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
+import LoginIcon from "@mui/icons-material/Login";
+import MenuIcon from "@mui/icons-material/Menu";
+import PersonIcon from "@mui/icons-material/Person";
+import SearchIcon from "@mui/icons-material/Search";
 import {
-  Container,
-  Stack,
-  Box,
   AppBar,
+  Box,
+  Container,
   IconButton,
-  alpha,
   List,
+  ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  ListItem,
+  Stack,
+  alpha,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { useContext, useEffect, useRef } from "react";
 import { Drawer } from "./drawer";
-import { SearchBar } from "./searchBar";
-import Link from "next/link";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
-import SearchIcon from "@mui/icons-material/Search";
-import { styled } from "@mui/material/styles";
-import MenuIcon from "@mui/icons-material/Menu";
-import PersonIcon from "@mui/icons-material/Person";
-import LoginIcon from "@mui/icons-material/Login";
-import HowToRegIcon from "@mui/icons-material/HowToReg";
-import { useAuth } from "@/hooks/auth";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { useRouter } from "next/router";
 
 const AppBarStyled = styled(AppBar)(({ theme }) => ({
   position: "static",
   backgroundColor: theme.palette.myBackground.headfoot,
   height: "50px",
+  paddingRight: "0!important",
 }));
 
 const DropdownMenu = styled(Box)(({ theme }) => ({
@@ -146,31 +146,25 @@ export function Header() {
               }}
               justifyContent={"space-between"}
             >
-              <Stack direction={"row"} alignItems={"center"} gap={"10px"}>
-                <Box
-                  component={Link}
-                  href="/"
-                  sx={{
-                    textDecoration: "none",
-                    flexGrow: 1,
-                    display: "block",
-                  }}
-                  color={"myText.main"}
-                  fontSize={"16px"}
-                >
-                  TRUYENHOT.INFO
-                </Box>
-              </Stack>
+              <Box
+                component={Link}
+                href="/"
+                sx={{
+                  textDecoration: "none",
+                  flexGrow: 1,
+                  display: "block",
+                }}
+                color={"myText.main"}
+                fontSize={"16px"}
+              >
+                TRUYENHOT.INFO
+              </Box>
+
               <Stack
                 direction={"row"}
                 alignItems={"center"}
-                width={"30%"}
-                justifyContent={"flex-end"}
                 gap={"10px"}
                 sx={{
-                  "& > button": {
-                    marginLeft: "8px",
-                  },
                   "& svg": { color: "myText.main" },
                 }}
               >

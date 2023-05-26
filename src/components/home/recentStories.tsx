@@ -41,6 +41,9 @@ const StackWrapper = styled(Stack)(({ theme }) => ({
   boxShadow: `0 0 2px ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
   overflow: "hidden",
   borderRadius: theme.spacing(1),
+  [theme.breakpoints.up("md")]: {
+    width: "582px",
+  },
 }));
 
 const RowWrapper = styled(Stack)(({ theme }) => ({
@@ -122,18 +125,21 @@ const ItemFirstRow = styled(Box)(({ theme }) => ({
     width: "80%",
   },
   [theme.breakpoints.up("md")]: {
-    width: "70%",
+    width: "75%",
   },
 }));
 
 const ItemSecondRow = styled(Box)(({ theme }) => ({
   padding: "4px",
   textAlign: "right",
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
   [theme.breakpoints.up("xs")]: {
     width: "20%",
   },
   [theme.breakpoints.up("md")]: {
-    width: "15%",
+    width: "10%",
   },
   "& > a ": {
     color: theme.palette.myText.link,
