@@ -32,7 +32,6 @@ const AppBarStyled = styled(AppBar)(({ theme }) => ({
   position: "static",
   backgroundColor: theme.palette.myBackground.headfoot,
   height: "50px",
-  paddingRight: "0!important",
 }));
 
 const DropdownMenu = styled(Box)(({ theme }) => ({
@@ -66,7 +65,7 @@ export function Header() {
   const { setMobileMenuOpen, setMode, mode, setSearchOpen } =
     useContext<any>(MainLayoutContext);
   const { profile, logout } = useAuth();
-
+  const { searchOpen } = useContext<any>(MainLayoutContext);
   const appBarEl = useRef<HTMLDivElement>(null);
   const yOffset = useRef<number>(0);
   const menuDropDown = useRef<HTMLDivElement>(null);
@@ -117,6 +116,14 @@ export function Header() {
   });
 
   useEffect(() => {
+    if (window.pageYOffset >= 50 && appBarEl?.current) {
+      if (searchOpen) appBarEl!.current!.style.visibility = "hidden";
+      else appBarEl!.current!.style.visibility = "visible";
+    }
+    console.log(yOffset.current);
+  }, [searchOpen]);
+
+  useEffect(() => {
     changeModeHandle();
   }, [mode]);
 
@@ -135,6 +142,7 @@ export function Header() {
           justifyContent={"center"}
           alignItems={"center"}
           height={"100%"}
+          sx={{ paddingLeft: searchOpen ? "15px" : 0 }}
         >
           <Container maxWidth={"md"}>
             <Stack
