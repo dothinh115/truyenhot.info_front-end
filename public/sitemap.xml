@@ -267,7 +267,7 @@
        <priority>0.8000</priority>
   </url>
   <url>
-       <loc>https://truyenhot.info/users/resetPassword</loc>
+       <loc>https://truyenhot.info/user/resetPassword</loc>
        <lastmod>2023-05-21T04:54:44+00:00</lastmod>
        <changefreq>daily</changefreq>
        <priority>0.6400</priority>

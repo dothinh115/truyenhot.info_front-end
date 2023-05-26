@@ -2,7 +2,7 @@ import { Seo } from "@/components";
 import { useAuth } from "@/hooks/auth";
 import { LoginLayout } from "@/layouts";
 import { LoginPayloadInterface } from "@/models/auth";
-import { emailPatter, thumbnailUrl } from "@/utils/variables";
+import { emailPattern, thumbnailUrl } from "@/utils/variables";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
@@ -18,7 +18,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 type Props = {};
-const emailPattern = new RegExp(emailPatter);
+const emailPatternExp = new RegExp(emailPattern);
 
 const Login = (props: Props) => {
   const { login } = useAuth({
@@ -88,7 +88,7 @@ const Login = (props: Props) => {
             rules={{
               required: "Không được để trống",
               pattern: {
-                value: emailPattern,
+                value: emailPatternExp,
                 message: "Email phải đúng định dạng!",
               },
             }}
@@ -138,7 +138,7 @@ const Login = (props: Props) => {
         >
           <Box
             component={Link}
-            href={"/users/resetPassword"}
+            href={"/user/resetPassword"}
             sx={{ textDecoration: "none", fontSize: "13px" }}
           >
             Quên mật khẩu

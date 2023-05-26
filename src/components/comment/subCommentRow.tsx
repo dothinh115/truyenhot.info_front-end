@@ -26,7 +26,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { convertToHTML } from "draft-convert";
 import { convertFromRaw } from "draft-js";
 import { CommentEditor } from "./commentEditor";
-
+import MaleIcon from "@mui/icons-material/Male";
+import FemaleIcon from "@mui/icons-material/Female";
 type Props = {
   subCmtData: SubCommentDataInterface;
   mutate: any;
@@ -133,22 +134,42 @@ export const StorySubCommentRow = ({
                 fontSize: "1.1em",
                 fontWeight: "bold",
                 marginRight: "5px",
+                display: "inline-flex",
+                alignItems: "center",
               }}
             >
-              {subCmtData?.author.user_name}
-            </Box>
-            <Box
-              component={"span"}
-              sx={{ color: "myText.primary", fontSize: ".9em" }}
-            >
-              (
-              {`${timeSince(
-                Math.abs(
-                  new Date().valueOf() -
-                    new Date(subCmtData?.created_at).valueOf()
+              {subCmtData?.author.gender === "male" ? (
+                <Box
+                  component={MaleIcon}
+                  sx={{
+                    color: "#2196f3",
+                  }}
+                />
+              ) : (
+                <Box
+                  component={FemaleIcon}
+                  sx={{
+                    color: "#e91e63",
+                  }}
+                />
+              )}
+              {subCmtData?.author.user_id}
+              <Box
+                sx={{
+                  color: "myText.primary",
+                  fontSize: ".7em",
+                  marginLeft: "4px",
+                }}
+              >
+                (
+                {`${timeSince(
+                  Math.abs(
+                    new Date().valueOf() -
+                      new Date(subCmtData?.created_at).valueOf()
+                  )
+                )} trước`}
                 )
-              )} trước`}
-              )
+              </Box>
             </Box>
           </Box>
         </Stack>

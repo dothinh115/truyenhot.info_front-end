@@ -30,10 +30,11 @@ import CircularProgress from "@mui/material/CircularProgress";
 import React, { useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import { MemorizedStorySubCommentRow } from "./subCommentRow";
-import { convertFromRaw } from "draft-js";
+import { CompositeDecorator, EditorState, convertFromRaw } from "draft-js";
 import { convertToHTML } from "draft-convert";
 import { CommentEditor } from "./commentEditor";
-
+import MaleIcon from "@mui/icons-material/Male";
+import FemaleIcon from "@mui/icons-material/Female";
 const CommentRowWrapper = styled(Stack)(({ theme }) => ({
   marginBottom: theme.spacing(1),
 }));
@@ -82,6 +83,41 @@ type Props = {
   comment: CommentDataInterface;
   mutate: () => void;
 };
+
+const styles = {
+  color: "rgb(98, 177, 254)",
+  direction: "ltr",
+};
+
+const MENTION_REGEX = /\@[\w]+/g;
+
+function mentionStrategy(contentBlock: any, callback: any) {
+  findWithRegex(MENTION_REGEX, contentBlock, callback);
+}
+
+function findWithRegex(regex: any, contentBlock: any, callback: any) {
+  const text = contentBlock.getText();
+  let matchArr, start;
+  while ((matchArr = regex.exec(text)) !== null) {
+    start = matchArr.index;
+    callback(start, start + matchArr[0].length);
+  }
+}
+
+const MentionSpan = (props: any) => {
+  return (
+    <Box component="span" sx={styles} data-offset-key={props.offsetKey}>
+      {props.children}
+    </Box>
+  );
+};
+
+const mentionDecorator = new CompositeDecorator([
+  {
+    strategy: mentionStrategy,
+    component: MentionSpan,
+  },
+]);
 
 export const StoryCommentRow = ({ comment, mutate }: Props) => {
   const { profile } = useAuth();
@@ -196,22 +232,42 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
                       fontSize: "1.1em",
                       fontWeight: "bold",
                       marginRight: "5px",
+                      display: "inline-flex",
+                      alignItems: "center",
                     }}
                   >
-                    {comment?.author.user_name}
-                  </Box>
-                  <Box
-                    component={"span"}
-                    sx={{ color: "myText.primary", fontSize: ".9em" }}
-                  >
-                    (
-                    {`${timeSince(
-                      Math.abs(
-                        new Date().valueOf() -
-                          new Date(comment?.created_at).valueOf()
+                    {comment?.author.gender === "male" ? (
+                      <Box
+                        component={MaleIcon}
+                        sx={{
+                          color: "#2196f3",
+                        }}
+                      />
+                    ) : (
+                      <Box
+                        component={FemaleIcon}
+                        sx={{
+                          color: "#e91e63",
+                        }}
+                      />
+                    )}
+                    {comment?.author.user_id}
+                    <Box
+                      sx={{
+                        color: "myText.primary",
+                        fontSize: ".7em",
+                        marginLeft: "4px",
+                      }}
+                    >
+                      (
+                      {`${timeSince(
+                        Math.abs(
+                          new Date().valueOf() -
+                            new Date(comment?.created_at).valueOf()
+                        )
+                      )} trước`}
                       )
-                    )} trước`}
-                    )
+                    </Box>
                   </Box>
                 </Box>
                 <Link
@@ -279,7 +335,12 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
                         }}
                         dangerouslySetInnerHTML={{
                           __html: convertToHTML(
-                            convertFromRaw(JSON.parse(comment?.comment_content))
+                            EditorState.createWithContent(
+                              convertFromRaw(
+                                JSON.parse(comment?.comment_content)
+                              ),
+                              mentionDecorator
+                            ).getCurrentContent()
                           ),
                         }}
                         my={"4px"}
@@ -403,7 +464,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
                   cb={replySubmitHandle}
                   clicked={replySubmitClicked}
                   setClicked={setReplySubmitClicked}
-                  placeholder={`Trả lời ${comment?.author.user_name}...`}
+                  placeholder={`Trả lời ${comment?.author.user_id}...`}
                 />
                 <Stack
                   direction={"row"}

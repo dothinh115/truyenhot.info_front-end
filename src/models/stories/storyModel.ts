@@ -105,10 +105,12 @@ export interface SubCommentDataInterface {
 
 interface SubCommentReplyToInterface {
   _id: string;
-  user_name: string;
+  user_id: string;
+  gender: "male" | "female";
 }
 
 interface CommentAuthorInterface {
   _id: string;
-  user_name: string;
+  user_id: string;
+  gender: "male" | "female";
 }

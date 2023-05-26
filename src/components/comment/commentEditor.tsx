@@ -1,6 +1,7 @@
 import { Box, alpha } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
+  CompositeDecorator,
   DraftHandleValue,
   Editor,
   EditorState,

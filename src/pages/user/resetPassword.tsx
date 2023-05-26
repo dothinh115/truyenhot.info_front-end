@@ -1,7 +1,7 @@
 import { Seo } from "@/components";
 import { LoginLayout } from "@/layouts";
 import { API } from "@/utils/config";
-import { emailPatter, thumbnailUrl } from "@/utils/variables";
+import { emailPattern, thumbnailUrl } from "@/utils/variables";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -20,7 +20,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 type Props = {};
 
-const emailPattern = new RegExp(emailPatter);
+const emailPatternExp = new RegExp(emailPattern);
 
 const ResetPassword = (props: Props) => {
   const [message, setMessage] = useState<string>("");
@@ -214,7 +214,7 @@ const ResetPassword = (props: Props) => {
               rules={{
                 required: "Không được để trống",
                 pattern: {
-                  value: emailPattern,
+                  value: emailPatternExp,
                   message: "Email phải đúng định dạng!",
                 },
               }}

@@ -8,6 +8,10 @@ import {
   IconButton,
   Typography,
   Stack,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormHelperText,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Controller, useForm } from "react-hook-form";
@@ -16,11 +20,13 @@ import Link from "next/link";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
 import { Seo } from "@/components";
-import { emailPatter, thumbnailUrl } from "@/utils/variables";
+import { emailPattern, thumbnailUrl, user_idPattern } from "@/utils/variables";
 
 type Props = {};
 
-const emailPattern = new RegExp(emailPatter);
+const emailPatternExp = new RegExp(emailPattern);
+
+const user_idPatternExp = new RegExp(user_idPattern);
 
 const Register = (props: Props) => {
   const [message, setMessage] = useState<string>("");
@@ -34,23 +40,26 @@ const Register = (props: Props) => {
     watch,
   } = useForm<{
     email: string;
-    user_name: string;
+    user_id: string;
     password: string;
+    gender: "male" | "female";
     passwordConfirm: string;
   }>({
     mode: "onChange",
     defaultValues: {
       email: "",
-      user_name: "",
+      user_id: "",
       password: "",
+      gender: "male",
       passwordConfirm: "",
     },
   });
 
   const submitHandle = async (data: {
     email: string;
-    user_name: string;
+    user_id: string;
     password: string;
+    gender: string;
   }) => {
     try {
       await API.post(`/signUp`, data);
@@ -59,7 +68,9 @@ const Register = (props: Props) => {
       );
       setCountdown(60);
     } catch (error: any) {
-      setError("email", { message: error.response?.data.message });
+      setError(error.response?.data.result.key, {
+        message: error.response?.data.result.message,
+      });
     }
   };
 
@@ -143,10 +154,15 @@ const Register = (props: Props) => {
         ) : (
           <>
             <Controller
-              name={"user_name"}
+              name={"user_id"}
               control={control}
               rules={{
                 required: "Không được để trống",
+                pattern: {
+                  value: user_idPatternExp,
+                  message:
+                    "Bạn chỉ cần điền ký tự và số, không cần @, và không có khoảng trắng",
+                },
               }}
               render={({ field: { onChange, value } }) => (
                 <TextField
@@ -154,11 +170,11 @@ const Register = (props: Props) => {
                   label={"Tên"}
                   onChange={onChange}
                   value={value}
-                  error={!!errors?.user_name}
+                  error={!!errors?.user_id}
                   helperText={
-                    errors.user_name?.message
-                      ? errors.user_name?.message
-                      : "Đây là tên sẽ hiển thị khi bạn bình luận"
+                    errors.user_id?.message
+                      ? errors.user_id?.message
+                      : "Đây là tên sẽ hiển thị khi bạn bình luận, ví dụ như alex sẽ hiển thị là @alex, bạn không cần phải điền ký tự @"
                   }
                   size="small"
                 />
@@ -171,7 +187,7 @@ const Register = (props: Props) => {
               rules={{
                 required: "Không được để trống",
                 pattern: {
-                  value: emailPattern,
+                  value: emailPatternExp,
                   message: "Email phải đúng định dạng!",
                 },
               }}
@@ -187,6 +203,28 @@ const Register = (props: Props) => {
                   }
                   size="small"
                 />
+              )}
+            />
+
+            <Controller
+              name={"gender"}
+              control={control}
+              rules={{
+                required: "Không được để trống",
+              }}
+              render={({ field: { onChange, value } }) => (
+                <>
+                  <Select
+                    value={value}
+                    onChange={onChange}
+                    size="small"
+                    fullWidth
+                    error={!!errors?.gender}
+                  >
+                    <MenuItem value={"male"}>Nam</MenuItem>
+                    <MenuItem value={"female"}>Nữ</MenuItem>
+                  </Select>
+                </>
               )}
             />
 
