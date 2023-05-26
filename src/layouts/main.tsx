@@ -28,34 +28,34 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
   useEffect(() => {
     loadTheme();
   }, []);
-  if (didMount)
-    return (
-      <>
-        <ThemeProvider theme={theme}>
-          <MainLayoutContext.Provider
-            value={{
-              mobileMenuOpen,
-              setMobileMenuOpen,
-              searchOpen,
-              setSearchOpen,
-              mode,
-              setMode,
+  if (!didMount) return null;
+  return (
+    <>
+      <ThemeProvider theme={theme}>
+        <MainLayoutContext.Provider
+          value={{
+            mobileMenuOpen,
+            setMobileMenuOpen,
+            searchOpen,
+            setSearchOpen,
+            mode,
+            setMode,
+          }}
+        >
+          <SearchModal />
+          <Stack
+            minHeight={"100vh"}
+            sx={{
+              backgroundColor: "myBackground.default",
+              transition: "all .2s linear",
             }}
           >
-            <SearchModal />
-            <Stack
-              minHeight={"100vh"}
-              sx={{
-                backgroundColor: "myBackground.default",
-                transition: "all .2s linear",
-              }}
-            >
-              <HeaderSection />
-              <Box flexGrow={1}>{children}</Box>
-              <FooterSection />
-            </Stack>
-          </MainLayoutContext.Provider>
-        </ThemeProvider>
-      </>
-    );
+            <HeaderSection />
+            <Box flexGrow={1}>{children}</Box>
+            <FooterSection />
+          </Stack>
+        </MainLayoutContext.Provider>
+      </ThemeProvider>
+    </>
+  );
 };
