@@ -1,7 +1,6 @@
 import { Box, alpha } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
-  CompositeDecorator,
   DraftHandleValue,
   Editor,
   EditorState,
@@ -36,6 +35,10 @@ const ContentEditableStyled = styled(Box)(({ theme }) => ({
     },
     [theme.breakpoints.up("md")]: {
       fontSize: "14px",
+    },
+    "& .public-DraftEditorPlaceholder-inner": {
+      position: "absolute",
+      color: alpha(theme.palette.myText.primary, 0.5),
     },
   },
 }));
