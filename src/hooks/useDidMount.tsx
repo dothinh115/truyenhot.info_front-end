@@ -7,5 +7,5 @@ export const useDidMount = () => {
     mount.current = true;
   }, []);
 
-  return mount;
+  return mount.current;
 };

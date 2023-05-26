@@ -13,22 +13,24 @@ export const MainLayoutContext = createContext({});
 export const MainLayout = ({ children }: MainLayoutInterface) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
-  const [mode, setMode] = useState<"light" | "dark">("dark");
+  const [mode, setMode] = useState<"light" | "dark">("light");
   const didMount = useDidMount();
   const theme = createTheme(getDesignTokens(mode));
 
-  const loadTheme = async () => {
+  const loadTheme = (): void => {
     let theme: any = localStorage.getItem("theme");
     if (theme) {
       theme = JSON.parse(theme);
       setMode(theme.mode);
+    } else {
+      setMode("light");
     }
   };
 
   useEffect(() => {
     loadTheme();
   }, []);
-  if (!didMount) return null;
+  // if (!didMount) return null;
   return (
     <>
       <ThemeProvider theme={theme}>
