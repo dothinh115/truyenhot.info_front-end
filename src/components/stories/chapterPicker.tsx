@@ -75,7 +75,7 @@ export const StoryChapterPicker = ({ chapterData, chapterListData }: Props) => {
               backgroundColor: "myBackground.secondary",
             }}
           >
-            {chapterListData?.map((chapter: any) => (
+            {chapterListData?.map((chapter: ChapterListInterface) => (
               <MenuItem key={chapter._id} value={chapter.chapter_code}>
                 {chapter.chapter_name}
               </MenuItem>

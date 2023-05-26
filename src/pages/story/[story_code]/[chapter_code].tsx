@@ -173,6 +173,7 @@ const ChapterDetail = ({ chapterData }: Props) => {
                 open={open}
                 setOpen={setOpen}
                 story_code={chapterData?.story_code}
+                chapter_code={chapterData?.chapter_code}
               />
             </Box>
             <Box className={"hr"} my={4} />
@@ -189,6 +190,7 @@ const ChapterDetail = ({ chapterData }: Props) => {
                 open={open}
                 setOpen={setOpen}
                 story_code={chapterData?.story_code}
+                chapter_code={chapterData?.chapter_code}
               />
             </Box>
             <StoryChapterPicker

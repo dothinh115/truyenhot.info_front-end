@@ -44,6 +44,7 @@ export interface NewReportInterface {
   report_title: string;
   report_description: string;
   story_code: string;
+  chapter_code: string;
 }
 
 export interface ReportInterface {

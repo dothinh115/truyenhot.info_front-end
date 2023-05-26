@@ -1,4 +1,5 @@
 import { useSnackbar } from "@/hooks/snackbar";
+import { ChapterListInterface } from "@/models/chapters";
 import { NewReportInterface, ReportOptionInterface } from "@/models/stories";
 import { API } from "@/utils/config";
 import CloseIcon from "@mui/icons-material/Close";
@@ -14,33 +15,54 @@ import {
   Modal,
   Select,
   TextField,
+  alpha,
 } from "@mui/material";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
+import { styled } from "@mui/material/styles";
 type Props = {
   open: boolean;
   setOpen: any;
   story_code: string;
+  chapter_code?: string;
 };
 
-const style = {
-  backgroundColor: "myBackground.default",
-  border: "1px solid #ccc",
-  borderRadius: "6px",
+const ITEM_HEIGHT = 36;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 10 + ITEM_PADDING_TOP,
+    },
+  },
+};
+
+const ModalInner = styled(Box)(({ theme }) => ({
+  borderRadius: theme.spacing(2),
   position: "absolute",
+  backgroundColor: theme.palette.myBackground.default,
+  border: `1px solid `,
+  zIndex: 100,
+  padding: theme.spacing(2),
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: {
-    md: "20%",
-    xs: "90%",
+  [theme.breakpoints.up("xs")]: {
+    width: "90%",
+  },
+  [theme.breakpoints.up("md")]: {
+    width: "20%",
   },
   minWidth: "350px",
-  p: 2,
-};
+}));
 
-export const StoryReportButton = ({ open, setOpen, story_code }: Props) => {
+export const StoryReportButton = ({
+  open,
+  setOpen,
+  story_code,
+  chapter_code,
+}: Props) => {
   const { snackbar, setSnackbar } = useSnackbar();
   const { data: reportOptionData, mutate: reportOptionMutate } = useSWR(
     `/stories/errorReportOption/getAll`,
@@ -49,6 +71,12 @@ export const StoryReportButton = ({ open, setOpen, story_code }: Props) => {
       dedupingInterval: 1000 * 60 * 60,
     }
   );
+
+  const { data: chapterListData, mutate: chapterListMutate } = useSWR<{
+    result: ChapterListInterface[];
+  }>(`/chapter/getChapterListByStoryCode/${story_code}?page=all`, {
+    revalidateOnMount: false,
+  });
 
   const {
     control,
@@ -59,6 +87,7 @@ export const StoryReportButton = ({ open, setOpen, story_code }: Props) => {
     defaultValues: {
       report_description: "",
       report_title: "",
+      chapter_code: "",
     },
   });
 
@@ -66,7 +95,9 @@ export const StoryReportButton = ({ open, setOpen, story_code }: Props) => {
     data = {
       ...data,
       story_code,
+      chapter_code: chapter_code ? chapter_code : data.chapter_code,
     };
+
     try {
       API.post(`/stories/errorReport/new`, data);
       setSnackbar({
@@ -92,16 +123,28 @@ export const StoryReportButton = ({ open, setOpen, story_code }: Props) => {
   useEffect(() => {
     if (open && !reportOptionData) reportOptionMutate();
   }, [open]);
+
+  useEffect(() => {
+    if (story_code && open && !chapter_code) chapterListMutate();
+  }, [story_code, open]);
   return (
     <>
       {snackbar}
       <Modal open={open} onClose={openModalHandle}>
-        <Box sx={style}>
+        <ModalInner>
           <Box component={"h2"} p={0} m={0} sx={{ color: "myText.primary" }}>
             Report truyện lỗi
           </Box>
           <Box className="hr" my={1} />
-          <Box component={"form"} onSubmit={handleSubmit(submitHandle)}>
+          <Box
+            component={"form"}
+            onSubmit={handleSubmit(submitHandle)}
+            sx={{
+              "&>div": {
+                mb: 2,
+              },
+            }}
+          >
             <Controller
               name={"report_title"}
               control={control}
@@ -109,11 +152,7 @@ export const StoryReportButton = ({ open, setOpen, story_code }: Props) => {
                 required: "Không được để trống",
               }}
               render={({ field: { onChange, value } }) => (
-                <FormControl
-                  fullWidth
-                  error={!!errors.report_title?.message}
-                  sx={{ mb: 2 }}
-                >
+                <FormControl fullWidth error={!!errors.report_title?.message}>
                   <InputLabel>Chọn lỗi</InputLabel>
                   <Select label="Chọn lỗi" value={value} onChange={onChange}>
                     {reportOptionData?.result.map(
@@ -134,12 +173,49 @@ export const StoryReportButton = ({ open, setOpen, story_code }: Props) => {
                 </FormControl>
               )}
             />
+            {!chapter_code && (
+              <Controller
+                name={"chapter_code"}
+                control={control}
+                rules={{
+                  required: "Không được để trống",
+                  maxLength: {
+                    value: 99,
+                    message: "Tối đa 100 ký tự!",
+                  },
+                }}
+                render={({ field: { onChange, value } }) => (
+                  <FormControl fullWidth>
+                    <InputLabel>Chương bị lỗi</InputLabel>
+                    <Select
+                      value={value}
+                      onChange={onChange}
+                      fullWidth
+                      label="Chương bị lỗi"
+                      MenuProps={MenuProps}
+                    >
+                      {chapterListData?.result.map(
+                        (chapter: ChapterListInterface) => {
+                          return (
+                            <MenuItem
+                              key={chapter._id}
+                              value={chapter.chapter_code}
+                            >
+                              {chapter.chapter_name}
+                            </MenuItem>
+                          );
+                        }
+                      )}
+                    </Select>
+                  </FormControl>
+                )}
+              />
+            )}
 
             <Controller
               name={"report_description"}
               control={control}
               rules={{
-                required: "Không được để trống",
                 maxLength: {
                   value: 99,
                   message: "Tối đa 100 ký tự!",
@@ -190,7 +266,7 @@ export const StoryReportButton = ({ open, setOpen, story_code }: Props) => {
               <CloseIcon />
             </IconButton>
           </Box>
-        </Box>
+        </ModalInner>
       </Modal>
       <Button
         color={"error"}
