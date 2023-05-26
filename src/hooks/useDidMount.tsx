@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export const useDidMount = () => {
-  const [mount, setMount] = useState(false);
+  const mount = useRef(false);
 
   useEffect(() => {
-    setMount(true);
+    mount.current = true;
   }, []);
 
   return mount;

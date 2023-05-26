@@ -13,7 +13,7 @@ export const MainLayoutContext = createContext({});
 export const MainLayout = ({ children }: MainLayoutInterface) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
-  const [mode, setMode] = useState<"light" | "dark">("light");
+  const [mode, setMode] = useState<"light" | "dark">("dark");
   const didMount = useDidMount();
   const theme = createTheme(getDesignTokens(mode));
 
@@ -22,42 +22,40 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
     if (theme) {
       theme = JSON.parse(theme);
       setMode(theme.mode);
-    } else {
-      setMode("light");
     }
   };
 
   useEffect(() => {
     loadTheme();
   }, []);
-  // if (!didMount) return null;
-  return (
-    <>
-      <ThemeProvider theme={theme}>
-        <MainLayoutContext.Provider
-          value={{
-            mobileMenuOpen,
-            setMobileMenuOpen,
-            searchOpen,
-            setSearchOpen,
-            mode,
-            setMode,
-          }}
-        >
-          <SearchModal />
-          <Stack
-            minHeight={"100vh"}
-            sx={{
-              backgroundColor: "myBackground.default",
-              transition: "all .2s linear",
+  if (didMount)
+    return (
+      <>
+        <ThemeProvider theme={theme}>
+          <MainLayoutContext.Provider
+            value={{
+              mobileMenuOpen,
+              setMobileMenuOpen,
+              searchOpen,
+              setSearchOpen,
+              mode,
+              setMode,
             }}
           >
-            <HeaderSection />
-            <Box flexGrow={1}>{children}</Box>
-            <FooterSection />
-          </Stack>
-        </MainLayoutContext.Provider>
-      </ThemeProvider>
-    </>
-  );
+            <SearchModal />
+            <Stack
+              minHeight={"100vh"}
+              sx={{
+                backgroundColor: "myBackground.default",
+                transition: "all .2s linear",
+              }}
+            >
+              <HeaderSection />
+              <Box flexGrow={1}>{children}</Box>
+              <FooterSection />
+            </Stack>
+          </MainLayoutContext.Provider>
+        </ThemeProvider>
+      </>
+    );
 };
