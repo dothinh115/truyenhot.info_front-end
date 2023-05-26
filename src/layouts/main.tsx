@@ -1,4 +1,5 @@
 import { SearchModal } from "@/components/searchModal";
+import { useDidMount } from "@/hooks";
 import { MainLayoutInterface } from "@/models";
 import { FooterSection, HeaderSection } from "@/sections";
 import { getDesignTokens } from "@/utils/theme";
@@ -13,7 +14,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
   const [mode, setMode] = useState<"light" | "dark">("light");
-
+  const didMount = useDidMount();
   const theme = createTheme(getDesignTokens(mode));
 
   const loadTheme = async () => {
@@ -30,33 +31,35 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
     loadTheme();
   }, []);
 
-  return (
-    <>
-      <ThemeProvider theme={theme}>
-        <MainLayoutContext.Provider
-          value={{
-            mobileMenuOpen,
-            setMobileMenuOpen,
-            searchOpen,
-            setSearchOpen,
-            mode,
-            setMode,
-          }}
-        >
-          <SearchModal />
-          <Stack
-            minHeight={"100vh"}
-            sx={{
-              backgroundColor: "myBackground.default",
-              transition: "all .2s linear",
+  if (!didMount) return null;
+  else
+    return (
+      <>
+        <ThemeProvider theme={theme}>
+          <MainLayoutContext.Provider
+            value={{
+              mobileMenuOpen,
+              setMobileMenuOpen,
+              searchOpen,
+              setSearchOpen,
+              mode,
+              setMode,
             }}
           >
-            <HeaderSection />
-            <Box flexGrow={1}>{children}</Box>
-            <FooterSection />
-          </Stack>
-        </MainLayoutContext.Provider>
-      </ThemeProvider>
-    </>
-  );
+            <SearchModal />
+            <Stack
+              minHeight={"100vh"}
+              sx={{
+                backgroundColor: "myBackground.default",
+                transition: "all .2s linear",
+              }}
+            >
+              <HeaderSection />
+              <Box flexGrow={1}>{children}</Box>
+              <FooterSection />
+            </Stack>
+          </MainLayoutContext.Provider>
+        </ThemeProvider>
+      </>
+    );
 };

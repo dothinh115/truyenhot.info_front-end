@@ -70,9 +70,6 @@ export const Footer = (props: Props) => {
                   <br /> Truyện hot luôn cập nhật những bộ{" "}
                   <Link href={`/`}>truyện mới nhất</Link>, với tốc độ nhanh
                   nhất, chúc các bạn có trải nghiệm vui vẻ!
-                  <br />
-                  <br />
-                  Liên hệ quảng cáo: 0978.481.071 | 0966.982.720
                 </Typography>
               </Box>
 
