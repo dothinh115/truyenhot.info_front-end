@@ -30,7 +30,7 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
   useEffect(() => {
     loadTheme();
   }, []);
-  if (!didMount) return null;
+  // if (!didMount) return null;
   return (
     <>
       <ThemeProvider theme={theme}>

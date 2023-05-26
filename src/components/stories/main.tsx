@@ -39,9 +39,6 @@ import { RowLoading } from "../loading";
 import { StoryCommentButton } from "./commentButton";
 import { StoryLikeButton } from "./likeButton";
 import { StoryReportButton } from "./reportButton";
-import CircularProgress from "@mui/material/CircularProgress";
-import { Seo } from "../seo";
-import { thumbnailUrl } from "@/utils/variables";
 
 const Wrapper = styled("h2")(({ theme }) => ({
   display: "flex",
@@ -325,14 +322,6 @@ export const StoryMain = ({ story }: Props) => {
 
   return (
     <>
-      <Seo
-        data={{
-          title: `${story?.story_title} - truyenhot.info`,
-          description: `${story?.story_title} - Đọc truyện online, đọc truyện chữ, truyện hay, truyện hot. Luôn cập nhật truyện nhanh nhất.`,
-          url: `https//truyenhot.info/story/${story?.story_code}`,
-          thumbnailUrl,
-        }}
-      />
       <Wrapper>THÔNG TIN TRUYỆN</Wrapper>
       <Box className={"hr"} />
 
