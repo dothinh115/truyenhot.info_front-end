@@ -32,6 +32,7 @@ const AppBarStyled = styled(AppBar)(({ theme }) => ({
   position: "static",
   backgroundColor: theme.palette.myBackground.headfoot,
   height: "50px",
+  paddingRight: "0!important",
 }));
 
 const DropdownMenu = styled(Box)(({ theme }) => ({
@@ -141,7 +142,6 @@ export function Header() {
           justifyContent={"center"}
           alignItems={"center"}
           height={"100%"}
-          sx={{ paddingLeft: searchOpen ? "15px" : 0 }}
         >
           <Container maxWidth={"md"}>
             <Stack
