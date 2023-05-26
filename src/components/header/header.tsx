@@ -120,7 +120,6 @@ export function Header() {
       if (searchOpen) appBarEl!.current!.style.visibility = "hidden";
       else appBarEl!.current!.style.visibility = "visible";
     }
-    console.log(yOffset.current);
   }, [searchOpen]);
 
   useEffect(() => {
