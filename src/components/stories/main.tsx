@@ -435,27 +435,6 @@ const StoryMain = ({ story }: Props) => {
         </Stack>
       </Stack>
 
-      {/* <Stack direction={"row"} justifyContent={"center"}>
-        <FavoriteIcon
-          sx={{
-            color: "red",
-            height: "25px",
-            lineHeight: "25px",
-            fontSize: "25px",
-          }}
-        />
-        <Typography
-          sx={{
-            fontStyle: "italic",
-            fontSize: "13px",
-            height: "25px",
-            lineHeight: "25px",
-          }}
-        >
-          3000 lượt like
-        </Typography>
-      </Stack> */}
-
       <DescriptionWrapper>
         <DescriptionHeading>Mô tả truyện</DescriptionHeading>
         {story?.story_description && (

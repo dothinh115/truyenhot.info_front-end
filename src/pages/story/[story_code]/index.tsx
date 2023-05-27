@@ -1,7 +1,6 @@
 import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
 import SameAuthorSidebar from "@/components/sidebar/sameAuthor";
-// import { SameAuthorSidebar } from "@/components/sidebar";
 import { StorySidebar } from "@/components/stories";
 import { CategoryInterface } from "@/models/categories";
 import { StoriesSearchResultInterface } from "@/models/search";
