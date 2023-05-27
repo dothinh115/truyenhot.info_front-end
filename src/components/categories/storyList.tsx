@@ -107,7 +107,7 @@ const ChapterInfo = styled(Typography)(({ theme }) => ({
   },
 }));
 
-export const RowStory = ({ storiesData }: Props) => {
+const RowStory = ({ storiesData }: Props) => {
   return (
     <>
       <UListStyled>
@@ -146,3 +146,5 @@ export const RowStory = ({ storiesData }: Props) => {
     </>
   );
 };
+
+export default RowStory;

@@ -1,6 +1,5 @@
 import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
-import { StoryChapterPicker, StoryReportButton } from "@/components/stories";
 import { ChapterDataInterface, ChapterListInterface } from "@/models/chapters";
 import { ChapterSection } from "@/sections";
 import { apiURL } from "@/utils/config";
@@ -9,6 +8,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import { Box, Container, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
@@ -16,6 +16,12 @@ type Props = {
   chapterData: ChapterDataInterface;
 };
 
+const StoryChapterPicker = dynamic(
+  () => import("../../../components/stories/chapterPicker")
+);
+const StoryReportButton = dynamic(
+  () => import("../../../components/stories/reportButton")
+);
 const ChapterTitle = styled("h1")(({ theme }) => ({
   textAlign: "center",
   color: theme.palette.myText.heading,

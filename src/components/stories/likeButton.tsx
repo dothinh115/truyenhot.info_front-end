@@ -17,7 +17,7 @@ type Props = {
   };
 };
 
-export const StoryLikeButton = ({
+const StoryLikeButton = ({
   story_code,
   likeNumberMutate,
   likeNumberData,
@@ -94,3 +94,5 @@ export const StoryLikeButton = ({
     </Button>
   );
 };
+
+export default StoryLikeButton;

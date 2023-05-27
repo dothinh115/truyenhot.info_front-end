@@ -48,7 +48,7 @@ const ListItem = styled("li")(({ theme }) => ({
   backgroundColor: theme.palette.myBackground.secondary,
 }));
 
-export const BaseStats = (props: Props) => {
+const BaseStats = (props: Props) => {
   const { data: baseStatsData, isValidating: baseStatsIsValidating } =
     useSWR(`/stats/getBaseStats`);
   return (
@@ -96,3 +96,5 @@ export const BaseStats = (props: Props) => {
     </>
   );
 };
+
+export default BaseStats;

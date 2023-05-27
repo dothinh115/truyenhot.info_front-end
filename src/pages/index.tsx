@@ -1,12 +1,6 @@
 import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
-import {
-  BaseStats,
-  HomeFullStories,
-  HomeHotStories,
-  IndexRecentStories,
-} from "@/components/home";
-import { CategoriesSidebar, ReadingStoriesHistory } from "@/components/sidebar";
+
 import { MainLayoutContext } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
 import { apiURL } from "@/utils/config";
@@ -14,8 +8,22 @@ import { thumbnailUrl } from "@/utils/variables";
 import HomeIcon from "@mui/icons-material/Home";
 import { Box, Container, Stack } from "@mui/material";
 import { GetStaticProps } from "next";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useContext } from "react";
+
+const BaseStats = dynamic(() => import("../components/home/baseStats"));
+const HomeFullStories = dynamic(() => import("../components/home/fullStories"));
+const HomeHotStories = dynamic(() => import("../components/home/hotStories"));
+const IndexRecentStories = dynamic(
+  () => import("../components/home/recentStories")
+);
+const CategoriesSidebar = dynamic(
+  () => import("../components/sidebar/categories")
+);
+const ReadingStoriesHistory = dynamic(
+  () => import("../components/sidebar/readingStories")
+);
 
 type Props = {
   categories: CategoryInterface[];

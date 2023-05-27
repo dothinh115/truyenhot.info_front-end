@@ -71,7 +71,7 @@ type Props = {
   story_code: string;
 };
 
-export const StoryCommentButton = ({ story_code }: Props) => {
+const StoryCommentButton = ({ story_code }: Props) => {
   const { profile } = useAuth();
 
   const getKey = (pageIndex: number, previousPageData: any) => {
@@ -279,3 +279,5 @@ export const StoryCommentButton = ({ story_code }: Props) => {
     </>
   );
 };
+
+export default StoryCommentButton;

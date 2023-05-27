@@ -5,22 +5,21 @@ import {
   Box,
   Button,
   FormControl,
-  InputLabel,
   MenuItem,
   OutlinedInput,
   Select,
   Stack,
+  alpha,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { SelectChangeEvent } from "@mui/material/Select";
+import { styled } from "@mui/material/styles";
 import Carousel from "better-react-carousel";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
 import { HotStoriesLoading } from "../loading";
-import { styled } from "@mui/material/styles";
-import { alpha } from "@mui/material";
-import Image from "next/image";
 const BoxWrapper = styled(Link)(() => ({
   width: "100%",
   padding: 0,
@@ -64,7 +63,7 @@ type Props = {
   categories: CategoryInterface[];
 };
 
-export const HomeHotStories = ({ categories }: Props) => {
+const HomeHotStories = ({ categories }: Props) => {
   const [cateValue, setCateValue] = useState<
     | {
         value: string;
@@ -241,3 +240,5 @@ export const HomeHotStories = ({ categories }: Props) => {
     </>
   );
 };
+
+export default HomeHotStories;

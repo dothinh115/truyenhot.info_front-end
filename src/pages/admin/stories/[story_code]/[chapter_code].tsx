@@ -204,9 +204,6 @@ const EditChapter = (props: Props) => {
             <Controller
               name={"chapter_title"}
               control={control}
-              rules={{
-                required: "Không được để trống",
-              }}
               render={({ field: { onChange, value } }) => (
                 <TextField
                   sx={{

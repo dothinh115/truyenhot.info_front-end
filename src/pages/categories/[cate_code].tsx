@@ -1,8 +1,6 @@
 import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
-import { RowStory } from "@/components/categories";
 import { StoryListLoading } from "@/components/loading";
-import { CategoriesSidebar, HotStoriesInCate } from "@/components/sidebar";
 import { CategoryInterface } from "@/models/categories";
 import { HotStoriesInCategoriesInterface } from "@/models/search";
 import { apiURL } from "@/utils/config";
@@ -14,10 +12,21 @@ import { Box, Container, Stack, Typography } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
+
+const CategoriesSidebar = dynamic(
+  () => import("../../components/sidebar/categories")
+);
+
+const HotStoriesInCate = dynamic(
+  () => import("../../components/sidebar/hotStoriesInCate")
+);
+
+const RowStory = dynamic(() => import("../../components/categories/storyList"));
 
 type Props = {
   categoryData: CategoryInterface;

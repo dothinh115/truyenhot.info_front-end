@@ -46,7 +46,7 @@ const ChapterLink = styled(Link)(() => ({
 
 type Props = {};
 
-export const ReadingStoriesHistory = (props: Props) => {
+const ReadingStoriesHistory = (props: Props) => {
   const [readingStories, setReadingStories] = useState<
     ReadingStoriesInterface[]
   >([]);
@@ -120,3 +120,5 @@ export const ReadingStoriesHistory = (props: Props) => {
     </>
   );
 };
+
+export default ReadingStoriesHistory;

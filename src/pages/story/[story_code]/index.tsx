@@ -1,7 +1,8 @@
 import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
-import { CategoriesSidebar, SameAuthorSidebar } from "@/components/sidebar";
-import { StoryMain, StorySidebar } from "@/components/stories";
+import SameAuthorSidebar from "@/components/sidebar/sameAuthor";
+// import { SameAuthorSidebar } from "@/components/sidebar";
+import { StorySidebar } from "@/components/stories";
 import { CategoryInterface } from "@/models/categories";
 import { StoriesSearchResultInterface } from "@/models/search";
 import { StoryInterface } from "@/models/stories";
@@ -11,6 +12,7 @@ import { thumbnailUrl } from "@/utils/variables";
 import HomeIcon from "@mui/icons-material/Home";
 import { Box, Container, Stack } from "@mui/material";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect } from "react";
 type Props = {
@@ -18,6 +20,11 @@ type Props = {
   categories: CategoryInterface[];
   sameAuthor: StoriesSearchResultInterface[];
 };
+
+const CategoriesSidebar = dynamic(
+  () => import("../../../components/sidebar/categories")
+);
+const StoryMain = dynamic(() => import("../../../components/stories/main"));
 
 const StoryDetail = ({ story, categories, sameAuthor }: Props) => {
   useEffect(() => {

@@ -1,20 +1,22 @@
-import { SearchModal } from "@/components/searchModal";
-import { useDidMount } from "@/hooks";
 import { MainLayoutInterface } from "@/models";
-import { FooterSection, HeaderSection } from "@/sections";
 import { getDesignTokens } from "@/utils/theme";
 import { ThemeProvider } from "@emotion/react";
 import { Box, Stack } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
+import dynamic from "next/dynamic";
 import { createContext, useEffect, useState } from "react";
 
+const HeaderSection = dynamic(() => import("../sections/header"));
+const FooterSection = dynamic(() => import("../sections/footer"));
+const SearchModal = dynamic(
+  () => import("../components/searchModal/searchModal")
+);
 export const MainLayoutContext = createContext({});
 
 export const MainLayout = ({ children }: MainLayoutInterface) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
   const [mode, setMode] = useState<"light" | "dark">("light");
-  const didMount = useDidMount();
   const theme = createTheme(getDesignTokens(mode));
 
   const loadTheme = (): void => {
@@ -30,7 +32,6 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
   useEffect(() => {
     loadTheme();
   }, []);
-  // if (!didMount) return null;
   return (
     <>
       <ThemeProvider theme={theme}>

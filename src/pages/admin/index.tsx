@@ -2,7 +2,6 @@ import {
   AdminNoChapterStories,
   AdminNotCompletedStories,
 } from "@/components/admin/indexStats";
-import { BaseStats } from "@/components/home/";
 import { AdminLayout } from "@/layouts";
 import { Box, Container, Stack } from "@mui/material";
 type Props = {};

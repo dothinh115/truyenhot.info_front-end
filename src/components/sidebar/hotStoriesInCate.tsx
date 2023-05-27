@@ -46,7 +46,7 @@ type Props = {
   hotStoriesInCategory: HotStoriesInCategoriesInterface[];
 };
 
-export const HotStoriesInCate = ({ category, hotStoriesInCategory }: Props) => {
+const HotStoriesInCate = ({ category, hotStoriesInCategory }: Props) => {
   return (
     <>
       <Box>
@@ -89,3 +89,5 @@ export const HotStoriesInCate = ({ category, hotStoriesInCategory }: Props) => {
     </>
   );
 };
+
+export default HotStoriesInCate;

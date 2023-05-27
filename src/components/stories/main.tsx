@@ -36,10 +36,10 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { RowLoading } from "../loading";
-import { StoryCommentButton } from "./commentButton";
-import { StoryLikeButton } from "./likeButton";
-import { StoryReportButton } from "./reportButton";
-
+import dynamic from "next/dynamic";
+const StoryReportButton = dynamic(() => import("./reportButton"));
+const StoryCommentButton = dynamic(() => import("../stories/commentButton"));
+const StoryLikeButton = dynamic(() => import("./likeButton"));
 const Wrapper = styled("h2")(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
@@ -272,7 +272,7 @@ type Props = {
   story: StoryInterface;
 };
 
-export const StoryMain = ({ story }: Props) => {
+const StoryMain = ({ story }: Props) => {
   const router = useRouter();
   const { story_code, page } = router?.query;
   const [paginationPage, setPaginationPage] = useState<number>(1);
@@ -563,3 +563,5 @@ export const StoryMain = ({ story }: Props) => {
     </>
   );
 };
+
+export default StoryMain;

@@ -93,7 +93,7 @@ const ItemTitle = styled(Link)(({ theme }) => ({
 type Props = {
   categories: CategoryInterface[];
 };
-export const HomeFullStories = ({ categories }: Props) => {
+const HomeFullStories = ({ categories }: Props) => {
   const [cateValue, setCateValue] = useState<
     | {
         value: string;
@@ -262,3 +262,5 @@ export const HomeFullStories = ({ categories }: Props) => {
     </>
   );
 };
+
+export default HomeFullStories;

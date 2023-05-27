@@ -1,5 +1,4 @@
 import { AdminNoCoverStoriesRow, AdminSearchBar } from "@/components/admin";
-import { RowStory } from "@/components/categories";
 import { AdminLayout } from "@/layouts";
 import { StoryInterface } from "@/models/stories";
 import { timeSince } from "@/utils/function";
@@ -17,9 +16,12 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import useSWR from "swr";
-
+const RowStory = dynamic(
+  () => import("../../../components/categories/storyList")
+);
 type Props = {};
 
 const AdminNoCoverStories = (props: Props) => {

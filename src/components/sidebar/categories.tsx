@@ -58,7 +58,7 @@ type Props = {
   categories: CategoryInterface[];
 };
 
-export const CategoriesSidebar = ({ categories }: Props) => {
+const CategoriesSidebar = ({ categories }: Props) => {
   return (
     <Stack spacing={2}>
       <Wrapper>
@@ -83,3 +83,5 @@ export const CategoriesSidebar = ({ categories }: Props) => {
     </Stack>
   );
 };
+
+export default CategoriesSidebar;

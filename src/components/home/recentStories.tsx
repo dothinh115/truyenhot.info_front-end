@@ -182,7 +182,7 @@ type Props = {
   categories: CategoryInterface[];
 };
 
-export const IndexRecentStories = ({ categories }: Props) => {
+const IndexRecentStories = ({ categories }: Props) => {
   const [cateValue, setCateValue] = useState<
     | {
         value: string;
@@ -359,3 +359,5 @@ export const IndexRecentStories = ({ categories }: Props) => {
     </>
   );
 };
+
+export default IndexRecentStories;

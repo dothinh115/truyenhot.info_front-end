@@ -57,7 +57,7 @@ const ModalInner = styled(Box)(({ theme }) => ({
   minWidth: "350px",
 }));
 
-export const StoryReportButton = ({
+const StoryReportButton = ({
   open,
   setOpen,
   story_code,
@@ -285,3 +285,5 @@ export const StoryReportButton = ({
     </>
   );
 };
+
+export default StoryReportButton;

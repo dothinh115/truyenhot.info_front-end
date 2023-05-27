@@ -97,7 +97,7 @@ const ResultItem = styled(Link)(({ theme }) => ({
   alignItems: "center",
 }));
 
-export const SearchModal = (props: Props) => {
+const SearchModal = (props: Props) => {
   const { control, reset, getValues } = useForm<{
     keywords: string;
   }>({
@@ -338,3 +338,5 @@ export const SearchModal = (props: Props) => {
     </>
   );
 };
+
+export default SearchModal;

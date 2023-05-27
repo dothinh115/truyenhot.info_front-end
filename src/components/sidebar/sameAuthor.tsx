@@ -44,49 +44,50 @@ const ListItemTextStyled = styled(ListItemText)(({ theme }) => ({
 
 type Props = { sameAuthor: StoriesSearchResultInterface[] };
 
-export const SameAuthorSidebar = ({ sameAuthor }: Props) => {
-  if (sameAuthor?.length !== 0)
-    return (
-      <>
+const SameAuthorSidebar = ({ sameAuthor }: Props) => {
+  if (sameAuthor?.length === 0) return null;
+  return (
+    <>
+      <Box>
+        <H3Styled>Truyện cùng tác giả</H3Styled>
         <Box>
-          <H3Styled>Truyện cùng tác giả</H3Styled>
-          <Box>
-            <Box component={List} py={0} dense={true}>
-              {sameAuthor?.map(
-                (story: StoriesSearchResultInterface, index: number) => {
-                  return (
-                    <ListItemStyled key={story._id}>
-                      <ListItemButton
-                        component={Link}
-                        href={`/story/${story.story_code}`}
-                        sx={{
-                          px: 0,
-                        }}
-                      >
-                        <Box component={ListItemIcon} minWidth={"25px"}>
-                          <ArrowForwardIosIcon
-                            sx={{
-                              fontSize: "15px",
-                              color:
-                                (index + 1 === 1 && "error.main") ||
-                                (index + 1 === 2 && "success.main") ||
-                                (index + 1 === 3 && "info.main") ||
-                                "#ccc",
-                            }}
-                          />
-                        </Box>
+          <Box component={List} py={0} dense={true}>
+            {sameAuthor?.map(
+              (story: StoriesSearchResultInterface, index: number) => {
+                return (
+                  <ListItemStyled key={story._id}>
+                    <ListItemButton
+                      component={Link}
+                      href={`/story/${story.story_code}`}
+                      sx={{
+                        px: 0,
+                      }}
+                    >
+                      <Box component={ListItemIcon} minWidth={"25px"}>
+                        <ArrowForwardIosIcon
+                          sx={{
+                            fontSize: "15px",
+                            color:
+                              (index + 1 === 1 && "error.main") ||
+                              (index + 1 === 2 && "success.main") ||
+                              (index + 1 === 3 && "info.main") ||
+                              "#ccc",
+                          }}
+                        />
+                      </Box>
 
-                        <ListItemTextStyled primary={story.story_title} />
-                      </ListItemButton>
-                    </ListItemStyled>
-                  );
-                }
-              )}
-            </Box>
+                      <ListItemTextStyled primary={story.story_title} />
+                    </ListItemButton>
+                  </ListItemStyled>
+                );
+              }
+            )}
           </Box>
         </Box>
-        <Box className={"hr"} my={2} />
-      </>
-    );
-  else return null;
+      </Box>
+      <Box className={"hr"} my={2} />
+    </>
+  );
 };
+
+export default SameAuthorSidebar;

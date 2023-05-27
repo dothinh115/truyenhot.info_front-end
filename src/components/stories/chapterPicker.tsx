@@ -96,3 +96,5 @@ export const StoryChapterPicker = ({ chapterData, chapterListData }: Props) => {
     </Stack>
   );
 };
+
+export default StoryChapterPicker;
