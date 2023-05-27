@@ -120,10 +120,7 @@ const decorator = new CompositeDecorator([
 export const StoryCommentRow = ({ comment, mutate }: Props) => {
   const { profile } = useAuth();
   const [editorState, setEditorState] = useState(() =>
-    EditorState.createWithContent(
-      convertFromRaw(JSON.parse(comment?.comment_content)),
-      decorator
-    )
+    EditorState.createEmpty(decorator)
   );
 
   const [subReplyTo, setSubReplyTo] = useState<string>("");

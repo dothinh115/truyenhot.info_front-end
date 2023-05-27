@@ -107,10 +107,7 @@ export const StorySubCommentRow = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [submitClick, setSubmitClick] = useState<boolean>(false);
   const [editorState, setEditorState] = useState(() =>
-    EditorState.createWithContent(
-      convertFromRaw(JSON.parse(subCmtData?.comment_content)),
-      decorator
-    )
+    EditorState.createEmpty(decorator)
   );
 
   const { setSubReplyTo } = useContext<any>(CommentContext);
