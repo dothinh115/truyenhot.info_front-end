@@ -109,20 +109,23 @@ export const CommentEditor = ({
   const sendCmt = async () => {
     let contentState = editorState.getCurrentContent();
     const blockArr = contentState.getBlocksAsArray();
-    let newEditorState;
+    let newEditorState = editorState;
     for (let block of blockArr) {
       const key = block.getKey();
       const text = block.getText();
       let start, matchArr, end;
+      let i: any[] = [];
       while ((matchArr = MENTION_REGEX.exec(text)) !== null) {
-        let i = 1;
         start = matchArr.index;
         end = start + matchArr[0].length;
+        i = [...i, { start, end }];
+      }
+      for (let x = 0; x < i.length; x++) {
         const selection = new SelectionState({
           anchorKey: key,
-          anchorOffset: start,
+          anchorOffset: i[x].start,
           focusKey: key,
-          focusOffset: end,
+          focusOffset: i[x].end,
         });
         let newContentState = contentState.createEntity(
           "MENTION",
@@ -143,14 +146,12 @@ export const CommentEditor = ({
           "apply-entity"
         );
         contentState = newEditorState.getCurrentContent();
-        i++;
-        if (i === matchArr[0].length) break;
       }
     }
-    let value;
-    if (newEditorState)
-      value = JSON.stringify(convertToRaw(newEditorState?.getCurrentContent()));
-    else value = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+
+    const value = JSON.stringify(
+      convertToRaw(newEditorState?.getCurrentContent())
+    );
     cb(value);
   };
 
