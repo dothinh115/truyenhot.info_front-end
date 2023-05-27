@@ -7,7 +7,7 @@ const Custom404 = () => {
 
   useEffect(() => {
     router.replace("/");
-  });
+  }, []);
 
   return null;
 };

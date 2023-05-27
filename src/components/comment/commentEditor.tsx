@@ -1,6 +1,7 @@
 import { Box, alpha } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
+  CompositeDecorator,
   DraftHandleValue,
   Editor,
   EditorState,
@@ -18,6 +19,7 @@ type Props = {
   setClicked: (state: boolean) => any;
   placeholder?: string;
   defaultValue?: string;
+  replyTo?: string;
 };
 
 const ContentEditableStyled = styled(Box)(({ theme }) => ({
@@ -43,16 +45,53 @@ const ContentEditableStyled = styled(Box)(({ theme }) => ({
   },
 }));
 
+export const MentionSpanStyled = styled("span")(({ theme }) => ({
+  color: theme.palette.myText.heading,
+  direction: "ltr",
+  fontWeight: "600",
+}));
+
+const MENTION_REGEX = /\@[\w]+/g;
+
+const MentionSpan = (props: any) => {
+  return (
+    <MentionSpanStyled data-offset-key={props.offsetKey}>
+      {props.children}
+    </MentionSpanStyled>
+  );
+};
+function findWithRegex(regex: RegExp, contentBlock: any, callback: any) {
+  const text = contentBlock.getText();
+  let matchArr, start;
+  while ((matchArr = regex.exec(text)) !== null) {
+    start = matchArr.index;
+    callback(start, start + matchArr[0].length);
+  }
+}
+
+function mentionStrategy(contentBlock: any, callback: any) {
+  findWithRegex(MENTION_REGEX, contentBlock, callback);
+}
+
+const compositeDecorator = new CompositeDecorator([
+  {
+    strategy: mentionStrategy,
+    component: MentionSpan,
+  },
+]);
+
 export const CommentEditor = ({
   cb,
   clicked,
   setClicked,
   placeholder,
   defaultValue,
+  replyTo,
 }: Props) => {
   const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty()
+    EditorState.createEmpty(compositeDecorator)
   );
+
   const editorRef = useRef<any>();
 
   const myKeyBindingFn = (e: React.KeyboardEvent): string | null => {
@@ -62,12 +101,53 @@ export const CommentEditor = ({
       } else {
         return "send-cmt";
       }
+    } else {
     }
     return getDefaultKeyBinding(e);
   };
 
-  const sendCmt = () => {
-    const value = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+  const sendCmt = async () => {
+    let contentState = editorState.getCurrentContent();
+    const blockArr = contentState.getBlocksAsArray();
+    let newEditorState;
+    for (let block of blockArr) {
+      const key = block.getKey();
+      const text = block.getText();
+      let start, matchArr, end;
+      while ((matchArr = MENTION_REGEX.exec(text)) !== null) {
+        start = matchArr.index;
+        end = start + matchArr[0].length;
+        const selection = new SelectionState({
+          anchorKey: key,
+          anchorOffset: start,
+          focusKey: key,
+          focusOffset: end,
+        });
+        let newContentState = contentState.createEntity(
+          "MENTION",
+          "IMMUTABLE",
+          {
+            url: "",
+          }
+        );
+        const entityKey = contentState.getLastCreatedEntityKey();
+        newContentState = Modifier.applyEntity(
+          newContentState,
+          selection,
+          entityKey
+        );
+        newEditorState = EditorState.push(
+          editorState,
+          newContentState,
+          "apply-entity"
+        );
+        contentState = newEditorState.getCurrentContent();
+      }
+    }
+    let value;
+    if (newEditorState)
+      value = JSON.stringify(convertToRaw(newEditorState?.getCurrentContent()));
+    else value = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
     cb(value);
   };
 
@@ -111,6 +191,7 @@ export const CommentEditor = ({
         if (plainText === "") return "not-handled";
         sendCmt();
         clearContent();
+
         return "handled";
       }
       default: {
@@ -119,10 +200,30 @@ export const CommentEditor = ({
     }
   };
 
+  const handleReplyTo = () => {
+    const contentState = editorState.getCurrentContent();
+    const selectionState = editorState.getSelection();
+
+    let newContentState = Modifier.insertText(
+      contentState,
+      selectionState,
+      replyTo ? replyTo + " " : ""
+    );
+    setEditorState(
+      EditorState.push(editorState, newContentState, "insert-characters")
+    );
+  };
+
+  useEffect(() => {
+    if (replyTo) handleReplyTo();
+  }, [replyTo]);
+
   useEffect(() => {
     if (defaultValue) {
       const parse = JSON.parse(defaultValue);
-      setEditorState(EditorState.createWithContent(convertFromRaw(parse)));
+      setEditorState(
+        EditorState.createWithContent(convertFromRaw(parse), compositeDecorator)
+      );
     }
   }, [defaultValue]);
 

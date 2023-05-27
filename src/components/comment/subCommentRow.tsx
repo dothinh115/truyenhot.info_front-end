@@ -20,14 +20,20 @@ import {
   Stack,
   alpha,
   styled,
+  Link,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-import React, { useEffect, useRef, useState } from "react";
-import { convertToHTML } from "draft-convert";
-import { convertFromRaw } from "draft-js";
-import { CommentEditor } from "./commentEditor";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import {
+  CompositeDecorator,
+  Editor,
+  EditorState,
+  convertFromRaw,
+} from "draft-js";
+import { CommentEditor, MentionSpanStyled } from "./commentEditor";
 import MaleIcon from "@mui/icons-material/Male";
 import FemaleIcon from "@mui/icons-material/Female";
+import { CommentContext } from "./commentRow";
 type Props = {
   subCmtData: SubCommentDataInterface;
   mutate: any;
@@ -62,6 +68,32 @@ const MenuDropdownWrapper = styled(Box)(({ theme }) => ({
   zIndex: 50,
 }));
 
+const getEntityStrategy = (mutability: string) => {
+  return function (contentBlock: any, callback: any, contentState: any) {
+    contentBlock.findEntityRanges((character: any) => {
+      const entityKey = character.getEntity();
+      if (entityKey === null) {
+        return false;
+      }
+      return contentState.getEntity(entityKey).getMutability() === mutability;
+    }, callback);
+  };
+};
+
+const MentionSpan = (props: any) => {
+  return (
+    <MentionSpanStyled data-offset-key={props.offsetkey}>
+      {props.children}
+    </MentionSpanStyled>
+  );
+};
+
+const decorator = new CompositeDecorator([
+  {
+    strategy: getEntityStrategy("IMMUTABLE"),
+    component: MentionSpan,
+  },
+]);
 export const StorySubCommentRow = ({
   subCmtData,
   mutate,
@@ -74,6 +106,14 @@ export const StorySubCommentRow = ({
   const [editing, setEditing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [submitClick, setSubmitClick] = useState<boolean>(false);
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createWithContent(
+      convertFromRaw(JSON.parse(subCmtData?.comment_content)),
+      decorator
+    )
+  );
+
+  const { setSubReplyTo } = useContext<any>(CommentContext);
 
   const menuDropdownClickHandle = (event: { target: any }) => {
     if (menuDropdown?.current) {
@@ -113,6 +153,15 @@ export const StorySubCommentRow = ({
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    setEditorState(
+      EditorState.createWithContent(
+        convertFromRaw(JSON.parse(subCmtData?.comment_content)),
+        decorator
+      )
+    );
+  }, [subCmtData]);
 
   useEffect(() => {
     window.addEventListener("click", menuDropdownClickHandle);
@@ -172,6 +221,20 @@ export const StorySubCommentRow = ({
               </Box>
             </Box>
           </Box>
+          <Link
+            underline="none"
+            sx={{
+              display: "inline-flex",
+              alignItems: "center",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              setSubReplyTo(subCmtData?.author.user_id);
+              setReplying(true);
+            }}
+          >
+            <ReplyIcon fontSize="small" /> Trả lời
+          </Link>
         </Stack>
         <Divider />
         {editing ? (
@@ -220,13 +283,14 @@ export const StorySubCommentRow = ({
                     margin: 0,
                   },
                 }}
-                dangerouslySetInnerHTML={{
-                  __html: convertToHTML(
-                    convertFromRaw(JSON.parse(subCmtData?.comment_content))
-                  ),
-                }}
                 my={"4px"}
-              />
+              >
+                <Editor
+                  editorState={editorState}
+                  onChange={setEditorState}
+                  readOnly={true}
+                />
+              </Box>
             )}
 
             <Box textAlign={"right"}>

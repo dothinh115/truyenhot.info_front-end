@@ -10,6 +10,8 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import FemaleIcon from "@mui/icons-material/Female";
+import MaleIcon from "@mui/icons-material/Male";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ReplyIcon from "@mui/icons-material/Reply";
 import SubdirectoryArrowRightIcon from "@mui/icons-material/SubdirectoryArrowRight";
@@ -27,14 +29,16 @@ import {
   styled,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-import React, { useEffect, useRef, useState } from "react";
+import {
+  CompositeDecorator,
+  Editor,
+  EditorState,
+  convertFromRaw,
+} from "draft-js";
+import React, { createContext, useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
+import { CommentEditor, MentionSpanStyled } from "./commentEditor";
 import { MemorizedStorySubCommentRow } from "./subCommentRow";
-import { CompositeDecorator, EditorState, convertFromRaw } from "draft-js";
-import { convertToHTML } from "draft-convert";
-import { CommentEditor } from "./commentEditor";
-import MaleIcon from "@mui/icons-material/Male";
-import FemaleIcon from "@mui/icons-material/Female";
 const CommentRowWrapper = styled(Stack)(({ theme }) => ({
   marginBottom: theme.spacing(1),
 }));
@@ -84,43 +88,45 @@ type Props = {
   mutate: () => void;
 };
 
-const styles = {
-  color: "rgb(98, 177, 254)",
-  direction: "ltr",
+export const CommentContext = createContext({});
+
+const getEntityStrategy = (mutability: string) => {
+  return function (contentBlock: any, callback: any, contentState: any) {
+    contentBlock.findEntityRanges((character: any) => {
+      const entityKey = character.getEntity();
+      if (entityKey === null) {
+        return false;
+      }
+      return contentState.getEntity(entityKey).getMutability() === mutability;
+    }, callback);
+  };
 };
-
-const MENTION_REGEX = /\@[\w]+/g;
-
-function mentionStrategy(contentBlock: any, callback: any) {
-  findWithRegex(MENTION_REGEX, contentBlock, callback);
-}
-
-function findWithRegex(regex: any, contentBlock: any, callback: any) {
-  const text = contentBlock.getText();
-  let matchArr, start;
-  while ((matchArr = regex.exec(text)) !== null) {
-    start = matchArr.index;
-    callback(start, start + matchArr[0].length);
-  }
-}
 
 const MentionSpan = (props: any) => {
   return (
-    <Box component="span" sx={styles} data-offset-key={props.offsetKey}>
+    <MentionSpanStyled data-offset-key={props.offsetkey}>
       {props.children}
-    </Box>
+    </MentionSpanStyled>
   );
 };
 
-const mentionDecorator = new CompositeDecorator([
+const decorator = new CompositeDecorator([
   {
-    strategy: mentionStrategy,
+    strategy: getEntityStrategy("IMMUTABLE"),
     component: MentionSpan,
   },
 ]);
 
 export const StoryCommentRow = ({ comment, mutate }: Props) => {
   const { profile } = useAuth();
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createWithContent(
+      convertFromRaw(JSON.parse(comment?.comment_content)),
+      decorator
+    )
+  );
+
+  const [subReplyTo, setSubReplyTo] = useState<string>("");
 
   const getKey = (pageIndex: number, previousPageData: any) => {
     pageIndex = pageIndex + 1;
@@ -204,6 +210,15 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
 
   const showReplyFooter =
     (subCmtData && subCmtData[0]?.result.length !== 0) || replying;
+
+  useEffect(() => {
+    setEditorState(
+      EditorState.createWithContent(
+        convertFromRaw(JSON.parse(comment?.comment_content)),
+        decorator
+      )
+    );
+  }, [comment]);
 
   useEffect(() => {
     window.addEventListener("click", menuDropdownClickHandle);
@@ -333,18 +348,14 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
                             margin: 0,
                           },
                         }}
-                        dangerouslySetInnerHTML={{
-                          __html: convertToHTML(
-                            EditorState.createWithContent(
-                              convertFromRaw(
-                                JSON.parse(comment?.comment_content)
-                              ),
-                              mentionDecorator
-                            ).getCurrentContent()
-                          ),
-                        }}
                         my={"4px"}
-                      />
+                      >
+                        <Editor
+                          editorState={editorState}
+                          onChange={setEditorState}
+                          readOnly={true}
+                        />
+                      </Box>
 
                       <Box textAlign={"right"}>
                         {comment?.comment_content.length > 400 && !show && (
@@ -465,6 +476,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
                   clicked={replySubmitClicked}
                   setClicked={setReplySubmitClicked}
                   placeholder={`Trả lời ${comment?.author.user_id}...`}
+                  replyTo={subReplyTo ? subReplyTo : comment?.author.user_id}
                 />
                 <Stack
                   direction={"row"}
@@ -492,22 +504,22 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
                 </Stack>
               </ReplyInputWrapper>
             )}
-
-            {subCmtData &&
-              subCmtData[0]?.result.length !== 0 &&
-              subCmtData.map((group: any) => {
-                return group?.result.map((sub: SubCommentDataInterface) => {
-                  return (
-                    <MemorizedStorySubCommentRow
-                      key={sub._id}
-                      subCmtData={sub}
-                      mutate={subCmtMutate}
-                      setReplying={setReplying}
-                    />
-                  );
-                });
-              })}
-
+            <CommentContext.Provider value={{ setSubReplyTo }}>
+              {subCmtData &&
+                subCmtData[0]?.result.length !== 0 &&
+                subCmtData.map((group: any) => {
+                  return group?.result.map((sub: SubCommentDataInterface) => {
+                    return (
+                      <MemorizedStorySubCommentRow
+                        key={sub._id}
+                        subCmtData={sub}
+                        mutate={subCmtMutate}
+                        setReplying={setReplying}
+                      />
+                    );
+                  });
+                })}
+            </CommentContext.Provider>
             {size < comment.totalSubCmtPages && (
               <Link
                 underline="none"
