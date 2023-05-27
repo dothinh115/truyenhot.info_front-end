@@ -51,7 +51,7 @@ export const MentionSpanStyled = styled("span")(({ theme }) => ({
   fontWeight: "600",
 }));
 
-const MENTION_REGEX = /\@[\w]+/g;
+const MENTION_REGEX = /\B@\w+/g;
 
 const MentionSpan = (props: any) => {
   return (
@@ -115,6 +115,7 @@ export const CommentEditor = ({
       const text = block.getText();
       let start, matchArr, end;
       while ((matchArr = MENTION_REGEX.exec(text)) !== null) {
+        let i = 1;
         start = matchArr.index;
         end = start + matchArr[0].length;
         const selection = new SelectionState({
@@ -142,6 +143,8 @@ export const CommentEditor = ({
           "apply-entity"
         );
         contentState = newEditorState.getCurrentContent();
+        i++;
+        if (i === matchArr[0].length) break;
       }
     }
     let value;

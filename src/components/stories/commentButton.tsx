@@ -123,7 +123,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
   }, [data]);
 
   useEffect(() => {
-    if (open) mutate();
+    if (story_code && open) mutate();
   }, [open]);
 
   return (
