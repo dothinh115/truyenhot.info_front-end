@@ -120,12 +120,13 @@ export const CommentEditor = ({
         end = start + matchArr[0].length;
         i = [...i, { start, end }];
       }
-      for (let x = 0; x < i.length; x++) {
+      // for (let x = 0; x < i.length; x++) {
+      if (i.length !== 0) {
         const selection = new SelectionState({
           anchorKey: key,
-          anchorOffset: i[x].start,
+          anchorOffset: start,
           focusKey: key,
-          focusOffset: i[x].end,
+          focusOffset: end,
         });
         let newContentState = contentState.createEntity(
           "MENTION",
@@ -145,9 +146,10 @@ export const CommentEditor = ({
           newContentState,
           "apply-entity"
         );
-        contentState = newEditorState.getCurrentContent();
+        contentState = editorState.getCurrentContent();
       }
     }
+    // }
 
     const value = JSON.stringify(
       convertToRaw(newEditorState?.getCurrentContent())
