@@ -106,54 +106,8 @@ export const CommentEditor = ({
     return getDefaultKeyBinding(e);
   };
 
-  const sendCmt = async () => {
-    let contentState = editorState.getCurrentContent();
-    const blockArr = contentState.getBlocksAsArray();
-    let newEditorState = editorState;
-    for (let block of blockArr) {
-      const key = block.getKey();
-      const text = block.getText();
-      let start, matchArr, end;
-      let i: any[] = [];
-      while ((matchArr = MENTION_REGEX.exec(text)) !== null) {
-        start = matchArr.index;
-        end = start + matchArr[0].length;
-        i = [...i, { start, end }];
-      }
-      // for (let x = 0; x < i.length; x++) {
-      if (i.length !== 0) {
-        const selection = new SelectionState({
-          anchorKey: key,
-          anchorOffset: start,
-          focusKey: key,
-          focusOffset: end,
-        });
-        let newContentState = contentState.createEntity(
-          "MENTION",
-          "IMMUTABLE",
-          {
-            url: "",
-          }
-        );
-        const entityKey = contentState.getLastCreatedEntityKey();
-        newContentState = Modifier.applyEntity(
-          newContentState,
-          selection,
-          entityKey
-        );
-        newEditorState = EditorState.push(
-          editorState,
-          newContentState,
-          "apply-entity"
-        );
-        contentState = editorState.getCurrentContent();
-      }
-    }
-    // }
-
-    const value = JSON.stringify(
-      convertToRaw(newEditorState?.getCurrentContent())
-    );
+  const sendCmt = async (contentState: any) => {
+    const value = JSON.stringify(contentState);
     cb(value);
   };
 
@@ -177,6 +131,57 @@ export const CommentEditor = ({
     setEditorState(modifier);
   };
 
+  const addEntities = () => {
+    let contentState = editorState.getCurrentContent();
+    const blockArr = contentState.getBlocksAsArray();
+    let newContentState = editorState;
+    for (let block of blockArr) {
+      const key = block.getKey();
+      let text = block.getText();
+      let startEnd: any[] = [];
+      let start, end, matchArr;
+      while ((matchArr = MENTION_REGEX.exec(text)) !== null) {
+        start = matchArr.index;
+        (end = start + matchArr[0].length),
+          (startEnd = [
+            ...startEnd,
+            {
+              start,
+              end,
+            },
+          ]);
+      }
+      for (let i = 0; i < startEnd.length; i++) {
+        const selection = new SelectionState({
+          anchorKey: key,
+          anchorOffset: startEnd[i].start,
+          focusKey: key,
+          focusOffset: startEnd[i].end,
+        });
+
+        const newEntity = contentState.createEntity("MENTION", "MUTABLE", {
+          url: "",
+        });
+        const entityKey = contentState.getLastCreatedEntityKey();
+
+        const applyEntity = Modifier.applyEntity(
+          newEntity,
+          selection,
+          entityKey
+        );
+
+        newContentState = EditorState.push(
+          editorState,
+          applyEntity,
+          "apply-entity"
+        );
+
+        contentState = newContentState.getCurrentContent();
+      }
+    }
+    return convertToRaw(newContentState.getCurrentContent());
+  };
+
   const handleKeyCommand = (command: string): DraftHandleValue => {
     const contentState = editorState.getCurrentContent();
     const selectionState = editorState.getSelection();
@@ -195,9 +200,8 @@ export const CommentEditor = ({
       case "send-cmt": {
         const plainText = editorState.getCurrentContent().getPlainText();
         if (plainText === "") return "not-handled";
-        sendCmt();
+        sendCmt(addEntities());
         clearContent();
-
         return "handled";
       }
       default: {
@@ -235,7 +239,7 @@ export const CommentEditor = ({
 
   useEffect(() => {
     if (clicked) {
-      sendCmt();
+      sendCmt(addEntities());
       setClicked(false);
     }
   }, [clicked]);
