@@ -79,8 +79,7 @@ const MenuDropdownWrapper = styled(Box)(({ theme }) => ({
   zIndex: 50,
 }));
 
-const ReplyInputWrapper = styled(Stack)(({ theme }) => ({
-  flexDirection: "row",
+const ReplyInputWrapper = styled(Box)(({ theme }) => ({
   color: theme.palette.myText.primary,
   width: "calc(100% - 45px)",
   marginBottom: theme.spacing(0.5),
