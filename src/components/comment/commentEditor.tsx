@@ -131,6 +131,7 @@ const CommentEditor = ({
         return "send-cmt";
       }
     }
+
     return getDefaultKeyBinding(e);
   };
 
@@ -202,7 +203,6 @@ const CommentEditor = ({
         sendCmt();
         return "handled";
       }
-
       default: {
         return "not-handled";
       }
@@ -268,6 +268,7 @@ const CommentEditor = ({
       clearSuggestion();
       return;
     }
+
     const keyOfBlockStanding = selectionState.getAnchorKey(); //key của block đang đứng
     const block = contentState.getBlockForKey(keyOfBlockStanding); //block đang đứng
     const text = block.getText(); //text của block đang đứng
@@ -288,6 +289,7 @@ const CommentEditor = ({
         },
       ];
     }
+    if (rangeArr.length === 0) clearSuggestion();
     //xét xem con trỏ chuột có đang nằm trong range mention hay ko
     for (let range of rangeArr) {
       const $_match = range.start <= anchorOffset && anchorOffset < range.end;
