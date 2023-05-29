@@ -1,4 +1,6 @@
-import { Box, alpha } from "@mui/material";
+import { UserSuggesionInterface } from "@/models/users";
+import { API } from "@/utils/config";
+import { Box, alpha, Stack, Chip } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
   CompositeDecorator,
@@ -12,7 +14,6 @@ import {
   getDefaultKeyBinding,
 } from "draft-js";
 import React, { useEffect, useRef, useState } from "react";
-
 type Props = {
   cb: (data: string) => void;
   clicked: boolean;
@@ -23,6 +24,7 @@ type Props = {
 };
 
 const ContentEditableStyled = styled(Box)(({ theme }) => ({
+  position: "relative",
   flexGrow: 1,
   "&> .DraftEditor-root": {
     border: `1px solid ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
@@ -42,40 +44,49 @@ const ContentEditableStyled = styled(Box)(({ theme }) => ({
       position: "absolute",
       color: alpha(theme.palette.myText.primary, 0.5),
     },
+    maxHeight: "calc(21px * 5)",
+    overflow: "auto",
   },
 }));
 
 export const MentionSpanStyled = styled("span")(({ theme }) => ({
-  color: theme.palette.myText.heading,
+  color: "#64b5f6",
   direction: "ltr",
-  fontWeight: "600",
+  fontWeight: "400",
+}));
+
+const UserSuggestionWrapper = styled(Stack)(() => ({
+  flexDirection: "row",
+  maxWidth: "100%",
+  width: "100%",
+  overflow: "auto",
 }));
 
 const MENTION_REGEX = /\B@\w+/g;
 
+const getEntityStrategy = (mutability: string) => {
+  return function (contentBlock: any, callback: any, contentState: any) {
+    contentBlock.findEntityRanges((character: any) => {
+      const entityKey = character.getEntity();
+      if (entityKey === null) {
+        return false;
+      }
+      return contentState.getEntity(entityKey).getMutability() === mutability;
+    }, callback);
+  };
+};
+
 const MentionSpan = (props: any) => {
   return (
-    <MentionSpanStyled data-offset-key={props.offsetKey}>
+    <MentionSpanStyled data-offset-key={props.offsetkey}>
       {props.children}
     </MentionSpanStyled>
   );
 };
-function findWithRegex(regex: RegExp, contentBlock: any, callback: any) {
-  const text = contentBlock.getText();
-  let matchArr, start;
-  while ((matchArr = regex.exec(text)) !== null) {
-    start = matchArr.index;
-    callback(start, start + matchArr[0].length);
-  }
-}
 
-function mentionStrategy(contentBlock: any, callback: any) {
-  findWithRegex(MENTION_REGEX, contentBlock, callback);
-}
-
-const compositeDecorator = new CompositeDecorator([
+const decorator = new CompositeDecorator([
   {
-    strategy: mentionStrategy,
+    strategy: getEntityStrategy("SEGMENTED"),
     component: MentionSpan,
   },
 ]);
@@ -89,10 +100,20 @@ export const CommentEditor = ({
   replyTo,
 }: Props) => {
   const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty(compositeDecorator)
+    EditorState.createEmpty(decorator)
   );
-
   const editorRef = useRef<any>();
+  const suggestionRef = useRef<HTMLDivElement>(null);
+  const timeout = useRef<any>();
+  const currentRangeSuggestion = useRef<{
+    start: number;
+    end: number;
+    value: string;
+    key: string;
+  }>();
+  const [userSuggestion, setUserSuggestion] = useState<
+    UserSuggesionInterface[]
+  >([]);
 
   const myKeyBindingFn = (e: React.KeyboardEvent): string | null => {
     if (e.key === "Enter") {
@@ -101,14 +122,44 @@ export const CommentEditor = ({
       } else {
         return "send-cmt";
       }
-    } else {
     }
     return getDefaultKeyBinding(e);
   };
 
-  const sendCmt = async (contentState: any) => {
-    const value = JSON.stringify(contentState);
+  const getUserSuggestion = (user_id: string) => {
+    if (user_id === "") return;
+    clearTimeout(timeout.current);
+
+    timeout.current = setTimeout(async () => {
+      try {
+        const response: any = await API.get(
+          `/users/getMentionSuggestion/${user_id}`
+        );
+        if (userSuggestion.length !== response.length)
+          setUserSuggestion(response.result);
+        let result = true;
+        for (let item of response.result) {
+          const find = userSuggestion.find(
+            (user: UserSuggesionInterface) => user.user_id === item.user_id
+          );
+          if (!find) result = false;
+        }
+        if (!result) setUserSuggestion(response.result);
+      } catch (error) {
+        console.log(error);
+      }
+    }, 500);
+  };
+
+  const clearSuggestion = () => {
+    clearTimeout(timeout.current);
+    setUserSuggestion([]);
+  };
+
+  const sendCmt = async () => {
+    const value = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
     cb(value);
+    clearSuggestion();
   };
 
   const clearContent = () => {
@@ -131,56 +182,7 @@ export const CommentEditor = ({
     setEditorState(modifier);
   };
 
-  const addEntities = () => {
-    let contentState = editorState.getCurrentContent();
-    const blockArr = contentState.getBlocksAsArray();
-    let newContentState = editorState;
-    for (let block of blockArr) {
-      const key = block.getKey();
-      let text = block.getText();
-      let startEnd: any[] = [];
-      let start, end, matchArr;
-      while ((matchArr = MENTION_REGEX.exec(text)) !== null) {
-        start = matchArr.index;
-        (end = start + matchArr[0].length),
-          (startEnd = [
-            ...startEnd,
-            {
-              start,
-              end,
-            },
-          ]);
-      }
-      for (let i = 0; i < startEnd.length; i++) {
-        const selection = new SelectionState({
-          anchorKey: key,
-          anchorOffset: startEnd[i].start,
-          focusKey: key,
-          focusOffset: startEnd[i].end,
-        });
-
-        const newEntity = contentState.createEntity("MENTION", "MUTABLE", {
-          url: "",
-        });
-        const entityKey = contentState.getLastCreatedEntityKey();
-
-        const applyEntity = Modifier.applyEntity(
-          newEntity,
-          selection,
-          entityKey
-        );
-
-        newContentState = EditorState.push(
-          editorState,
-          applyEntity,
-          "apply-entity"
-        );
-
-        contentState = newContentState.getCurrentContent();
-      }
-    }
-    return convertToRaw(newContentState.getCurrentContent());
-  };
+  const backSpaceHandle = () => {};
 
   const handleKeyCommand = (command: string): DraftHandleValue => {
     const contentState = editorState.getCurrentContent();
@@ -194,16 +196,16 @@ export const CommentEditor = ({
         setEditorState(
           EditorState.push(editorState, newContentState, "split-block")
         );
-
         return "handled";
       }
       case "send-cmt": {
         const plainText = editorState.getCurrentContent().getPlainText();
         if (plainText === "") return "not-handled";
-        sendCmt(addEntities());
+        sendCmt();
         clearContent();
         return "handled";
       }
+
       default: {
         return "not-handled";
       }
@@ -211,18 +213,102 @@ export const CommentEditor = ({
   };
 
   const handleReplyTo = () => {
-    const contentState = editorState.getCurrentContent();
+    let contentState = editorState.getCurrentContent();
     const selectionState = editorState.getSelection();
+    contentState.createEntity("MENTION", "SEGMENTED", {
+      url: `/user/${replyTo?.replace("@", "")}`,
+    });
+    const entityKey = contentState.getLastCreatedEntityKey();
 
     let newContentState = Modifier.insertText(
       contentState,
       selectionState,
-      replyTo ? replyTo + " " : ""
+      replyTo ? replyTo + " " : "",
+      undefined,
+      entityKey
     );
     setEditorState(
       EditorState.push(editorState, newContentState, "insert-characters")
     );
   };
+
+  const handleMention = async () => {
+    const contentState = editorState.getCurrentContent();
+    const selectionState = editorState.getSelection();
+    if (
+      contentState.getPlainText() === "" ||
+      contentState.getPlainText() === "@"
+    ) {
+      //nếu text rỗng thì dừng
+      clearSuggestion();
+      return;
+    }
+    const keyOfBlockStading = selectionState.getAnchorKey(); //key của block đang đứng
+    const block = contentState.getBlockForKey(keyOfBlockStading); //block đang đứng
+    const text = block.getText(); //text của block đang đứng
+    const anchorOffset = selectionState.getAnchorOffset() - 1; //vị trí ban đầu của con trỏ chuột
+    let rangeArr: { start: number; end: number; value: string }[] = []; //lấy range của mention nếu có
+    let matchArr;
+    while ((matchArr = MENTION_REGEX.exec(text)) !== null) {
+      //check xem bên trong text có mention hay ko
+      const start = matchArr.index;
+      const end = start + matchArr[0].length;
+      const value = matchArr[0];
+      rangeArr = [
+        ...rangeArr,
+        {
+          start,
+          end,
+          value,
+        },
+      ];
+    }
+    //xét xem con trỏ chuột có đang nằm trong range mention hay ko
+    for (let range of rangeArr) {
+      const $_match = range.start <= anchorOffset && anchorOffset < range.end;
+      if (!$_match) {
+        clearSuggestion();
+        continue; //nếu ko nằm trong range của mention thì bỏ qua
+      } else {
+        //vượt qua tất cả thì đã có value của mention, tiến hành call api lấy suggestion
+        const user_id = range.value;
+        await getUserSuggestion(user_id.replace("@", ""));
+        currentRangeSuggestion.current = { ...range, key: keyOfBlockStading }; //lưu thông tin range hiện tại để dùng sau
+      }
+    }
+  };
+
+  const mentionClickHandle = (user_id: string) => {
+    const contentState = editorState.getCurrentContent();
+    const editTextSelection = new SelectionState({
+      anchorKey: currentRangeSuggestion.current?.key,
+      anchorOffset: currentRangeSuggestion.current?.start,
+      focusKey: currentRangeSuggestion.current?.key,
+      focusOffset: currentRangeSuggestion?.current?.end,
+    });
+
+    contentState.createEntity("MENTION", "SEGMENTED", {
+      url: `/user/${user_id}`,
+    });
+    const entityKey = contentState.getLastCreatedEntityKey();
+
+    const editText = Modifier.replaceText(
+      contentState,
+      editTextSelection,
+      user_id,
+      undefined,
+      entityKey
+    );
+
+    setEditorState(
+      EditorState.push(editorState, editText, "change-block-data")
+    );
+    setUserSuggestion([]);
+  };
+
+  useEffect(() => {
+    handleMention();
+  }, [editorState.getCurrentContent()]);
 
   useEffect(() => {
     if (replyTo) handleReplyTo();
@@ -232,28 +318,46 @@ export const CommentEditor = ({
     if (defaultValue) {
       const parse = JSON.parse(defaultValue);
       setEditorState(
-        EditorState.createWithContent(convertFromRaw(parse), compositeDecorator)
+        EditorState.createWithContent(convertFromRaw(parse), decorator)
       );
     }
   }, [defaultValue]);
 
   useEffect(() => {
     if (clicked) {
-      sendCmt(addEntities());
+      sendCmt();
       setClicked(false);
     }
   }, [clicked]);
 
   return (
-    <ContentEditableStyled onClick={() => editorRef.current?.focus()}>
-      <Editor
-        ref={editorRef}
-        editorState={editorState}
-        onChange={setEditorState}
-        handleKeyCommand={handleKeyCommand}
-        keyBindingFn={myKeyBindingFn}
-        placeholder={placeholder}
-      />
-    </ContentEditableStyled>
+    <>
+      <UserSuggestionWrapper ref={suggestionRef}>
+        {userSuggestion?.map((user: UserSuggesionInterface) => {
+          return (
+            <Chip
+              sx={{
+                marginBottom: "4px",
+                marginRight: "4px",
+                fontSize: ".85em",
+              }}
+              key={user._id}
+              label={user.user_id}
+              onClick={() => mentionClickHandle(user.user_id)}
+            />
+          );
+        })}
+      </UserSuggestionWrapper>
+      <ContentEditableStyled onClick={() => editorRef.current?.focus()}>
+        <Editor
+          ref={editorRef}
+          editorState={editorState}
+          onChange={setEditorState}
+          handleKeyCommand={handleKeyCommand}
+          keyBindingFn={myKeyBindingFn}
+          placeholder={placeholder}
+        />
+      </ContentEditableStyled>
+    </>
   );
 };

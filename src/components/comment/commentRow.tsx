@@ -77,10 +77,12 @@ const MenuDropdownWrapper = styled(Box)(({ theme }) => ({
 }));
 
 const ReplyInputWrapper = styled(Stack)(({ theme }) => ({
+  flexDirection: "row",
   color: theme.palette.myText.primary,
   width: "calc(100% - 45px)",
   marginBottom: theme.spacing(0.5),
   padding: theme.spacing(0, 0.5),
+  flexWrap: "wrap",
 }));
 
 type Props = {
@@ -112,7 +114,7 @@ const MentionSpan = (props: any) => {
 
 const decorator = new CompositeDecorator([
   {
-    strategy: getEntityStrategy("MUTABLE"),
+    strategy: getEntityStrategy("SEGMENTED"),
     component: MentionSpan,
   },
 ]);

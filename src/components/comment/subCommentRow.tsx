@@ -90,7 +90,7 @@ const MentionSpan = (props: any) => {
 
 const decorator = new CompositeDecorator([
   {
-    strategy: getEntityStrategy("MUTABLE"),
+    strategy: getEntityStrategy("SEGMENTED"),
     component: MentionSpan,
   },
 ]);
