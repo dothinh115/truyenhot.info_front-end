@@ -3,7 +3,6 @@ import { CommentDataInterface } from "@/models/stories";
 import { API } from "@/utils/config";
 import CloseIcon from "@mui/icons-material/Close";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
-import SendIcon from "@mui/icons-material/Send";
 import {
   Box,
   Button,
@@ -14,11 +13,11 @@ import {
   styled,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import { MemorizedStoryCommentRow } from "../comment";
-import dynamic from "next/dynamic";
 
 const CommentEditor = dynamic(() => import("../comment/commentEditor"));
 
@@ -210,19 +209,9 @@ const StoryCommentButton = ({ story_code }: Props) => {
                   clicked={submitClicked}
                   setClicked={setSubmitClicked}
                   placeholder="Viết bình luận..."
+                  sendIcon={true}
                 />
 
-                <IconButton
-                  type="submit"
-                  size="large"
-                  sx={{
-                    height: "40px",
-                    width: "40px",
-                  }}
-                  onClick={() => setSubmitClicked(true)}
-                >
-                  <SendIcon />
-                </IconButton>
                 <Box
                   sx={{
                     fontSize: ".8em",

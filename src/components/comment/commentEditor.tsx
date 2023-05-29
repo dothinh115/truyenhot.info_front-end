@@ -1,6 +1,6 @@
 import { UserSuggesionInterface } from "@/models/users";
 import { API } from "@/utils/config";
-import { Box, alpha, Stack, Chip } from "@mui/material";
+import { Box, alpha, Stack, Chip, IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
   CompositeDecorator,
@@ -13,6 +13,8 @@ import {
   convertToRaw,
   getDefaultKeyBinding,
 } from "draft-js";
+import SendIcon from "@mui/icons-material/Send";
+
 import React, { useEffect, useRef, useState } from "react";
 type Props = {
   cb: (data: string) => void;
@@ -21,11 +23,15 @@ type Props = {
   placeholder?: string;
   defaultValue?: string;
   replyTo?: string;
+  sendIcon?: boolean;
 };
 
-const ContentEditableStyled = styled(Box)(({ theme }) => ({
+const ContentEditableStyled = styled(Stack)(({ theme }) => ({
   position: "relative",
   flexGrow: 1,
+  flexDirection: "row",
+  width: "100%",
+  alignItems: "center",
   "&> .DraftEditor-root": {
     border: `1px solid ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
     backgroundColor: theme.palette.myBackground.paper,
@@ -46,6 +52,7 @@ const ContentEditableStyled = styled(Box)(({ theme }) => ({
     },
     maxHeight: "calc(21px * 5)",
     overflow: "auto",
+    width: "100%",
   },
 }));
 
@@ -98,6 +105,7 @@ const CommentEditor = ({
   placeholder,
   defaultValue,
   replyTo,
+  sendIcon = false,
 }: Props) => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty(decorator)
@@ -380,7 +388,10 @@ const CommentEditor = ({
 
   return (
     <>
-      <UserSuggestionWrapper ref={suggestionRef}>
+      <UserSuggestionWrapper
+        ref={suggestionRef}
+        sx={{ display: userSuggestion.length !== 0 ? "block" : "none" }}
+      >
         {userSuggestion?.map((user: UserSuggesionInterface) => {
           return (
             <Chip
@@ -405,6 +416,18 @@ const CommentEditor = ({
           keyBindingFn={myKeyBindingFn}
           placeholder={placeholder}
         />
+        <IconButton
+          type="submit"
+          size="large"
+          sx={{
+            height: "40px",
+            width: "40px",
+            display: sendIcon ? "flex" : "none",
+          }}
+          onClick={() => sendCmt()}
+        >
+          <SendIcon />
+        </IconButton>
       </ContentEditableStyled>
     </>
   );
