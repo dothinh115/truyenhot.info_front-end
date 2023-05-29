@@ -363,12 +363,7 @@ const CommentEditor = ({
     );
 
     //setState thay đổi mọi thứ vào editorState hiện tại
-    setEditorState(
-      EditorState.createWithContent(
-        newContentState.getCurrentContent(),
-        decorator
-      )
-    );
+    setEditorState(newContentState);
     //clear suggestion sau khi mọi thứ đã xong
     clearSuggestion();
   };
