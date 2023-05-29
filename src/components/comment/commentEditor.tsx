@@ -343,27 +343,27 @@ const CommentEditor = ({
         : user_id.length,
       focusKey: currentRangeSuggestion.current?.key,
       focusOffset: currentRangeSuggestion.current?.start
-        ? currentRangeSuggestion.current?.start + user_id.length + 1
+        ? currentRangeSuggestion.current?.start + user_id.length
         : user_id.length,
       hasFocus: true,
     });
     //Tạo insert text
-    const newBlankSpace = Modifier.replaceText(
+    const newBlankSpace = Modifier.insertText(
       newContentState.getCurrentContent(),
       addBlankSelection,
-      String.fromCharCode(160)
+      ""
     );
     //tiếp tục push vào editorState, lúc này editorState phải là cái mới đã dc replaceText, tức là newEditorState
     newContentState = EditorState.push(
       newContentState,
       newBlankSpace,
-      "change-block-data"
+      "insert-characters"
     );
 
     //setState thay đổi mọi thứ vào editorState hiện tại
     setEditorState(newContentState);
     //clear suggestion sau khi mọi thứ đã xong
-    setUserSuggestion([]);
+    clearSuggestion();
   };
 
   useEffect(() => {
