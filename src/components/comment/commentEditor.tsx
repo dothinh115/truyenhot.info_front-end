@@ -182,8 +182,6 @@ export const CommentEditor = ({
     setEditorState(modifier);
   };
 
-  const backSpaceHandle = () => {};
-
   const handleKeyCommand = (command: string): DraftHandleValue => {
     const contentState = editorState.getCurrentContent();
     const selectionState = editorState.getSelection();
@@ -295,7 +293,7 @@ export const CommentEditor = ({
     const editText = Modifier.replaceText(
       contentState,
       editTextSelection,
-      user_id,
+      user_id + " ",
       undefined,
       entityKey
     );
