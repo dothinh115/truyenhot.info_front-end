@@ -234,7 +234,7 @@ const CommentEditor = ({
     const addBlank = Modifier.insertText(
       newContentState.getCurrentContent(),
       addBlankSelection,
-      " "
+      String.fromCharCode(160)
     );
 
     newContentState = EditorState.push(
@@ -244,7 +244,7 @@ const CommentEditor = ({
     );
 
     //di chuyển con trỏ đến ký tự cuối cùng
-    // newContentState = EditorState.moveFocusToEnd(newContentState);
+    newContentState = EditorState.moveFocusToEnd(newContentState);
 
     setEditorState(newContentState);
   };
@@ -339,7 +339,7 @@ const CommentEditor = ({
     const newBlankSpace = Modifier.insertText(
       newContentState.getCurrentContent(),
       addBlankSelection,
-      " "
+      String.fromCharCode(160)
     );
     //tiếp tục push vào editorState, lúc này editorState phải là cái mới đã dc replaceText, tức là newEditorState
     newContentState = EditorState.push(
@@ -348,7 +348,7 @@ const CommentEditor = ({
       "insert-characters"
     );
     //di chuyển con trỏ đến ký tự cuối cùng
-    // newContentState = EditorState.moveFocusToEnd(newContentState);
+    newContentState = EditorState.moveFocusToEnd(newContentState);
     //setState thay đổi mọi thứ vào editorState hiện tại
     setEditorState(newContentState);
     //clear suggestion sau khi mọi thứ đã xong
