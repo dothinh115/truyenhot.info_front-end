@@ -362,10 +362,13 @@ const CommentEditor = ({
       "insert-characters"
     );
 
-    console.log(convertToRaw(newContentState.getCurrentContent()));
-
     //setState thay đổi mọi thứ vào editorState hiện tại
-    setEditorState(newContentState);
+    setEditorState(
+      EditorState.createWithContent(
+        newContentState.getCurrentContent(),
+        decorator
+      )
+    );
     //clear suggestion sau khi mọi thứ đã xong
     clearSuggestion();
   };
