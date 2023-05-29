@@ -290,7 +290,7 @@ const CommentEditor = ({
         },
       ];
     }
-    if (rangeArr.length === 0) clearSuggestion();
+    if (rangeArr.length === 0) return clearSuggestion();
     //xét xem con trỏ chuột có đang nằm trong range mention hay ko
     for (let range of rangeArr) {
       const $_match = range.start <= anchorOffset && anchorOffset < range.end;
@@ -302,6 +302,8 @@ const CommentEditor = ({
         const user_id = range.value;
         await getUserSuggestion(user_id.replace("@", ""));
         currentRangeSuggestion.current = { ...range, key: keyOfBlockStanding }; //lưu thông tin range hiện tại để dùng sau
+        const entityInstace = block.getEntityAt(range.start);
+        if (entityInstace) clearSuggestion();
       }
     }
   };
@@ -352,7 +354,7 @@ const CommentEditor = ({
     const newBlankSpace = Modifier.insertText(
       newContentState.getCurrentContent(),
       addBlankSelection,
-      " "
+      ""
     );
 
     //tiếp tục push vào editorState, lúc này editorState phải là cái mới đã dc replaceText, tức là newEditorState
