@@ -91,7 +91,7 @@ const decorator = new CompositeDecorator([
   },
 ]);
 
-export const CommentEditor = ({
+const CommentEditor = ({
   cb,
   clicked,
   setClicked,
@@ -359,3 +359,5 @@ export const CommentEditor = ({
     </>
   );
 };
+
+export default CommentEditor;

@@ -30,10 +30,14 @@ import {
   EditorState,
   convertFromRaw,
 } from "draft-js";
-import { CommentEditor, MentionSpanStyled } from "./commentEditor";
+import { MentionSpanStyled } from "./commentEditor";
 import MaleIcon from "@mui/icons-material/Male";
 import FemaleIcon from "@mui/icons-material/Female";
 import { CommentContext } from "./commentRow";
+import dynamic from "next/dynamic";
+
+const CommentEditor = dynamic(() => import("./commentEditor"));
+
 type Props = {
   subCmtData: SubCommentDataInterface;
   mutate: any;

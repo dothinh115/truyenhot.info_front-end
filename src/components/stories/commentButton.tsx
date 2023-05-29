@@ -17,7 +17,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
-import { CommentEditor, MemorizedStoryCommentRow } from "../comment";
+import { MemorizedStoryCommentRow } from "../comment";
+import dynamic from "next/dynamic";
+const CommentEditor = dynamic(() => import("../comment/commentEditor"));
 
 const ModalInner = styled(Stack)(({ theme }) => ({
   position: "fixed",

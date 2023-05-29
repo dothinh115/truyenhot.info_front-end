@@ -37,8 +37,11 @@ import {
 } from "draft-js";
 import React, { createContext, useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
-import { CommentEditor, MentionSpanStyled } from "./commentEditor";
+import { MentionSpanStyled } from "./commentEditor";
 import { MemorizedStorySubCommentRow } from "./subCommentRow";
+import dynamic from "next/dynamic";
+const CommentEditor = dynamic(() => import("./commentEditor"));
+
 const CommentRowWrapper = styled(Stack)(({ theme }) => ({
   marginBottom: theme.spacing(1),
 }));
