@@ -40,6 +40,7 @@ export default function App({
     <CacheProvider value={emotionCache}>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
+        <meta charSet="utf-8" />
       </Head>
       <CssBaseline />
       <SWRConfig
