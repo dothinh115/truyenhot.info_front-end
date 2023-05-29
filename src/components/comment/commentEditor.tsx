@@ -228,10 +228,10 @@ const CommentEditor = ({
       anchorKey: firstBlock.getKey(),
       anchorOffset: replyTo ? replyTo.length : 1,
       focusKey: firstBlock.getKey(),
-      focusOffset: replyTo ? replyTo.length : 1,
+      focusOffset: replyTo ? replyTo.length + 1 : 1,
     });
 
-    const addBlank = Modifier.insertText(
+    const addBlank = Modifier.replaceText(
       newContentState.getCurrentContent(),
       addBlankSelection,
       String.fromCharCode(160)
@@ -240,7 +240,7 @@ const CommentEditor = ({
     newContentState = EditorState.push(
       newContentState,
       addBlank,
-      "insert-characters"
+      "change-block-data"
     );
 
     //di chuyển con trỏ đến ký tự cuối cùng
@@ -332,11 +332,11 @@ const CommentEditor = ({
         : user_id.length,
       focusKey: currentRangeSuggestion.current?.key,
       focusOffset: currentRangeSuggestion.current?.start
-        ? currentRangeSuggestion.current?.start + user_id.length
+        ? currentRangeSuggestion.current?.start + user_id.length + 1
         : user_id.length,
     });
     //Tạo insert text
-    const newBlankSpace = Modifier.insertText(
+    const newBlankSpace = Modifier.replaceText(
       newContentState.getCurrentContent(),
       addBlankSelection,
       String.fromCharCode(160)
@@ -345,10 +345,9 @@ const CommentEditor = ({
     newContentState = EditorState.push(
       newContentState,
       newBlankSpace,
-      "insert-characters"
+      "change-block-data"
     );
-    //di chuyển con trỏ đến ký tự cuối cùng
-    newContentState = EditorState.moveFocusToEnd(newContentState);
+
     //setState thay đổi mọi thứ vào editorState hiện tại
     setEditorState(newContentState);
     //clear suggestion sau khi mọi thứ đã xong
