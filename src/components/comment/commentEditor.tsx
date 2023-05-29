@@ -86,7 +86,7 @@ const MentionSpan = (props: any) => {
 
 const decorator = new CompositeDecorator([
   {
-    strategy: getEntityStrategy("SEGMENTED"),
+    strategy: getEntityStrategy("IMMUTABLE"),
     component: MentionSpan,
   },
 ]);
@@ -213,7 +213,7 @@ const CommentEditor = ({
   const handleReplyTo = () => {
     let contentState = editorState.getCurrentContent();
     const selectionState = editorState.getSelection();
-    contentState.createEntity("MENTION", "SEGMENTED", {
+    contentState.createEntity("MENTION", "IMMUTABLE", {
       url: `/user/${replyTo?.replace("@", "")}`,
     });
     const entityKey = contentState.getLastCreatedEntityKey();
@@ -241,8 +241,8 @@ const CommentEditor = ({
       clearSuggestion();
       return;
     }
-    const keyOfBlockStading = selectionState.getAnchorKey(); //key của block đang đứng
-    const block = contentState.getBlockForKey(keyOfBlockStading); //block đang đứng
+    const keyOfBlockStanding = selectionState.getAnchorKey(); //key của block đang đứng
+    const block = contentState.getBlockForKey(keyOfBlockStanding); //block đang đứng
     const text = block.getText(); //text của block đang đứng
     const anchorOffset = selectionState.getAnchorOffset() - 1; //vị trí ban đầu của con trỏ chuột
     let rangeArr: { start: number; end: number; value: string }[] = []; //lấy range của mention nếu có
@@ -271,7 +271,7 @@ const CommentEditor = ({
         //vượt qua tất cả thì đã có value của mention, tiến hành call api lấy suggestion
         const user_id = range.value;
         await getUserSuggestion(user_id.replace("@", ""));
-        currentRangeSuggestion.current = { ...range, key: keyOfBlockStading }; //lưu thông tin range hiện tại để dùng sau
+        currentRangeSuggestion.current = { ...range, key: keyOfBlockStanding }; //lưu thông tin range hiện tại để dùng sau
       }
     }
   };
@@ -285,7 +285,7 @@ const CommentEditor = ({
       focusOffset: currentRangeSuggestion?.current?.end,
     });
 
-    contentState.createEntity("MENTION", "SEGMENTED", {
+    contentState.createEntity("MENTION", "IMMUTABLE", {
       url: `/user/${user_id}`,
     });
     const entityKey = contentState.getLastCreatedEntityKey();
