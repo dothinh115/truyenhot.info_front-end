@@ -226,9 +226,9 @@ const CommentEditor = ({
 
     const addBlankSelection = new SelectionState({
       anchorKey: firstBlock.getKey(),
-      anchorOffset: replyTo ? replyTo.length + 1 : 1,
+      anchorOffset: replyTo ? replyTo.length : 1,
       focusKey: firstBlock.getKey(),
-      focusOffset: replyTo ? replyTo.length + 1 : 1,
+      focusOffset: replyTo ? replyTo.length : 1,
     });
 
     const addBlank = Modifier.insertText(
@@ -325,28 +325,28 @@ const CommentEditor = ({
     );
     //Tiếp tục thêm 1 khoảng trắng đằng sau @dothinh
     //tạo selection mới
-    // const addBlankSelection = new SelectionState({
-    //   anchorKey: currentRangeSuggestion.current?.key,
-    //   anchorOffset: currentRangeSuggestion.current?.start
-    //     ? currentRangeSuggestion.current?.start + user_id.length + 1
-    //     : user_id.length + 1,
-    //   focusKey: currentRangeSuggestion.current?.key,
-    //   focusOffset: currentRangeSuggestion.current?.start
-    //     ? currentRangeSuggestion.current?.start + user_id.length + 1
-    //     : user_id.length + 1,
-    // });
+    const addBlankSelection = new SelectionState({
+      anchorKey: currentRangeSuggestion.current?.key,
+      anchorOffset: currentRangeSuggestion.current?.start
+        ? currentRangeSuggestion.current?.start + user_id.length
+        : user_id.length,
+      focusKey: currentRangeSuggestion.current?.key,
+      focusOffset: currentRangeSuggestion.current?.start
+        ? currentRangeSuggestion.current?.start + user_id.length
+        : user_id.length,
+    });
     //Tạo insert text
-    // const newBlankSpace = Modifier.insertText(
-    //   newContentState.getCurrentContent(),
-    //   addBlankSelection,
-    //   String.fromCharCode(160)
-    // );
+    const newBlankSpace = Modifier.insertText(
+      newContentState.getCurrentContent(),
+      addBlankSelection,
+      String.fromCharCode(160)
+    );
     //tiếp tục push vào editorState, lúc này editorState phải là cái mới đã dc replaceText, tức là newEditorState
-    // newContentState = EditorState.push(
-    //   newContentState,
-    //   newBlankSpace,
-    //   "insert-characters"
-    // );
+    newContentState = EditorState.push(
+      newContentState,
+      newBlankSpace,
+      "insert-characters"
+    );
     //di chuyển con trỏ đến ký tự cuối cùng
     newContentState = EditorState.moveFocusToEnd(newContentState);
     //setState thay đổi mọi thứ vào editorState hiện tại
