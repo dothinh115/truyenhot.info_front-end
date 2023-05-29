@@ -367,7 +367,7 @@ const CommentEditor = ({
     const removeRangeSelection = new SelectionState({
       anchorKey: currentRangeSuggestion.current?.key,
       anchorOffset: currentRangeSuggestion.current?.start
-        ? currentRangeSuggestion.current?.start + user_id.length + 1
+        ? currentRangeSuggestion.current?.start + user_id.length
         : user_id.length,
       focusKey: currentRangeSuggestion.current?.key,
       focusOffset: currentRangeSuggestion.current?.start
@@ -377,7 +377,7 @@ const CommentEditor = ({
     });
 
     const removeRange = Modifier.removeRange(
-      newContentState,
+      newContentState.getCurrentContent(),
       removeRangeSelection,
       "backward"
     );
