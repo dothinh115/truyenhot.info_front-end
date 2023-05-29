@@ -157,6 +157,7 @@ const CommentEditor = ({
   };
 
   const sendCmt = async () => {
+    if (editorState.getCurrentContent().getPlainText() === "") return;
     const value = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
     cb(value);
     clearContent();
