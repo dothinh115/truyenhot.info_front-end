@@ -338,7 +338,7 @@ const CommentEditor = ({
     );
     //Tiếp tục thêm 1 khoảng trắng đằng sau @dothinh
     //tạo selection mới
-    const addBlankSelection = new SelectionState({
+    const newSelectionAfterAutoComplete = new SelectionState({
       anchorKey: currentRangeSuggestion.current?.key,
       anchorOffset: currentRangeSuggestion.current?.start
         ? currentRangeSuggestion.current?.start + user_id.length
@@ -347,21 +347,11 @@ const CommentEditor = ({
       focusOffset: currentRangeSuggestion.current?.start
         ? currentRangeSuggestion.current?.start + user_id.length
         : user_id.length,
-      hasFocus: true,
     });
 
-    //Tạo insert text
-    const newBlankSpace = Modifier.insertText(
-      newContentState.getCurrentContent(),
-      addBlankSelection,
-      ""
-    );
-
-    //tiếp tục push vào editorState, lúc này editorState phải là cái mới đã dc replaceText, tức là newEditorState
-    newContentState = EditorState.push(
+    newContentState = EditorState.forceSelection(
       newContentState,
-      newBlankSpace,
-      "insert-characters"
+      newSelectionAfterAutoComplete
     );
 
     //setState thay đổi mọi thứ vào editorState hiện tại
