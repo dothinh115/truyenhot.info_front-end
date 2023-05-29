@@ -338,7 +338,7 @@ const CommentEditor = ({
     );
     //Tiếp tục thêm 1 khoảng trắng đằng sau @dothinh
     //tạo selection mới
-    const newSelectionAfterAutoComplete = new SelectionState({
+    const addBlankSelection = new SelectionState({
       anchorKey: currentRangeSuggestion.current?.key,
       anchorOffset: currentRangeSuggestion.current?.start
         ? currentRangeSuggestion.current?.start + user_id.length
@@ -347,13 +347,46 @@ const CommentEditor = ({
       focusOffset: currentRangeSuggestion.current?.start
         ? currentRangeSuggestion.current?.start + user_id.length
         : user_id.length,
+      hasFocus: true,
     });
 
-    newContentState = EditorState.forceSelection(
-      newContentState,
-      newSelectionAfterAutoComplete
+    //Tạo insert text
+    const newBlankSpace = Modifier.insertText(
+      newContentState.getCurrentContent(),
+      addBlankSelection,
+      "  "
     );
 
+    //tiếp tục push vào editorState, lúc này editorState phải là cái mới đã dc replaceText, tức là newEditorState
+    newContentState = EditorState.push(
+      newContentState,
+      newBlankSpace,
+      "insert-characters"
+    );
+
+    const removeRangeSelection = new SelectionState({
+      anchorKey: currentRangeSuggestion.current?.key,
+      anchorOffset: currentRangeSuggestion.current?.start
+        ? currentRangeSuggestion.current?.start + user_id.length + 1
+        : user_id.length,
+      focusKey: currentRangeSuggestion.current?.key,
+      focusOffset: currentRangeSuggestion.current?.start
+        ? currentRangeSuggestion.current?.start + user_id.length + 2
+        : user_id.length,
+      hasFocus: true,
+    });
+
+    const removeRange = Modifier.removeRange(
+      newContentState,
+      removeRangeSelection,
+      "backward"
+    );
+
+    newContentState = EditorState.push(
+      newContentState,
+      removeRange,
+      "backspace-character"
+    );
     //setState thay đổi mọi thứ vào editorState hiện tại
     setEditorState(newContentState);
     //clear suggestion sau khi mọi thứ đã xong
