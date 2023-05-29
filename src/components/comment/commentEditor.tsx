@@ -344,6 +344,7 @@ const CommentEditor = ({
       focusOffset: currentRangeSuggestion.current?.start
         ? currentRangeSuggestion.current?.start + user_id.length + 1
         : user_id.length,
+      hasFocus: true,
     });
     //Tạo insert text
     const newBlankSpace = Modifier.replaceText(
@@ -357,9 +358,6 @@ const CommentEditor = ({
       newBlankSpace,
       "change-block-data"
     );
-
-    //di chuyển con trỏ đến ký tự cuối cùng
-    newContentState = EditorState.moveFocusToEnd(newContentState);
 
     //setState thay đổi mọi thứ vào editorState hiện tại
     setEditorState(newContentState);
