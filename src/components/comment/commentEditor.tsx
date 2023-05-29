@@ -78,7 +78,7 @@ const UserSuggestionWrapper = styled(Stack)(({ theme }) => ({
   flexDirection: "row",
   maxWidth: "100%",
   width: "100%",
-  maxHeight: "calc(37px * 10)",
+  maxHeight: "calc(37px * 5)",
   overflow: "auto",
 }));
 
