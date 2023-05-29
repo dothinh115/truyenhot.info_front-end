@@ -269,22 +269,6 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
                       />
                     )}
                     {comment?.author.user_id}
-                    <Box
-                      sx={{
-                        color: "myText.primary",
-                        fontSize: ".7em",
-                        marginLeft: "4px",
-                      }}
-                    >
-                      (
-                      {`${timeSince(
-                        Math.abs(
-                          new Date().valueOf() -
-                            new Date(comment?.created_at).valueOf()
-                        )
-                      )} trước`}
-                      )
-                    </Box>
                   </Box>
                 </Box>
                 <Link

@@ -386,7 +386,7 @@ const CommentEditor = ({
           return (
             <Chip
               sx={{
-                marginBottom: "4px",
+                my: "2px",
                 marginRight: "4px",
                 fontSize: ".85em",
               }}

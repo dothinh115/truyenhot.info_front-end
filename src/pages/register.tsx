@@ -157,11 +157,15 @@ const Register = (props: Props) => {
               name={"user_id"}
               control={control}
               rules={{
-                required: "Không được để trống",
+                required: "Không được để trống!",
+                maxLength: {
+                  value: 15,
+                  message: "Tối đa 15 ký tự.",
+                },
                 pattern: {
                   value: user_idPatternExp,
                   message:
-                    "Bạn chỉ cần điền ký tự và số, không cần @, và không có khoảng trắng",
+                    "Bạn chỉ cần điền ký tự và số, không cần @, và không có khoảng trắng.",
                 },
               }}
               render={({ field: { onChange, value } }) => (
@@ -169,6 +173,7 @@ const Register = (props: Props) => {
                   fullWidth
                   label={"Tên"}
                   onChange={onChange}
+                  inputProps={{ maxLength: 15 }}
                   value={value}
                   error={!!errors?.user_id}
                   helperText={
