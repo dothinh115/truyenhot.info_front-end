@@ -159,7 +159,7 @@ export const CommentEditor = ({
   const sendCmt = async () => {
     const value = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
     cb(value);
-    clearSuggestion();
+    clearContent();
   };
 
   const clearContent = () => {
@@ -180,6 +180,7 @@ export const CommentEditor = ({
     );
     let modifier = EditorState.push(editorState, removeRange, "remove-range");
     setEditorState(modifier);
+    clearSuggestion();
   };
 
   const handleKeyCommand = (command: string): DraftHandleValue => {
@@ -200,7 +201,6 @@ export const CommentEditor = ({
         const plainText = editorState.getCurrentContent().getPlainText();
         if (plainText === "") return "not-handled";
         sendCmt();
-        clearContent();
         return "handled";
       }
 
