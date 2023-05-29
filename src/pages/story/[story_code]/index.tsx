@@ -137,7 +137,14 @@ export const getStaticProps: GetStaticProps<Props> = async (
     `${apiURL}/api/stories/getDetail/${story_code}?limit=1100`
   );
   const story: { result: StoryInterface } = await storyRespone.json();
-
+  if (!story.result) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
   const sameAuthorStoriesResponse = await fetch(
     `${apiURL}/api/search/storyAuthorQuickSearch?keywords=${story?.result.story_author}`
   );
@@ -148,14 +155,6 @@ export const getStaticProps: GetStaticProps<Props> = async (
   const categoriesResponse = await fetch(`${apiURL}/api/categories/getAll`);
   const categories = await categoriesResponse.json();
 
-  if (!story.result) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
   return {
     props: {
       story: story.result,

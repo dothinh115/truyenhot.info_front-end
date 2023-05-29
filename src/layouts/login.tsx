@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 export const LoginLayout = ({ children }: LoginLayoutInterface) => {
-  const { profile, isValidating, firstLoading } = useAuth();
+  const { profile } = useAuth();
 
   const router = useRouter();
 
@@ -16,6 +16,7 @@ export const LoginLayout = ({ children }: LoginLayoutInterface) => {
     if (profile)
       router.push(backTo && typeof backTo === "string" ? backTo : "/");
   }, [profile]);
+
   if (profile) return null;
   else
     return (

@@ -219,6 +219,13 @@ export const getStaticProps: GetStaticProps<Props> = async (
       `${apiURL}/api/categories/getCategoryDetail/${cate_code}`
     );
     const category = await cateDetailResponse.json();
+    if (!category.result)
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false,
+        },
+      };
     const categoriesResponse = await fetch(`${apiURL}/api/categories/getAll`);
     const categories = await categoriesResponse.json();
     const hotStoriesInCategoryResponse = await fetch(

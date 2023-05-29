@@ -32,7 +32,7 @@ const ResetPassword = (props: Props) => {
   const {
     handleSubmit,
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<{ email: string }>({
     mode: "onChange",
     defaultValues: {
