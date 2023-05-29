@@ -347,18 +347,22 @@ const CommentEditor = ({
         : user_id.length,
       hasFocus: true,
     });
+
     //Tạo insert text
     const newBlankSpace = Modifier.insertText(
       newContentState.getCurrentContent(),
       addBlankSelection,
-      ""
+      " "
     );
+
     //tiếp tục push vào editorState, lúc này editorState phải là cái mới đã dc replaceText, tức là newEditorState
     newContentState = EditorState.push(
       newContentState,
       newBlankSpace,
       "insert-characters"
     );
+
+    console.log(convertToRaw(newContentState.getCurrentContent()));
 
     //setState thay đổi mọi thứ vào editorState hiện tại
     setEditorState(newContentState);
