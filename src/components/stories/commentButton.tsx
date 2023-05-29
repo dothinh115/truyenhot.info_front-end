@@ -19,6 +19,7 @@ import { useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import { MemorizedStoryCommentRow } from "../comment";
 import dynamic from "next/dynamic";
+
 const CommentEditor = dynamic(() => import("../comment/commentEditor"));
 
 const ModalInner = styled(Stack)(({ theme }) => ({

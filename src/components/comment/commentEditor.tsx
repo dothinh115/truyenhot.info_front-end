@@ -135,16 +135,7 @@ const CommentEditor = ({
         const response: any = await API.get(
           `/users/getMentionSuggestion/${user_id}`
         );
-        if (userSuggestion.length !== response.length)
-          setUserSuggestion(response.result);
-        let result = true;
-        for (let item of response.result) {
-          const find = userSuggestion.find(
-            (user: UserSuggesionInterface) => user.user_id === item.user_id
-          );
-          if (!find) result = false;
-        }
-        if (!result) setUserSuggestion(response.result);
+        setUserSuggestion(response.result);
       } catch (error) {
         console.log(error);
       }
@@ -212,22 +203,50 @@ const CommentEditor = ({
 
   const handleReplyTo = () => {
     let contentState = editorState.getCurrentContent();
+    const firstBlock = contentState.getFirstBlock();
     const selectionState = editorState.getSelection();
     contentState.createEntity("MENTION", "IMMUTABLE", {
       url: `/user/${replyTo?.replace("@", "")}`,
     });
     const entityKey = contentState.getLastCreatedEntityKey();
 
-    let newContentState = Modifier.insertText(
+    const insertUserID = Modifier.insertText(
       contentState,
       selectionState,
-      replyTo ? replyTo + " " : "",
+      replyTo ? replyTo : "",
       undefined,
       entityKey
     );
-    setEditorState(
-      EditorState.push(editorState, newContentState, "insert-characters")
+
+    let newContentState = EditorState.push(
+      editorState,
+      insertUserID,
+      "insert-characters"
     );
+
+    const addBlankSelection = new SelectionState({
+      anchorKey: firstBlock.getKey(),
+      anchorOffset: replyTo ? replyTo.length + 1 : 1,
+      focusKey: firstBlock.getKey(),
+      focusOffset: replyTo ? replyTo.length + 1 : 1,
+    });
+
+    const addBlank = Modifier.insertText(
+      newContentState.getCurrentContent(),
+      addBlankSelection,
+      " "
+    );
+
+    newContentState = EditorState.push(
+      newContentState,
+      addBlank,
+      "insert-characters"
+    );
+
+    //di chuyển con trỏ đến ký tự cuối cùng
+    newContentState = EditorState.moveFocusToEnd(newContentState);
+
+    setEditorState(newContentState);
   };
 
   const handleMention = async () => {
@@ -285,22 +304,54 @@ const CommentEditor = ({
       focusOffset: currentRangeSuggestion?.current?.end,
     });
 
+    //Tạo entity có data, chứa url đến trang profile của user
     contentState.createEntity("MENTION", "IMMUTABLE", {
       url: `/user/${user_id}`,
     });
     const entityKey = contentState.getLastCreatedEntityKey();
-
-    const editText = Modifier.replaceText(
+    //Tạo text để replace, @do -> @dothinh
+    let editText = Modifier.replaceText(
       contentState,
       editTextSelection,
-      user_id + " ",
+      user_id,
       undefined,
       entityKey
     );
-
-    setEditorState(
-      EditorState.push(editorState, editText, "change-block-data")
+    //push vào editorState
+    let newContentState: any = EditorState.push(
+      editorState,
+      editText,
+      "change-block-data"
     );
+    //Tiếp tục thêm 1 khoảng trắng đằng sau @dothinh
+    //tạo selection mới
+    const addBlankSelection = new SelectionState({
+      anchorKey: currentRangeSuggestion.current?.key,
+      anchorOffset: currentRangeSuggestion.current?.start
+        ? currentRangeSuggestion.current?.start + user_id.length + 1
+        : user_id.length + 1,
+      focusKey: currentRangeSuggestion.current?.key,
+      focusOffset: currentRangeSuggestion.current?.start
+        ? currentRangeSuggestion.current?.start + user_id.length + 1
+        : user_id.length + 1,
+    });
+    //Tạo insert text
+    const newBlankSpace = Modifier.insertText(
+      newContentState.getCurrentContent(),
+      addBlankSelection,
+      " "
+    );
+    //tiếp tục push vào editorState, lúc này editorState phải là cái mới đã dc replaceText, tức là newEditorState
+    newContentState = EditorState.push(
+      newContentState,
+      newBlankSpace,
+      "insert-characters"
+    );
+    //di chuyển con trỏ đến ký tự cuối cùng
+    newContentState = EditorState.moveFocusToEnd(newContentState);
+    //setState thay đổi mọi thứ vào editorState hiện tại
+    setEditorState(newContentState);
+    //clear suggestion sau khi mọi thứ đã xong
     setUserSuggestion([]);
   };
 
