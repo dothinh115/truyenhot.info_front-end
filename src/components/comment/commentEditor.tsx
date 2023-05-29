@@ -358,6 +358,9 @@ const CommentEditor = ({
       "change-block-data"
     );
 
+    //di chuyển con trỏ đến ký tự cuối cùng
+    newContentState = EditorState.moveFocusToEnd(newContentState);
+
     //setState thay đổi mọi thứ vào editorState hiện tại
     setEditorState(newContentState);
     //clear suggestion sau khi mọi thứ đã xong
@@ -426,7 +429,7 @@ const CommentEditor = ({
             width: "40px",
             display: sendIcon ? "flex" : "none",
           }}
-          onClick={() => sendCmt()}
+          onClick={() => setClicked(true)}
         >
           <SendIcon />
         </IconButton>
