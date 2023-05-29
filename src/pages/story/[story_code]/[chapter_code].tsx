@@ -143,7 +143,11 @@ const ChapterDetail = ({ chapterData }: Props) => {
   ];
 
   return (
-    <>
+    <Box
+      sx={{
+        backgroundColor: "myBackground.reading",
+      }}
+    >
       <Seo
         data={{
           title: `Truyện ${chapterData?.story_title} - ${
@@ -208,7 +212,7 @@ const ChapterDetail = ({ chapterData }: Props) => {
           </Container>
         </Stack>
       </ChapterSection>
-    </>
+    </Box>
   );
 };
 
