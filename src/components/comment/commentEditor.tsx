@@ -203,6 +203,7 @@ const CommentEditor = ({
 
   const handleReplyTo = () => {
     let contentState = editorState.getCurrentContent();
+    const firstBlock = contentState.getFirstBlock();
     const selectionState = editorState.getSelection();
     contentState.createEntity("MENTION", "IMMUTABLE", {
       url: `/user/${replyTo?.replace("@", "")}`,
@@ -212,7 +213,7 @@ const CommentEditor = ({
     const insertUserID = Modifier.insertText(
       contentState,
       selectionState,
-      replyTo ? replyTo + " " : "",
+      replyTo ? replyTo : "",
       undefined,
       entityKey
     );
@@ -223,8 +224,27 @@ const CommentEditor = ({
       "insert-characters"
     );
 
+    const addBlankSelection = new SelectionState({
+      anchorKey: firstBlock.getKey(),
+      anchorOffset: replyTo ? replyTo.length + 1 : 1,
+      focusKey: firstBlock.getKey(),
+      focusOffset: replyTo ? replyTo.length + 1 : 1,
+    });
+
+    const addBlank = Modifier.insertText(
+      newContentState.getCurrentContent(),
+      addBlankSelection,
+      " "
+    );
+
+    newContentState = EditorState.push(
+      newContentState,
+      addBlank,
+      "insert-characters"
+    );
+
     //di chuyển con trỏ đến ký tự cuối cùng
-    newContentState = EditorState.moveFocusToEnd(newContentState);
+    // newContentState = EditorState.moveFocusToEnd(newContentState);
 
     setEditorState(newContentState);
   };
@@ -293,7 +313,7 @@ const CommentEditor = ({
     let editText = Modifier.replaceText(
       contentState,
       editTextSelection,
-      user_id + " ",
+      user_id,
       undefined,
       entityKey
     );
@@ -303,8 +323,32 @@ const CommentEditor = ({
       editText,
       "change-block-data"
     );
+    //Tiếp tục thêm 1 khoảng trắng đằng sau @dothinh
+    //tạo selection mới
+    const addBlankSelection = new SelectionState({
+      anchorKey: currentRangeSuggestion.current?.key,
+      anchorOffset: currentRangeSuggestion.current?.start
+        ? currentRangeSuggestion.current?.start + user_id.length + 1
+        : user_id.length + 1,
+      focusKey: currentRangeSuggestion.current?.key,
+      focusOffset: currentRangeSuggestion.current?.start
+        ? currentRangeSuggestion.current?.start + user_id.length + 1
+        : user_id.length + 1,
+    });
+    //Tạo insert text
+    const newBlankSpace = Modifier.insertText(
+      newContentState.getCurrentContent(),
+      addBlankSelection,
+      " "
+    );
+    //tiếp tục push vào editorState, lúc này editorState phải là cái mới đã dc replaceText, tức là newEditorState
+    newContentState = EditorState.push(
+      newContentState,
+      newBlankSpace,
+      "insert-characters"
+    );
     //di chuyển con trỏ đến ký tự cuối cùng
-    newContentState = EditorState.moveFocusToEnd(newContentState);
+    // newContentState = EditorState.moveFocusToEnd(newContentState);
     //setState thay đổi mọi thứ vào editorState hiện tại
     setEditorState(newContentState);
     //clear suggestion sau khi mọi thứ đã xong
