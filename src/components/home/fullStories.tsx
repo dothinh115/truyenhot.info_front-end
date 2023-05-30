@@ -1,24 +1,20 @@
 import { CategoryInterface } from "@/models/categories";
 import { FullStoriesInterface } from "@/models/home";
 import CachedIcon from "@mui/icons-material/Cached";
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Select from "@mui/material/Select";
 import CircularProgress from "@mui/material/CircularProgress";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { styled } from "@mui/material/styles";
+import { styled, alpha } from "@mui/material/styles";
 import Carousel from "better-react-carousel";
 import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
 import { FullStoriesLoading } from "../loading/fullStoriesLoading";
-import { alpha } from "@mui/material";
 import Image from "next/image";
 const ITEM_HEIGHT = 36;
 const ITEM_PADDING_TOP = 8;

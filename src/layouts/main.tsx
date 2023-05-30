@@ -1,7 +1,8 @@
 import { MainLayoutInterface } from "@/models";
 import { getDesignTokens } from "@/utils/theme";
 import { ThemeProvider } from "@emotion/react";
-import { Box, Stack } from "@mui/material";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
 import { createTheme } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import { createContext, useEffect, useState } from "react";

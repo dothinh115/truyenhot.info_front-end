@@ -1,6 +1,10 @@
 import { ReadingStoriesInterface } from "@/models/stories";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Box, List, ListItem, ListItemIcon, Stack } from "@mui/material";
+import Box from "@mui/material/Box";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Stack from "@mui/material/Stack";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";

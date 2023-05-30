@@ -2,17 +2,17 @@ import { useSnackbar } from "@/hooks/snackbar";
 import { AdminLayout, AdminLayoutContext } from "@/layouts";
 import { API } from "@/utils/config";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import {
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField,
-} from "@mui/material";
-import { Box, Container, Stack } from "@mui/system";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import Stack from "@mui/material/Stack";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import TextField from "@mui/material/TextField";
+import Container from "@mui/system/Container";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
 import React, { useContext, useEffect } from "react";

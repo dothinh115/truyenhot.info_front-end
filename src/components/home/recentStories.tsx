@@ -4,19 +4,16 @@ import { RecentStoriesInterface } from "@/models/home";
 import { timeSince } from "@/utils/function";
 import CachedIcon from "@mui/icons-material/Cached";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import {
-  Box,
-  Button,
-  FormControl,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  Stack,
-  alpha,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Select from "@mui/material/Select";
+import Stack from "@mui/material/Stack";
 import CircularProgress from "@mui/material/CircularProgress";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { styled } from "@mui/material/styles";
+import { styled, alpha } from "@mui/material/styles";
 import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
@@ -197,7 +194,7 @@ const IndexRecentStories = ({ categories }: Props) => {
     mutate: recenUpdatetStoriesListMutate,
     isValidating: recentUpdateStoriesValidating,
   } = useSWR(
-    `/stories/getRecentUpdate?limit=25${
+    `/stories/getRecentUpdate?limit=30${
       cateValue ? "&category=" + cateValue.value : ""
     }`,
     {

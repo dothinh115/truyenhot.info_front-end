@@ -1,17 +1,15 @@
 import { useSnackbar } from "@/hooks/snackbar";
-import { AdminLayout, AdminLayoutContext } from "@/layouts";
+import { AdminLayout } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
 import { NewStoryInterface } from "@/models/stories";
 import { NProgressDone, NProgressStart } from "@/pages/_app";
 import { API, modules } from "@/utils/config";
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Container,
-  Stack,
-  TextField,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Autocomplete from "@mui/material/Autocomplete";
+import Container from "@mui/material/Container";
+import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
 import dynamic from "next/dynamic";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";

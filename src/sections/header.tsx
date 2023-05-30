@@ -1,5 +1,5 @@
 import { Header } from "@/components/header";
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 
 type Props = {};
 

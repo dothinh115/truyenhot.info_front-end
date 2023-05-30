@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Button } from "@mui/material";
+import Button from "@mui/material/Button";
 import { useAuth } from "@/hooks/auth";
 import { API } from "@/utils/config";
 import { useRouter } from "next/router";

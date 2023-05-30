@@ -1,15 +1,13 @@
 import { ChapterDataInterface, ChapterListInterface } from "@/models/chapters";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import {
-  FormControl,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  Stack,
-} from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import FormControl from "@mui/material/FormControl";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Select from "@mui/material/Select";
+import Stack from "@mui/material/Stack";
+
 import { SelectChangeEvent } from "@mui/material/Select";
 import Link from "next/link";
 import { useRouter } from "next/router";

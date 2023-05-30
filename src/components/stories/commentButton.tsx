@@ -3,15 +3,14 @@ import { CommentDataInterface } from "@/models/stories";
 import { API } from "@/utils/config";
 import CloseIcon from "@mui/icons-material/Close";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
-import {
-  Box,
-  Button,
-  IconButton,
-  Link,
-  Modal,
-  Stack,
-  styled,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
+import Modal from "@mui/material/Modal";
+import Stack from "@mui/material/Stack";
+import { styled } from "@mui/material/styles";
+
 import CircularProgress from "@mui/material/CircularProgress";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";

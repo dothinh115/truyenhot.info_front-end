@@ -1,9 +1,5 @@
-import {
-  AdminNoChapterStories,
-  AdminNotCompletedStories,
-} from "@/components/admin/indexStats";
 import { AdminLayout } from "@/layouts";
-import { Box, Container, Stack } from "@mui/material";
+import Stack from "@mui/material/Stack";
 type Props = {};
 
 const AdminIndex = (props: Props) => {

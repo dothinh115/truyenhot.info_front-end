@@ -1,7 +1,7 @@
 import { AdminLayoutContext } from "@/layouts";
 import CloseIcon from "@mui/icons-material/Close";
 import HomeIcon from "@mui/icons-material/Home";
-import { ListItemIcon } from "@mui/material";
+import ListItemIcon from "@mui/material/ListItemIcon";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton/";

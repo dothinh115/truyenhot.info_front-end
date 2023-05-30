@@ -4,18 +4,15 @@ import { CategoryInterface } from "@/models/categories";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
-import {
-  Box,
-  Button,
-  Chip,
-  IconButton,
-  Stack,
-  alpha,
-  Modal,
-  Slide,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Chip from "@mui/material/Chip";
+import Slide from "@mui/material/Slide";
+import Modal from "@mui/material/Modal";
+import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
-import { styled } from "@mui/material/styles";
+import { styled, alpha } from "@mui/material/styles";
 import Link from "next/link";
 import { useContext, useState } from "react";
 import useSWR from "swr";

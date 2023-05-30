@@ -1,12 +1,13 @@
 import { Seo } from "@/components";
 import { MainBreadcrumbs } from "@/components/breadcrumbs";
-
 import { MainLayoutContext } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
 import { apiURL } from "@/utils/config";
 import { thumbnailUrl } from "@/utils/variables";
 import HomeIcon from "@mui/icons-material/Home";
-import { Box, Container, Stack } from "@mui/material";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
 import { GetStaticProps } from "next";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -88,7 +89,7 @@ const Index = ({ categories }: Props) => {
             >
               <ReadingStoriesHistory />
               <CategoriesSidebar categories={categories} />
-              {/* <BaseStats /> */}
+              <BaseStats />
             </Box>
           </Stack>
           <HomeFullStories categories={categories} />

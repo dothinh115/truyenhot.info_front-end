@@ -1,7 +1,10 @@
 import { UserSuggesionInterface } from "@/models/users";
 import { API } from "@/utils/config";
-import { Box, alpha, Stack, IconButton, Chip } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import IconButton from "@mui/material/IconButton";
+import Chip from "@mui/material/Chip";
+import { styled, alpha } from "@mui/material/styles";
 import {
   CompositeDecorator,
   DraftHandleValue,

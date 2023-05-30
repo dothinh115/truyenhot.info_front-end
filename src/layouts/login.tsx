@@ -1,7 +1,7 @@
 import { useAuth } from "@/hooks/auth";
 import { LoginLayoutInterface } from "@/models";
-import { Stack } from "@mui/material";
-import { Container } from "@mui/system";
+import Stack from "@mui/material/Stack";
+import Container from "@mui/system/Container";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 

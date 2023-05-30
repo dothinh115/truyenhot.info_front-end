@@ -1,5 +1,8 @@
 import { useSnackbar } from "@/hooks/snackbar";
-import { Stack, Box, Button, TextField } from "@mui/material";
+import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 import React, { useState, useRef, useEffect } from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 type Props = {

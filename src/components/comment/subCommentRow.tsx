@@ -1,7 +1,6 @@
 import { useAuth } from "@/hooks/auth";
 import { SubCommentDataInterface } from "@/models/stories";
 import { API, PermissionVariables } from "@/utils/config";
-import { strip_tags } from "@/utils/function";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -11,19 +10,16 @@ import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ReplyIcon from "@mui/icons-material/Reply";
-import {
-  Box,
-  Divider,
-  IconButton,
-  Link,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Stack,
-  alpha,
-  styled,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
+import ListItemButton from "@mui/material/ListItemButton";
+import List from "@mui/material/List";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Stack from "@mui/material/Stack";
+import { styled, alpha } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import {
   CompositeDecorator,
@@ -139,7 +135,7 @@ export const StorySubCommentRow = ({
   };
 
   const submitHandle = async (data: string) => {
-    const comment_content = strip_tags(data, "b", "i", "u", "br");
+    const comment_content = data;
     if (comment_content === "") return;
     setLoading(true);
     try {

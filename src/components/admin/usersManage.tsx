@@ -1,4 +1,4 @@
-import { ListItemIcon } from "@mui/material";
+import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemButton from "@mui/material/ListItemButton/";
 import ListItemText from "@mui/material/ListItemText/";
 import GroupIcon from "@mui/icons-material/Group";

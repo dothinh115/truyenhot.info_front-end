@@ -6,15 +6,13 @@ import { timeSince } from "@/utils/function";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CachedIcon from "@mui/icons-material/Cached";
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  Box,
-  Button,
-  Chip,
-  Container,
-  IconButton,
-  Modal,
-  Stack,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import Container from "@mui/material/Container";
+import IconButton from "@mui/material/IconButton";
+import Modal from "@mui/material/Modal";
+import Stack from "@mui/material/Stack";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import useSWR from "swr";

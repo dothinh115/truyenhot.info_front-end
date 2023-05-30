@@ -1,5 +1,7 @@
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { Breadcrumbs, Container, Stack } from "@mui/material";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
 
 type Props = {
   links: any[];

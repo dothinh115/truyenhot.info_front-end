@@ -3,20 +3,17 @@ import { AdminLayout } from "@/layouts";
 import { StoryInterface } from "@/models/stories";
 import { timeSince } from "@/utils/function";
 import SettingsIcon from "@mui/icons-material/Settings";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Container,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
-import Link from "next/link";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import Stack from "@mui/material/Stack";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Container from "@mui/material/Container";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 

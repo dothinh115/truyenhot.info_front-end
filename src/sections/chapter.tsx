@@ -1,7 +1,5 @@
 import { SectionInterface } from "@/models";
-import { Box } from "@mui/material";
-import React from "react";
-
+import Box from "@mui/material/Box";
 export const ChapterSection = ({ children }: SectionInterface) => {
   return (
     <Box component={"section"} mt={5}>

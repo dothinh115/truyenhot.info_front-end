@@ -1,7 +1,8 @@
 import { StoriesSearchResultInterface } from "@/models/search";
 import { API } from "@/utils/config";
 import ClearIcon from "@mui/icons-material/Clear";
-import { IconButton, Stack } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
 import InputBase from "@mui/material/InputBase";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";

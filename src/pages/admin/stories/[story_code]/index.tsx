@@ -1,6 +1,6 @@
 import { DragAndDropImg } from "@/components/admin";
 import { useSnackbar } from "@/hooks/snackbar";
-import { AdminLayout } from "@/layouts";
+import { AdminLayout } from "../../../../layouts/admin";
 import { CategoryInterface } from "@/models/categories";
 import { ChapterDataInterface } from "@/models/chapters";
 import { UpdateStoryInterface } from "@/models/stories";
@@ -9,20 +9,18 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Chip,
-  Container,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Stack,
-  TextField,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Autocomplete from "@mui/material/Autocomplete";
+import Chip from "@mui/material/Chip";
+import Container from "@mui/material/Container";
+import List from "@mui/material/List";
+import Stack from "@mui/material/Stack";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";

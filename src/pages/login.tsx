@@ -4,15 +4,13 @@ import { LoginLayout } from "@/layouts";
 import { LoginPayloadInterface } from "@/models/auth";
 import { emailPattern, thumbnailUrl } from "@/utils/variables";
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  Box,
-  Button,
-  Divider,
-  IconButton,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
 import CircularProgress from "@mui/material/CircularProgress";
 import Link from "next/link";
 import { useRouter } from "next/router";

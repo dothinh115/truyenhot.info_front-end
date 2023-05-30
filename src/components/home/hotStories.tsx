@@ -1,19 +1,16 @@
 import { CategoryInterface } from "@/models/categories";
 import { HotStoriesInterface } from "@/models/home";
 import CachedIcon from "@mui/icons-material/Cached";
-import {
-  Box,
-  Button,
-  FormControl,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  Stack,
-  alpha,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Select from "@mui/material/Select";
+import Stack from "@mui/material/Stack";
 import CircularProgress from "@mui/material/CircularProgress";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { styled } from "@mui/material/styles";
+import { styled, alpha } from "@mui/material/styles";
 import Carousel from "better-react-carousel";
 import Image from "next/image";
 import Link from "next/link";

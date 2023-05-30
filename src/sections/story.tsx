@@ -1,5 +1,5 @@
 import { SectionInterface } from "@/models";
-import { Box } from "@mui/system";
+import Box from "@mui/material/Box";
 
 export const StorySection = ({ children }: SectionInterface) => {
   return (

@@ -1,5 +1,9 @@
 import React from "react";
-import { Box, Stack, Container, Typography, Chip } from "@mui/material";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
 import InfoIcon from "@mui/icons-material/Info";
 import ClassIcon from "@mui/icons-material/Class";
 import useSWR from "swr";

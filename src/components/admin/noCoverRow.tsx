@@ -1,7 +1,10 @@
 import { useSnackbar } from "@/hooks/snackbar";
 import { StoryInterface } from "@/models/stories";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { Box, IconButton, Stack, Typography } from "@mui/material";
+import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";

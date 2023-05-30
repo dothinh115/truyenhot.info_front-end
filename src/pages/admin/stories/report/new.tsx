@@ -1,17 +1,15 @@
 import { AdminLayout } from "@/layouts";
 import { ReportOptionInterface } from "@/models/stories";
-import {
-  Box,
-  Stack,
-  Container,
-  TextField,
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import TextField from "@mui/material/TextField";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import Stack from "@mui/material/Stack";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableRow from "@mui/material/TableRow";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";

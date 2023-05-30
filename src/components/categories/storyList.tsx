@@ -1,9 +1,11 @@
 import { StoriesInCategoryInterface } from "@/models/categories";
 import CreateIcon from "@mui/icons-material/Create";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import { Box, Stack, Typography, alpha } from "@mui/material";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import Link from "next/link";
-import { styled } from "@mui/material/styles";
+import { styled, alpha } from "@mui/material/styles";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 type Props = {
   storiesData: {

@@ -4,14 +4,12 @@ import { API } from "@/utils/config";
 import { emailPattern, thumbnailUrl } from "@/utils/variables";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  Box,
-  Button,
-  Divider,
-  IconButton,
-  Stack,
-  TextField,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";

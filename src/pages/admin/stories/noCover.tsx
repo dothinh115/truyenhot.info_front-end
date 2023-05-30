@@ -1,27 +1,14 @@
-import { AdminNoCoverStoriesRow, AdminSearchBar } from "@/components/admin";
+import { AdminNoCoverStoriesRow } from "@/components/admin";
 import { AdminLayout } from "@/layouts";
 import { StoryInterface } from "@/models/stories";
-import { timeSince } from "@/utils/function";
-import SettingsIcon from "@mui/icons-material/Settings";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Container,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
-import dynamic from "next/dynamic";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
 import { useRouter } from "next/router";
 import useSWR from "swr";
-const RowStory = dynamic(
-  () => import("../../../components/categories/storyList")
-);
+
 type Props = {};
 
 const AdminNoCoverStories = (props: Props) => {

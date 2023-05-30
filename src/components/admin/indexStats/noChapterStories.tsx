@@ -1,7 +1,8 @@
-import { StoryInterface } from "@/models/stories";
+import { StoryInterface } from "@/models/stories/";
 import CachedIcon from "@mui/icons-material/Cached";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { Box, Button } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";

@@ -1,5 +1,5 @@
-import { Box, alpha } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import { styled, alpha } from "@mui/material/styles";
 type Props = {};
 
 const LoadingWrapper = styled(Box)(({ theme }) => ({

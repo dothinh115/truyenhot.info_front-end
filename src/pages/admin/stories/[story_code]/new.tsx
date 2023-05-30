@@ -1,7 +1,11 @@
 import { useSnackbar } from "@/hooks/snackbar";
 import { API, localAPI, modules } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Box, Button, Container, Stack, TextField } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
 import CircularProgress from "@mui/material/CircularProgress";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
