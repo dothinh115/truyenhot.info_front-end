@@ -104,9 +104,17 @@ const StoryCommentContent = ({ comment_content }: Props) => {
     );
     const truncatedLastBlock = newContentState.getLastBlock(); //lấy block cuối
     //tạo range cần replace text ở block cuối
+    selectionStart = maxLength - selectionStart;
+
+    let entityCheck = truncatedLastBlock.getEntityAt(selectionStart);
+    while (entityCheck !== null) {
+      selectionStart += 2;
+      entityCheck = truncatedLastBlock.getEntityAt(selectionStart);
+    }
+
     const replaceTextSelection = new SelectionState({
       anchorKey: truncatedLastBlock.getKey(),
-      anchorOffset: maxLength - selectionStart, //lấy maxLength trừ đi ký tự của các block trước sẽ lấy dc start range của block cuối
+      anchorOffset: selectionStart, //lấy maxLength trừ đi ký tự của các block trước sẽ lấy dc start range của block cuối
       focusKey: truncatedLastBlock.getKey(),
       focusOffset: truncatedLastBlock.getLength(),
     });

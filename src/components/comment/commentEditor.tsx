@@ -29,13 +29,16 @@ type Props = {
   sendIcon?: boolean;
 };
 
-const ContentEditableStyled = styled(Stack)(({ theme }) => ({
+const Wrapper = styled(Stack)(() => ({
   position: "relative",
   flexGrow: 1,
   flexDirection: "row",
   width: "100%",
   alignItems: "center",
+}));
 
+const ContentEditableStyled = styled(Stack)(({ theme }) => ({
+  width: "100%",
   "&> .DraftEditor-root": {
     border: `1px solid ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
     backgroundColor: theme.palette.myBackground.paper,
@@ -416,15 +419,17 @@ const CommentEditor = ({
           );
         })}
       </UserSuggestionWrapper>
-      <ContentEditableStyled onClick={() => editorRef.current?.focus()}>
-        <Editor
-          ref={editorRef}
-          editorState={editorState}
-          onChange={setEditorState}
-          handleKeyCommand={handleKeyCommand}
-          keyBindingFn={myKeyBindingFn}
-          placeholder={placeholder}
-        />
+      <Wrapper>
+        <ContentEditableStyled onClick={() => editorRef.current?.focus()}>
+          <Editor
+            ref={editorRef}
+            editorState={editorState}
+            onChange={setEditorState}
+            handleKeyCommand={handleKeyCommand}
+            keyBindingFn={myKeyBindingFn}
+            placeholder={placeholder}
+          />
+        </ContentEditableStyled>
         <IconButton
           type="submit"
           size="large"
@@ -437,7 +442,7 @@ const CommentEditor = ({
         >
           <SendIcon />
         </IconButton>
-      </ContentEditableStyled>
+      </Wrapper>
     </>
   );
 };
