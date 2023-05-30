@@ -14,15 +14,13 @@ import PersonIcon from "@mui/icons-material/Person";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import StarIcon from "@mui/icons-material/Star";
 import UpdateIcon from "@mui/icons-material/Update";
-import {
-  Box,
-  Chip,
-  IconButton,
-  List,
-  ListItemIcon,
-  Stack,
-  alpha,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import IconButton from "@mui/material/IconButton";
+import Chip from "@mui/material/Chip";
+import List from "@mui/material/List";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import { styled, alpha } from "@mui/material/styles";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
@@ -30,7 +28,6 @@ import Pagination, {
   PaginationRenderItemParams,
 } from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
-import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";

@@ -12,6 +12,7 @@ const UserActive = (props: Props) => {
   const router = useRouter();
   const { token } = router.query;
   const [message, setMessage] = useState<string>("");
+
   const activeRequest = async () => {
     try {
       const response: any = await API.get(`/userActive/${token}`);
