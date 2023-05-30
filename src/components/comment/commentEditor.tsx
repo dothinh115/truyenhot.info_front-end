@@ -78,8 +78,12 @@ const UserSuggestionWrapper = styled(Stack)(({ theme }) => ({
   flexDirection: "row",
   maxWidth: "100%",
   width: "100%",
-  maxHeight: "calc(37px * 5)",
+  maxHeight: "calc(45px * 5)",
   overflow: "auto",
+}));
+
+const ListItemButtonStyled = styled(ListItemButton)(({ theme }) => ({
+  padding: theme.spacing(1.5, 1),
 }));
 
 const MENTION_REGEX = /\B@\w+/g;
@@ -253,7 +257,7 @@ const CommentEditor = ({
       focusOffset: replyTo ? replyTo.length + 1 : 1,
     });
 
-    const addBlank = Modifier.replaceText(
+    const addBlank = Modifier.insertText(
       newContentState.getCurrentContent(),
       addBlankSelection,
       String.fromCharCode(160)
@@ -262,7 +266,7 @@ const CommentEditor = ({
     newContentState = EditorState.push(
       newContentState,
       addBlank,
-      "change-block-data"
+      "insert-characters"
     );
 
     //di chuyển con trỏ đến ký tự cuối cùng
@@ -351,7 +355,7 @@ const CommentEditor = ({
     );
 
     //tạo selection mới
-    const selectionPosAfterAutoCorrect = new SelectionState({
+    const addBlankSpaceSelection = new SelectionState({
       anchorKey: currentRangeSuggestion.current?.key,
       anchorOffset: currentRangeSuggestion.current?.start
         ? currentRangeSuggestion.current?.start + user_id.length
@@ -363,9 +367,16 @@ const CommentEditor = ({
       hasFocus: true,
     });
 
-    newContentState = EditorState.forceSelection(
+    const addBlank = Modifier.insertText(
+      newContentState.getCurrentContent(),
+      addBlankSpaceSelection,
+      String.fromCharCode(160)
+    );
+
+    newContentState = EditorState.push(
       newContentState,
-      selectionPosAfterAutoCorrect
+      addBlank,
+      "insert-characters"
     );
 
     //setState thay đổi mọi thứ vào editorState hiện tại
@@ -411,12 +422,12 @@ const CommentEditor = ({
         >
           {userSuggestion?.map((user: UserSuggesionInterface) => {
             return (
-              <ListItemButton
+              <ListItemButtonStyled
                 key={user._id}
                 onClick={() => mentionClickHandle(user.user_id)}
               >
                 {user.user_id}
-              </ListItemButton>
+              </ListItemButtonStyled>
             );
           })}
         </List>
