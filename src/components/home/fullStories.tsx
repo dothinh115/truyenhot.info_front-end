@@ -245,6 +245,7 @@ const HomeFullStories = ({ categories }: Props) => {
                       src={story.story_cover}
                       alt={story.story_title}
                       placeholder="empty"
+                      quality={75}
                     />
                     <ItemChapter>Full - {story._count} chương</ItemChapter>
                   </ItemLinkWrapper>

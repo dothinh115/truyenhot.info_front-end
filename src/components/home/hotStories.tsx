@@ -227,6 +227,8 @@ const HomeHotStories = ({ categories }: Props) => {
                       src={story.story_cover}
                       alt={story.story_title}
                       placeholder="empty"
+                      loading="eager"
+                      quality={75}
                     />
                     <BoxTitle>{story.story_title}</BoxTitle>
                   </BoxWrapper>
