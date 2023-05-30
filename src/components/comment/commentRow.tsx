@@ -4,7 +4,7 @@ import {
   SubCommentDataInterface,
 } from "@/models/stories";
 import { API, PermissionVariables } from "@/utils/config";
-import { strip_tags, timeSince } from "@/utils/function";
+import { strip_tags } from "@/utils/function";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -35,11 +35,10 @@ import {
   EditorState,
   convertFromRaw,
 } from "draft-js";
+import dynamic from "next/dynamic";
 import React, { createContext, useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
-import { MentionSpanStyled } from "./commentEditor";
 import { MemorizedStorySubCommentRow } from "./subCommentRow";
-import dynamic from "next/dynamic";
 const CommentEditor = dynamic(() => import("./commentEditor"));
 
 const CommentRowWrapper = styled(Stack)(({ theme }) => ({
@@ -87,6 +86,13 @@ const ReplyInputWrapper = styled(Box)(({ theme }) => ({
   flexWrap: "wrap",
 }));
 
+export const MentionLinkStyled = styled("span")(({ theme }) => ({
+  color: "#64b5f6",
+  direction: "ltr",
+  fontWeight: "400",
+  textDecoration: "none",
+}));
+
 type Props = {
   comment: CommentDataInterface;
   mutate: () => void;
@@ -107,10 +113,11 @@ const getEntityStrategy = (mutability: string) => {
 };
 
 const MentionSpan = (props: any) => {
+  const { url } = props.contentState.getEntity(props.entityKey).getData();
   return (
-    <MentionSpanStyled data-offset-key={props.offsetkey}>
+    <MentionLinkStyled data-offset-key={props.offsetkey}>
       {props.children}
-    </MentionSpanStyled>
+    </MentionLinkStyled>
   );
 };
 

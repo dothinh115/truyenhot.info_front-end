@@ -1,18 +1,21 @@
 import { useAuth } from "@/hooks/auth";
 import { SubCommentDataInterface } from "@/models/stories";
 import { API, PermissionVariables } from "@/utils/config";
-import { strip_tags, timeSince } from "@/utils/function";
+import { strip_tags } from "@/utils/function";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import FemaleIcon from "@mui/icons-material/Female";
+import MaleIcon from "@mui/icons-material/Male";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ReplyIcon from "@mui/icons-material/Reply";
 import {
   Box,
   Divider,
   IconButton,
+  Link,
   List,
   ListItemButton,
   ListItemIcon,
@@ -20,21 +23,17 @@ import {
   Stack,
   alpha,
   styled,
-  Link,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   CompositeDecorator,
   Editor,
   EditorState,
   convertFromRaw,
 } from "draft-js";
-import { MentionSpanStyled } from "./commentEditor";
-import MaleIcon from "@mui/icons-material/Male";
-import FemaleIcon from "@mui/icons-material/Female";
-import { CommentContext } from "./commentRow";
 import dynamic from "next/dynamic";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { CommentContext, MentionLinkStyled } from "./commentRow";
 
 const CommentEditor = dynamic(() => import("./commentEditor"));
 
@@ -85,10 +84,11 @@ const getEntityStrategy = (mutability: string) => {
 };
 
 const MentionSpan = (props: any) => {
+  const { url } = props.contentState.getEntity(props.entityKey).getData();
   return (
-    <MentionSpanStyled data-offset-key={props.offsetkey}>
+    <MentionLinkStyled data-offset-key={props.offsetkey}>
       {props.children}
-    </MentionSpanStyled>
+    </MentionLinkStyled>
   );
 };
 

@@ -43,11 +43,11 @@ const ModalInner = styled(Stack)(({ theme }) => ({
     height: "80%",
     borderRadius: theme.spacing(2),
     transform: "translate(-50%, -50%)",
-    minWidth: "450px",
+    minWidth: "600px",
   },
 }));
 
-const HeaddingStyled = styled(Box)(({ theme }) => ({
+const HeaddingStyled = styled(Box)(() => ({
   width: "100%",
   top: 0,
   left: 0,

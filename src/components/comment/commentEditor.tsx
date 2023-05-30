@@ -63,7 +63,7 @@ const ContentEditableStyled = styled(Stack)(({ theme }) => ({
   },
 }));
 
-export const MentionSpanStyled = styled("span")(({ theme }) => ({
+const MentionSpanStyled = styled("span")(({ theme }) => ({
   color: "#64b5f6",
   direction: "ltr",
   fontWeight: "400",
@@ -196,8 +196,12 @@ const CommentEditor = ({
       allSelected,
       "backward"
     );
-    let modifier = EditorState.push(editorState, removeRange, "remove-range");
-    setEditorState(modifier);
+    const newContentState = EditorState.push(
+      editorState,
+      removeRange,
+      "remove-range"
+    );
+    setEditorState(newContentState);
     clearSuggestion();
   };
 
@@ -325,7 +329,7 @@ const CommentEditor = ({
     }
   };
 
-  const mentionClickHandle = (user_id: string) => {
+  const mentionClickHandle = (user_id: string, _id: string) => {
     const contentState = editorState.getCurrentContent();
     const editTextSelection = new SelectionState({
       anchorKey: currentRangeSuggestion.current?.key,
@@ -336,7 +340,7 @@ const CommentEditor = ({
 
     //Tạo entity có data, chứa url đến trang profile của user
     contentState.createEntity("MENTION", "IMMUTABLE", {
-      url: `/user/${user_id}`,
+      url: `/user/${_id}`,
     });
     const entityKey = contentState.getLastCreatedEntityKey();
     //Tạo text để replace, @do -> @dothinh
@@ -424,7 +428,7 @@ const CommentEditor = ({
             return (
               <ListItemButtonStyled
                 key={user._id}
-                onClick={() => mentionClickHandle(user.user_id)}
+                onClick={() => mentionClickHandle(user.user_id, user._id)}
               >
                 {user.user_id}
               </ListItemButtonStyled>
