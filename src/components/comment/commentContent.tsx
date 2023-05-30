@@ -1,0 +1,165 @@
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import IconButton from "@mui/material/IconButton";
+import { styled } from "@mui/material/styles";
+import {
+  CompositeDecorator,
+  ContentBlock,
+  ContentState,
+  Editor,
+  EditorState,
+  Modifier,
+  SelectionState,
+  convertFromRaw,
+} from "draft-js";
+import { useState, useEffect } from "react";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+const MentionLinkStyled = styled("span")(() => ({
+  color: "#64b5f6",
+  direction: "ltr",
+  fontWeight: "400",
+  textDecoration: "none",
+}));
+
+const ContentWrapper = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(0.5, 0),
+  "& p": {
+    margin: 0,
+  },
+}));
+
+type Props = {
+  comment_content: string;
+};
+
+const getEntityStrategy = (mutability: string) => {
+  return function (
+    contentBlock: ContentBlock,
+    callback: any,
+    contentState: ContentState
+  ) {
+    contentBlock.findEntityRanges((character: any) => {
+      const entityKey = character.getEntity();
+      if (entityKey === null) {
+        return false;
+      }
+      return contentState.getEntity(entityKey).getMutability() === mutability;
+    }, callback);
+  };
+};
+
+const MentionSpan = (props: any) => {
+  const { url } = props.contentState.getEntity(props.entityKey).getData();
+  return (
+    <MentionLinkStyled data-offset-key={props.offsetkey}>
+      {props.children}
+    </MentionLinkStyled>
+  );
+};
+
+const contentMaxLength = 400;
+
+const mentionDecorator = new CompositeDecorator([
+  {
+    strategy: getEntityStrategy("IMMUTABLE"),
+    component: MentionSpan,
+  },
+]);
+
+const StoryCommentContent = ({ comment_content }: Props) => {
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createWithContent(
+      convertFromRaw(JSON.parse(comment_content)),
+      mentionDecorator
+    )
+  );
+
+  const [show, setShow] = useState<boolean>(false);
+
+  const shouldContentTruncated = () => {
+    const contentState = editorState.getCurrentContent();
+    const blockArr = contentState.getBlocksAsArray(); // lấy toàn bộ block trong content
+    let maxLength: number = contentMaxLength; //400
+    let currentLength: number = 0; //lấy độ dài hiện tại, đến khi vượt quá maxLength thì ngừng
+    let truncatedBlockArr: ContentBlock[] = [];
+    for (let block of blockArr) {
+      currentLength += block.getText().length; // chạy vòng lặp lấy length từng block thêm vào currentLength
+      truncatedBlockArr = [...truncatedBlockArr, block]; //nếu currentLength chưa lớn hơn maxLength thì block này vẫn dc tính
+      if (currentLength >= maxLength) break; //nếu đã lớn hơn maxLength thì dừng
+    }
+    if (currentLength <= maxLength) return; //nếu nhỏ hơn maxLength thì dừng ngay
+    //nếu đã đến dc đây thì đây là 1 cmt dài, cần hiện nút xem thêm
+    setShow(true);
+    //block cuối chính là block phá vỡ maxLength, nên cần replace text ở block này
+    let selectionStart: number = 0; //lấy vị trí start, tức là length của những block trước block cuối cùng
+
+    //chạy vòng lặp lấy length của các block trước block cuối
+    for (let i = 0; i < truncatedBlockArr.length - 1; i++) {
+      selectionStart += truncatedBlockArr[i].getLength();
+    }
+    //tạo contentState mới từ chuỗi block đã tạo ở trên, với decorator
+    const newContentState = ContentState.createFromBlockArray(
+      truncatedBlockArr,
+      mentionDecorator
+    );
+    const truncatedLastBlock = newContentState.getLastBlock(); //lấy block cuối
+    //tạo range cần replace text ở block cuối
+    const replaceTextSelection = new SelectionState({
+      anchorKey: truncatedLastBlock.getKey(),
+      anchorOffset: maxLength - selectionStart, //lấy maxLength trừ đi ký tự của các block trước sẽ lấy dc start range của block cuối
+      focusKey: truncatedLastBlock.getKey(),
+      focusOffset: truncatedLastBlock.getLength(),
+    });
+    //tạo contentState mới, replace vào
+    const replaceText = Modifier.replaceText(
+      newContentState,
+      replaceTextSelection,
+      "..."
+    );
+    let newEditorState = EditorState.push(
+      editorState,
+      replaceText,
+      "change-block-data"
+    );
+    //cuối cùng set lại editorState
+    setEditorState(newEditorState);
+  };
+
+  const seeMoreHandle = () => {
+    setEditorState(
+      EditorState.createWithContent(
+        convertFromRaw(JSON.parse(comment_content)),
+        mentionDecorator
+      )
+    );
+    setShow(false);
+  };
+
+  useEffect(() => {
+    shouldContentTruncated();
+  }, [comment_content]);
+
+  return (
+    <ContentWrapper>
+      <Editor
+        editorState={editorState}
+        onChange={setEditorState}
+        readOnly={true}
+      />
+      <Stack
+        sx={{
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          display: show ? "flex" : "none",
+        }}
+      >
+        <IconButton size="small" onClick={seeMoreHandle}>
+          <ArrowDropDownIcon />
+        </IconButton>
+      </Stack>
+    </ContentWrapper>
+  );
+};
+
+export default StoryCommentContent;

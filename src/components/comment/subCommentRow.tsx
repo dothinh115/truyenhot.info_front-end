@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/auth/useAuth";
 import { SubCommentDataInterface } from "@/models/stories";
 import { API, PermissionVariables } from "@/utils/config";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -10,28 +11,22 @@ import MaleIcon from "@mui/icons-material/Male";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ReplyIcon from "@mui/icons-material/Reply";
 import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
-import ListItemButton from "@mui/material/ListItemButton";
 import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
-import { styled, alpha } from "@mui/material/styles";
-import CircularProgress from "@mui/material/CircularProgress";
-import {
-  CompositeDecorator,
-  Editor,
-  EditorState,
-  convertFromRaw,
-} from "draft-js";
+import { alpha, styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { CommentContext, MentionLinkStyled } from "./commentRow";
-import { useAuth } from "@/hooks/auth/useAuth";
+import { CommentContext } from "./commentRow";
 
 const CommentEditor = dynamic(() => import("./commentEditor"));
+const StoryCommentContent = dynamic(() => import("./commentContent"));
 
 type Props = {
   subCmtData: SubCommentDataInterface;
@@ -67,49 +62,31 @@ const MenuDropdownWrapper = styled(Box)(({ theme }) => ({
   zIndex: 50,
 }));
 
-const getEntityStrategy = (mutability: string) => {
-  return function (contentBlock: any, callback: any, contentState: any) {
-    contentBlock.findEntityRanges((character: any) => {
-      const entityKey = character.getEntity();
-      if (entityKey === null) {
-        return false;
-      }
-      return contentState.getEntity(entityKey).getMutability() === mutability;
-    }, callback);
-  };
-};
+const IconWrapper = styled(Stack)(({ theme }) => ({
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "flex-end",
+  fontSize: ".8em",
+  gap: theme.spacing(0.5),
+}));
 
-const MentionSpan = (props: any) => {
-  const { url } = props.contentState.getEntity(props.entityKey).getData();
-  return (
-    <MentionLinkStyled data-offset-key={props.offsetkey}>
-      {props.children}
-    </MentionLinkStyled>
-  );
-};
+const PosterSpanStyled = styled("span")(({ theme }) => ({
+  color: theme.palette.myText.heading,
+  margin: 0,
+  fontSize: "1.1em",
+  fontWeight: "bold",
+  marginRight: theme.spacing(0.5),
+  display: "inline-flex",
+  alignItems: "center",
+}));
 
-const decorator = new CompositeDecorator([
-  {
-    strategy: getEntityStrategy("IMMUTABLE"),
-    component: MentionSpan,
-  },
-]);
-export const StorySubCommentRow = ({
-  subCmtData,
-  mutate,
-  setReplying,
-}: Props) => {
+const StorySubCommentRow = ({ subCmtData, mutate, setReplying }: Props) => {
   const { profile } = useAuth();
   const menuDropdownIcon = useRef<HTMLButtonElement>(null);
   const menuDropdown = useRef<HTMLDivElement>(null);
-  const [show, setShow] = useState<boolean>(false);
   const [editing, setEditing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [submitClick, setSubmitClick] = useState<boolean>(false);
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty(decorator)
-  );
-
   const { setSubReplyTo } = useContext<any>(CommentContext);
 
   const menuDropdownClickHandle = (event: { target: any }) => {
@@ -152,15 +129,6 @@ export const StorySubCommentRow = ({
   };
 
   useEffect(() => {
-    setEditorState(
-      EditorState.createWithContent(
-        convertFromRaw(JSON.parse(subCmtData?.comment_content)),
-        decorator
-      )
-    );
-  }, [subCmtData]);
-
-  useEffect(() => {
     window.addEventListener("click", menuDropdownClickHandle);
     return () => {
       window.removeEventListener("click", menuDropdownClickHandle);
@@ -172,18 +140,7 @@ export const StorySubCommentRow = ({
       <SubCommentInner>
         <Stack direction={"row"} justifyContent={"space-between"}>
           <Box>
-            <Box
-              component={"span"}
-              sx={{
-                color: "myText.heading",
-                margin: 0,
-                fontSize: "1.1em",
-                fontWeight: "bold",
-                marginRight: "5px",
-                display: "inline-flex",
-                alignItems: "center",
-              }}
-            >
+            <PosterSpanStyled>
               {subCmtData?.author.gender === "male" ? (
                 <Box
                   component={MaleIcon}
@@ -200,7 +157,7 @@ export const StorySubCommentRow = ({
                 />
               )}
               {subCmtData?.author.user_id}
-            </Box>
+            </PosterSpanStyled>
           </Box>
           <Link
             underline="none"
@@ -226,15 +183,7 @@ export const StorySubCommentRow = ({
               setClicked={setSubmitClick}
               defaultValue={subCmtData.comment_content}
             />
-            <Stack
-              direction={"row"}
-              alignItems={"center"}
-              justifyContent={"flex-end"}
-              sx={{
-                fontSize: ".8em",
-              }}
-              gap={"5px"}
-            >
+            <IconWrapper>
               <IconButton
                 size="small"
                 color="error"
@@ -249,7 +198,7 @@ export const StorySubCommentRow = ({
               >
                 <CheckCircleIcon />
               </IconButton>
-            </Stack>
+            </IconWrapper>
           </>
         ) : (
           <>
@@ -258,29 +207,10 @@ export const StorySubCommentRow = ({
                 <CircularProgress size={"1em"} /> Đang cập nhật...
               </Box>
             ) : (
-              <Box
-                sx={{
-                  "& p": {
-                    margin: 0,
-                  },
-                }}
-                my={"4px"}
-              >
-                <Editor
-                  editorState={editorState}
-                  onChange={setEditorState}
-                  readOnly={true}
-                />
-              </Box>
+              <StoryCommentContent
+                comment_content={subCmtData?.comment_content}
+              />
             )}
-
-            <Box textAlign={"right"}>
-              {subCmtData?.comment_content.length > 400 && !show && (
-                <IconButton size="small" onClick={() => setShow(true)}>
-                  <ExpandMoreIcon />
-                </IconButton>
-              )}
-            </Box>
           </>
         )}
       </SubCommentInner>
@@ -352,4 +282,6 @@ export const StorySubCommentRow = ({
   );
 };
 
-export const MemorizedStorySubCommentRow = React.memo(StorySubCommentRow);
+const MemorizedStorySubCommentRow = React.memo(StorySubCommentRow);
+
+export default MemorizedStorySubCommentRow;

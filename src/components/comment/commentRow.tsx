@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/auth/useAuth";
 import {
   CommentDataInterface,
   SubCommentDataInterface,
@@ -14,30 +15,23 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ReplyIcon from "@mui/icons-material/Reply";
 import SubdirectoryArrowRightIcon from "@mui/icons-material/SubdirectoryArrowRight";
 import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
-import ListItemButton from "@mui/material/ListItemButton";
 import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
-import { styled, alpha } from "@mui/material/styles";
-import CircularProgress from "@mui/material/CircularProgress";
-import {
-  CompositeDecorator,
-  Editor,
-  EditorState,
-  convertFromRaw,
-} from "draft-js";
+import { alpha, styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import React, { createContext, useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
-import { MemorizedStorySubCommentRow } from "./subCommentRow";
-import { useAuth } from "@/hooks/auth/useAuth";
 
 const CommentEditor = dynamic(() => import("./commentEditor"));
-
+const MemorizedStorySubCommentRow = dynamic(() => import("./subCommentRow"));
+const StoryCommentContent = dynamic(() => import("./commentContent"));
 const CommentRowWrapper = styled(Stack)(({ theme }) => ({
   marginBottom: theme.spacing(1),
 }));
@@ -83,11 +77,22 @@ const ReplyInputWrapper = styled(Box)(({ theme }) => ({
   flexWrap: "wrap",
 }));
 
-export const MentionLinkStyled = styled("span")(({ theme }) => ({
-  color: "#64b5f6",
-  direction: "ltr",
-  fontWeight: "400",
-  textDecoration: "none",
+const IconWrapper = styled(Stack)(({ theme }) => ({
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "flex-end",
+  fontSize: ".8em",
+  gap: theme.spacing(0.5),
+}));
+
+const PosterSpanStyled = styled("span")(({ theme }) => ({
+  color: theme.palette.myText.heading,
+  margin: 0,
+  fontSize: "1.1em",
+  fontWeight: "bold",
+  marginRight: theme.spacing(0.5),
+  display: "inline-flex",
+  alignItems: "center",
 }));
 
 type Props = {
@@ -97,42 +102,9 @@ type Props = {
 
 export const CommentContext = createContext({});
 
-const getEntityStrategy = (mutability: string) => {
-  return function (contentBlock: any, callback: any, contentState: any) {
-    contentBlock.findEntityRanges((character: any) => {
-      const entityKey = character.getEntity();
-      if (entityKey === null) {
-        return false;
-      }
-      return contentState.getEntity(entityKey).getMutability() === mutability;
-    }, callback);
-  };
-};
-
-const MentionSpan = (props: any) => {
-  const { url } = props.contentState.getEntity(props.entityKey).getData();
-  return (
-    <MentionLinkStyled data-offset-key={props.offsetkey}>
-      {props.children}
-    </MentionLinkStyled>
-  );
-};
-
-const decorator = new CompositeDecorator([
-  {
-    strategy: getEntityStrategy("IMMUTABLE"),
-    component: MentionSpan,
-  },
-]);
-
 export const StoryCommentRow = ({ comment, mutate }: Props) => {
   const { profile } = useAuth();
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty(decorator)
-  );
-
   const [subReplyTo, setSubReplyTo] = useState<string>("");
-
   const getKey = (pageIndex: number, previousPageData: any) => {
     pageIndex = pageIndex + 1;
     return `/comments/sub/getSubCommentByCommentId/${comment._id}?page=${pageIndex}`;
@@ -145,7 +117,6 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
     mutate: subCmtMutate,
   } = useSWRInfinite(getKey);
 
-  const [show, setShow] = useState<boolean>(false);
   const menuDropdownIcon = useRef<HTMLButtonElement>(null);
   const menuDropdown = useRef<HTMLDivElement>(null);
   const [editing, setEditing] = useState<boolean>(false);
@@ -217,15 +188,6 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
     (subCmtData && subCmtData[0]?.result.length !== 0) || replying;
 
   useEffect(() => {
-    setEditorState(
-      EditorState.createWithContent(
-        convertFromRaw(JSON.parse(comment?.comment_content)),
-        decorator
-      )
-    );
-  }, [comment]);
-
-  useEffect(() => {
     window.addEventListener("click", menuDropdownClickHandle);
     return () => {
       window.removeEventListener("click", menuDropdownClickHandle);
@@ -244,18 +206,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
             <CommentRowContentInner>
               <Stack direction={"row"} justifyContent={"space-between"}>
                 <Box>
-                  <Box
-                    component={"span"}
-                    sx={{
-                      color: "myText.heading",
-                      margin: 0,
-                      fontSize: "1.1em",
-                      fontWeight: "bold",
-                      marginRight: "5px",
-                      display: "inline-flex",
-                      alignItems: "center",
-                    }}
-                  >
+                  <PosterSpanStyled>
                     {comment?.author.gender === "male" ? (
                       <Box
                         component={MaleIcon}
@@ -272,7 +223,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
                       />
                     )}
                     {comment?.author.user_id}
-                  </Box>
+                  </PosterSpanStyled>
                 </Box>
                 <Link
                   underline="none"
@@ -298,15 +249,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
                     setClicked={setEditSubmitClicked}
                     defaultValue={comment?.comment_content}
                   />
-                  <Stack
-                    direction={"row"}
-                    alignItems={"center"}
-                    justifyContent={"flex-end"}
-                    sx={{
-                      fontSize: ".8em",
-                    }}
-                    gap={"5px"}
-                  >
+                  <IconWrapper>
                     <IconButton
                       size="small"
                       color="error"
@@ -321,7 +264,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
                     >
                       <CheckCircleIcon />
                     </IconButton>
-                  </Stack>
+                  </IconWrapper>
                 </>
               ) : (
                 <>
@@ -330,33 +273,9 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
                       <CircularProgress size="1em" /> Đang cập nhật...
                     </Box>
                   ) : (
-                    <>
-                      <Box
-                        sx={{
-                          "& p": {
-                            margin: 0,
-                          },
-                        }}
-                        my={"4px"}
-                      >
-                        <Editor
-                          editorState={editorState}
-                          onChange={setEditorState}
-                          readOnly={true}
-                        />
-                      </Box>
-
-                      <Box textAlign={"right"}>
-                        {comment?.comment_content.length > 400 && !show && (
-                          <IconButton
-                            size="small"
-                            onClick={() => setShow(true)}
-                          >
-                            <ExpandMoreIcon />
-                          </IconButton>
-                        )}
-                      </Box>
-                    </>
+                    <StoryCommentContent
+                      comment_content={comment?.comment_content}
+                    />
                   )}
                 </>
               )}
@@ -467,15 +386,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
                   placeholder={`Trả lời ${comment?.author.user_id}...`}
                   replyTo={subReplyTo ? subReplyTo : comment?.author.user_id}
                 />
-                <Stack
-                  direction={"row"}
-                  alignItems={"center"}
-                  justifyContent={"flex-end"}
-                  sx={{
-                    fontSize: ".8em",
-                  }}
-                  gap={"5px"}
-                >
+                <IconWrapper>
                   <IconButton
                     size="small"
                     color="error"
@@ -490,7 +401,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
                   >
                     <CheckCircleIcon />
                   </IconButton>
-                </Stack>
+                </IconWrapper>
               </ReplyInputWrapper>
             )}
             <CommentContext.Provider value={{ setSubReplyTo }}>

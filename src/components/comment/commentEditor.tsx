@@ -35,6 +35,8 @@ const ContentEditableStyled = styled(Stack)(({ theme }) => ({
   flexDirection: "row",
   width: "100%",
   alignItems: "center",
+  maxHeight: "100%",
+  overflow: "auto",
   "&> .DraftEditor-root": {
     border: `1px solid ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
     backgroundColor: theme.palette.myBackground.paper,
@@ -53,8 +55,8 @@ const ContentEditableStyled = styled(Stack)(({ theme }) => ({
       position: "absolute",
       color: alpha(theme.palette.myText.primary, 0.5),
     },
-    maxHeight: "calc(21px * 5)",
-    overflow: "auto",
+    // maxHeight: "calc(21px * 5)",
+
     width: "100%",
   },
 }));
@@ -296,6 +298,7 @@ const CommentEditor = ({
     //xét xem con trỏ chuột có đang nằm trong range mention hay ko
     for (let range of rangeArr) {
       const $_match = range.start <= anchorOffset && anchorOffset < range.end;
+      console.log(range);
       if (!$_match) {
         clearSuggestion();
         continue; //nếu ko nằm trong range của mention thì bỏ qua
