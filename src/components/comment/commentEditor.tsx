@@ -1,13 +1,6 @@
 import { UserSuggesionInterface } from "@/models/users";
 import { API } from "@/utils/config";
-import {
-  Box,
-  alpha,
-  Stack,
-  IconButton,
-  List,
-  ListItemButton,
-} from "@mui/material";
+import { Box, alpha, Stack, IconButton, Chip } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import {
   CompositeDecorator,
@@ -63,28 +56,13 @@ const ContentEditableStyled = styled(Stack)(({ theme }) => ({
   },
 }));
 
-const MentionSpanStyled = styled("span")(({ theme }) => ({
+const MentionSpanStyled = styled("span")(() => ({
   color: "#64b5f6",
   direction: "ltr",
   fontWeight: "400",
 }));
 
-const UserSuggestionWrapper = styled(Stack)(({ theme }) => ({
-  background: theme.palette.myBackground.secondary,
-  boxShadow: `0 0 2px ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
-  position: "absolute",
-  left: 0,
-  bottom: "calc(100% + 16px)",
-  flexDirection: "row",
-  maxWidth: "100%",
-  width: "100%",
-  maxHeight: "calc(45px * 5)",
-  overflow: "auto",
-}));
-
-const ListItemButtonStyled = styled(ListItemButton)(({ theme }) => ({
-  padding: theme.spacing(1.5, 1),
-}));
+const UserSuggestionWrapper = styled(Box)(({ theme }) => ({}));
 
 const MENTION_REGEX = /\B@\w+/g;
 
@@ -258,7 +236,7 @@ const CommentEditor = ({
       anchorKey: firstBlock.getKey(),
       anchorOffset: replyTo ? replyTo.length : 1,
       focusKey: firstBlock.getKey(),
-      focusOffset: replyTo ? replyTo.length + 1 : 1,
+      focusOffset: replyTo ? replyTo.length : 1,
     });
 
     const addBlank = Modifier.insertText(
@@ -414,27 +392,25 @@ const CommentEditor = ({
   }, [clicked]);
 
   return (
-    <Box width={"100%"} position={"relative"}>
+    <>
       <UserSuggestionWrapper
         ref={suggestionRef}
         sx={{ display: userSuggestion.length !== 0 ? "block" : "none" }}
       >
-        <List
-          sx={{
-            padding: 0,
-          }}
-        >
-          {userSuggestion?.map((user: UserSuggesionInterface) => {
-            return (
-              <ListItemButtonStyled
-                key={user._id}
-                onClick={() => mentionClickHandle(user.user_id, user._id)}
-              >
-                {user.user_id}
-              </ListItemButtonStyled>
-            );
-          })}
-        </List>
+        {userSuggestion?.map((user: UserSuggesionInterface) => {
+          return (
+            <Chip
+              key={user._id}
+              onClick={() => mentionClickHandle(user.user_id, user._id)}
+              label={user.user_id}
+              size="small"
+              sx={{
+                my: "2px",
+                mr: "2px",
+              }}
+            />
+          );
+        })}
       </UserSuggestionWrapper>
       <ContentEditableStyled onClick={() => editorRef.current?.focus()}>
         <Editor
@@ -458,7 +434,7 @@ const CommentEditor = ({
           <SendIcon />
         </IconButton>
       </ContentEditableStyled>
-    </Box>
+    </>
   );
 };
 
