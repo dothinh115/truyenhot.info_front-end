@@ -1,16 +1,16 @@
+import { useDidMount } from "@/hooks/useDidMount";
 import { CategoryInterface } from "@/models/categories";
 import { HotStoriesInterface } from "@/models/home";
 import CachedIcon from "@mui/icons-material/Cached";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import Select from "@mui/material/Select";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
-import CircularProgress from "@mui/material/CircularProgress";
-import { SelectChangeEvent } from "@mui/material/Select";
-import { styled, alpha } from "@mui/material/styles";
+import { alpha, styled } from "@mui/material/styles";
 import Carousel from "better-react-carousel";
 import Image from "next/image";
 import Link from "next/link";
@@ -61,6 +61,7 @@ type Props = {
 };
 
 const HomeHotStories = ({ categories }: Props) => {
+  const didMount = useDidMount();
   const [cateValue, setCateValue] = useState<
     | {
         value: string;
@@ -176,66 +177,70 @@ const HomeHotStories = ({ categories }: Props) => {
         </Box>
       </Stack>
       <Box className={"hr"} my={2} />
-      <Carousel
-        mobileBreakpoint={100}
-        cols={6}
-        rows={2}
-        gap={10}
-        responsiveLayout={[
-          {
-            breakpoint: 600,
-            cols: 4,
-            rows: 2,
-            gap: 10,
-            loop: true,
-          },
-          {
-            breakpoint: 800,
-            cols: 5,
-            rows: 2,
-            gap: 10,
-            loop: true,
-          },
-          {
-            breakpoint: 428,
-            cols: 3,
-            rows: 2,
-            gap: 10,
-            loop: true,
-          },
-          {
-            breakpoint: 390,
-            cols: 2,
-            rows: 2,
-            gap: 10,
-            loop: true,
-          },
-        ]}
-      >
-        {hotStoriesValidating
-          ? carouselPreRender()
-          : hotStoriesList?.result.map((story: HotStoriesInterface) => {
-              return (
-                <Carousel.Item key={story._id}>
-                  <BoxWrapper
-                    href={`/story/${story.story_code}`}
-                    title={story.story_title}
-                  >
-                    <Image
-                      fill={true}
-                      sizes="180px"
-                      src={story.story_cover}
-                      alt={story.story_title}
-                      placeholder="empty"
-                      loading="eager"
-                      quality={75}
-                    />
-                    <BoxTitle>{story.story_title}</BoxTitle>
-                  </BoxWrapper>
-                </Carousel.Item>
-              );
-            })}
-      </Carousel>
+      {didMount ? (
+        <Carousel
+          mobileBreakpoint={100}
+          cols={6}
+          rows={2}
+          gap={10}
+          responsiveLayout={[
+            {
+              breakpoint: 600,
+              cols: 4,
+              rows: 2,
+              gap: 10,
+              loop: true,
+            },
+            {
+              breakpoint: 800,
+              cols: 5,
+              rows: 2,
+              gap: 10,
+              loop: true,
+            },
+            {
+              breakpoint: 428,
+              cols: 3,
+              rows: 2,
+              gap: 10,
+              loop: true,
+            },
+            {
+              breakpoint: 390,
+              cols: 2,
+              rows: 2,
+              gap: 10,
+              loop: true,
+            },
+          ]}
+        >
+          {hotStoriesValidating
+            ? carouselPreRender()
+            : hotStoriesList?.result.map((story: HotStoriesInterface) => {
+                return (
+                  <Carousel.Item key={story._id}>
+                    <BoxWrapper
+                      href={`/story/${story.story_code}`}
+                      title={story.story_title}
+                    >
+                      <Image
+                        fill={true}
+                        sizes="180px"
+                        src={story.story_cover}
+                        alt={story.story_title}
+                        placeholder="empty"
+                        priority
+                        quality={75}
+                      />
+                      <BoxTitle>{story.story_title}</BoxTitle>
+                    </BoxWrapper>
+                  </Carousel.Item>
+                );
+              })}
+        </Carousel>
+      ) : (
+        <Box width={"100%"} height={"370px"}></Box>
+      )}
     </>
   );
 };

@@ -27,7 +27,8 @@ export const AdminLayout = ({ children }: AdminLayoutInterface) => {
     setLoading(isValidating);
   }, [profile, isValidating]);
 
-  if (!profile) return null;
+  if (!profile || profile?.result.permission < PermissionVariables.Moderators)
+    return null;
 
   return (
     <AdminLayoutContext.Provider value={{ loading, setLoading, setOpen }}>

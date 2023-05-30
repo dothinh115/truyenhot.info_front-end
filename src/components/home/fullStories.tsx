@@ -1,21 +1,21 @@
+import { useDidMount } from "@/hooks/useDidMount";
 import { CategoryInterface } from "@/models/categories";
 import { FullStoriesInterface } from "@/models/home";
 import CachedIcon from "@mui/icons-material/Cached";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import Select from "@mui/material/Select";
-import CircularProgress from "@mui/material/CircularProgress";
-import { SelectChangeEvent } from "@mui/material/Select";
-import { styled, alpha } from "@mui/material/styles";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { alpha, styled } from "@mui/material/styles";
 import Carousel from "better-react-carousel";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
 import { FullStoriesLoading } from "../loading/fullStoriesLoading";
-import Image from "next/image";
 const ITEM_HEIGHT = 36;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -90,6 +90,7 @@ type Props = {
   categories: CategoryInterface[];
 };
 const HomeFullStories = ({ categories }: Props) => {
+  const didMount = useDidMount();
   const [cateValue, setCateValue] = useState<
     | {
         value: string;
@@ -189,73 +190,77 @@ const HomeFullStories = ({ categories }: Props) => {
         </Box>
       </BoxWrapper>
       <Box className={"hr"} my={2} />
-      <Carousel
-        mobileBreakpoint={100}
-        cols={7}
-        rows={4}
-        gap={10}
-        responsiveLayout={[
-          {
-            breakpoint: 900,
-            cols: 7,
-            rows: 4,
-            gap: 10,
-            loop: true,
-          },
-          {
-            breakpoint: 800,
-            cols: 6,
-            rows: 4,
-            gap: 10,
-            loop: true,
-          },
-          {
-            breakpoint: 700,
-            cols: 5,
-            rows: 4,
-            gap: 10,
-            loop: true,
-          },
+      {didMount ? (
+        <Carousel
+          mobileBreakpoint={100}
+          cols={7}
+          rows={4}
+          gap={10}
+          responsiveLayout={[
+            {
+              breakpoint: 900,
+              cols: 7,
+              rows: 4,
+              gap: 10,
+              loop: true,
+            },
+            {
+              breakpoint: 800,
+              cols: 6,
+              rows: 4,
+              gap: 10,
+              loop: true,
+            },
+            {
+              breakpoint: 700,
+              cols: 5,
+              rows: 4,
+              gap: 10,
+              loop: true,
+            },
 
-          {
-            breakpoint: 600,
-            cols: 4,
-            rows: 4,
-            gap: 10,
-            loop: true,
-          },
-          {
-            breakpoint: 428,
-            cols: 3,
-            rows: 4,
-            gap: 10,
-            loop: true,
-          },
-        ]}
-      >
-        {fullStoriesValidating
-          ? carouselPreRender()
-          : fullStoriesListData?.result.map((story: FullStoriesInterface) => {
-              return (
-                <Carousel.Item key={story._id}>
-                  <ItemLinkWrapper href={`/story/${story.story_code}`}>
-                    <Image
-                      fill={true}
-                      sizes="180px"
-                      src={story.story_cover}
-                      alt={story.story_title}
-                      placeholder="empty"
-                      quality={75}
-                    />
-                    <ItemChapter>Full - {story._count} chương</ItemChapter>
-                  </ItemLinkWrapper>
-                  <ItemTitle href={`/story/${story.story_code}`}>
-                    {story.story_title}
-                  </ItemTitle>
-                </Carousel.Item>
-              );
-            })}
-      </Carousel>
+            {
+              breakpoint: 600,
+              cols: 4,
+              rows: 4,
+              gap: 10,
+              loop: true,
+            },
+            {
+              breakpoint: 428,
+              cols: 3,
+              rows: 4,
+              gap: 10,
+              loop: true,
+            },
+          ]}
+        >
+          {fullStoriesValidating
+            ? carouselPreRender()
+            : fullStoriesListData?.result.map((story: FullStoriesInterface) => {
+                return (
+                  <Carousel.Item key={story._id}>
+                    <ItemLinkWrapper href={`/story/${story.story_code}`}>
+                      <Image
+                        fill={true}
+                        sizes="180px"
+                        src={story.story_cover}
+                        alt={story.story_title}
+                        placeholder="empty"
+                        quality={75}
+                      />
+                      <ItemChapter>Full - {story._count} chương</ItemChapter>
+                    </ItemLinkWrapper>
+                    <ItemTitle href={`/story/${story.story_code}`}>
+                      {story.story_title}
+                    </ItemTitle>
+                  </Carousel.Item>
+                );
+              })}
+        </Carousel>
+      ) : (
+        <Box width={"100%"} height={"370px"}></Box>
+      )}
     </>
   );
 };
