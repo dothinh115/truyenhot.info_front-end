@@ -197,7 +197,7 @@ const IndexRecentStories = ({ categories }: Props) => {
     mutate: recenUpdatetStoriesListMutate,
     isValidating: recentUpdateStoriesValidating,
   } = useSWR(
-    `/stories/getRecentUpdate?limit=30${
+    `/stories/getRecentUpdate?limit=25${
       cateValue ? "&category=" + cateValue.value : ""
     }`,
     {

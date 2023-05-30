@@ -115,7 +115,7 @@ const StoryDetail = ({ story, categories, sameAuthor }: Props) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const response = await fetch(`${apiURL}/api/stories/getAll?limit=6000`);
+  const response = await fetch(`${apiURL}/api/stories/getAll?limit=10`);
   const data = await response.json();
   const paths = data.result.map((item: StoryInterface) => ({
     params: {

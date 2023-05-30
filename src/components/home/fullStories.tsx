@@ -245,10 +245,10 @@ const HomeFullStories = ({ categories }: Props) => {
                   <ItemLinkWrapper href={`/story/${story.story_code}`}>
                     <Image
                       fill={true}
-                      sizes="cover"
+                      sizes="180px"
                       src={story.story_cover}
                       alt={story.story_title}
-                      priority
+                      placeholder="empty"
                     />
                     <ItemChapter>Full - {story._count} chương</ItemChapter>
                   </ItemLinkWrapper>

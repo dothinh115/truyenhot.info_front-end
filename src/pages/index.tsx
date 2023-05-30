@@ -88,7 +88,7 @@ const Index = ({ categories }: Props) => {
             >
               <ReadingStoriesHistory />
               <CategoriesSidebar categories={categories} />
-              <BaseStats />
+              {/* <BaseStats /> */}
             </Box>
           </Stack>
           <HomeFullStories categories={categories} />

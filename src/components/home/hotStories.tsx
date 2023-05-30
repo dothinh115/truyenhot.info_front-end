@@ -226,10 +226,10 @@ const HomeHotStories = ({ categories }: Props) => {
                   >
                     <Image
                       fill={true}
-                      sizes="cover"
+                      sizes="180px"
                       src={story.story_cover}
                       alt={story.story_title}
-                      priority
+                      placeholder="empty"
                     />
                     <BoxTitle>{story.story_title}</BoxTitle>
                   </BoxWrapper>
