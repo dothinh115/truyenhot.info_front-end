@@ -1,4 +1,3 @@
-import { useAuth } from "@/hooks/auth";
 import { CommentDataInterface } from "@/models/stories";
 import { API } from "@/utils/config";
 import CloseIcon from "@mui/icons-material/Close";
@@ -16,7 +15,8 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
-import { MemorizedStoryCommentRow } from "../comment";
+import { useAuth } from "@/hooks/auth/useAuth";
+import { MemorizedStoryCommentRow } from "../comment/commentRow";
 
 const CommentEditor = dynamic(() => import("../comment/commentEditor"));
 

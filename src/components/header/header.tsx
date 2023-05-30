@@ -1,5 +1,3 @@
-import { useAuth } from "@/hooks/auth";
-import { MainLayoutContext } from "@/layouts";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
@@ -24,6 +22,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useRef } from "react";
 import { Drawer } from "./drawer";
+import { MainLayoutContext } from "@/layouts/main";
+import { useAuth } from "@/hooks/auth/useAuth";
 
 const AppBarStyled = styled(AppBar)(({ theme }) => ({
   position: "static",
@@ -60,10 +60,9 @@ const ListStyled = styled(List)(({ theme }) => ({
 }));
 
 export function Header() {
-  const { setMobileMenuOpen, setMode, mode, setSearchOpen } =
+  const { setMobileMenuOpen, setMode, mode, setSearchOpen, searchOpen } =
     useContext<any>(MainLayoutContext);
   const { profile, logout } = useAuth();
-  const { searchOpen } = useContext<any>(MainLayoutContext);
   const appBarEl = useRef<HTMLDivElement>(null);
   const yOffset = useRef<number>(0);
   const menuDropDown = useRef<HTMLDivElement>(null);

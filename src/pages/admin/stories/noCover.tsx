@@ -1,5 +1,5 @@
-import { AdminNoCoverStoriesRow } from "@/components/admin";
-import { AdminLayout } from "@/layouts";
+import { AdminNoCoverStoriesRow } from "@/components/admin/noCoverRow";
+import { AdminLayout } from "@/layouts/admin";
 import { StoryInterface } from "@/models/stories";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";

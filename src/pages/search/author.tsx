@@ -1,6 +1,3 @@
-import { Seo } from "@/components";
-import { MainBreadcrumbs } from "@/components/breadcrumbs";
-import { StoryListLoading } from "@/components/loading";
 import { CategoryInterface } from "@/models/categories";
 import { apiURL } from "@/utils/config";
 import { thumbnailUrl } from "@/utils/variables";
@@ -19,6 +16,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
+import { Seo } from "@/components/seo";
+import { MainBreadcrumbs } from "@/components/breadcrumbs/mainBreadcrumbs";
+import { StoryListLoading } from "@/components/loading/storyListLoading";
 const RowStory = dynamic(() => import("../../components/categories/storyList"));
 const CategoriesSidebar = dynamic(
   () => import("../../components/sidebar/categories")

@@ -1,4 +1,4 @@
-import { AdminLayout } from "@/layouts";
+import { AdminLayout } from "@/layouts/admin";
 import Stack from "@mui/material/Stack";
 type Props = {};
 

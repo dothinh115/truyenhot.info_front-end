@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
 import { useRef } from "react";
-import { AdminLayout } from "@/layouts";
+import { AdminLayout } from "@/layouts/admin";
 
 type Props = {};
 interface ChapterCreateInterface {

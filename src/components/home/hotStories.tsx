@@ -16,7 +16,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
-import { HotStoriesLoading } from "../loading";
+import { HotStoriesLoading } from "../loading/storyCarouselLoading";
 const BoxWrapper = styled(Link)(() => ({
   width: "100%",
   padding: 0,

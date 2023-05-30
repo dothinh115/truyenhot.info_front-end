@@ -1,5 +1,3 @@
-import { Seo } from "@/components";
-import { LoginLayout } from "@/layouts";
 import { API } from "@/utils/config";
 import { emailPattern, thumbnailUrl } from "@/utils/variables";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
@@ -15,6 +13,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { LoginLayout } from "@/layouts/login";
+import { Seo } from "@/components/seo";
 
 type Props = {};
 

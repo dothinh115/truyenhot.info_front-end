@@ -1,4 +1,3 @@
-import { DragAndDropImg } from "@/components/admin";
 import { useSnackbar } from "@/hooks/snackbar";
 import { AdminLayout } from "../../../../layouts/admin";
 import { CategoryInterface } from "@/models/categories";
@@ -30,6 +29,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
+import { DragAndDropImg } from "@/components/admin/dragAndDropImg";
 
 type Props = {};
 

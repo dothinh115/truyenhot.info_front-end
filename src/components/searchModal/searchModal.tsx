@@ -1,4 +1,3 @@
-import { MainLayoutContext } from "@/layouts";
 import {
   SearchDataInterface,
   StoriesSearchResultInterface,
@@ -18,6 +17,7 @@ import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { MainLayoutContext } from "@/layouts/main";
 
 type Props = {};
 

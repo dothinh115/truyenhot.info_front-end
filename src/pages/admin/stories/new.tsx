@@ -1,5 +1,4 @@
 import { useSnackbar } from "@/hooks/snackbar";
-import { AdminLayout } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
 import { NewStoryInterface } from "@/models/stories";
 import { NProgressDone, NProgressStart } from "@/pages/_app";
@@ -14,6 +13,7 @@ import dynamic from "next/dynamic";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
 import CircularProgress from "@mui/material/CircularProgress";
+import { AdminLayout } from "@/layouts/admin";
 
 type Props = {};
 

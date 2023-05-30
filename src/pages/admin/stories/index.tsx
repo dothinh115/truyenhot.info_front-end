@@ -1,5 +1,3 @@
-import { AdminSearchBar } from "@/components/admin";
-import { AdminLayout } from "@/layouts";
 import { StoryInterface } from "@/models/stories";
 import { timeSince } from "@/utils/function";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -16,6 +14,8 @@ import TableRow from "@mui/material/TableRow";
 import Container from "@mui/material/Container";
 import { useRouter } from "next/router";
 import useSWR from "swr";
+import { AdminLayout } from "@/layouts/admin";
+import { AdminSearchBar } from "@/components/admin/adminSearchBar";
 
 type Props = {};
 

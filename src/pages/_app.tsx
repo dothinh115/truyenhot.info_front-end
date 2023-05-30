@@ -1,4 +1,3 @@
-import { MainLayout } from "@/layouts";
 import { MyAppProps } from "@/models";
 import { API } from "@/utils/config";
 import createEmotionCache from "@/utils/createEmotionCache";
@@ -11,6 +10,7 @@ import { useEffect } from "react";
 import "react-quill/dist/quill.snow.css";
 import { SWRConfig } from "swr/_internal";
 import "../style/style.scss";
+import { MainLayout } from "@/layouts/main";
 
 const clientSideEmotionCache = createEmotionCache();
 NProgress.configure({ showSpinner: false, speed: 500 });

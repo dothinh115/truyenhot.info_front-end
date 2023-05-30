@@ -1,6 +1,6 @@
-import { Seo } from "@/components";
-import { MainBreadcrumbs } from "@/components/breadcrumbs";
-import { MainLayoutContext } from "@/layouts";
+import { MainBreadcrumbs } from "@/components/breadcrumbs/mainBreadcrumbs";
+import { Seo } from "@/components/seo";
+import { MainLayoutContext } from "@/layouts/main";
 import { CategoryInterface } from "@/models/categories";
 import { apiURL } from "@/utils/config";
 import { thumbnailUrl } from "@/utils/variables";

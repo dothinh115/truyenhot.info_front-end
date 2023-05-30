@@ -1,4 +1,3 @@
-import { AdminLayoutContext } from "@/layouts";
 import AddIcon from "@mui/icons-material/Add";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
@@ -14,6 +13,7 @@ import { useContext, useState } from "react";
 import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove";
 import ReportIcon from "@mui/icons-material/Report";
 import ReportProblemIcon from "@mui/icons-material/ReportProblem";
+import { AdminLayoutContext } from "@/layouts/admin";
 type Props = {};
 
 export const StoriesManage = (props: Props) => {

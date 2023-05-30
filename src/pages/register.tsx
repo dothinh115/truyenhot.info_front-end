@@ -1,4 +1,3 @@
-import { LoginLayout } from "@/layouts";
 import { API } from "@/utils/config";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -15,8 +14,9 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
-import { Seo } from "@/components";
 import { emailPattern, thumbnailUrl, user_idPattern } from "@/utils/variables";
+import { Seo } from "@/components/seo";
+import { LoginLayout } from "@/layouts/login";
 
 type Props = {};
 

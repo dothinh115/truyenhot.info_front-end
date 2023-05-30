@@ -1,5 +1,4 @@
 import { useSnackbar } from "@/hooks/snackbar";
-import { AdminLayout } from "@/layouts";
 import { ChapterDataInterface } from "@/models/chapters";
 import { API, localAPI, modules } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -14,6 +13,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
+import { AdminLayout } from "@/layouts/admin";
 
 type Props = {};
 

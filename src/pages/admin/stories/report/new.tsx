@@ -1,4 +1,3 @@
-import { AdminLayout } from "@/layouts";
 import { ReportOptionInterface } from "@/models/stories";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -16,6 +15,7 @@ import useSWR from "swr";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { API } from "@/utils/config";
 import { useSnackbar } from "@/hooks/snackbar";
+import { AdminLayout } from "@/layouts/admin";
 
 type Props = {};
 

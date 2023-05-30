@@ -1,5 +1,5 @@
+import { Footer } from "@/components/footer/footer";
 import Box from "@mui/material/Box";
-import { Footer } from "@/components/footer";
 
 type Props = {};
 

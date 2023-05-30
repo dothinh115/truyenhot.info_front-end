@@ -1,10 +1,10 @@
-import { AdminLayoutContext } from "@/layouts";
 import MenuIcon from "@mui/icons-material/Menu";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Avatar from "@mui/material/Avatar";
 import { ReactNode, useContext } from "react";
+import { AdminLayoutContext } from "@/layouts/admin";
 interface AdminMainInterface {
   children: ReactNode;
 }

@@ -1,5 +1,5 @@
-import { Seo } from "@/components";
-import { MainBreadcrumbs } from "@/components/breadcrumbs";
+import { MainBreadcrumbs } from "@/components/breadcrumbs/mainBreadcrumbs";
+import { Seo } from "@/components/seo";
 import { ChapterDataInterface, ChapterListInterface } from "@/models/chapters";
 import { ChapterSection } from "@/sections";
 import { apiURL } from "@/utils/config";

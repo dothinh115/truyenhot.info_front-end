@@ -1,4 +1,3 @@
-import { useAuth } from "@/hooks/auth";
 import { SubCommentDataInterface } from "@/models/stories";
 import { API, PermissionVariables } from "@/utils/config";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -30,6 +29,7 @@ import {
 import dynamic from "next/dynamic";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { CommentContext, MentionLinkStyled } from "./commentRow";
+import { useAuth } from "@/hooks/auth/useAuth";
 
 const CommentEditor = dynamic(() => import("./commentEditor"));
 

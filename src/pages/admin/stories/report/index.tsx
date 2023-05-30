@@ -1,5 +1,5 @@
 import { useSnackbar } from "@/hooks/snackbar";
-import { AdminLayout } from "@/layouts";
+import { AdminLayout } from "@/layouts/admin";
 import { ReportInterface } from "@/models/stories";
 import { API } from "@/utils/config";
 import { timeSince } from "@/utils/function";

@@ -1,7 +1,7 @@
-import { Seo } from "@/components";
-import { MainBreadcrumbs } from "@/components/breadcrumbs";
+import { MainBreadcrumbs } from "@/components/breadcrumbs/mainBreadcrumbs";
+import { Seo } from "@/components/seo";
 import SameAuthorSidebar from "@/components/sidebar/sameAuthor";
-import { StorySidebar } from "@/components/stories";
+import { StorySidebar } from "@/components/stories/sidebar";
 import { CategoryInterface } from "@/models/categories";
 import { StoriesSearchResultInterface } from "@/models/search";
 import { StoryInterface } from "@/models/stories";

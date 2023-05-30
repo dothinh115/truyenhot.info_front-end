@@ -1,4 +1,3 @@
-import { useAuth } from "@/hooks/auth";
 import {
   CommentDataInterface,
   SubCommentDataInterface,
@@ -24,7 +23,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import { styled, alpha } from "@mui/material/styles";
-
 import CircularProgress from "@mui/material/CircularProgress";
 import {
   CompositeDecorator,
@@ -36,6 +34,7 @@ import dynamic from "next/dynamic";
 import React, { createContext, useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import { MemorizedStorySubCommentRow } from "./subCommentRow";
+import { useAuth } from "@/hooks/auth/useAuth";
 
 const CommentEditor = dynamic(() => import("./commentEditor"));
 

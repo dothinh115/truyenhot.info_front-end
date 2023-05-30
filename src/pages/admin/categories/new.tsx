@@ -1,5 +1,4 @@
 import { useSnackbar } from "@/hooks/snackbar";
-import { AdminLayout, AdminLayoutContext } from "@/layouts";
 import { API } from "@/utils/config";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Box from "@mui/material/Box";
@@ -16,6 +15,7 @@ import Container from "@mui/system/Container";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
 import React, { useContext, useEffect } from "react";
+import { AdminLayout, AdminLayoutContext } from "@/layouts/admin";
 type Props = {};
 
 interface NewCategoryInterface {

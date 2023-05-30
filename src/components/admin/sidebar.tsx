@@ -1,4 +1,3 @@
-import { AdminLayoutContext } from "@/layouts";
 import CloseIcon from "@mui/icons-material/Close";
 import HomeIcon from "@mui/icons-material/Home";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -11,6 +10,7 @@ import Link from "next/link";
 import { useContext } from "react";
 import { StoriesManage } from "./storiesManage";
 import { UsersManage } from "./usersManage";
+import { AdminLayoutContext } from "@/layouts/admin";
 
 type Props = {};
 

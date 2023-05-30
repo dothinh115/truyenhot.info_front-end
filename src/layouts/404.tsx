@@ -1,4 +1,4 @@
-import { useDidMount } from "@/hooks";
+import { useDidMount } from "@/hooks/useDidMount";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 

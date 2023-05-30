@@ -1,4 +1,4 @@
-import { useAuth } from "@/hooks/auth";
+import { useAuth } from "@/hooks/auth/useAuth";
 import { LoginLayoutInterface } from "@/models";
 import Stack from "@mui/material/Stack";
 import Container from "@mui/system/Container";

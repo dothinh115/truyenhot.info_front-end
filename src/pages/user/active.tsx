@@ -1,4 +1,4 @@
-import { LoginLayout } from "@/layouts";
+import { LoginLayout } from "@/layouts/login";
 import { API } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Button from "@mui/material/Button";

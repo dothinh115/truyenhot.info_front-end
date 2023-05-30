@@ -1,6 +1,3 @@
-import { Seo } from "@/components";
-import { useAuth } from "@/hooks/auth";
-import { LoginLayout } from "@/layouts";
 import { LoginPayloadInterface } from "@/models/auth";
 import { emailPattern, thumbnailUrl } from "@/utils/variables";
 import CloseIcon from "@mui/icons-material/Close";
@@ -15,6 +12,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Controller, useForm } from "react-hook-form";
+import { LoginLayout } from "@/layouts/login";
+import { useAuth } from "@/hooks/auth/useAuth";
+import { Seo } from "@/components/seo";
 type Props = {};
 const emailPatternExp = new RegExp(emailPattern);
 

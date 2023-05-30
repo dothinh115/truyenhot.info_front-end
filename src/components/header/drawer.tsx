@@ -1,5 +1,3 @@
-import { useAuth } from "@/hooks/auth";
-import { MainLayoutContext } from "@/layouts";
 import { CategoryInterface } from "@/models/categories";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -16,6 +14,8 @@ import { styled, alpha } from "@mui/material/styles";
 import Link from "next/link";
 import { useContext, useState } from "react";
 import useSWR from "swr";
+import { MainLayoutContext } from "@/layouts/main";
+import { useAuth } from "@/hooks/auth/useAuth";
 
 type Props = {};
 

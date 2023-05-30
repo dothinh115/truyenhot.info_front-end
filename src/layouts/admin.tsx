@@ -1,13 +1,14 @@
-import { useAuth } from "@/hooks/auth";
 import { useRouter } from "next/router";
 import React, { createContext, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
-import { AdminMain, AdminSidebar } from "@/components/admin";
-import { AdminLoading } from "@/components/loading/index";
 import { AdminLayoutInterface } from "@/models";
 import { PermissionVariables } from "@/utils/config";
+import { useAuth } from "@/hooks/auth/useAuth";
+import { AdminSidebar } from "@/components/admin/sidebar";
+import { AdminMain } from "@/components/admin/main";
+import { AdminLoading } from "@/components/loading/adminLoading";
 
 export const AdminLayoutContext = createContext({});
 

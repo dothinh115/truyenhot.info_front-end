@@ -1,4 +1,3 @@
-import { IndexRowLoading } from "@/components/loading";
 import { CategoryInterface } from "@/models/categories";
 import { RecentStoriesInterface } from "@/models/home";
 import { timeSince } from "@/utils/function";
@@ -17,6 +16,7 @@ import { styled, alpha } from "@mui/material/styles";
 import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
+import { IndexRowLoading } from "../loading/indexRowLoading";
 
 const ITEM_HEIGHT = 36;
 const ITEM_PADDING_TOP = 8;
