@@ -105,9 +105,10 @@ const StoryCommentContent = ({ comment_content }: Props) => {
     const truncatedLastBlock = newContentState.getLastBlock(); //lấy block cuối
     //tạo range cần replace text ở block cuối
     selectionStart = maxLength - selectionStart;
-
+    //kiểm tra xem có entity ở ký tự cuối cùng hay ko
     let entityCheck = truncatedLastBlock.getEntityAt(selectionStart);
     while (entityCheck !== null) {
+      //nếu có thì tăng giới hạn lên 2 và kiểm tra lại
       selectionStart += 2;
       entityCheck = truncatedLastBlock.getEntityAt(selectionStart);
     }
