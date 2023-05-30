@@ -40,7 +40,9 @@ const ListItemTextStyled = styled(ListItemText)(({ theme }) => ({
   },
 }));
 
-type Props = { sameAuthor: StoriesSearchResultInterface[] };
+type Props = {
+  sameAuthor: StoriesSearchResultInterface[];
+};
 
 const SameAuthorSidebar = ({ sameAuthor }: Props) => {
   if (sameAuthor?.length === 0) return null;

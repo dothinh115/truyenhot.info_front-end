@@ -1,7 +1,7 @@
 import { MainBreadcrumbs } from "@/components/breadcrumbs/mainBreadcrumbs";
 import { Seo } from "@/components/seo";
 import { ChapterDataInterface, ChapterListInterface } from "@/models/chapters";
-import { ChapterSection } from "@/sections";
+import { ChapterSection } from "@/sections/chapter";
 import { apiURL } from "@/utils/config";
 import { thumbnailUrl } from "@/utils/variables";
 import HomeIcon from "@mui/icons-material/Home";

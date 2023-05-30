@@ -1,11 +1,10 @@
 import { MainBreadcrumbs } from "@/components/breadcrumbs/mainBreadcrumbs";
 import { Seo } from "@/components/seo";
-import SameAuthorSidebar from "@/components/sidebar/sameAuthor";
 import { StorySidebar } from "@/components/stories/sidebar";
 import { CategoryInterface } from "@/models/categories";
 import { StoriesSearchResultInterface } from "@/models/search";
 import { StoryInterface } from "@/models/stories";
-import { StorySection } from "@/sections";
+import { StorySection } from "@/sections/story";
 import { API, apiURL } from "@/utils/config";
 import { thumbnailUrl } from "@/utils/variables";
 import HomeIcon from "@mui/icons-material/Home";
@@ -26,6 +25,10 @@ const CategoriesSidebar = dynamic(
   () => import("../../../components/sidebar/categories")
 );
 const StoryMain = dynamic(() => import("../../../components/stories/main"));
+
+const SameAuthorSidebar = dynamic(
+  () => import("../../../components/sidebar/sameAuthor")
+);
 
 const StoryDetail = ({ story, categories, sameAuthor }: Props) => {
   useEffect(() => {
@@ -103,7 +106,7 @@ const StoryDetail = ({ story, categories, sameAuthor }: Props) => {
             </Box>
             <Box width={{ md: "30%", xs: "100%" }}>
               <StorySidebar>
-                <SameAuthorSidebar sameAuthor={sameAuthor} />
+                <SameAuthorSidebar sameAuthor={...sameAuthor} />
                 <Box display={{ md: "block", xs: "none" }}>
                   <CategoriesSidebar categories={categories} />
                 </Box>
