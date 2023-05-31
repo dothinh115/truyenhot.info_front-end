@@ -6,6 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import Chip from "@mui/material/Chip";
 import { styled, alpha } from "@mui/material/styles";
 import {
+  CharacterMetadata,
   CompositeDecorator,
   ContentBlock,
   ContentState,
@@ -206,11 +207,37 @@ const CommentEditor = ({
     return newContentState;
   };
 
+  const getAllMentionData = (
+    contentState: ContentState,
+    entityType: string
+  ) => {
+    let entities: any[] = [];
+    const blockArr: ContentBlock[] = contentState.getBlocksAsArray();
+    //lấy toàn bộ thông tin entities có trong contentState
+    for (let block of blockArr) {
+      block.findEntityRanges(
+        (charater: CharacterMetadata) => {
+          if (charater.getEntity() !== null) {
+            const entity = contentState.getEntity(charater.getEntity());
+            if (entity.getType() === entityType) {
+              return true;
+            }
+          }
+          return false;
+        },
+        (start: number, end: number) => {
+          entities.push(block.getText().slice(start, end));
+        }
+      );
+    }
+  };
+
   const sendCmt = async () => {
     if (blankBlockRemoveHandle().getPlainText() === "") {
       clearContent();
       return;
     }
+    const mentionData = getAllMentionData(blankBlockRemoveHandle(), "MENTION");
     const value = JSON.stringify(convertToRaw(blankBlockRemoveHandle()));
     cb(value);
 
