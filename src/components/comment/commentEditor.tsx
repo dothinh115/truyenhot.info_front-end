@@ -1,9 +1,9 @@
 import { UserSuggesionInterface } from "@/models/users";
 import { API } from "@/utils/config";
-import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
 import IconButton from "@mui/material/IconButton";
-import Chip from "@mui/material/Chip";
 import { styled, alpha } from "@mui/material/styles";
 import {
   CharacterMetadata,
@@ -43,9 +43,10 @@ const Wrapper = styled(Stack)(({ theme }) => ({
   flexDirection: "row",
   width: "100%",
   alignItems: "center",
+  flexWrap: "wrap",
 }));
 const ContentEditableStyled = styled(Stack)(({ theme }) => ({
-  width: "100%",
+  width: "calc(100% - 40px)",
   maxHeight: "calc(21px * 10)",
   overflow: "auto",
   "&::-webkit-scrollbar": {
@@ -82,7 +83,20 @@ const MentionSpanStyled = styled("span")(() => ({
   fontWeight: "400",
 }));
 
-const UserSuggestionWrapper = styled(Box)(({ theme }) => ({}));
+const UserSuggestionUL = styled(List)(({ theme }) => ({
+  width: "100%",
+  padding: 0,
+  borderBottom: `1px dashed ${theme.palette.mySecondary.boxShadow}`,
+}));
+
+const UserSuggestionItem = styled(ListItemButton)(({ theme }) => ({
+  "&:hover": {
+    backgroundColor: theme.palette.myBackground.default,
+  },
+  "&.active": {
+    backgroundColor: theme.palette.myBackground.default,
+  },
+}));
 
 const MENTION_REGEX = /\B@\w+/g;
 
@@ -126,8 +140,10 @@ const CommentEditor = ({
     EditorState.createEmpty(decorator)
   );
   const editorRef = useRef<any>();
-  const suggestionRef = useRef<HTMLDivElement>(null);
+  const suggestionULRef = useRef<HTMLUListElement>(null);
   const timeout = useRef<any>();
+  const [listIndex, setListIndex] = useState<number>(0);
+
   const currentRangeSuggestion = useRef<{
     start: number;
     end: number;
@@ -145,6 +161,9 @@ const CommentEditor = ({
       } else {
         return "send-cmt";
       }
+    }
+    if (userSuggestion?.length !== 0) {
+      if (e.key === "ArrowUp" || e.key === "ArrowDown") return "arrow-pressed";
     }
 
     return getDefaultKeyBinding(e);
@@ -169,6 +188,7 @@ const CommentEditor = ({
   const clearSuggestion = () => {
     clearTimeout(timeout.current);
     setUserSuggestion([]);
+    setListIndex(0);
   };
 
   const blankBlockRemoveHandle = (): ContentState => {
@@ -240,7 +260,6 @@ const CommentEditor = ({
     const mentionData = getAllMentionData(blankBlockRemoveHandle(), "MENTION");
     const value = JSON.stringify(convertToRaw(blankBlockRemoveHandle()));
     cb(value);
-
     clearContent();
   };
 
@@ -284,10 +303,19 @@ const CommentEditor = ({
         return "handled";
       }
       case "send-cmt": {
-        const plainText = editorState.getCurrentContent().getPlainText();
-        if (plainText === "") return "not-handled";
-        sendCmt();
-        return "handled";
+        if (userSuggestion.length === 0) {
+          const plainText = editorState.getCurrentContent().getPlainText();
+          if (plainText === "") return "not-handled";
+          sendCmt();
+          return "handled";
+        } else {
+          if (suggestionULRef.current) {
+            suggestionULRef.current.querySelectorAll("div")[listIndex].click();
+          }
+        }
+      }
+      case "arrow-pressed": {
+        return "not-handled";
       }
       default: {
         return "not-handled";
@@ -454,6 +482,28 @@ const CommentEditor = ({
     clearSuggestion();
   };
 
+  const moveDown = () => {
+    if (listIndex + 1 > userSuggestion?.length - 1) return;
+    setListIndex(listIndex + 1);
+  };
+  const moveUp = () => {
+    if (listIndex - 1 < 0) return;
+    setListIndex(listIndex - 1);
+  };
+  const arrowPressHandle = (event: any) => {
+    if (userSuggestion.length === 0) return;
+    switch (event.key) {
+      case "ArrowDown": {
+        moveDown();
+        break;
+      }
+      case "ArrowUp": {
+        moveUp();
+        break;
+      }
+    }
+  };
+
   useEffect(() => {
     handleMention();
   }, [editorState.getCurrentContent()]);
@@ -478,28 +528,34 @@ const CommentEditor = ({
     }
   }, [clicked]);
 
+  useEffect(() => {
+    window.addEventListener("keydown", arrowPressHandle);
+    return () => {
+      window.removeEventListener("keydown", arrowPressHandle);
+    };
+  });
+
   return (
     <>
-      <UserSuggestionWrapper
-        ref={suggestionRef}
-        sx={{ display: userSuggestion.length !== 0 ? "block" : "none" }}
-      >
-        {userSuggestion?.map((user: UserSuggesionInterface) => {
-          return (
-            <Chip
-              key={user._id}
-              onClick={() => mentionClickHandle(user.user_id, user._id)}
-              label={user.user_id}
-              size="small"
-              sx={{
-                my: "2px",
-                mr: "2px",
-              }}
-            />
-          );
-        })}
-      </UserSuggestionWrapper>
       <Wrapper>
+        <UserSuggestionUL
+          sx={{ display: userSuggestion.length !== 0 ? "block" : "none" }}
+          ref={suggestionULRef}
+        >
+          {userSuggestion?.map(
+            (user: UserSuggesionInterface, index: number) => {
+              return (
+                <UserSuggestionItem
+                  className={index === listIndex ? "active" : ""}
+                  key={user._id}
+                  onClick={() => mentionClickHandle(user.user_id, user._id)}
+                >
+                  {user.user_id}
+                </UserSuggestionItem>
+              );
+            }
+          )}
+        </UserSuggestionUL>
         <ContentEditableStyled onClick={() => editorRef.current?.focus()}>
           <Editor
             ref={editorRef}
