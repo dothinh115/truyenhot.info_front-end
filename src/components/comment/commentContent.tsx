@@ -95,7 +95,7 @@ const StoryCommentContent = ({ comment_content }: Props) => {
       //tạo selection vị trí cuối cùng của block thứ 5
       const lastPosSelection = new SelectionState({
         anchorKey: lastBlock.getKey(),
-        anchorOffset: lastBlock.getLength(), //lấy maxLength trừ đi ký tự của các block trước sẽ lấy dc start range của block cuối
+        anchorOffset: lastBlock.getLength(),
         focusKey: lastBlock.getKey(),
         focusOffset: lastBlock.getLength(),
       });
