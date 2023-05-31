@@ -7,6 +7,8 @@ import Chip from "@mui/material/Chip";
 import { styled, alpha } from "@mui/material/styles";
 import {
   CompositeDecorator,
+  ContentBlock,
+  ContentState,
   DraftHandleValue,
   Editor,
   EditorState,
@@ -29,20 +31,32 @@ type Props = {
   sendIcon?: boolean;
 };
 
-const Wrapper = styled(Stack)(() => ({
+const Wrapper = styled(Stack)(({ theme }) => ({
+  marginTop: theme.spacing(0.5),
+  backgroundColor: theme.palette.myBackground.paper,
+  border: `1px solid ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
+  borderRadius: theme.spacing(0.5),
+  overflow: "hidden",
   position: "relative",
   flexGrow: 1,
   flexDirection: "row",
   width: "100%",
   alignItems: "center",
 }));
-
 const ContentEditableStyled = styled(Stack)(({ theme }) => ({
   width: "100%",
+  maxHeight: "calc(21px * 10)",
+  overflow: "auto",
+  "&::-webkit-scrollbar": {
+    borderRadius: theme.spacing(0, 2, 2, 0),
+    backgroundColor: "transparent",
+    width: "5px",
+  },
+  "&::-webkit-scrollbar-thumb": {
+    background: "#7986cba6",
+  },
   "&> .DraftEditor-root": {
-    border: `1px solid ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
-    backgroundColor: theme.palette.myBackground.paper,
-    borderRadius: theme.spacing(0.5),
+    borderRadius: "4px",
     minHeight: theme.spacing(4),
     outline: "none",
     color: theme.palette.myText.primary,
@@ -58,8 +72,6 @@ const ContentEditableStyled = styled(Stack)(({ theme }) => ({
       color: alpha(theme.palette.myText.primary, 0.5),
     },
     width: "100%",
-    maxHeight: "calc(21px * 10)",
-    overflow: "auto",
   },
 }));
 
@@ -158,10 +170,50 @@ const CommentEditor = ({
     setUserSuggestion([]);
   };
 
+  const blankBlockRemoveHandle = (): ContentState => {
+    const contentState: ContentState = editorState.getCurrentContent();
+    let blockArr: ContentBlock[] = contentState.getBlocksAsArray();
+    let firstHasContentBlockIndex: number = 0;
+    let lastHasContentBlockIndex: number = blockArr.length;
+    let any = false;
+    for (let block of blockArr) {
+      if (block.getText().length !== 0) {
+        any = true;
+        break;
+      }
+    }
+
+    if (!any) return EditorState.createEmpty().getCurrentContent();
+
+    for (let index in blockArr) {
+      if (blockArr[index].getText().length !== 0) {
+        firstHasContentBlockIndex = Number(index);
+        break;
+      }
+    }
+    for (let i = blockArr.length - 1; i >= firstHasContentBlockIndex; i--) {
+      if (blockArr[i].getText().length !== 0) {
+        lastHasContentBlockIndex = i;
+        break;
+      }
+    }
+    blockArr = blockArr.slice(
+      firstHasContentBlockIndex,
+      lastHasContentBlockIndex + 1
+    );
+
+    const newContentState = ContentState.createFromBlockArray(blockArr);
+    return newContentState;
+  };
+
   const sendCmt = async () => {
-    if (editorState.getCurrentContent().getPlainText() === "") return;
-    const value = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
+    if (blankBlockRemoveHandle().getPlainText() === "") {
+      clearContent();
+      return;
+    }
+    const value = JSON.stringify(convertToRaw(blankBlockRemoveHandle()));
     cb(value);
+
     clearContent();
   };
 
@@ -310,6 +362,7 @@ const CommentEditor = ({
         currentRangeSuggestion.current = { ...range, key: keyOfBlockStanding }; //lưu thông tin range hiện tại để dùng sau
         const entityInstace = block.getEntityAt(range.start);
         if (entityInstace) clearSuggestion();
+        break;
       }
     }
   };

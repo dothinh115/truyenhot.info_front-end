@@ -58,7 +58,7 @@ const MentionSpan = (props: any) => {
 };
 
 const contentMaxLength = 400;
-
+const maxRow = 5;
 const mentionDecorator = new CompositeDecorator([
   {
     strategy: getEntityStrategy("IMMUTABLE"),
@@ -79,6 +79,40 @@ const StoryCommentContent = ({ comment_content }: Props) => {
   const shouldContentTruncated = () => {
     const contentState = editorState.getCurrentContent();
     const blockArr = contentState.getBlocksAsArray(); // lấy toàn bộ block trong content
+    //Xử lý trường hợp nhiều block, xuống hàng liên tục
+    if (blockArr.length > maxRow) {
+      //tiến hành tạo contentState mới với 5 block đầu tiên
+      let newBlockArr: ContentBlock[] = [];
+      for (let i = 0; i < maxRow; i++) {
+        newBlockArr = [...newBlockArr, blockArr[i]];
+      }
+      //tạo newContentState
+      let newContentState: ContentState | EditorState =
+        ContentState.createFromBlockArray(newBlockArr);
+      //tiếp tục thêm ... vào sau cùng
+      //lấy block cuối cùng
+      const lastBlock = newContentState.getLastBlock();
+      //tạo selection vị trí cuối cùng của block thứ 5
+      const lastPosSelection = new SelectionState({
+        anchorKey: lastBlock.getKey(),
+        anchorOffset: lastBlock.getLength(), //lấy maxLength trừ đi ký tự của các block trước sẽ lấy dc start range của block cuối
+        focusKey: lastBlock.getKey(),
+        focusOffset: lastBlock.getLength(),
+      });
+      const addEllipsis = Modifier.insertText(
+        newContentState,
+        lastPosSelection,
+        "..."
+      );
+      newContentState = EditorState.push(
+        editorState,
+        addEllipsis,
+        "insert-characters"
+      );
+      setEditorState(newContentState);
+      setShow(true);
+      return;
+    }
     let maxLength: number = contentMaxLength; //400
     let currentLength: number = 0; //lấy độ dài hiện tại, đến khi vượt quá maxLength thì ngừng
     let truncatedBlockArr: ContentBlock[] = [];
@@ -87,12 +121,12 @@ const StoryCommentContent = ({ comment_content }: Props) => {
       truncatedBlockArr = [...truncatedBlockArr, block]; //nếu currentLength chưa lớn hơn maxLength thì block này vẫn dc tính
       if (currentLength >= maxLength) break; //nếu đã lớn hơn maxLength thì dừng
     }
-    if (currentLength <= maxLength) return; //nếu nhỏ hơn maxLength thì dừng ngay
+    if (currentLength <= maxLength) return; //trường hợp cmt ngắn thì dừng ngay
+
     //nếu đã đến dc đây thì đây là 1 cmt dài, cần hiện nút xem thêm
     setShow(true);
     //block cuối chính là block phá vỡ maxLength, nên cần replace text ở block này
     let selectionStart: number = 0; //lấy vị trí start, tức là length của những block trước block cuối cùng
-
     //chạy vòng lặp lấy length của các block trước block cuối
     for (let i = 0; i < truncatedBlockArr.length - 1; i++) {
       selectionStart += truncatedBlockArr[i].getLength();
@@ -108,11 +142,10 @@ const StoryCommentContent = ({ comment_content }: Props) => {
     //kiểm tra xem có entity ở ký tự cuối cùng hay ko
     let entityCheck = truncatedLastBlock.getEntityAt(selectionStart);
     while (entityCheck !== null) {
-      //nếu có thì tăng giới hạn lên 2 và kiểm tra lại
-      selectionStart += 2;
+      //nếu có thì tăng giới hạn lên 10 và kiểm tra lại
+      selectionStart += 10;
       entityCheck = truncatedLastBlock.getEntityAt(selectionStart);
     }
-
     const replaceTextSelection = new SelectionState({
       anchorKey: truncatedLastBlock.getKey(),
       anchorOffset: selectionStart, //lấy maxLength trừ đi ký tự của các block trước sẽ lấy dc start range của block cuối
