@@ -1,11 +1,11 @@
 import { UserSuggesionInterface } from "@/models/users";
 import { API } from "@/utils/config";
-import Stack from "@mui/material/Stack";
-import List from "@mui/material/List";
-import Link from "@mui/material/Link";
-import ListItemButton from "@mui/material/ListItemButton";
+import SendIcon from "@mui/icons-material/Send";
 import IconButton from "@mui/material/IconButton";
-import { styled, alpha } from "@mui/material/styles";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import Stack from "@mui/material/Stack";
+import { alpha, styled } from "@mui/material/styles";
 import {
   CharacterMetadata,
   CompositeDecorator,
@@ -20,17 +20,8 @@ import {
   convertToRaw,
   getDefaultKeyBinding,
 } from "draft-js";
-import SendIcon from "@mui/icons-material/Send";
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  memo,
-  createContext,
-  useContext,
-} from "react";
-import emojiCompact from "emoji.json/emoji-compact.json";
-import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
+
+import React, { useEffect, useRef, useState } from "react";
 type Props = {
   cb: (data: string) => void;
   clicked: boolean;
@@ -40,8 +31,6 @@ type Props = {
   replyTo?: string;
   sendIcon?: boolean;
 };
-
-const EditorContext = createContext({});
 
 const Wrapper = styled(Stack)(({ theme }) => ({
   marginTop: theme.spacing(0.5),
@@ -577,9 +566,6 @@ const CommentEditor = ({
             }
           )}
         </UserSuggestionUL>
-        {/* <EditorContext.Provider value={{ emojiClick: emojiClick }}>
-          <MemorizedEmojiPicker />
-        </EditorContext.Provider> */}
         <ContentEditableStyled onClick={() => editorRef.current?.focus()}>
           <Editor
             ref={editorRef}
@@ -606,118 +592,5 @@ const CommentEditor = ({
     </>
   );
 };
-
-const EmoJiPickerWrapper = styled(Stack)(({ theme }) => ({
-  flexDirection: "row",
-  flexWrap: "wrap",
-  maxHeight: "350px",
-  overflowY: "auto",
-  width: "260px",
-  backgroundColor: theme.palette.myBackground.default,
-  position: "absolute",
-  top: 0,
-  border: `1px solid ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
-  display: "none",
-  zIndex: 1000,
-}));
-
-const EmojiButton = styled(Link)(({ theme }) => ({
-  minWidth: "unset",
-  padding: 0,
-  fontSize: "1.5em",
-  lineHeight: "unset",
-  margin: theme.spacing(0.5),
-  cursor: "pointer",
-}));
-
-function vh(percent: number) {
-  var h = Math.max(
-    document.documentElement.clientHeight,
-    window.innerHeight || 0
-  );
-  return (percent * h) / 100;
-}
-
-const EmojiPicker = () => {
-  const iconRef = useRef<HTMLButtonElement>(null);
-  const pickerWrapperRef = useRef<HTMLDivElement>(null);
-  const { emojiClick } = useContext<any>(EditorContext);
-  const emojis = (): string[] => {
-    let emojis: string[] = [];
-    for (let i = 0; i < 500; i++) {
-      emojis = [...emojis, emojiCompact[i]];
-    }
-    return emojis;
-  };
-
-  const emojiIconClick = (event: any) => {
-    if (iconRef.current || pickerWrapperRef.current) {
-      if (iconRef.current?.contains(event.target)) {
-        if (pickerWrapperRef.current!.style.display === "none") {
-          pickerWrapperRef.current!.style.display = "block";
-        } else pickerWrapperRef.current!.style.display = "none";
-      } else if (pickerWrapperRef.current?.contains(event.target)) return;
-      else pickerWrapperRef.current!.style.display = "none";
-    }
-  };
-
-  useEffect(() => {
-    if (pickerWrapperRef.current && iconRef.current) {
-      if (iconRef.current?.getBoundingClientRect().top > 450)
-        pickerWrapperRef.current.style.top = `${
-          iconRef.current?.getBoundingClientRect().top - vh(10) - 350
-        }px`;
-      else
-        pickerWrapperRef.current.style.top = `${
-          iconRef.current?.getBoundingClientRect().top - vh(10) + 80
-        }px`;
-    }
-  });
-
-  useEffect(() => {
-    window.addEventListener("click", emojiIconClick);
-    return () => {
-      window.removeEventListener("click", emojiIconClick);
-    };
-  }, []);
-
-  return (
-    <>
-      <Stack
-        width={"100%"}
-        p={"4px"}
-        direction={"row"}
-        position={"relative"}
-        sx={{
-          display: {
-            md: "flex",
-            xs: "none",
-          },
-        }}
-      >
-        <IconButton
-          ref={iconRef}
-          sx={{
-            width: "30px",
-            height: "30px",
-          }}
-        >
-          <InsertEmoticonIcon />
-        </IconButton>
-      </Stack>
-      <EmoJiPickerWrapper ref={pickerWrapperRef}>
-        {emojis().map((emoji: string) => {
-          return (
-            <EmojiButton underline="none" onClick={() => emojiClick(emoji)}>
-              {emoji}
-            </EmojiButton>
-          );
-        })}
-      </EmoJiPickerWrapper>
-    </>
-  );
-};
-
-const MemorizedEmojiPicker = memo(EmojiPicker);
 
 export default CommentEditor;

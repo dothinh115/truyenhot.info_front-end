@@ -50,7 +50,6 @@ const CommentMenuDropDown = ({
   const router = useRouter();
   const { profile } = useAuth();
   const deleteHandle = async (_id: string) => {
-    console.log(comment._id);
     try {
       await API.delete(`/comments${subCmt ? "/sub" : ""}/delete/${_id}`);
       mutate();
