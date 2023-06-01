@@ -187,7 +187,9 @@ const CommentEditorWrapper = (props: Props) => {
             }
           )}
         </UserSuggestionUL>
-        {showEmojiButton ? <MemorizedEmojiPickerIcon /> : null}
+        {showEmojiButton && window.innerWidth > 768 ? (
+          <MemorizedEmojiPickerIcon />
+        ) : null}
         <MemoriezedCommentEditor {...props} />
       </CommentEditorContext.Provider>
     </Wrapper>
