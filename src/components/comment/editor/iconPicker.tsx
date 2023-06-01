@@ -3,7 +3,7 @@ import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
-import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
+import EmojiPicker, { EmojiClickData, EmojiStyle } from "emoji-picker-react";
 import { memo, useContext } from "react";
 import { CommentEditorContext } from "./wrapperEditor";
 
@@ -62,6 +62,7 @@ const EmojiPickerIcon = () => {
           theme={mode}
           height={"300px"}
           onEmojiClick={emojiClickHandle}
+          emojiStyle={EmojiStyle.TWITTER}
         />
       </PickerWrapper>
     </Wrapper>
