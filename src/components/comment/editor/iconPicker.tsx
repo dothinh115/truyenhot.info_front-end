@@ -28,11 +28,8 @@ const PickerWrapper = styled(Stack)(({ theme }) => ({
 
 const EmojiPickerIcon = () => {
   const { mode } = useContext<any>(MainLayoutContext);
-  const { setIconPick, showPicker, setShowPicker } =
+  const { setIconPick, showPicker, setShowPicker, wrapperRef, iconButtonRef } =
     useContext<any>(CommentEditorContext);
-  const emojiButtonRef = useRef<HTMLButtonElement>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
   const emojiButtonClick = () => {
     setShowPicker(!showPicker);
   };
@@ -48,8 +45,8 @@ const EmojiPickerIcon = () => {
           width: "30px",
           height: "30px",
         }}
+        ref={iconButtonRef}
         onClick={emojiButtonClick}
-        ref={emojiButtonRef}
       >
         <InsertEmoticonIcon />
       </IconButton>

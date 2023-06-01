@@ -57,14 +57,16 @@ const UserSuggestionItem = styled(ListItemButton)(({ theme }) => ({
 }));
 
 const CommentEditorWrapper = (props: Props) => {
-  const { replyTo, showEmojiButton = false } = props;
+  const { showEmojiButton = false } = props;
   const [userSuggestion, setUserSuggestion] = useState<
     UserSuggesionInterface[]
   >([]);
   const [iconPick, setIconPick] = useState<string | null>(null);
   const suggestionULRef = useRef<HTMLUListElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const [listIndex, setListIndex] = useState<number>(0);
   const timeout = useRef<any>();
+  const iconButtonRef = useRef<HTMLButtonElement>(null);
   const [showPicker, setShowPicker] = useState<boolean>(false);
   const [mentionClickData, setMentionClickData] = useState<{
     user_id: string;
@@ -115,12 +117,25 @@ const CommentEditorWrapper = (props: Props) => {
     }
   };
 
+  const outSidePickerClickHandle = (event: any) => {
+    if (wrapperRef.current && iconButtonRef.current) {
+      if (
+        !wrapperRef.current.contains(event.target) &&
+        !iconButtonRef.current.contains(event.target)
+      ) {
+        setShowPicker(false);
+      }
+    }
+  };
+
   useEffect(() => {
     window.addEventListener("keydown", arrowPressHandle);
+    window.addEventListener("click", outSidePickerClickHandle);
     return () => {
       window.removeEventListener("keydown", arrowPressHandle);
+      window.removeEventListener("click", outSidePickerClickHandle);
     };
-  });
+  }, []);
 
   return (
     <Wrapper>
@@ -137,6 +152,8 @@ const CommentEditorWrapper = (props: Props) => {
           iconPick,
           showPicker,
           setShowPicker,
+          wrapperRef,
+          iconButtonRef,
         }}
       >
         <UserSuggestionUL
