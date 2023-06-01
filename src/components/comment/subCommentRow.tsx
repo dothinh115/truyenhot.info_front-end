@@ -17,7 +17,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import CommentMenuDropDown from "./menuDropDown";
-const CommentEditor = dynamic(() => import("./commentEditor"));
+const CommentEditor = dynamic(() => import("./editor/wrapperEditor"));
 const StoryCommentContent = dynamic(() => import("./commentContent"));
 
 type Props = {

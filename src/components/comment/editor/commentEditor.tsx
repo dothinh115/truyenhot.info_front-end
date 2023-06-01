@@ -1,10 +1,5 @@
-import { MainLayoutContext } from "@/layouts/main";
-import { UserSuggesionInterface } from "@/models/users";
-import { API } from "@/utils/config";
 import SendIcon from "@mui/icons-material/Send";
 import IconButton from "@mui/material/IconButton";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
 import Stack from "@mui/material/Stack";
 import { alpha, styled } from "@mui/material/styles";
 import {
@@ -21,9 +16,8 @@ import {
   convertToRaw,
   getDefaultKeyBinding,
 } from "draft-js";
-import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
-import React, { useEffect, useRef, useState, useContext, memo } from "react";
-import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
+import React, { memo, useContext, useEffect, useRef, useState } from "react";
+import { CommentEditorContext } from "./wrapperEditor";
 type Props = {
   cb: (data: string) => void;
   clicked: boolean;
@@ -33,19 +27,6 @@ type Props = {
   replyTo?: string;
   sendIcon?: boolean;
 };
-
-const Wrapper = styled(Stack)(({ theme }) => ({
-  marginTop: theme.spacing(0.5),
-  backgroundColor: theme.palette.myBackground.paper,
-  border: `1px solid ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
-  borderRadius: theme.spacing(0.5),
-  overflow: "hidden",
-  flexGrow: 1,
-  flexDirection: "row",
-  width: "100%",
-  alignItems: "center",
-  flexWrap: "wrap",
-}));
 
 const ContentEditableStyled = styled(Stack)(({ theme }) => ({
   width: "calc(100% - 40px)",
@@ -83,21 +64,6 @@ const MentionSpanStyled = styled("span")(() => ({
   color: "#64b5f6",
   direction: "ltr",
   fontWeight: "400",
-}));
-
-const UserSuggestionUL = styled(List)(({ theme }) => ({
-  width: "100%",
-  padding: 0,
-  borderBottom: `1px dashed ${theme.palette.mySecondary.boxShadow}`,
-}));
-
-const UserSuggestionItem = styled(ListItemButton)(({ theme }) => ({
-  "&:hover": {
-    backgroundColor: theme.palette.myBackground.default,
-  },
-  "&.active": {
-    backgroundColor: theme.palette.myBackground.default,
-  },
 }));
 
 const MENTION_REGEX = /\B@\w+/g;
@@ -142,20 +108,25 @@ const CommentEditor = ({
     EditorState.createEmpty(decorator)
   );
   const editorRef = useRef<any>();
-  const suggestionULRef = useRef<HTMLUListElement>(null);
   const timeout = useRef<any>();
-  const [listIndex, setListIndex] = useState<number>(0);
-  const iconPicked = useRef<string>("");
-
+  const {
+    setUserSuggestion,
+    setListIndex,
+    listIndex,
+    mentionClickData,
+    userSuggestion,
+    getUserSuggestion,
+    suggestionULRef,
+    iconPick,
+    setIconPick,
+    setShowPicker,
+  } = useContext<any>(CommentEditorContext);
   const currentRangeSuggestion = useRef<{
     start: number;
     end: number;
     value: string;
     key: string;
   }>();
-  const [userSuggestion, setUserSuggestion] = useState<
-    UserSuggesionInterface[]
-  >([]);
 
   const iconPickChange = (emoji: string) => {
     const contentState = editorState.getCurrentContent();
@@ -182,22 +153,6 @@ const CommentEditor = ({
     }
 
     return getDefaultKeyBinding(e);
-  };
-
-  const getUserSuggestion = (user_id: string) => {
-    if (user_id === "") return;
-    clearTimeout(timeout.current);
-
-    timeout.current = setTimeout(async () => {
-      try {
-        const response: any = await API.get(
-          `/users/getMentionSuggestion/${user_id}`
-        );
-        setUserSuggestion(response.result);
-      } catch (error) {
-        console.log(error);
-      }
-    }, 500);
   };
 
   const clearSuggestion = () => {
@@ -276,6 +231,7 @@ const CommentEditor = ({
     const value = JSON.stringify(convertToRaw(blankBlockRemoveHandle()));
     cb(value);
     clearContent();
+    setShowPicker(false);
   };
 
   const clearContent = () => {
@@ -401,7 +357,6 @@ const CommentEditor = ({
     const keyOfBlockStanding = selectionState.getAnchorKey(); //key của block đang đứng
     const block = contentState.getBlockForKey(keyOfBlockStanding); //block đang đứng
     const text = block.getText(); //text của block đang đứng
-    const anchorOffset = selectionState.getAnchorOffset() - 1; //vị trí ban đầu của con trỏ chuột
     let rangeArr: { start: number; end: number; value: string }[] = []; //lấy range của mention nếu có
     let matchArr;
     while ((matchArr = MENTION_REGEX.exec(text)) !== null) {
@@ -421,17 +376,27 @@ const CommentEditor = ({
     if (rangeArr.length === 0) return clearSuggestion();
     //xét xem con trỏ chuột có đang nằm trong range mention hay ko
     for (let range of rangeArr) {
-      const $_match = range.start <= anchorOffset && anchorOffset < range.end;
-      if ($_match) {
+      const $_match = selectionState.hasEdgeWithin(
+        keyOfBlockStanding,
+        range.start,
+        range.end
+      );
+      if (!$_match) {
+        clearSuggestion();
+        continue;
+      } else {
+        const entityInstace = block.getEntityAt(
+          selectionState.getFocusOffset() - 1
+        );
+        if (entityInstace) {
+          clearSuggestion();
+          return;
+        }
         //vượt qua tất cả thì đã có value của mention, tiến hành call api lấy suggestion
         const user_id = range.value;
         await getUserSuggestion(user_id.replace("@", ""));
         currentRangeSuggestion.current = { ...range, key: keyOfBlockStanding }; //lưu thông tin range hiện tại để dùng sau
-        const entityInstace = block.getEntityAt(range.start);
-        if (entityInstace) clearSuggestion();
         break;
-      } else {
-        clearSuggestion();
       }
     }
   };
@@ -496,27 +461,10 @@ const CommentEditor = ({
     clearSuggestion();
   };
 
-  const moveDown = () => {
-    if (listIndex + 1 > userSuggestion?.length - 1) return;
-    setListIndex(listIndex + 1);
-  };
-  const moveUp = () => {
-    if (listIndex - 1 < 0) return;
-    setListIndex(listIndex - 1);
-  };
-  const arrowPressHandle = (event: any) => {
-    if (userSuggestion.length === 0) return;
-    switch (event.key) {
-      case "ArrowDown": {
-        moveDown();
-        break;
-      }
-      case "ArrowUp": {
-        moveUp();
-        break;
-      }
-    }
-  };
+  useEffect(() => {
+    if (mentionClickData)
+      mentionClickHandle(mentionClickData.user_id, mentionClickData._id);
+  }, [mentionClickData]);
 
   useEffect(() => {
     handleMention();
@@ -543,129 +491,40 @@ const CommentEditor = ({
   }, [clicked]);
 
   useEffect(() => {
-    window.addEventListener("keydown", arrowPressHandle);
-    return () => {
-      window.removeEventListener("keydown", arrowPressHandle);
-    };
-  });
+    if (iconPick) {
+      iconPickChange(iconPick);
+      setIconPick(null);
+    }
+  }, [iconPick]);
 
   return (
     <>
-      <Wrapper>
-        <UserSuggestionUL
-          sx={{ display: userSuggestion.length !== 0 ? "block" : "none" }}
-          ref={suggestionULRef}
-        >
-          {userSuggestion?.map(
-            (user: UserSuggesionInterface, index: number) => {
-              return (
-                <UserSuggestionItem
-                  className={index === listIndex ? "active" : ""}
-                  key={user._id}
-                  onClick={() => mentionClickHandle(user.user_id, user._id)}
-                >
-                  {user.user_id}
-                </UserSuggestionItem>
-              );
-            }
-          )}
-        </UserSuggestionUL>
-        {!replyTo && (
-          <MemorizedEmojiPickerIcon iconPickChange={iconPickChange} />
-        )}
-
-        <ContentEditableStyled onClick={() => editorRef.current?.focus()}>
-          <Editor
-            ref={editorRef}
-            editorState={editorState}
-            onChange={setEditorState}
-            handleKeyCommand={handleKeyCommand}
-            keyBindingFn={myKeyBindingFn}
-            placeholder={placeholder}
-          />
-        </ContentEditableStyled>
-        <IconButton
-          type="submit"
-          size="large"
-          sx={{
-            height: "40px",
-            width: "40px",
-            display: sendIcon ? "flex" : "none",
-          }}
-          onClick={() => setClicked(true)}
-        >
-          <SendIcon />
-        </IconButton>
-      </Wrapper>
+      <ContentEditableStyled onClick={() => editorRef.current?.focus()}>
+        <Editor
+          ref={editorRef}
+          editorState={editorState}
+          onChange={setEditorState}
+          handleKeyCommand={handleKeyCommand}
+          keyBindingFn={myKeyBindingFn}
+          placeholder={placeholder}
+        />
+      </ContentEditableStyled>
+      <IconButton
+        type="submit"
+        size="large"
+        sx={{
+          height: "40px",
+          width: "40px",
+          display: sendIcon ? "flex" : "none",
+        }}
+        onClick={() => setClicked(true)}
+      >
+        <SendIcon />
+      </IconButton>
     </>
   );
 };
 
-const EmojiPickerWrapper = styled(Stack)(({ theme }) => ({
-  flexDirection: "row",
-  padding: theme.spacing(0.5),
-  width: "100%",
-  "& aside.EmojiPickerReact.epr-main": {
-    position: "absolute",
-    bottom: "calc(100% + 30px)",
-    left: 0,
-    display: "none",
-  },
-  "& .EmojiPickerReact .epr-preview": {
-    display: "none",
-  },
-  " & .EmojiPickerReact li.epr-emoji-category>.epr-emoji-category-label": {
-    position: "static",
-  },
-}));
+const MemoriezedCommentEditor = memo(CommentEditor);
 
-const EmojiPickerIcon = ({ iconPickChange }: { iconPickChange: any }) => {
-  const { mode } = useContext<any>(MainLayoutContext);
-  const emojiButtonRef = useRef<HTMLButtonElement>(null);
-  const emojiButtonClick = (event: any) => {
-    if (emojiButtonRef.current) {
-      if (emojiButtonRef.current.contains(event.target)) {
-        const picker = document.querySelector(
-          "aside.EmojiPickerReact.epr-main"
-        ) as HTMLElement;
-        if (picker) {
-          if (picker.style.display === "none") {
-            picker.style.display = "flex";
-          } else {
-            picker.style.display = "none";
-          }
-        }
-      }
-    }
-  };
-
-  const emojiClickHandle = (emojiData: EmojiClickData, event: MouseEvent) => {
-    iconPickChange(emojiData.emoji);
-  };
-
-  return (
-    <EmojiPickerWrapper>
-      <IconButton
-        sx={{
-          width: "30px",
-          height: "30px",
-        }}
-        onClick={emojiButtonClick}
-        ref={emojiButtonRef}
-      >
-        <InsertEmoticonIcon />
-      </IconButton>
-      <EmojiPicker
-        searchDisabled={true}
-        skinTonesDisabled={true}
-        theme={mode}
-        height={"300px"}
-        onEmojiClick={emojiClickHandle}
-      />
-    </EmojiPickerWrapper>
-  );
-};
-
-const MemorizedEmojiPickerIcon = memo(EmojiPickerIcon);
-
-export default CommentEditor;
+export default MemoriezedCommentEditor;

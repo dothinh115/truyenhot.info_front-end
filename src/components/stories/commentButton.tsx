@@ -17,7 +17,7 @@ import useSWRInfinite from "swr/infinite";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { MemorizedStoryCommentRow } from "../comment/commentRow";
 
-const CommentEditor = dynamic(() => import("../comment/commentEditor"));
+const CommentEditor = dynamic(() => import("../comment/editor/wrapperEditor"));
 
 const ModalInner = styled(Stack)(({ theme }) => ({
   position: "fixed",
@@ -209,6 +209,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
                   setClicked={setSubmitClicked}
                   placeholder="Viết bình luận..."
                   sendIcon={true}
+                  showEmojiButton={true}
                 />
 
                 <Box

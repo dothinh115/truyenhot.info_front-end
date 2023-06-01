@@ -24,7 +24,7 @@ import useSWRInfinite from "swr/infinite";
 import CommentMenuDropDown from "./menuDropDown";
 import { useAuth } from "@/hooks/auth/useAuth";
 
-const CommentEditor = dynamic(() => import("./commentEditor"));
+const CommentEditor = dynamic(() => import("./editor/wrapperEditor"));
 const MemorizedStorySubCommentRow = dynamic(() => import("./subCommentRow"));
 const StoryCommentContent = dynamic(() => import("./commentContent"));
 const CommentRowWrapper = styled(Stack)(({ theme }) => ({
