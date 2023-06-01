@@ -19,7 +19,7 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import CommentMenuDropDown from "./menuDropDown";
 import { useAuth } from "@/hooks/auth/useAuth";
@@ -105,7 +105,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
   const [editLoading, setEditLoading] = useState<boolean>(false);
   const [replyLoading, setReplyLoading] = useState<boolean>(false);
 
-  const submitHandle = useCallback(async (data: string) => {
+  const submitHandle = async (data: string) => {
     const comment_content = data;
     if (comment_content === "") return;
     setEditLoading(true);
@@ -120,9 +120,9 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
       await mutate();
       setEditLoading(false);
     }
-  }, []);
+  };
 
-  const replySubmitHandle = useCallback(async (data: string) => {
+  const replySubmitHandle = async (data: string) => {
     const comment_content = data;
     if (comment_content === "") return;
     setReplyLoading(true);
@@ -140,7 +140,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
       await mutate();
       setReplyLoading(false);
     }
-  }, []);
+  };
 
   const showReplyFooter =
     (subCmtData && subCmtData[0]?.result.length !== 0) || replying;

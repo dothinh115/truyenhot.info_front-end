@@ -96,13 +96,21 @@ const CommentEditorWrapper = (props: Props) => {
   }, []);
 
   const moveDown = () => {
-    if (listIndex + 1 > userSuggestion?.length - 1) return;
+    if (listIndex + 1 > userSuggestion?.length - 1) {
+      setListIndex(0);
+      return;
+    }
     setListIndex(listIndex + 1);
   };
+
   const moveUp = () => {
-    if (listIndex - 1 < 0) return;
+    if (listIndex - 1 < 0) {
+      setListIndex(userSuggestion.length - 1);
+      return;
+    }
     setListIndex(listIndex - 1);
   };
+
   const arrowPressHandle = (event: any) => {
     if (userSuggestion.length === 0) return;
     switch (event.key) {
@@ -130,9 +138,14 @@ const CommentEditorWrapper = (props: Props) => {
 
   useEffect(() => {
     window.addEventListener("keydown", arrowPressHandle);
-    window.addEventListener("click", outSidePickerClickHandle);
     return () => {
       window.removeEventListener("keydown", arrowPressHandle);
+    };
+  });
+
+  useEffect(() => {
+    window.addEventListener("click", outSidePickerClickHandle);
+    return () => {
       window.removeEventListener("click", outSidePickerClickHandle);
     };
   }, []);

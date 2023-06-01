@@ -236,6 +236,7 @@ const CommentEditor = ({
 
   const clearContent = () => {
     const contentState = editorState.getCurrentContent();
+    if (contentState.getPlainText() === "") return;
     const firstBlock = contentState.getFirstBlock();
     const lastBlock = contentState.getLastBlock();
     const allSelected = new SelectionState({
@@ -243,7 +244,6 @@ const CommentEditor = ({
       anchorOffset: 0,
       focusKey: lastBlock.getKey(),
       focusOffset: lastBlock.getLength(),
-      hasFocus: true,
     });
     const removeRange = Modifier.removeRange(
       contentState,

@@ -4,7 +4,7 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
-import { memo, useContext, useRef, useState } from "react";
+import { memo, useContext } from "react";
 import { CommentEditorContext } from "./wrapperEditor";
 
 const Wrapper = styled(Stack)(({ theme }) => ({
@@ -20,7 +20,7 @@ const Wrapper = styled(Stack)(({ theme }) => ({
   },
 }));
 
-const PickerWrapper = styled(Stack)(({ theme }) => ({
+const PickerWrapper = styled(Stack)(() => ({
   position: "absolute",
   bottom: "calc(100% + 30px)",
   left: 0,
