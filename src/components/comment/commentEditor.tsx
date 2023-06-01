@@ -1,3 +1,4 @@
+import { MainLayoutContext } from "@/layouts/main";
 import { UserSuggesionInterface } from "@/models/users";
 import { API } from "@/utils/config";
 import SendIcon from "@mui/icons-material/Send";
@@ -20,8 +21,9 @@ import {
   convertToRaw,
   getDefaultKeyBinding,
 } from "draft-js";
-
-import React, { useEffect, useRef, useState } from "react";
+import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
+import React, { useEffect, useRef, useState, useContext, memo } from "react";
+import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 type Props = {
   cb: (data: string) => void;
   clicked: boolean;
@@ -44,6 +46,7 @@ const Wrapper = styled(Stack)(({ theme }) => ({
   alignItems: "center",
   flexWrap: "wrap",
 }));
+
 const ContentEditableStyled = styled(Stack)(({ theme }) => ({
   width: "calc(100% - 40px)",
   maxHeight: "calc(21px * 10)",
@@ -142,6 +145,7 @@ const CommentEditor = ({
   const suggestionULRef = useRef<HTMLUListElement>(null);
   const timeout = useRef<any>();
   const [listIndex, setListIndex] = useState<number>(0);
+  const iconPicked = useRef<string>("");
 
   const currentRangeSuggestion = useRef<{
     start: number;
@@ -152,6 +156,18 @@ const CommentEditor = ({
   const [userSuggestion, setUserSuggestion] = useState<
     UserSuggesionInterface[]
   >([]);
+
+  const iconPickChange = (emoji: string) => {
+    const contentState = editorState.getCurrentContent();
+    const selectionState = editorState.getSelection();
+    const addEmoji = Modifier.insertText(contentState, selectionState, emoji);
+    const newContentState = EditorState.push(
+      editorState,
+      addEmoji,
+      "insert-characters"
+    );
+    setEditorState(newContentState);
+  };
 
   const myKeyBindingFn = (e: React.KeyboardEvent): string | null => {
     if (e.key === "Enter") {
@@ -502,18 +518,6 @@ const CommentEditor = ({
     }
   };
 
-  const emojiClick = (emoji: string) => {
-    const contentState = editorState.getCurrentContent();
-    const selectionState = editorState.getSelection();
-    const addEmoji = Modifier.insertText(contentState, selectionState, emoji);
-    const newContentState = EditorState.push(
-      editorState,
-      addEmoji,
-      "insert-characters"
-    );
-    setEditorState(newContentState);
-  };
-
   useEffect(() => {
     handleMention();
   }, [editorState.getCurrentContent()]);
@@ -566,6 +570,10 @@ const CommentEditor = ({
             }
           )}
         </UserSuggestionUL>
+        {!replyTo && (
+          <MemorizedEmojiPickerIcon iconPickChange={iconPickChange} />
+        )}
+
         <ContentEditableStyled onClick={() => editorRef.current?.focus()}>
           <Editor
             ref={editorRef}
@@ -592,5 +600,72 @@ const CommentEditor = ({
     </>
   );
 };
+
+const EmojiPickerWrapper = styled(Stack)(({ theme }) => ({
+  flexDirection: "row",
+  padding: theme.spacing(0.5),
+  width: "100%",
+  "& aside.EmojiPickerReact.epr-main": {
+    position: "absolute",
+    bottom: "calc(100% + 30px)",
+    left: 0,
+    display: "none",
+  },
+  "& .EmojiPickerReact .epr-preview": {
+    display: "none",
+  },
+  " & .EmojiPickerReact li.epr-emoji-category>.epr-emoji-category-label": {
+    position: "static",
+  },
+}));
+
+const EmojiPickerIcon = ({ iconPickChange }: { iconPickChange: any }) => {
+  const { mode } = useContext<any>(MainLayoutContext);
+  const emojiButtonRef = useRef<HTMLButtonElement>(null);
+  const emojiButtonClick = (event: any) => {
+    if (emojiButtonRef.current) {
+      if (emojiButtonRef.current.contains(event.target)) {
+        const picker = document.querySelector(
+          "aside.EmojiPickerReact.epr-main"
+        ) as HTMLElement;
+        if (picker) {
+          if (picker.style.display === "none") {
+            picker.style.display = "flex";
+          } else {
+            picker.style.display = "none";
+          }
+        }
+      }
+    }
+  };
+
+  const emojiClickHandle = (emojiData: EmojiClickData, event: MouseEvent) => {
+    iconPickChange(emojiData.emoji);
+  };
+
+  return (
+    <EmojiPickerWrapper>
+      <IconButton
+        sx={{
+          width: "30px",
+          height: "30px",
+        }}
+        onClick={emojiButtonClick}
+        ref={emojiButtonRef}
+      >
+        <InsertEmoticonIcon />
+      </IconButton>
+      <EmojiPicker
+        searchDisabled={true}
+        skinTonesDisabled={true}
+        theme={mode}
+        height={"300px"}
+        onEmojiClick={emojiClickHandle}
+      />
+    </EmojiPickerWrapper>
+  );
+};
+
+const MemorizedEmojiPickerIcon = memo(EmojiPickerIcon);
 
 export default CommentEditor;

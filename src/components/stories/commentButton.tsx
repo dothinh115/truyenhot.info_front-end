@@ -199,6 +199,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
               color: "myText.primary",
               flexWrap: "wrap",
             }}
+            position={"relative"}
           >
             {profile ? (
               <>
