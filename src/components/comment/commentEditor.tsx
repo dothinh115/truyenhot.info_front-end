@@ -20,8 +20,9 @@ import {
   getDefaultKeyBinding,
 } from "draft-js";
 import SendIcon from "@mui/icons-material/Send";
-
 import React, { useEffect, useRef, useState } from "react";
+import emojiCompact from "emoji.json/emoji-compact.json";
+
 type Props = {
   cb: (data: string) => void;
   clicked: boolean;
@@ -538,6 +539,7 @@ const CommentEditor = ({
   return (
     <>
       <Wrapper>
+        <EmojiPicker />
         <UserSuggestionUL
           sx={{ display: userSuggestion.length !== 0 ? "block" : "none" }}
           ref={suggestionULRef}
@@ -579,6 +581,21 @@ const CommentEditor = ({
           <SendIcon />
         </IconButton>
       </Wrapper>
+    </>
+  );
+};
+
+const EmojiPicker = () => {
+  const emojis = () => {
+    let emojis: any[] = [];
+    for (let i = 0; i < 500; i++) {
+      emojis = [...emojis, emojiCompact[i]];
+    }
+    return emojis;
+  };
+  return (
+    <>
+      <Stack direction={"row"}></Stack>
     </>
   );
 };

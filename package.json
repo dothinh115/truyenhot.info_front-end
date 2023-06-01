@@ -27,6 +27,7 @@
     "cookies": "^0.8.0",
     "draft-convert": "^2.1.13",
     "draft-js": "^0.11.7",
+    "emoji.json": "^14.0.0",
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
     "http-proxy": "^1.18.1",

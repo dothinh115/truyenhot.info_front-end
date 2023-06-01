@@ -1,30 +1,23 @@
 import { useAuth } from "@/hooks/auth/useAuth";
 import { SubCommentDataInterface } from "@/models/stories";
-import { API, PermissionVariables } from "@/utils/config";
+import { API } from "@/utils/config";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ReplyIcon from "@mui/icons-material/Reply";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
-import { alpha, styled } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
+import React, { useContext, useState } from "react";
 import { CommentContext } from "./commentRow";
-
+import CommentMenuDropDown from "./menuDropDown";
 const CommentEditor = dynamic(() => import("./commentEditor"));
 const StoryCommentContent = dynamic(() => import("./commentContent"));
 
@@ -49,19 +42,6 @@ const SubCommentInner = styled(Stack)(({ theme }) => ({
   borderRadius: theme.spacing(2),
 }));
 
-const MenuDropdownWrapper = styled(Box)(({ theme }) => ({
-  position: "absolute",
-  width: "150px",
-  backgroundColor: theme.palette.myBackground.secondary,
-  borderRadius: theme.spacing(2),
-  overflow: "hidden",
-  boxShadow: `0 0 2px ${alpha(theme.palette.mySecondary.boxShadow, 0.4)}`,
-  right: 0,
-  top: "100%",
-  display: "none",
-  zIndex: 50,
-}));
-
 const IconWrapper = styled(Stack)(({ theme }) => ({
   flexDirection: "row",
   alignItems: "center",
@@ -81,36 +61,12 @@ const PosterSpanStyled = styled("span")(({ theme }) => ({
 }));
 
 const StorySubCommentRow = ({ subCmtData, mutate, setReplying }: Props) => {
-  const { profile } = useAuth();
-  const menuDropdownIcon = useRef<HTMLButtonElement>(null);
-  const menuDropdown = useRef<HTMLDivElement>(null);
   const [editing, setEditing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [submitClick, setSubmitClick] = useState<boolean>(false);
   const { setSubReplyTo } = useContext<any>(CommentContext);
-
-  const menuDropdownClickHandle = (event: { target: any }) => {
-    if (menuDropdown?.current) {
-      if (menuDropdownIcon?.current?.contains(event.target)) {
-        if (menuDropdown.current.style.display === "block") {
-          menuDropdown.current.style.display = "none";
-        } else menuDropdown.current.style.display = "block";
-      } else {
-        if (menuDropdown?.current) menuDropdown.current.style.display = "none";
-      }
-    }
-  };
-
-  const deleteHandle = async (_id: string) => {
-    try {
-      await API.delete(`/comments/sub/delete/${_id}`);
-
-      mutate();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+  const { profile } = useAuth();
+  const router = useRouter();
   const submitHandle = async (data: string) => {
     const comment_content = data;
     if (comment_content === "") return;
@@ -127,13 +83,6 @@ const StorySubCommentRow = ({ subCmtData, mutate, setReplying }: Props) => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    window.addEventListener("click", menuDropdownClickHandle);
-    return () => {
-      window.removeEventListener("click", menuDropdownClickHandle);
-    };
-  }, []);
 
   return (
     <SubCommentWrapper>
@@ -167,8 +116,16 @@ const StorySubCommentRow = ({ subCmtData, mutate, setReplying }: Props) => {
               cursor: "pointer",
             }}
             onClick={() => {
-              setSubReplyTo(subCmtData?.author.user_id);
-              setReplying(true);
+              if (profile) {
+                setReplying(true);
+                setSubReplyTo(subCmtData?.author.user_id);
+              } else
+                router.push({
+                  pathname: "/login",
+                  query: {
+                    backTo: router.asPath,
+                  },
+                });
             }}
           >
             <ReplyIcon fontSize="small" /> Trả lời
@@ -215,69 +172,12 @@ const StorySubCommentRow = ({ subCmtData, mutate, setReplying }: Props) => {
         )}
       </SubCommentInner>
 
-      <Box
-        sx={{
-          display: "inline-block",
-          marginLeft: "5px",
-          position: "relative",
-        }}
-      >
-        <IconButton
-          sx={{
-            width: "40px",
-            height: "40px",
-          }}
-          ref={menuDropdownIcon}
-        >
-          <MoreHorizIcon />
-        </IconButton>
-        <MenuDropdownWrapper ref={menuDropdown}>
-          <List
-            dense={true}
-            sx={{
-              padding: 0,
-            }}
-          >
-            <ListItemButton onClick={() => setReplying(true)}>
-              <ListItemIcon>
-                <ReplyIcon />
-              </ListItemIcon>
-              <ListItemText
-                sx={{ color: "myText.primary" }}
-                primary="Trả lời"
-              />
-            </ListItemButton>
-            {(profile?.result._id === subCmtData.author._id ||
-              profile?.result.permission > PermissionVariables.Editors) && (
-              <>
-                <ListItemButton onClick={() => deleteHandle(subCmtData._id)}>
-                  <ListItemIcon>
-                    <DeleteIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    sx={{ color: "myText.primary" }}
-                    primary="Xóa"
-                  />
-                </ListItemButton>
-
-                <ListItemButton
-                  onClick={() => {
-                    setEditing(true);
-                  }}
-                >
-                  <ListItemIcon>
-                    <EditIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Sửa"
-                    sx={{ color: "myText.primary" }}
-                  />
-                </ListItemButton>
-              </>
-            )}
-          </List>
-        </MenuDropdownWrapper>
-      </Box>
+      <CommentMenuDropDown
+        comment={subCmtData}
+        mutate={mutate}
+        setEditing={setEditing}
+        setReplying={setReplying}
+      />
     </SubCommentWrapper>
   );
 };
