@@ -2,6 +2,7 @@ import { UserSuggesionInterface } from "@/models/users";
 import { API } from "@/utils/config";
 import Stack from "@mui/material/Stack";
 import List from "@mui/material/List";
+import Link from "@mui/material/Link";
 import ListItemButton from "@mui/material/ListItemButton";
 import IconButton from "@mui/material/IconButton";
 import { styled, alpha } from "@mui/material/styles";
@@ -20,9 +21,16 @@ import {
   getDefaultKeyBinding,
 } from "draft-js";
 import SendIcon from "@mui/icons-material/Send";
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  memo,
+  createContext,
+  useContext,
+} from "react";
 import emojiCompact from "emoji.json/emoji-compact.json";
-
+import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 type Props = {
   cb: (data: string) => void;
   clicked: boolean;
@@ -33,13 +41,14 @@ type Props = {
   sendIcon?: boolean;
 };
 
+const EditorContext = createContext({});
+
 const Wrapper = styled(Stack)(({ theme }) => ({
   marginTop: theme.spacing(0.5),
   backgroundColor: theme.palette.myBackground.paper,
   border: `1px solid ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
   borderRadius: theme.spacing(0.5),
   overflow: "hidden",
-  position: "relative",
   flexGrow: 1,
   flexDirection: "row",
   width: "100%",
@@ -408,10 +417,7 @@ const CommentEditor = ({
     //xét xem con trỏ chuột có đang nằm trong range mention hay ko
     for (let range of rangeArr) {
       const $_match = range.start <= anchorOffset && anchorOffset < range.end;
-      if (!$_match) {
-        clearSuggestion();
-        continue; //nếu ko nằm trong range của mention thì bỏ qua
-      } else {
+      if ($_match) {
         //vượt qua tất cả thì đã có value của mention, tiến hành call api lấy suggestion
         const user_id = range.value;
         await getUserSuggestion(user_id.replace("@", ""));
@@ -419,6 +425,8 @@ const CommentEditor = ({
         const entityInstace = block.getEntityAt(range.start);
         if (entityInstace) clearSuggestion();
         break;
+      } else {
+        clearSuggestion();
       }
     }
   };
@@ -505,6 +513,18 @@ const CommentEditor = ({
     }
   };
 
+  const emojiClick = (emoji: string) => {
+    const contentState = editorState.getCurrentContent();
+    const selectionState = editorState.getSelection();
+    const addEmoji = Modifier.insertText(contentState, selectionState, emoji);
+    const newContentState = EditorState.push(
+      editorState,
+      addEmoji,
+      "insert-characters"
+    );
+    setEditorState(newContentState);
+  };
+
   useEffect(() => {
     handleMention();
   }, [editorState.getCurrentContent()]);
@@ -539,7 +559,6 @@ const CommentEditor = ({
   return (
     <>
       <Wrapper>
-        <EmojiPicker />
         <UserSuggestionUL
           sx={{ display: userSuggestion.length !== 0 ? "block" : "none" }}
           ref={suggestionULRef}
@@ -558,6 +577,9 @@ const CommentEditor = ({
             }
           )}
         </UserSuggestionUL>
+        {/* <EditorContext.Provider value={{ emojiClick: emojiClick }}>
+          <MemorizedEmojiPicker />
+        </EditorContext.Provider> */}
         <ContentEditableStyled onClick={() => editorRef.current?.focus()}>
           <Editor
             ref={editorRef}
@@ -585,19 +607,117 @@ const CommentEditor = ({
   );
 };
 
+const EmoJiPickerWrapper = styled(Stack)(({ theme }) => ({
+  flexDirection: "row",
+  flexWrap: "wrap",
+  maxHeight: "350px",
+  overflowY: "auto",
+  width: "260px",
+  backgroundColor: theme.palette.myBackground.default,
+  position: "absolute",
+  top: 0,
+  border: `1px solid ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
+  display: "none",
+  zIndex: 1000,
+}));
+
+const EmojiButton = styled(Link)(({ theme }) => ({
+  minWidth: "unset",
+  padding: 0,
+  fontSize: "1.5em",
+  lineHeight: "unset",
+  margin: theme.spacing(0.5),
+  cursor: "pointer",
+}));
+
+function vh(percent: number) {
+  var h = Math.max(
+    document.documentElement.clientHeight,
+    window.innerHeight || 0
+  );
+  return (percent * h) / 100;
+}
+
 const EmojiPicker = () => {
-  const emojis = () => {
-    let emojis: any[] = [];
+  const iconRef = useRef<HTMLButtonElement>(null);
+  const pickerWrapperRef = useRef<HTMLDivElement>(null);
+  const { emojiClick } = useContext<any>(EditorContext);
+  const emojis = (): string[] => {
+    let emojis: string[] = [];
     for (let i = 0; i < 500; i++) {
       emojis = [...emojis, emojiCompact[i]];
     }
     return emojis;
   };
+
+  const emojiIconClick = (event: any) => {
+    if (iconRef.current || pickerWrapperRef.current) {
+      if (iconRef.current?.contains(event.target)) {
+        if (pickerWrapperRef.current!.style.display === "none") {
+          pickerWrapperRef.current!.style.display = "block";
+        } else pickerWrapperRef.current!.style.display = "none";
+      } else if (pickerWrapperRef.current?.contains(event.target)) return;
+      else pickerWrapperRef.current!.style.display = "none";
+    }
+  };
+
+  useEffect(() => {
+    if (pickerWrapperRef.current && iconRef.current) {
+      if (iconRef.current?.getBoundingClientRect().top > 450)
+        pickerWrapperRef.current.style.top = `${
+          iconRef.current?.getBoundingClientRect().top - vh(10) - 350
+        }px`;
+      else
+        pickerWrapperRef.current.style.top = `${
+          iconRef.current?.getBoundingClientRect().top - vh(10) + 80
+        }px`;
+    }
+  });
+
+  useEffect(() => {
+    window.addEventListener("click", emojiIconClick);
+    return () => {
+      window.removeEventListener("click", emojiIconClick);
+    };
+  }, []);
+
   return (
     <>
-      <Stack direction={"row"}></Stack>
+      <Stack
+        width={"100%"}
+        p={"4px"}
+        direction={"row"}
+        position={"relative"}
+        sx={{
+          display: {
+            md: "flex",
+            xs: "none",
+          },
+        }}
+      >
+        <IconButton
+          ref={iconRef}
+          sx={{
+            width: "30px",
+            height: "30px",
+          }}
+        >
+          <InsertEmoticonIcon />
+        </IconButton>
+      </Stack>
+      <EmoJiPickerWrapper ref={pickerWrapperRef}>
+        {emojis().map((emoji: string) => {
+          return (
+            <EmojiButton underline="none" onClick={() => emojiClick(emoji)}>
+              {emoji}
+            </EmojiButton>
+          );
+        })}
+      </EmoJiPickerWrapper>
     </>
   );
 };
+
+const MemorizedEmojiPicker = memo(EmojiPicker);
 
 export default CommentEditor;

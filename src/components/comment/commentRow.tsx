@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/auth/useAuth";
 import {
   CommentDataInterface,
   SubCommentDataInterface,
@@ -18,11 +19,10 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
-import React, { createContext, useRef, useState } from "react";
+import { useRouter } from "next/router";
+import React, { useRef, useState, useCallback } from "react";
 import useSWRInfinite from "swr/infinite";
 import CommentMenuDropDown from "./menuDropDown";
-import { useAuth } from "@/hooks/auth/useAuth";
-import { useRouter } from "next/router";
 
 const CommentEditor = dynamic(() => import("./commentEditor"));
 const MemorizedStorySubCommentRow = dynamic(() => import("./subCommentRow"));
@@ -82,8 +82,6 @@ type Props = {
   mutate: () => void;
 };
 
-export const CommentContext = createContext({});
-
 export const StoryCommentRow = ({ comment, mutate }: Props) => {
   const [subReplyTo, setSubReplyTo] = useState<string>("");
   const getKey = (pageIndex: number, previousPageData: any) => {
@@ -107,7 +105,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
   const [editLoading, setEditLoading] = useState<boolean>(false);
   const [replyLoading, setReplyLoading] = useState<boolean>(false);
 
-  const submitHandle = async (data: string) => {
+  const submitHandle = useCallback(async (data: string) => {
     const comment_content = data;
     if (comment_content === "") return;
     setEditLoading(true);
@@ -122,9 +120,9 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
       await mutate();
       setEditLoading(false);
     }
-  };
+  }, []);
 
-  const replySubmitHandle = async (data: string) => {
+  const replySubmitHandle = useCallback(async (data: string) => {
     const comment_content = data;
     if (comment_content === "") return;
     setReplyLoading(true);
@@ -142,7 +140,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
       await mutate();
       setReplyLoading(false);
     }
-  };
+  }, []);
 
   const showReplyFooter =
     (subCmtData && subCmtData[0]?.result.length !== 0) || replying;
@@ -306,22 +304,21 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
                 </IconWrapper>
               </ReplyInputWrapper>
             )}
-            <CommentContext.Provider value={{ setSubReplyTo }}>
-              {subCmtData &&
-                subCmtData[0]?.result.length !== 0 &&
-                subCmtData.map((group: any) => {
-                  return group?.result.map((sub: SubCommentDataInterface) => {
-                    return (
-                      <MemorizedStorySubCommentRow
-                        key={sub._id}
-                        subCmtData={sub}
-                        mutate={subCmtMutate}
-                        setReplying={setReplying}
-                      />
-                    );
-                  });
-                })}
-            </CommentContext.Provider>
+            {subCmtData &&
+              subCmtData[0]?.result.length !== 0 &&
+              subCmtData.map((group: any) => {
+                return group?.result.map((sub: SubCommentDataInterface) => {
+                  return (
+                    <MemorizedStorySubCommentRow
+                      key={sub._id}
+                      subCmtData={sub}
+                      mutate={subCmtMutate}
+                      setReplying={setReplying}
+                      setSubReplyTo={setSubReplyTo}
+                    />
+                  );
+                });
+              })}
             {size < comment.totalSubCmtPages && (
               <Link
                 underline="none"

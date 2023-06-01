@@ -23,6 +23,7 @@ type Props = {
   setReplying: (reply: boolean) => void;
   comment: CommentDataInterface | SubCommentDataInterface;
   setEditing: (edit: boolean) => void;
+  subCmt?: boolean;
 };
 
 const MenuDropdownWrapper = styled(Box)(({ theme }) => ({
@@ -42,14 +43,16 @@ const CommentMenuDropDown = ({
   setReplying,
   comment,
   setEditing,
+  subCmt = false,
 }: Props) => {
   const menuDropdownIcon = useRef<HTMLButtonElement>(null);
   const menuDropdown = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { profile } = useAuth();
   const deleteHandle = async (_id: string) => {
+    console.log(comment._id);
     try {
-      await API.delete(`/comments/delete/${_id}`);
+      await API.delete(`/comments${subCmt ? "/sub" : ""}/delete/${_id}`);
       mutate();
     } catch (error) {
       console.log(error);

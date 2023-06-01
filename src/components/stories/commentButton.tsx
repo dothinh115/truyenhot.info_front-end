@@ -12,7 +12,7 @@ import { styled } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import useSWRInfinite from "swr/infinite";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { MemorizedStoryCommentRow } from "../comment/commentRow";
@@ -92,7 +92,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
 
   const router = useRouter();
 
-  const submitHandle = async (data: string) => {
+  const submitHandle = useCallback(async (data: string) => {
     if (!profile)
       router.push({
         pathname: "/login",
@@ -114,7 +114,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
     } finally {
       await mutate();
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (data && size > data[data.length - 1]?.pagination.pages && size !== 1) {

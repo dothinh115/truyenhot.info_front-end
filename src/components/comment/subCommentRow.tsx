@@ -15,8 +15,7 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, { useContext, useState } from "react";
-import { CommentContext } from "./commentRow";
+import React, { useState } from "react";
 import CommentMenuDropDown from "./menuDropDown";
 const CommentEditor = dynamic(() => import("./commentEditor"));
 const StoryCommentContent = dynamic(() => import("./commentContent"));
@@ -25,6 +24,7 @@ type Props = {
   subCmtData: SubCommentDataInterface;
   mutate: any;
   setReplying: any;
+  setSubReplyTo: any;
 };
 
 const SubCommentWrapper = styled(Stack)(({ theme }) => ({
@@ -60,11 +60,15 @@ const PosterSpanStyled = styled("span")(({ theme }) => ({
   alignItems: "center",
 }));
 
-const StorySubCommentRow = ({ subCmtData, mutate, setReplying }: Props) => {
+const StorySubCommentRow = ({
+  subCmtData,
+  mutate,
+  setReplying,
+  setSubReplyTo,
+}: Props) => {
   const [editing, setEditing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [submitClick, setSubmitClick] = useState<boolean>(false);
-  const { setSubReplyTo } = useContext<any>(CommentContext);
   const { profile } = useAuth();
   const router = useRouter();
   const submitHandle = async (data: string) => {
@@ -177,6 +181,7 @@ const StorySubCommentRow = ({ subCmtData, mutate, setReplying }: Props) => {
         mutate={mutate}
         setEditing={setEditing}
         setReplying={setReplying}
+        subCmt={true}
       />
     </SubCommentWrapper>
   );
