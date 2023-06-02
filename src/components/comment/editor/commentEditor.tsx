@@ -132,12 +132,12 @@ const CommentEditor = ({
     const contentState = editorState.getCurrentContent();
     const selectionState = editorState.getSelection();
     const addEmoji = Modifier.insertText(contentState, selectionState, emoji);
-    const newContentState = EditorState.push(
+    const newEditorState = EditorState.push(
       editorState,
       addEmoji,
       "insert-characters"
     );
-    setEditorState(newContentState);
+    setEditorState(newEditorState);
   };
 
   const myKeyBindingFn = (e: React.KeyboardEvent): string | null => {
@@ -250,12 +250,12 @@ const CommentEditor = ({
       allSelected,
       "backward"
     );
-    const newContentState = EditorState.push(
+    const newEditorState = EditorState.push(
       editorState,
       removeRange,
       "remove-range"
     );
-    setEditorState(newContentState);
+    setEditorState(newEditorState);
     clearSuggestion();
   };
 
@@ -311,7 +311,7 @@ const CommentEditor = ({
       entityKey
     );
 
-    let newContentState = EditorState.push(
+    let newEditorState = EditorState.push(
       editorState,
       insertUserID,
       "insert-characters"
@@ -325,21 +325,21 @@ const CommentEditor = ({
     });
 
     const addBlank = Modifier.insertText(
-      newContentState.getCurrentContent(),
+      newEditorState.getCurrentContent(),
       addBlankSelection,
       String.fromCharCode(160)
     );
 
-    newContentState = EditorState.push(
-      newContentState,
+    newEditorState = EditorState.push(
+      newEditorState,
       addBlank,
       "insert-characters"
     );
 
     //di chuyển con trỏ đến ký tự cuối cùng
-    newContentState = EditorState.moveFocusToEnd(newContentState);
+    newEditorState = EditorState.moveFocusToEnd(newEditorState);
 
-    setEditorState(newContentState);
+    setEditorState(newEditorState);
   };
 
   const handleMention = async () => {
@@ -424,7 +424,7 @@ const CommentEditor = ({
       entityKey
     );
     //push vào editorState
-    let newContentState: any = EditorState.push(
+    let newEditorState: any = EditorState.push(
       editorState,
       editText,
       "change-block-data"
@@ -444,19 +444,19 @@ const CommentEditor = ({
     });
 
     const addBlank = Modifier.insertText(
-      newContentState.getCurrentContent(),
+      newEditorState.getCurrentContent(),
       addBlankSpaceSelection,
       String.fromCharCode(160)
     );
 
-    newContentState = EditorState.push(
-      newContentState,
+    newEditorState = EditorState.push(
+      newEditorState,
       addBlank,
       "insert-characters"
     );
 
     //setState thay đổi mọi thứ vào editorState hiện tại
-    setEditorState(newContentState);
+    setEditorState(newEditorState);
     //clear suggestion sau khi mọi thứ đã xong
     clearSuggestion();
   };
