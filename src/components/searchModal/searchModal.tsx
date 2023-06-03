@@ -136,7 +136,7 @@ const SearchModal = (props: Props) => {
           setResultmess("Tìm theo tên truyện");
           if (searchResponse?.result.length === 0) {
             const authorSearchResponse: any = await API.get(
-              `/search/storyAuthor?keywords=${value}&exact=true`
+              `/search/storyAuthor?keywords=${value}`
             );
             setSearchData(authorSearchResponse);
             setResultmess(`Tìm theo tác giả`);
@@ -334,9 +334,7 @@ const SearchModal = (props: Props) => {
                   color: "myText.link",
                 }}
                 component={Link}
-                href={`/search/${
-                  resultMess === "Tìm theo tác giả" ? "author" : "title"
-                }?keywords=${getValues("keywords")}`}
+                href={`/search/title?keywords=${getValues("keywords")}`}
                 onClick={() => {
                   setSearchOpen(false);
                 }}
