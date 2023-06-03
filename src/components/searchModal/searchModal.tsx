@@ -31,7 +31,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const LoadingAnimation = styled(Box)(({ theme }) => ({
   width: "100%",
-  height: "50px",
+  height: "68.89px",
   borderRadius: theme.spacing(2),
   marginBottom: theme.spacing(2),
   animationDuration: "2s",
@@ -136,7 +136,7 @@ const SearchModal = (props: Props) => {
           setResultmess("Tìm theo tên truyện");
           if (searchResponse?.result.length === 0) {
             const authorSearchResponse: any = await API.get(
-              `/search/storyAuthor?keywords=${value}`
+              `/search/storyAuthor?keywords=${value}&exact=true`
             );
             setSearchData(authorSearchResponse);
             setResultmess(`Tìm theo tác giả`);
@@ -278,25 +278,31 @@ const SearchModal = (props: Props) => {
                           component={"img"}
                           alt={item.story_title}
                           src={item.story_cover}
-                          width={"35px"}
-                          height={"35px"}
+                          width={"55px"}
+                          height={"55px"}
                           mr={1}
                           borderRadius={"5px"}
                           sx={{ objectFit: "cover" }}
                         />
-                        <Stack p={0} m={0}>
-                          <Typography
-                            component={"span"}
-                            fontSize={"1.1em"}
-                            color={"myText.link"}
-                          >
-                            {item.story_title}
+                        <Stack
+                          p={0}
+                          m={0}
+                          sx={{
+                            "& p": {
+                              fontSize: "1.1em",
+                              color: "myText.link",
+                            },
+                            "& span": {
+                              fontSize: ".9em",
+                              color: "myText.primary",
+                            },
+                          }}
+                        >
+                          <Typography>{item.story_title}</Typography>
+                          <Typography component={"span"}>
+                            {item.story_author}
                           </Typography>
-                          <Typography
-                            component={"span"}
-                            fontSize={".9em"}
-                            color={"myText.primary"}
-                          >
+                          <Typography component={"span"}>
                             {item._count} chương
                           </Typography>
                         </Stack>
