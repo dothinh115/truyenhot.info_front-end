@@ -113,7 +113,7 @@ const SearchModal = (props: Props) => {
 
   const { setSearchOpen, searchOpen } = useContext<any>(MainLayoutContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const timeout = useRef<any>(null);
+  const timeout = useRef<NodeJS.Timeout | number | undefined>();
   const [searchData, setSearchData] = useState<SearchDataInterface | null>(
     null
   );

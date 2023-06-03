@@ -24,7 +24,7 @@ const StoryLikeButton = ({
 }: Props) => {
   const { profile } = useAuth();
   const router = useRouter();
-  const timeout = useRef<any>();
+  const timeout = useRef<NodeJS.Timeout | number | undefined>();
   const [checkIfLikedData, setCheckIfLikedData] =
     useState<CheckIfLikedInterface>();
 

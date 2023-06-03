@@ -54,7 +54,7 @@ export const SearchBar = (props: Props) => {
   );
   const resultList = useRef<HTMLUListElement>(null);
   const router = useRouter();
-  const timeout = useRef<any>(null);
+  const timeout = useRef<NodeJS.Timeout | number | undefined>();
   const inputElement = useRef<HTMLInputElement>(null);
 
   const submitHandle = (data: any) => {

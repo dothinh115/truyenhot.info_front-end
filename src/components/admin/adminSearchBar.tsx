@@ -51,7 +51,7 @@ export const AdminSearchBar = (props: Props) => {
     []
   );
   const resultList = useRef<HTMLUListElement>(null);
-  const timeout = useRef<any>(null);
+  const timeout = useRef<NodeJS.Timeout | number | undefined>();
   const inputElement = useRef<HTMLInputElement>(null);
 
   const onChangeHandle = (e: React.ChangeEvent<HTMLInputElement>) => {

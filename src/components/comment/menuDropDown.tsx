@@ -119,34 +119,35 @@ const CommentMenuDropDown = ({
                 primary="Trả lời"
               />
             </ListItemButton>
-            {(profile?.result._id === comment.author._id ||
-              profile?.result.permission > PermissionVariables.Editors) && (
-              <>
-                <ListItemButton onClick={() => deleteHandle(comment._id)}>
-                  <ListItemIcon color="error">
-                    <DeleteIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    sx={{ color: "myText.primary" }}
-                    primary="Xóa"
-                  />
-                </ListItemButton>
+            {profile &&
+              (profile?.result._id === comment.author._id ||
+                profile?.result.permission > PermissionVariables.Editors) && (
+                <>
+                  <ListItemButton onClick={() => deleteHandle(comment._id)}>
+                    <ListItemIcon color="error">
+                      <DeleteIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      sx={{ color: "myText.primary" }}
+                      primary="Xóa"
+                    />
+                  </ListItemButton>
 
-                <ListItemButton
-                  onClick={() => {
-                    setEditing(true);
-                  }}
-                >
-                  <ListItemIcon>
-                    <EditIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Sửa"
-                    sx={{ color: "myText.primary" }}
-                  />
-                </ListItemButton>
-              </>
-            )}
+                  <ListItemButton
+                    onClick={() => {
+                      setEditing(true);
+                    }}
+                  >
+                    <ListItemIcon>
+                      <EditIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Sửa"
+                      sx={{ color: "myText.primary" }}
+                    />
+                  </ListItemButton>
+                </>
+              )}
           </List>
         </MenuDropdownWrapper>
       </Box>

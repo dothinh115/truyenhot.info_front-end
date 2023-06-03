@@ -20,7 +20,8 @@ export const AdminLayout = ({ children }: AdminLayoutInterface) => {
   useEffect(() => {
     if (
       (!isValidating && !profile) ||
-      (!isValidating &&
+      (profile &&
+        !isValidating &&
         profile?.result.permission < PermissionVariables.Moderators)
     )
       router.push("/login");

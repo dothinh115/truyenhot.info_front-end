@@ -108,7 +108,7 @@ const CommentEditor = ({
     EditorState.createEmpty(decorator)
   );
   const editorRef = useRef<any>();
-  const timeout = useRef<any>();
+  const timeout = useRef<NodeJS.Timeout | number | undefined>();
   const {
     setUserSuggestion,
     setListIndex,

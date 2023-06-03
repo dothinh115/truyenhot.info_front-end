@@ -1,4 +1,5 @@
 import { LoginPayloadInterface } from "@/models/auth";
+import { UserProfileInterface } from "@/models/users";
 import { API } from "@/utils/config";
 import useSWR, { SWRConfiguration } from "swr";
 
@@ -8,13 +9,11 @@ export const useAuth = (option?: SWRConfiguration) => {
     error,
     isValidating,
     mutate,
-  } = useSWR("/users/profile", {
+  } = useSWR<{ result: UserProfileInterface }>("/users/profile", {
     revalidateOnFocus: false,
     dedupingInterval: 1000 * 60 * 60, //1 giờ mới đi call lại
     ...option,
   });
-
-  const firstLoading = profile === undefined && error === undefined;
 
   const login = async (payload: LoginPayloadInterface) => {
     await API.post("/signIn", payload);
@@ -33,6 +32,5 @@ export const useAuth = (option?: SWRConfiguration) => {
     mutate,
     login,
     logout,
-    firstLoading,
   };
 };

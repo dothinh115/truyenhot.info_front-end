@@ -65,7 +65,7 @@ const CommentEditorWrapper = (props: Props) => {
   const suggestionULRef = useRef<HTMLUListElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [listIndex, setListIndex] = useState<number>(0);
-  const timeout = useRef<any>();
+  const timeout = useRef<NodeJS.Timeout | number | undefined>();
   const iconButtonRef = useRef<HTMLButtonElement>(null);
   const [showPicker, setShowPicker] = useState<boolean>(false);
   const [mentionClickData, setMentionClickData] = useState<{
