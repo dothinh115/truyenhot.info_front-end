@@ -157,8 +157,8 @@ const CommentEditor = ({
 
   const clearSuggestion = () => {
     clearTimeout(timeout.current);
-    setUserSuggestion([]);
-    setListIndex(0);
+    if (userSuggestion.length !== 0) setUserSuggestion([]);
+    if (listIndex !== 0) setListIndex(0);
   };
 
   const blankBlockRemoveHandle = (): ContentState => {
