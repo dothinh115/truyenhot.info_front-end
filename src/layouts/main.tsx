@@ -1,5 +1,4 @@
 import { useTheme } from "@/hooks/theme/useTheme";
-import { useDidMount } from "@/hooks/useDidMount";
 import { MainLayoutInterface } from "@/models";
 import { getDesignTokens } from "@/utils/theme";
 import { ThemeProvider } from "@emotion/react";
