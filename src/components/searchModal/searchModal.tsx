@@ -334,7 +334,9 @@ const SearchModal = (props: Props) => {
                   color: "myText.link",
                 }}
                 component={Link}
-                href={`/search/title?keywords=${getValues("keywords")}`}
+                href={`/search/${
+                  resultMess === "Tìm theo tác giả" ? "author" : "title"
+                }?keywords=${getValues("keywords")}`}
                 onClick={() => {
                   setSearchOpen(false);
                 }}
