@@ -21,8 +21,6 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
   const { mode, setMode } = useTheme();
   const theme = createTheme(getDesignTokens(mode));
-  const didMount = useDidMount();
-  if (!didMount) return null;
   return (
     <>
       <ThemeProvider theme={theme}>
