@@ -1,3 +1,5 @@
+import { useTheme } from "@/hooks/theme/useTheme";
+import { useDidMount } from "@/hooks/useDidMount";
 import { MainLayoutInterface } from "@/models";
 import { getDesignTokens } from "@/utils/theme";
 import { ThemeProvider } from "@emotion/react";
@@ -5,7 +7,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { createTheme } from "@mui/material/styles";
 import dynamic from "next/dynamic";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 
 const HeaderSection = dynamic(() => import("../sections/header"));
 const FooterSection = dynamic(() => import("../sections/footer"));
@@ -17,22 +19,10 @@ export const MainLayoutContext = createContext({});
 export const MainLayout = ({ children }: MainLayoutInterface) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
-  const [mode, setMode] = useState<"light" | "dark">("light");
+  const { mode, setMode } = useTheme();
   const theme = createTheme(getDesignTokens(mode));
-
-  const loadTheme = (): void => {
-    let theme: any = localStorage.getItem("theme");
-    if (theme) {
-      theme = JSON.parse(theme);
-      setMode(theme.mode);
-    } else {
-      setMode("light");
-    }
-  };
-
-  useEffect(() => {
-    loadTheme();
-  }, []);
+  const didMount = useDidMount();
+  if (!didMount) return null;
   return (
     <>
       <ThemeProvider theme={theme}>
