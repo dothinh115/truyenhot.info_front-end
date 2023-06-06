@@ -32,7 +32,7 @@ type Props = {
   comment_content: string;
 };
 
-const getEntityStrategy = (mutability: string) => {
+const getMentionEntityStrategy = (mutability: string) => {
   return function (
     contentBlock: ContentBlock,
     callback: any,
@@ -43,7 +43,7 @@ const getEntityStrategy = (mutability: string) => {
       if (entityKey === null) {
         return false;
       }
-      return contentState.getEntity(entityKey).getMutability() === mutability;
+      return contentState.getEntity(entityKey).getType() === mutability;
     }, callback);
   };
 };
@@ -61,7 +61,7 @@ const contentMaxLength = 400;
 const maxRow = 5;
 const mentionDecorator = new CompositeDecorator([
   {
-    strategy: getEntityStrategy("IMMUTABLE"),
+    strategy: getMentionEntityStrategy("MENTION"),
     component: MentionSpan,
   },
 ]);

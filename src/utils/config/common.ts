@@ -13,7 +13,7 @@ export const localAPI: AxiosInstance = axios.create({
   baseURL: `http://localhost:5000/api`,
   headers: {
     authorization:
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE2ODEzNzE3OTN9.W0zlJ1otqwHCX7Fzyqpz8nFFio5bbQNlHAN9XGLDs1o",
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDYwZTM4NDM1NzA5OTNhMWE4Y2ViMzkiLCJpYXQiOjE2ODYwNjE4MjR9.nc5CwdBQEwcaYCPToAPOhaKbi59O0PWuygAJQt6l1lY",
   },
 });
 

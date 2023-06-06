@@ -68,14 +68,14 @@ const MentionSpanStyled = styled("span")(() => ({
 
 const MENTION_REGEX = /\B@\w+/g;
 
-const getEntityStrategy = (mutability: string) => {
+const getMentionEntityStrategy = (mutability: string) => {
   return function (contentBlock: any, callback: any, contentState: any) {
     contentBlock.findEntityRanges((character: any) => {
       const entityKey = character.getEntity();
       if (entityKey === null) {
         return false;
       }
-      return contentState.getEntity(entityKey).getMutability() === mutability;
+      return contentState.getEntity(entityKey).getType() === mutability;
     }, callback);
   };
 };
@@ -90,7 +90,7 @@ const MentionSpan = (props: any) => {
 
 const decorator = new CompositeDecorator([
   {
-    strategy: getEntityStrategy("IMMUTABLE"),
+    strategy: getMentionEntityStrategy("MENTION"),
     component: MentionSpan,
   },
 ]);
@@ -109,6 +109,7 @@ const CommentEditor = ({
   );
   const editorRef = useRef<any>();
   const timeout = useRef<NodeJS.Timeout | number | undefined>();
+  const characterCount = useRef<number>(0);
   const {
     setUserSuggestion,
     setListIndex,
@@ -347,10 +348,12 @@ const CommentEditor = ({
     const selectionState = editorState.getSelection();
     if (
       contentState.getPlainText() === "" ||
-      contentState.getPlainText() === "@"
+      contentState.getPlainText() === "@" ||
+      contentState.getPlainText().length < characterCount.current
     ) {
       //nếu text rỗng thì dừng
       clearSuggestion();
+      characterCount.current = 0;
       return;
     }
 
@@ -395,6 +398,7 @@ const CommentEditor = ({
         //vượt qua tất cả thì đã có value của mention, tiến hành call api lấy suggestion
         const user_id = range.value;
         await getUserSuggestion(user_id.replace("@", ""));
+        characterCount.current = contentState.getPlainText().length;
         currentRangeSuggestion.current = { ...range, key: keyOfBlockStanding }; //lưu thông tin range hiện tại để dùng sau
         break;
       }
