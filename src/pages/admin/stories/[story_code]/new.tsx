@@ -1,5 +1,5 @@
 import { useSnackbar } from "@/hooks/snackbar";
-import { API, localAPI, modules } from "@/utils/config";
+import { API, modules } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -100,7 +100,7 @@ const AdminNewChapter = (props: Props) => {
 
   const createByUrlSubmitHandle = async (data: any) => {
     try {
-      const response: any = await localAPI.get(
+      const response: any = await API.get(
         `/bot/updateSingleChapterByUrl?url=${data.url}`
       );
       await API.post(`/chapter/new/${story_code}`, response.result);

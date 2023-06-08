@@ -1,6 +1,6 @@
 import { useSnackbar } from "@/hooks/snackbar";
 import { ChapterDataInterface } from "@/models/chapters";
-import { API, localAPI, modules } from "@/utils/config";
+import { API, modules } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -93,7 +93,7 @@ const EditChapter = (props: Props) => {
   const updateByUrlSubmitHandle = async (data: any) => {
     console.log(document.cookie);
     try {
-      const response: any = await localAPI.get(
+      const response: any = await API.get(
         `/bot/updateSingleChapterByUrl?url=${data.url}`
       );
       await reset({

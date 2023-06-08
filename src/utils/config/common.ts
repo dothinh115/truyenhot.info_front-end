@@ -9,24 +9,7 @@ export const API: AxiosInstance = axios.create({
   baseURL: `/api`,
 });
 
-export const localAPI: AxiosInstance = axios.create({
-  baseURL: `http://localhost:5000/api`,
-  headers: {
-    authorization:
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDYwZTM4NDM1NzA5OTNhMWE4Y2ViMzkiLCJpYXQiOjE2ODYwNjE4MjR9.nc5CwdBQEwcaYCPToAPOhaKbi59O0PWuygAJQt6l1lY",
-  },
-});
-
 API.interceptors.response.use(
-  (res: any) => {
-    return res.data;
-  },
-  (error: AxiosResponse) => {
-    return Promise.reject(error);
-  }
-);
-
-localAPI.interceptors.response.use(
   (res: any) => {
     return res.data;
   },

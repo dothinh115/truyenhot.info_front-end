@@ -3,7 +3,7 @@ import { AdminLayout } from "../../../../layouts/admin";
 import { CategoryInterface } from "@/models/categories";
 import { ChapterDataInterface } from "@/models/chapters";
 import { UpdateStoryInterface } from "@/models/stories";
-import { API, localAPI, modules } from "@/utils/config";
+import { API, modules } from "@/utils/config";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -92,7 +92,6 @@ const EditStory = (props: Props) => {
   const {
     control: createByUrlControl,
     handleSubmit: createByUrlHandleSubmit,
-    reset: createByUrlReset,
     formState: {
       errors: createByUrlErrors,
       isSubmitting: createByUrlIsSubmitting,
@@ -182,7 +181,7 @@ const EditStory = (props: Props) => {
 
   const createByUrlSubmitHandle = async (data: any) => {
     try {
-      const response: any = await localAPI.get(
+      const response: any = await API.get(
         `/bot/updateAllSingleStory/${story_code}?url=${data.url}`
       );
       setSnackbar({
