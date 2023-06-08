@@ -198,7 +198,7 @@ const IndexRecentStories = ({ categories }: Props) => {
     }`,
     {
       keepPreviousData: true,
-      refreshInterval: 10000,
+      refreshInterval: 30000,
     }
   );
   const handleChange = (

@@ -83,8 +83,10 @@ const StoryCommentContent = ({ comment_content }: Props) => {
     if (blockArr.length > maxRow) {
       //tiến hành tạo contentState mới với 5 block đầu tiên
       let newBlockArr: ContentBlock[] = [];
-      for (let i = 0; i < maxRow; i++) {
+      let i = 0;
+      while (i < maxRow) {
         newBlockArr = [...newBlockArr, blockArr[i]];
+        i++;
       }
       //tạo newContentState
       let newContentState: ContentState | EditorState =
