@@ -114,6 +114,7 @@ const ChapterDetail = ({ chapterData }: Props) => {
         md: "1rem",
         xs: ".8rem",
       }}
+      title="Home"
     >
       <HomeIcon />
     </Box>,
@@ -129,6 +130,7 @@ const ChapterDetail = ({ chapterData }: Props) => {
       sx={{
         textDecoration: "none",
       }}
+      title={chapterData?.story_title}
     >
       {chapterData?.story_title}
     </Box>,
@@ -139,6 +141,7 @@ const ChapterDetail = ({ chapterData }: Props) => {
         xs: ".8rem",
       }}
       key="3"
+      title={chapterData?.chapter_name}
     >
       {chapterData?.chapter_name}
     </Box>,

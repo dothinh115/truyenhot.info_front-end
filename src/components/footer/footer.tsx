@@ -62,18 +62,43 @@ export const Footer = (props: Props) => {
                   }}
                 >
                   Website Truyện Hot - là trang{" "}
-                  <Link href={`/`}>đọc truyện</Link>,{" "}
-                  <Link href={`/`}>đọc truyện chữ</Link> online hàng đầu Việt
-                  Nam với nhiều thể loại <Link href={`/`}>truyện đam mỹ</Link>,{" "}
-                  <Link href={`/`}>truyện ngôn tình</Link>,{" "}
-                  <Link href={`/`}>truyện sắc</Link>,{" "}
-                  <Link href={`/`}>truyện linh dị</Link>,{" "}
-                  <Link href={`/`}>truyện xuyên không</Link>,{" "}
-                  <Link href={`/`}>truyện trọng sinh</Link> chọn lọc dành cho
-                  độc giả yêu thích. <br />
+                  <Link href={`/`} title="truyenhot.info">
+                    đọc truyện
+                  </Link>
+                  ,{" "}
+                  <Link href={`/`} title="truyenhot.info">
+                    đọc truyện chữ
+                  </Link>{" "}
+                  online hàng đầu Việt Nam với nhiều thể loại{" "}
+                  <Link href={`/`} title="truyenhot.info">
+                    truyện đam mỹ
+                  </Link>
+                  ,{" "}
+                  <Link href={`/`} title="truyenhot.info">
+                    truyện ngôn tình
+                  </Link>
+                  ,{" "}
+                  <Link href={`/`} title="truyenhot.info">
+                    truyện sắc
+                  </Link>
+                  ,{" "}
+                  <Link href={`/`} title="truyenhot.info">
+                    truyện linh dị
+                  </Link>
+                  ,{" "}
+                  <Link href={`/`} title="truyenhot.info">
+                    truyện xuyên không
+                  </Link>
+                  ,{" "}
+                  <Link href={`/`} title="truyenhot.info">
+                    truyện trọng sinh
+                  </Link>{" "}
+                  chọn lọc dành cho độc giả yêu thích. <br />
                   <br /> Truyện hot luôn cập nhật những bộ{" "}
-                  <Link href={`/`}>truyện mới nhất</Link>, với tốc độ nhanh
-                  nhất, chúc các bạn có trải nghiệm vui vẻ!
+                  <Link href={`/`} title="truyenhot.info">
+                    truyện mới nhất
+                  </Link>
+                  , với tốc độ nhanh nhất, chúc các bạn có trải nghiệm vui vẻ!
                 </Typography>
               </Box>
 
@@ -100,6 +125,7 @@ export const Footer = (props: Props) => {
                       size="small"
                       variant="outlined"
                       color="primary"
+                      title={cate.cate_title}
                       sx={{
                         mr: "4px",
                         mb: "4px",

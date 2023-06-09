@@ -44,6 +44,7 @@ const Index = ({ categories }: Props) => {
         xs: ".8rem",
       }}
       scroll={true}
+      title="Home"
     >
       <HomeIcon />
     </Stack>,

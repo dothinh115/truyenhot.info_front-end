@@ -281,7 +281,7 @@ const SearchModal = (props: Props) => {
                           width={"55px"}
                           height={"55px"}
                           mr={1}
-                          borderRadius={"5px"}
+                          borderRadius={"8px"}
                           sx={{ objectFit: "cover" }}
                         />
                         <Stack

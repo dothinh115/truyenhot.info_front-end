@@ -240,7 +240,10 @@ const HomeFullStories = ({ categories }: Props) => {
             : fullStoriesListData?.result.map((story: FullStoriesInterface) => {
                 return (
                   <Carousel.Item key={story._id}>
-                    <ItemLinkWrapper href={`/story/${story.story_code}`}>
+                    <ItemLinkWrapper
+                      href={`/story/${story.story_code}`}
+                      title={story.story_title}
+                    >
                       <Image
                         fill={true}
                         sizes="180px"

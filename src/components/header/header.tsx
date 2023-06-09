@@ -159,6 +159,7 @@ export function Header() {
                 }}
                 color={"myText.main"}
                 fontSize={"16px"}
+                title="Home"
               >
                 TRUYENHOT.INFO
               </Box>
@@ -171,11 +172,16 @@ export function Header() {
                   "& svg": { color: "myText.main" },
                 }}
               >
-                <IconButton size="small" onClick={() => setSearchOpen(true)}>
+                <IconButton
+                  title="Tìm kiếm"
+                  size="small"
+                  onClick={() => setSearchOpen(true)}
+                >
                   <SearchIcon />
                 </IconButton>
                 <IconButton
                   size="small"
+                  title="Mode"
                   sx={{
                     display: {
                       md: "inline-flex",
@@ -201,7 +207,7 @@ export function Header() {
                     },
                   }}
                 >
-                  <IconButton ref={menuDropDownButton}>
+                  <IconButton ref={menuDropDownButton} title="Menu">
                     <PersonIcon />
                   </IconButton>
                   <DropdownMenu ref={menuDropDown}>
@@ -211,6 +217,7 @@ export function Header() {
                           <ListItem>
                             <ListItemIcon
                               sx={{ minWidth: "unset", marginRight: "8px" }}
+                              title="Profile"
                             >
                               <AccountCircleIcon />
                             </ListItemIcon>
@@ -225,7 +232,10 @@ export function Header() {
                               primary={profile.result.email}
                             />
                           </ListItem>
-                          <ListItemButton onClick={() => logout()}>
+                          <ListItemButton
+                            title="Đăng xuất"
+                            onClick={() => logout()}
+                          >
                             <ListItemIcon
                               sx={{ minWidth: "unset", marginRight: "8px" }}
                             >
@@ -237,6 +247,7 @@ export function Header() {
                       ) : (
                         <>
                           <ListItemButton
+                            title="Đăng nhập"
                             onClick={() =>
                               router.push({
                                 pathname: "/login",
@@ -254,7 +265,11 @@ export function Header() {
                             <ListItemText primary="Đăng nhập" />
                           </ListItemButton>
 
-                          <ListItemButton LinkComponent={Link} href="/register">
+                          <ListItemButton
+                            title="Đăng ký"
+                            LinkComponent={Link}
+                            href="/register"
+                          >
                             <ListItemIcon
                               sx={{ minWidth: "unset", marginRight: "8px" }}
                             >
@@ -276,6 +291,7 @@ export function Header() {
                       xs: "inline-flex",
                     },
                   }}
+                  title="Menu"
                   onClick={() => setMobileMenuOpen(true)}
                 >
                   <MenuIcon />

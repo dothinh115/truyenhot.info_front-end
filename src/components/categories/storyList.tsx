@@ -48,7 +48,7 @@ const ListItemInnerImg = styled("img")(({ theme }) => ({
   width: "100%",
   height: "90px",
   objectFit: "cover",
-  borderRadius: theme.spacing(2),
+  borderRadius: theme.spacing(1),
 }));
 
 const ListItemInnerTitle = styled(Link)(({ theme }) => ({

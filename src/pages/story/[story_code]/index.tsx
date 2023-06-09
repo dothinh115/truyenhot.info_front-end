@@ -49,6 +49,7 @@ const StoryDetail = ({ story, categories, sameAuthor }: Props) => {
         md: "1rem",
         xs: ".8rem",
       }}
+      title="Home"
     >
       <HomeIcon />
     </Box>,
@@ -64,6 +65,7 @@ const StoryDetail = ({ story, categories, sameAuthor }: Props) => {
       sx={{
         textDecoration: "none",
       }}
+      title={story?.story_title}
     >
       {story?.story_title}
     </Box>,
@@ -120,7 +122,7 @@ const StoryDetail = ({ story, categories, sameAuthor }: Props) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const response = await fetch(`${apiURL}/api/stories/getAll?limit=6000`);
+  const response = await fetch(`${apiURL}/api/stories/getAll?limit=1000`);
   const data = await response.json();
   const paths = data.result.map((item: StoryInterface) => ({
     params: {
