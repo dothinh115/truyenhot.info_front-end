@@ -84,11 +84,15 @@ const StoryCommentButton = ({ story_code }: Props) => {
   const [open, setOpen] = useState<boolean>(false);
   const [submitClicked, setSubmitClicked] = useState<boolean>(false);
   const commentWrapper = useRef<HTMLDivElement>(null);
-  const closeHandle = () => setOpen(!open);
-
   const router = useRouter();
   const { commentOpen, commentId } = router.query;
-
+  const { pathname, query } = router;
+  const closeHandle = () => {
+    delete query.commentOpen;
+    router.replace({ pathname, query }, undefined, {
+      shallow: true,
+    });
+  };
   const submitHandle = async (data: {
     truncatedValue: string;
     mainValue: string;
@@ -157,6 +161,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
 
   useEffect(() => {
     if (commentOpen) setOpen(true);
+    else setOpen(false);
   }, [commentOpen]);
 
   useEffect(() => {
@@ -314,7 +319,18 @@ const StoryCommentButton = ({ story_code }: Props) => {
       <Button
         color="secondary"
         startIcon={<ModeCommentIcon />}
-        onClick={() => setOpen(true)}
+        onClick={() =>
+          router.replace(
+            {
+              pathname: router.asPath,
+              query: {
+                commentOpen: true,
+              },
+            },
+            undefined,
+            { shallow: true }
+          )
+        }
       >
         bình luận
       </Button>
