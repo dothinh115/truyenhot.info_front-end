@@ -124,7 +124,7 @@ const RowStory = ({ storiesData }: Props) => {
                   {story.story_title}
                 </ListItemInnerTitle>
                 <ListItemInnerAuthor
-                  href={`/search/author?keywords=${story.story_author}`}
+                  href={`/search/author?keywords=${story.story_author}&exact=true`}
                 >
                   <CreateIcon />
                   {story.story_author}

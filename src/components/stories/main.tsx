@@ -348,7 +348,7 @@ const StoryMain = ({ story }: Props) => {
                 </Box>
                 <Box
                   component={Link}
-                  href={`/search/author?keywords=${story?.story_author}`}
+                  href={`/search/author?keywords=${story?.story_author}&exact=true`}
                 >
                   {story?.story_author}
                 </Box>

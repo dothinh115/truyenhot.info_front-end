@@ -323,25 +323,45 @@ const SearchModal = (props: Props) => {
                   );
                 })}
 
-            {searchData?.pagination?.pages &&
-            searchData?.pagination?.pages > 1 &&
-            !loading ? (
-              <Stack
-                direction={"row"}
-                justifyContent={"center"}
-                sx={{
-                  textDecoration: "none",
-                  color: "myText.link",
-                }}
-                component={Link}
-                href={`/search/title?keywords=${getValues("keywords")}`}
-                onClick={() => {
-                  setSearchOpen(false);
-                }}
-              >
-                Xem thêm kết quả
-              </Stack>
-            ) : null}
+            {(searchData?.pagination?.pages &&
+              searchData?.pagination?.pages > 1 &&
+              resultMess === "Tìm theo tác giả" &&
+              !loading && (
+                <Stack
+                  direction={"row"}
+                  justifyContent={"center"}
+                  sx={{
+                    textDecoration: "none",
+                    color: "myText.link",
+                  }}
+                  component={Link}
+                  href={`/search/author?keywords=${getValues("keywords")}`}
+                  onClick={() => {
+                    setSearchOpen(false);
+                  }}
+                >
+                  Xem thêm kết quả
+                </Stack>
+              )) ||
+              (searchData?.pagination?.pages &&
+                searchData?.pagination?.pages > 1 &&
+                !loading && (
+                  <Stack
+                    direction={"row"}
+                    justifyContent={"center"}
+                    sx={{
+                      textDecoration: "none",
+                      color: "myText.link",
+                    }}
+                    component={Link}
+                    href={`/search/title?keywords=${getValues("keywords")}`}
+                    onClick={() => {
+                      setSearchOpen(false);
+                    }}
+                  >
+                    Xem thêm kết quả
+                  </Stack>
+                ))}
           </ResultList>
         </ModalInner>
       </Modal>

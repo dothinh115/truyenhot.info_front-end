@@ -28,16 +28,16 @@ type Props = { categories: CategoryInterface[] };
 const SearchByAuthorPage = ({ categories }: Props) => {
   const [paginationPage, setPaginationPage] = useState<number>(1);
   const router = useRouter();
-  const { keywords, page } = router.query;
+  const { keywords, page, exact } = router.query;
 
   const {
     data: searchData,
     mutate: searchMutate,
     isValidating: searchIsValidating,
   } = useSWR(
-    `/search/storyAuthor?keywords=${keywords}${
-      page ? `&page=${page}` : ""
-    }&exact=true`,
+    `/search/storyAuthor?keywords=${keywords}${page ? `&page=${page}` : ""}${
+      exact ? "&exact=true" : ""
+    }`,
     {
       revalidateOnMount: false,
     }
@@ -93,7 +93,9 @@ const SearchByAuthorPage = ({ categories }: Props) => {
         data={{
           title: `Tìm kiếm: ${keywords}`,
           description: `Kết quả tìm kiếm từ khóa ${keywords} tại truyenhot.info. Chúc bạn có những phút giây thư giãn!`,
-          url: `https//truyenhot.info/search/author?keywords=${keywords}`,
+          url: `https//truyenhot.info/search/author?keywords=${keywords}${
+            exact ? "&exact=true" : ""
+          }`,
           thumbnailUrl,
         }}
       />
