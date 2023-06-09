@@ -30,7 +30,7 @@ const StoryLikeButton = ({
 
   const likeHandle = async () => {
     if (!profile) {
-      router.push(`/login?backTo=${window.location.href}`);
+      router.push(`/login?goAround=true`);
       return;
     }
 

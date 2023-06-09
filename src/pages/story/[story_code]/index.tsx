@@ -143,6 +143,7 @@ export const getStaticProps: GetStaticProps<Props> = async (
   const storyRespone = await fetch(
     `${apiURL}/api/stories/getDetail/${story_code}`
   );
+
   const story: { result: StoryInterface } = await storyRespone.json();
   if (!story.result) {
     return {
@@ -152,6 +153,7 @@ export const getStaticProps: GetStaticProps<Props> = async (
       },
     };
   }
+
   const sameAuthorStoriesResponse = await fetch(
     `${apiURL}/api/search/storyAuthorQuickSearch?keywords=${story?.result.story_author}`
   );
@@ -168,7 +170,7 @@ export const getStaticProps: GetStaticProps<Props> = async (
       categories: categories.result,
       sameAuthor: sameAuthorStories,
     },
-    revalidate: 60,
+    revalidate: 180,
   };
 };
 

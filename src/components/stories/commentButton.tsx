@@ -97,7 +97,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
       router.push({
         pathname: "/login",
         query: {
-          backTo: router.asPath,
+          goAround: true,
         },
       });
     try {
@@ -233,7 +233,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
                       router.push({
                         pathname: "/login",
                         query: {
-                          backTo: router.asPath,
+                          goAround: true,
                         },
                       })
                     }
@@ -249,6 +249,9 @@ const StoryCommentButton = ({ story_code }: Props) => {
                     onClick={() =>
                       router.push({
                         pathname: "/register",
+                        query: {
+                          goAround: true,
+                        },
                       })
                     }
                   >

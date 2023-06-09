@@ -10,11 +10,12 @@ export const LoginLayout = ({ children }: LoginLayoutInterface) => {
 
   const router = useRouter();
 
-  const { backTo } = router.query;
+  const { goAround } = router.query;
 
   useEffect(() => {
-    if (profile)
-      router.push(backTo && typeof backTo === "string" ? backTo : "/");
+    if (profile) {
+      goAround ? router.back() : router.push("/");
+    }
   }, [profile]);
 
   if (profile) return null;

@@ -25,7 +25,7 @@ const ResetPassword = (props: Props) => {
   const [showReset, setShowReset] = useState<boolean>(false);
 
   const router = useRouter();
-  const { token } = router.query;
+  const { token, goAround } = router.query;
 
   const {
     handleSubmit,
@@ -121,13 +121,21 @@ const ResetPassword = (props: Props) => {
           }}
         >
           <Stack direction={"row"} gap={"5px"} alignItems={"center"}>
-            <IconButton LinkComponent={Link} href="/login">
+            <IconButton
+              onClick={() => {
+                goAround ? router.back() : router.push("/login");
+              }}
+            >
               <ArrowBackIcon />
             </IconButton>
             {showReset ? "Đặt lại mật khẩu " : "Quên mật khẩu"}
           </Stack>
 
-          <IconButton LinkComponent={Link} href="/" color="error">
+          <IconButton
+            onClick={() => {
+              goAround ? router.back() : router.push("/");
+            }}
+          >
             <CloseIcon />
           </IconButton>
         </Box>

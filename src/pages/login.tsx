@@ -24,7 +24,7 @@ const Login = (props: Props) => {
   });
   const router = useRouter();
 
-  const { backTo } = router.query;
+  const { goAround } = router.query;
 
   const {
     handleSubmit,
@@ -72,8 +72,11 @@ const Login = (props: Props) => {
         >
           Đăng nhập
           <IconButton
-            LinkComponent={Link}
-            href={backTo && typeof backTo === "string" ? backTo : "/"}
+            onClick={() => {
+              goAround && typeof goAround === "string"
+                ? router.back()
+                : router.push("/");
+            }}
             color="error"
           >
             <CloseIcon />

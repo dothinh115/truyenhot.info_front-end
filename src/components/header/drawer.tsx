@@ -149,7 +149,7 @@ export const Drawer = (props: Props) => {
                         borderRight: "1px solid #eee",
                       }}
                     >
-                      <Link href={"/login"}>Đăng nhập</Link>
+                      <Link href={"/login?goAround=true"}>Đăng nhập</Link>
                     </Box>
                     <Box
                       sx={{
@@ -157,7 +157,7 @@ export const Drawer = (props: Props) => {
                         textAlign: "center",
                       }}
                     >
-                      <Link href={"/register"}>Đăng ký</Link>
+                      <Link href={"/register?goAround=true"}>Đăng ký</Link>
                     </Box>
                   </>
                 )}

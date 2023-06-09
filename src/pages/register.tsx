@@ -17,6 +17,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { emailPattern, thumbnailUrl, user_idPattern } from "@/utils/variables";
 import { Seo } from "@/components/seo";
 import { LoginLayout } from "@/layouts/login";
+import { useRouter } from "next/router";
 
 type Props = {};
 
@@ -50,6 +51,10 @@ const Register = (props: Props) => {
       passwordConfirm: "",
     },
   });
+
+  const router = useRouter();
+
+  const { goAround } = router.query;
 
   const submitHandle = async (data: {
     email: string;
@@ -123,12 +128,17 @@ const Register = (props: Props) => {
           }}
         >
           <Stack direction={"row"} gap={"5px"} alignItems={"center"}>
-            <IconButton LinkComponent={Link} href="/login">
+            <IconButton onClick={() => router.push("/login")}>
               <ArrowBackIcon />
             </IconButton>
             Đăng ký
           </Stack>
-          <IconButton LinkComponent={Link} href="/" color="error">
+          <IconButton
+            onClick={() => {
+              goAround ? router.back() : router.push("/");
+            }}
+            color="error"
+          >
             <CloseIcon />
           </IconButton>
         </Box>

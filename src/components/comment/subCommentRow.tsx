@@ -127,7 +127,7 @@ const StorySubCommentRow = ({
                 router.push({
                   pathname: "/login",
                   query: {
-                    backTo: router.asPath,
+                    goAround: true,
                   },
                 });
             }}

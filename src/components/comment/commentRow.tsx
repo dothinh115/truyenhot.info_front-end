@@ -185,7 +185,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
                       router.push({
                         pathname: "/login",
                         query: {
-                          backTo: router.asPath,
+                          goAround: true,
                         },
                       });
                   }}

@@ -81,13 +81,14 @@ export function Header() {
         appBarEl?.current!.classList.add("appbar-fixed");
       }
     } else {
-      appBarEl?.current!.classList.remove("appbar-fixed");
+      if (appBarEl?.current)
+        appBarEl?.current!.classList.remove("appbar-fixed");
     }
   };
 
   const changeModeHandle = () => {
-    if (window.pageYOffset >= 50 && appBarEl?.current) {
-      appBarEl?.current!.classList.add("appbar-fixed");
+    if (window.pageYOffset >= 50) {
+      if (appBarEl?.current) appBarEl?.current!.classList.add("appbar-fixed");
     }
   };
 
@@ -252,7 +253,7 @@ export function Header() {
                               router.push({
                                 pathname: "/login",
                                 query: {
-                                  backTo: router.asPath,
+                                  goAround: true,
                                 },
                               })
                             }
@@ -267,8 +268,14 @@ export function Header() {
 
                           <ListItemButton
                             title="Đăng ký"
-                            LinkComponent={Link}
-                            href="/register"
+                            onClick={() =>
+                              router.push({
+                                pathname: "/register",
+                                query: {
+                                  goAround: true,
+                                },
+                              })
+                            }
                           >
                             <ListItemIcon
                               sx={{ minWidth: "unset", marginRight: "8px" }}
