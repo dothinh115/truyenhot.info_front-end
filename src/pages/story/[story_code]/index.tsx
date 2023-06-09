@@ -3,7 +3,7 @@ import { Seo } from "@/components/seo";
 import { StorySidebar } from "@/components/stories/sidebar";
 import { CategoryInterface } from "@/models/categories";
 import { StoriesSearchResultInterface } from "@/models/search";
-import { StoryInterface } from "@/models/stories";
+import { CommentDataInterface, StoryInterface } from "@/models/stories";
 import { StorySection } from "@/sections/story";
 import { API, apiURL } from "@/utils/config";
 import { thumbnailUrl } from "@/utils/variables";
@@ -14,7 +14,7 @@ import Stack from "@mui/material/Stack";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, createContext } from "react";
 type Props = {
   story: StoryInterface;
   categories: CategoryInterface[];

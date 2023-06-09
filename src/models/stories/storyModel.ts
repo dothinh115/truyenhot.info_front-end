@@ -1,3 +1,4 @@
+import { EditorState } from "draft-js";
 import { CategoryInterface } from "../categories";
 
 export interface StoryInterface {
@@ -89,16 +90,19 @@ interface NumberOfLikeResultInterface {
 export interface CommentDataInterface {
   _id: string;
   story_code: string;
-  comment_content: string;
+  truncatedValue: string;
+  mainValue: string;
   created_at: Date;
   author: CommentAuthorInterface;
   totalSubCmtPages: number;
+  totalSubCmt: number;
 }
 
 export interface SubCommentDataInterface {
   _id: string;
   parent_id: string;
-  comment_content: string;
+  truncatedValue: string;
+  mainValue: string;
   created_at: Date;
   author: CommentAuthorInterface;
   to: SubCommentReplyToInterface;

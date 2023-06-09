@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/auth/useAuth";
 import {
   CommentDataInterface,
   SubCommentDataInterface,
@@ -19,11 +20,9 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import CommentMenuDropDown from "./menuDropDown";
-import { useAuth } from "@/hooks/auth/useAuth";
-
 const CommentEditor = dynamic(() => import("./editor/wrapperEditor"));
 const MemorizedStorySubCommentRow = dynamic(() => import("./subCommentRow"));
 const StoryCommentContent = dynamic(() => import("./commentContent"));
@@ -49,6 +48,7 @@ const CommentRowContentInner = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(1, 2),
   borderRadius: theme.spacing(2),
   width: "calc(100% - 45px)",
+  minHeight: "80px",
 }));
 
 const ReplyInputWrapper = styled(Box)(({ theme }) => ({
@@ -93,8 +93,9 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
     data: subCmtData,
     size,
     setSize,
+    isValidating: subCmtIsValidating,
     mutate: subCmtMutate,
-  } = useSWRInfinite(getKey);
+  } = useSWRInfinite(getKey, { revalidateOnMount: false });
   const { profile } = useAuth();
   const router = useRouter();
   const [editing, setEditing] = useState<boolean>(false);
@@ -105,14 +106,15 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
   const [editLoading, setEditLoading] = useState<boolean>(false);
   const [replyLoading, setReplyLoading] = useState<boolean>(false);
 
-  const submitHandle = async (data: string) => {
-    const comment_content = data;
-    if (comment_content === "") return;
+  const submitHandle = async (data: {
+    truncatedValue: string;
+    mainValue: string;
+  }) => {
     setEditLoading(true);
     try {
       setEditing(false);
       await API.put(`/comments/edit/${comment._id}`, {
-        comment_content,
+        data,
       });
     } catch (error) {
       console.log(error);
@@ -122,15 +124,16 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
     }
   };
 
-  const replySubmitHandle = async (data: string) => {
-    const comment_content = data;
-    if (comment_content === "") return;
+  const replySubmitHandle = async (data: {
+    truncatedValue: string;
+    mainValue: string;
+  }) => {
     setReplyLoading(true);
     try {
       setReplying(false);
 
       await API.post(`/comments/sub/new/${comment._id}`, {
-        comment_content,
+        data,
       });
 
       await subCmtMutate();
@@ -141,6 +144,12 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
       setReplyLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (comment.totalSubCmt > 0) {
+      subCmtMutate();
+    }
+  }, [comment]);
 
   const showReplyFooter =
     (subCmtData && subCmtData[0]?.result.length !== 0) || replying;
@@ -205,7 +214,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
                     cb={submitHandle}
                     clicked={editSubmitClicked}
                     setClicked={setEditSubmitClicked}
-                    defaultValue={comment?.comment_content}
+                    defaultValue={comment?.mainValue}
                   />
                   <IconWrapper>
                     <IconButton
@@ -224,18 +233,15 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
                     </IconButton>
                   </IconWrapper>
                 </>
+              ) : editLoading ? (
+                <Box my={1}>
+                  <CircularProgress size="1em" /> Đang cập nhật...
+                </Box>
               ) : (
-                <>
-                  {editLoading ? (
-                    <Box my={1}>
-                      <CircularProgress size="1em" /> Đang cập nhật...
-                    </Box>
-                  ) : (
-                    <StoryCommentContent
-                      comment_content={comment?.comment_content}
-                    />
-                  )}
-                </>
+                <StoryCommentContent
+                  mainValue={comment?.mainValue}
+                  truncatedValue={comment?.truncatedValue}
+                />
               )}
             </CommentRowContentInner>
 
@@ -344,4 +350,6 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
   );
 };
 
-export const MemorizedStoryCommentRow = React.memo(StoryCommentRow);
+const MemorizedStoryCommentRow = React.memo(StoryCommentRow);
+
+export default MemorizedStoryCommentRow;

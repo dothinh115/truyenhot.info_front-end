@@ -101,7 +101,7 @@ const Index = ({ categories }: Props) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const revalidate = 1 * 60 * 60;
+  const revalidate = 1 * 60 * 60 * 24;
   const categoriesResponse = await fetch(`${apiURL}/api/categories/getAll`);
 
   const categories = await categoriesResponse.json();

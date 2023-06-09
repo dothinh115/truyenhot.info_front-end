@@ -12,13 +12,13 @@ import { styled } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, memo } from "react";
 import useSWRInfinite from "swr/infinite";
 import { useAuth } from "@/hooks/auth/useAuth";
-import { MemorizedStoryCommentRow } from "../comment/commentRow";
+import { CommentLoading } from "../loading/commentLoading";
 
 const CommentEditor = dynamic(() => import("../comment/editor/wrapperEditor"));
-
+const MemorizedStoryCommentRow = dynamic(() => import("../comment/commentRow"));
 const ModalInner = styled(Stack)(({ theme }) => ({
   position: "fixed",
   backgroundColor: theme.palette.myBackground.default,
@@ -75,24 +75,24 @@ const StoryCommentButton = ({ story_code }: Props) => {
   const { profile } = useAuth();
 
   const getKey = (pageIndex: number, previousPageData: any) => {
-    return `/comments/getCommentsByStoryCode/${story_code}?page=${
-      pageIndex + 1
-    }`;
+    pageIndex += 1;
+    return `/comments/getCommentsByStoryCode/${story_code}?page=${pageIndex}`;
   };
 
   const { data, size, setSize, mutate, isValidating, isLoading } =
-    useSWRInfinite(getKey, {
-      revalidateOnMount: false,
-    });
+    useSWRInfinite(getKey);
   const [open, setOpen] = useState<boolean>(false);
   const [submitClicked, setSubmitClicked] = useState<boolean>(false);
   const commentWrapper = useRef<HTMLDivElement>(null);
-
   const closeHandle = () => setOpen(!open);
 
   const router = useRouter();
+  const { commentOpen, commentId } = router.query;
 
-  const submitHandle = async (data: string) => {
+  const submitHandle = async (data: {
+    truncatedValue: string;
+    mainValue: string;
+  }) => {
     if (!profile)
       router.push({
         pathname: "/login",
@@ -102,7 +102,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
       });
     try {
       await API.post(`/comments/new/${story_code}`, {
-        comment_content: data,
+        data,
       });
       if (commentWrapper?.current) {
         commentWrapper?.current.scroll({
@@ -116,15 +116,60 @@ const StoryCommentButton = ({ story_code }: Props) => {
     }
   };
 
+  const commentLoadingRender = () => {
+    let html: any[] = [];
+    for (let i = 0; i < 20; i++) {
+      html.push(<CommentLoading key={i} />);
+    }
+    return html;
+  };
+
   useEffect(() => {
     if (data && size > data[data.length - 1]?.pagination.pages && size !== 1) {
       setSize(size - 1);
+    }
+    if (data) {
+      let findIndex: number = -1;
+      let group: number = 0;
+      for (let index in data) {
+        findIndex = data[index]?.result.findIndex(
+          (comment: CommentDataInterface) => comment._id === commentId
+        );
+        if (findIndex !== -1) {
+          group = +index;
+        }
+      }
+      if (findIndex !== -1) {
+        const index = group * 20 + findIndex;
+        if (commentWrapper.current) {
+          commentWrapper.current.scroll({
+            top: index * 96,
+            left: 0,
+          });
+        }
+      }
     }
   }, [data]);
 
   useEffect(() => {
     if (story_code && open) mutate();
   }, [open]);
+
+  useEffect(() => {
+    if (commentOpen) setOpen(true);
+  }, [commentOpen]);
+
+  useEffect(() => {
+    if (commentId && data) {
+      for (let group of data) {
+        const find = group?.result.find(
+          (comment: CommentDataInterface) => comment._id === commentId
+        );
+        if (!find) setSize(size + 1);
+        else break;
+      }
+    }
+  }, [commentId]);
 
   return (
     <>
@@ -151,17 +196,19 @@ const StoryCommentButton = ({ story_code }: Props) => {
           <Box className="hr" />
 
           <CommentRowWrapper ref={commentWrapper}>
-            {data?.map((group: any) => {
-              return group?.result.map((comment: CommentDataInterface) => {
-                return (
-                  <MemorizedStoryCommentRow
-                    key={comment._id}
-                    comment={comment}
-                    mutate={mutate}
-                  />
-                );
-              });
-            })}
+            {isLoading
+              ? commentLoadingRender()
+              : data?.map((group: any) => {
+                  return group?.result.map((comment: CommentDataInterface) => {
+                    return (
+                      <MemorizedStoryCommentRow
+                        key={comment._id}
+                        comment={comment}
+                        mutate={mutate}
+                      />
+                    );
+                  });
+                })}
             {data && size < data[data.length - 1]?.pagination.pages ? (
               <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
                 <Button
@@ -275,4 +322,6 @@ const StoryCommentButton = ({ story_code }: Props) => {
   );
 };
 
-export default StoryCommentButton;
+const MemorizedStoryCommentButton = memo(StoryCommentButton);
+
+export default MemorizedStoryCommentButton;

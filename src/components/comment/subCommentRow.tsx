@@ -71,14 +71,15 @@ const StorySubCommentRow = ({
   const [submitClick, setSubmitClick] = useState<boolean>(false);
   const { profile } = useAuth();
   const router = useRouter();
-  const submitHandle = async (data: string) => {
-    const comment_content = data;
-    if (comment_content === "") return;
+  const submitHandle = async (data: {
+    truncatedValue: string;
+    mainValue: string;
+  }) => {
     setLoading(true);
     try {
       setEditing(false);
       await API.put(`/comments/sub/edit/${subCmtData._id}`, {
-        comment_content,
+        data,
       });
     } catch (error) {
       console.log(error);
@@ -142,7 +143,7 @@ const StorySubCommentRow = ({
               cb={submitHandle}
               clicked={submitClick}
               setClicked={setSubmitClick}
-              defaultValue={subCmtData.comment_content}
+              defaultValue={subCmtData?.mainValue}
             />
             <IconWrapper>
               <IconButton
@@ -169,7 +170,8 @@ const StorySubCommentRow = ({
               </Box>
             ) : (
               <StoryCommentContent
-                comment_content={subCmtData?.comment_content}
+                mainValue={subCmtData?.mainValue}
+                truncatedValue={subCmtData?.truncatedValue}
               />
             )}
           </>

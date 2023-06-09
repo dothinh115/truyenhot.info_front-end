@@ -31,7 +31,7 @@ const Wrapper = styled(Stack)(({ theme }) => ({
 }));
 
 type Props = {
-  cb: (data: string) => void;
+  cb: (data: { truncatedValue: string; mainValue: string }) => void;
   clicked: boolean;
   setClicked: (state: boolean) => any;
   placeholder?: string;
