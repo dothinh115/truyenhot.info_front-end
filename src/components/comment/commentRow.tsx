@@ -20,7 +20,7 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState, createContext } from "react";
+import React, { createContext, useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
 const CommentEditor = dynamic(() => import("./editor/wrapperEditor"));
 const MemorizedStorySubCommentRow = dynamic(() => import("./subCommentRow"));
@@ -158,6 +158,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
         if (commentWrapperEle.current)
           commentWrapperEle.current.scrollIntoView(true);
       }, 250);
+    } else {
     }
   }, [commentId]);
 

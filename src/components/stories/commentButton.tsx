@@ -1,20 +1,20 @@
+import { useAuth } from "@/hooks/auth/useAuth";
 import { CommentDataInterface } from "@/models/stories";
 import { API } from "@/utils/config";
 import CloseIcon from "@mui/icons-material/Close";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import Modal from "@mui/material/Modal";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
-import CircularProgress from "@mui/material/CircularProgress";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState, memo } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
-import { useAuth } from "@/hooks/auth/useAuth";
 import { CommentLoading } from "../loading/commentLoading";
 
 const CommentEditor = dynamic(() => import("../comment/editor/wrapperEditor"));
@@ -73,23 +73,24 @@ type Props = {
 
 const StoryCommentButton = ({ story_code }: Props) => {
   const { profile } = useAuth();
-
+  const [open, setOpen] = useState<boolean>(false);
   const getKey = (pageIndex: number, previousPageData: any) => {
     pageIndex += 1;
-    return `/comments/getCommentsByStoryCode/${story_code}?page=${pageIndex}`;
+    return open
+      ? `/comments/getCommentsByStoryCode/${story_code}?page=${pageIndex}`
+      : null;
   };
+  const { data, size, setSize, mutate, isValidating } = useSWRInfinite(getKey, {
+    revalidateOnMount: false,
+  });
 
-  const { data, size, setSize, mutate, isValidating, isLoading } =
-    useSWRInfinite(getKey, {
-      revalidateOnMount: false,
-    });
-  const [open, setOpen] = useState<boolean>(false);
   const [submitClicked, setSubmitClicked] = useState<boolean>(false);
   const commentWrapper = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
   const { commentOpen, commentId } = router.query;
   const { pathname, query } = router;
+
   const closeHandle = () => {
     delete query.commentOpen;
     if (query.commentId) delete query.commentId;
@@ -134,11 +135,20 @@ const StoryCommentButton = ({ story_code }: Props) => {
 
   const findGroupContainsCommentId = async () => {
     if (commentId && data) {
-      let find = data[data.length - 1].result.find(
-        (comment: CommentDataInterface) => comment._id === commentId
-      );
-      if (!find && size < data[data.length - 1]?.pagination.pages)
-        setSize(size + 1);
+      try {
+        const checkExistingId: { result: boolean } = await API.get(
+          `/comments/isCommentInStory/${story_code}?commentId=${commentId}`
+        );
+        if (checkExistingId.result) {
+          let find = data[data.length - 1].result.find(
+            (comment: CommentDataInterface) => comment._id === commentId
+          );
+          if (!find && size < data[data.length - 1]?.pagination.pages)
+            setSize(size + 1);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -148,15 +158,18 @@ const StoryCommentButton = ({ story_code }: Props) => {
       for (let group of data) {
         _count += group?.result.length;
       }
+      let time = _count * 80;
+      if (time < 1000) time = 1000;
+      else if (time > 3000) time = 3000;
       setTimeout(() => {
         setLoading(false);
-      }, _count * 80);
+      }, time);
     }
   };
 
   const showComment = async () => {
     if (open) {
-      await mutate();
+      if (!data) await mutate();
       await findGroupContainsCommentId();
       await calcLoadingTime();
     }
@@ -183,7 +196,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
         <ModalInner>
           <HeaddingStyled>
             <Box
-              component={"h2"}
+              component={"h1"}
               sx={{
                 margin: 0,
                 color: "myText.primary",
@@ -191,6 +204,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
                 justifyContent: "space-between",
                 alignItems: "center",
                 padding: "8px",
+                fontSize: "20px",
               }}
             >
               Bình luận

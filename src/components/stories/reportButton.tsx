@@ -14,13 +14,13 @@ import IconButton from "@mui/material/IconButton";
 import InputLabel from "@mui/material/InputLabel";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
 import { styled } from "@mui/material/styles";
 type Props = {
   open: boolean;
-  setOpen: any;
+  setOpen: Function;
   story_code: string;
   chapter_code?: string;
 };
@@ -71,9 +71,12 @@ const StoryReportButton = ({
 
   const { data: chapterListData, mutate: chapterListMutate } = useSWR<{
     result: ChapterListInterface[];
-  }>(`/chapter/getChapterListByStoryCode/${story_code}?page=all`, {
-    revalidateOnMount: false,
-  });
+  }>(
+    open ? `/chapter/getChapterListByStoryCode/${story_code}?page=all` : null,
+    {
+      revalidateOnMount: false,
+    }
+  );
 
   const {
     control,
@@ -122,7 +125,8 @@ const StoryReportButton = ({
   }, [open]);
 
   useEffect(() => {
-    if (story_code && open && !chapter_code) chapterListMutate();
+    if (story_code && open && !chapter_code && !chapterListData)
+      chapterListMutate();
   }, [story_code, open]);
   return (
     <>

@@ -15,7 +15,7 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, { useState, useContext } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { StoryCommentRowContext } from "./commentRow";
 const CommentEditor = dynamic(() => import("./editor/wrapperEditor"));
 const StoryCommentContent = dynamic(() => import("./commentContent"));
@@ -62,6 +62,7 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [submitClick, setSubmitClick] = useState<boolean>(false);
   const { profile } = useAuth();
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { subCmtMutate, setReplying, setSubReplyTo } = useContext<any>(
     StoryCommentRowContext
@@ -85,7 +86,7 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
   };
 
   return (
-    <SubCommentWrapper>
+    <SubCommentWrapper ref={wrapperRef}>
       <SubCommentInner>
         <Stack direction={"row"} justifyContent={"space-between"}>
           <Box>
