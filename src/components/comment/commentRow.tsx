@@ -104,6 +104,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
   const [editing, setEditing] = useState<boolean>(false);
   const [replying, setReplying] = useState<boolean>(false);
   const commentWrapperEle = useRef<HTMLDivElement>(null);
+  const commentRowRef = useRef<HTMLDivElement>(null);
   const [editSubmitClicked, setEditSubmitClicked] = useState<boolean>(false);
   const [replySubmitClicked, setReplySubmitClicked] = useState<boolean>(false);
   const [editLoading, setEditLoading] = useState<boolean>(false);
@@ -154,10 +155,13 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
 
   useEffect(() => {
     if (commentId === comment._id) {
+      subCmtMutate();
       setTimeout(() => {
-        if (commentWrapperEle.current)
+        if (commentWrapperEle.current && commentRowRef.current) {
           commentWrapperEle.current.scrollIntoView(true);
-      }, 250);
+          commentRowRef.current.style.backgroundColor = "#222";
+        }
+      }, 300);
     } else {
     }
   }, [commentId]);
@@ -188,7 +192,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
             }}
           >
             <Stack direction={"row"} width={"100%"} alignItems={"center"}>
-              <CommentRowContentInner>
+              <CommentRowContentInner ref={commentRowRef}>
                 <Stack direction={"row"} justifyContent={"space-between"}>
                   <Box>
                     <PosterSpanStyled>
