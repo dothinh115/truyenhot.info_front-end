@@ -126,7 +126,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
 
   const commentLoadingRender = () => {
     let html: any[] = [];
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 4; i++) {
       html.push(<CommentLoading key={i} />);
     }
     return html;

@@ -161,6 +161,12 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
     }
   }, [commentId]);
 
+  useEffect(() => {
+    if (replying && commentWrapperEle.current) {
+      commentWrapperEle.current.scrollIntoView(true);
+    }
+  }, [replying]);
+
   const showReplyFooter =
     (subCmtData && subCmtData[0]?.result.length !== 0) || replying;
 
