@@ -54,6 +54,7 @@ export const StoryChapterPicker = ({ chapterData, chapterListData }: Props) => {
         disabled={!chapterData?.prevChapter ? true : false}
         color="primary"
         size="large"
+        title="Chương trước"
       >
         <ArrowBackIcon fontSize="inherit" />
       </IconButton>
@@ -88,6 +89,7 @@ export const StoryChapterPicker = ({ chapterData, chapterListData }: Props) => {
         href={`/story/${chapterData?.story_code}/${chapterData?.nextChapter}`}
         disabled={!chapterData?.nextChapter ? true : false}
         color="primary"
+        title="Chương sau"
       >
         <ArrowForwardIcon fontSize="inherit" />
       </IconButton>
