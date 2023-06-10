@@ -118,17 +118,13 @@ const RowStory = ({ storiesData }: Props) => {
           return (
             <ListItemStyled key={story._id}>
               <ListItemInnerWrapper>
-                {/* <ListItemInnerImg
-                  alt={story.story_title}
-                  src={story.story_cover}
-                /> */}
                 <Image
-                  // width={100}
                   sizes="90px"
                   src={story.story_cover}
                   alt={story.story_title}
                   fill={true}
                   priority
+                  quality={100}
                 />
               </ListItemInnerWrapper>
               <Stack width={"80%"} gap={"4px"}>

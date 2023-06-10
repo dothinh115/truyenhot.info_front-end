@@ -134,54 +134,51 @@ const UListStyled = styled("ul")(({ theme }) => ({
   listStyleType: "none",
   paddingLeft: "0",
   flexGrow: 1,
+  fontSize: "13px",
   "& a ": {
     textDecoration: "none",
     color: theme.palette.myText.link,
   },
-  "& > li > a, & > li > h4, & > li > p": {
-    display: "inline-block",
-    marginRight: "5px",
-  },
-  "& p, & a, & h4, & li": {
-    fontSize: "13px",
-  },
-  "& > li > h4": {
-    marginTop: "0",
-    marginBottom: "0",
-  },
   "& > li": {
-    padding: "4px",
-    color: theme.palette.myText.primary,
-    minHeight: "30px",
     "&:not(:last-child)": {
       borderBottomWidth: "1px",
       borderBottomStyle: "dashed",
       borderBottomColor: theme.palette.mySecondary.main,
     },
-    display: "flex",
-    alignItems: "flex-start",
-    "& h4": {
-      alignItems: "center",
-      color: theme.palette.myText.secondary,
-      display: "inline-flex",
-      "& svg": {
-        color: theme.palette.info.main,
-        height: "20px",
-        width: "20px",
-        marginRight: "8px",
-      },
-      "& span": {
-        display: "inline-block",
-        width: "60px",
-      },
-    },
-    "&>span>a": {
-      marginBottom: "4px",
-    },
   },
-  "& > li > ul": {
+}));
+
+const StoryDetailListStyled = styled("li")(({ theme }) => ({
+  padding: "4px",
+  color: theme.palette.myText.primary,
+  minHeight: "30px",
+  display: "flex",
+  alignItems: "flex-start",
+  lineHeight: "25px",
+  gap: "5px",
+  "& > ul": {
     display: "inline-block",
     paddingLeft: "8px",
+  },
+  "&>span>a": {
+    marginTop: "2px",
+    marginBottom: "2px",
+  },
+}));
+
+const StoryDetailListLeftBoxStyled = styled(Box)(({ theme }) => ({
+  alignItems: "center",
+  color: theme.palette.myText.secondary,
+  display: "flex",
+  "& svg": {
+    color: theme.palette.info.main,
+    height: "20px",
+    width: "20px",
+    marginRight: "8px",
+  },
+  "& span": {
+    display: "inline-block",
+    width: "60px",
   },
 }));
 
@@ -341,23 +338,23 @@ const StoryMain = ({ story }: Props) => {
         <Stack flexGrow={1}>
           <ULWrapper>
             <UListStyled>
-              <Box component={"li"}>
-                <Box component={"h4"}>
+              <StoryDetailListStyled>
+                <StoryDetailListLeftBoxStyled>
                   <PersonIcon />
                   Tác giả:
-                </Box>
+                </StoryDetailListLeftBoxStyled>
                 <Box
                   component={Link}
                   href={`/search/author?keywords=${story?.story_author}&exact=true`}
                 >
                   {story?.story_author}
                 </Box>
-              </Box>
-              <Box component={"li"}>
-                <Box component={"h4"}>
+              </StoryDetailListStyled>
+              <StoryDetailListStyled>
+                <StoryDetailListLeftBoxStyled>
                   <FolderIcon />
                   <Box component={"span"}>Thể loại:</Box>
-                </Box>
+                </StoryDetailListLeftBoxStyled>
                 <Box component={"span"}>
                   {story?.story_category.map((cate: CategoryInterface) => {
                     return (
@@ -377,26 +374,26 @@ const StoryMain = ({ story }: Props) => {
                     );
                   })}
                 </Box>
-              </Box>
-              <Box component={"li"}>
-                <Box component={"h4"}>
+              </StoryDetailListStyled>
+              <StoryDetailListStyled>
+                <StoryDetailListLeftBoxStyled>
                   <ArrowForwardIosIcon />
                   Nguồn:
-                </Box>
+                </StoryDetailListLeftBoxStyled>
                 {story?.story_source}
-              </Box>
-              <Box component={"li"}>
-                <Box component={"h4"}>
+              </StoryDetailListStyled>
+              <StoryDetailListStyled>
+                <StoryDetailListLeftBoxStyled>
                   <StarIcon />
                   Trạng thái:
-                </Box>
+                </StoryDetailListLeftBoxStyled>
                 {story?.story_status}
-              </Box>
-              <Box component={"li"}>
-                <Box component={"h4"}>
+              </StoryDetailListStyled>
+              <StoryDetailListStyled>
+                <StoryDetailListLeftBoxStyled>
                   <UpdateIcon />
                   Update lần cuối:
-                </Box>
+                </StoryDetailListLeftBoxStyled>
                 {story?.updated_at && (
                   <>{`${timeSince(
                     Math.abs(
@@ -405,14 +402,14 @@ const StoryMain = ({ story }: Props) => {
                     )
                   )} trước`}</>
                 )}
-              </Box>
-              <Box component={"li"}>
-                <Box component={"h4"}>
+              </StoryDetailListStyled>
+              <StoryDetailListStyled>
+                <StoryDetailListLeftBoxStyled>
                   <FavoriteIcon />
                   Số lượt thích:
-                </Box>
+                </StoryDetailListLeftBoxStyled>
                 {likeNumberData?.result?.number}
-              </Box>
+              </StoryDetailListStyled>
             </UListStyled>
             <ButtonWrapper>
               <StoryLikeButton
@@ -446,11 +443,17 @@ const StoryMain = ({ story }: Props) => {
             }}
           ></DescriptionContent>
         )}
-        <Stack direction={"row"} justifyContent={"center"}>
-          <IconButton onClick={() => setShowMore(!showMore)} size="small">
-            {showMore ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-          </IconButton>
-        </Stack>
+        {story?.story_description && story?.story_description.length >= 400 ? (
+          <Stack direction={"row"} justifyContent={"center"}>
+            <IconButton
+              onClick={() => setShowMore(!showMore)}
+              size="small"
+              title={showMore ? "Rút gọn" : "Xem thêm"}
+            >
+              {showMore ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+            </IconButton>
+          </Stack>
+        ) : null}
       </DescriptionWrapper>
 
       <Stack
