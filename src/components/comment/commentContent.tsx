@@ -3,8 +3,15 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
+import {
+  CompositeDecorator,
+  ContentBlock,
+  ContentState,
+  Editor,
+  EditorState,
+  convertFromRaw,
+} from "draft-js";
 import { memo, useState } from "react";
-import redraft from "redraft";
 const MentionLinkStyled = styled("span")(() => ({
   color: "#64b5f6",
   direction: "ltr",
@@ -21,64 +28,68 @@ const ContentWrapper = styled(Box)(({ theme }) => ({
 
 type Props = {
   truncatedValue: string;
-  mainValue: string;
+  mainValue: any;
 };
 
-// const getMentionEntityStrategy = (mutability: string) => {
-//   return function (
-//     contentBlock: ContentBlock,
-//     callback: any,
-//     contentState: ContentState
-//   ) {
-//     contentBlock.findEntityRanges((character: any) => {
-//       const entityKey = character.getEntity();
-//       if (entityKey === null) {
-//         return false;
-//       }
-//       return contentState.getEntity(entityKey).getType() === mutability;
-//     }, callback);
-//   };
-// };
+const getMentionEntityStrategy = (mutability: string) => {
+  return function (
+    contentBlock: ContentBlock,
+    callback: any,
+    contentState: ContentState
+  ) {
+    contentBlock.findEntityRanges((character: any) => {
+      const entityKey = character.getEntity();
+      if (entityKey === null) {
+        return false;
+      }
+      return contentState.getEntity(entityKey).getType() === mutability;
+    }, callback);
+  };
+};
 
-// const MentionSpan = (props: any) => {
-//   const { url } = props.contentState.getEntity(props.entityKey).getData();
-//   return (
-//     <MentionLinkStyled data-offset-key={props.offsetkey}>
-//       {props.children}
-//     </MentionLinkStyled>
-//   );
-// };
+const MentionSpan = (props: any) => {
+  const { url } = props.contentState.getEntity(props.entityKey).getData();
+  return (
+    <MentionLinkStyled data-offset-key={props.offsetkey}>
+      {props.children}
+    </MentionLinkStyled>
+  );
+};
 
-// const mentionDecorator = new CompositeDecorator([
-//   {
-//     strategy: getMentionEntityStrategy("MENTION"),
-//     component: MentionSpan,
-//   },
-// ]);
-
-const renderers = {
-  inline: {},
-  blocks: {},
-  entities: {
-    MENTION: (children: string, data: any, { key }: { key: number }) => (
-      <MentionLinkStyled key={key}>{children}</MentionLinkStyled>
-    ),
+const mentionDecorator = new CompositeDecorator([
+  {
+    strategy: getMentionEntityStrategy("MENTION"),
+    component: MentionSpan,
   },
-};
+]);
 
 const StoryCommentContent = ({ truncatedValue, mainValue }: Props) => {
   const [show, setShow] = useState<boolean>(true);
-  const [value, setValue] = useState(
-    redraft(JSON.parse(truncatedValue ? truncatedValue : mainValue), renderers)
+
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createWithContent(
+      convertFromRaw(JSON.parse(truncatedValue ? truncatedValue : mainValue)),
+      mentionDecorator
+    )
   );
 
   const seeMoreHandle = () => {
-    setValue(redraft(JSON.parse(mainValue), renderers));
+    setEditorState(
+      EditorState.createWithContent(
+        convertFromRaw(JSON.parse(mainValue)),
+        mentionDecorator
+      )
+    );
     setShow(false);
   };
+
   return (
     <ContentWrapper>
-      {value}
+      <Editor
+        editorState={editorState}
+        onChange={setEditorState}
+        readOnly={true}
+      />
       <Stack
         sx={{
           flexDirection: "row",

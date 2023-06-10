@@ -98,6 +98,7 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
   } = useSWRInfinite(getKey, { revalidateOnMount: false });
   const { profile } = useAuth();
   const router = useRouter();
+  const { commentId } = router.query;
   const [editing, setEditing] = useState<boolean>(false);
   const [replying, setReplying] = useState<boolean>(false);
   const commentWrapperEle = useRef<HTMLDivElement>(null);
@@ -150,6 +151,15 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
       subCmtMutate();
     }
   }, [comment]);
+
+  useEffect(() => {
+    if (commentId === comment._id) {
+      setTimeout(() => {
+        if (commentWrapperEle.current)
+          commentWrapperEle.current.scrollIntoView(true);
+      }, 250);
+    }
+  }, [commentId]);
 
   const showReplyFooter =
     (subCmtData && subCmtData[0]?.result.length !== 0) || replying;

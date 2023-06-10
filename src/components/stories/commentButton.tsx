@@ -80,15 +80,19 @@ const StoryCommentButton = ({ story_code }: Props) => {
   };
 
   const { data, size, setSize, mutate, isValidating, isLoading } =
-    useSWRInfinite(getKey);
+    useSWRInfinite(getKey, {
+      revalidateOnMount: false,
+    });
   const [open, setOpen] = useState<boolean>(false);
   const [submitClicked, setSubmitClicked] = useState<boolean>(false);
   const commentWrapper = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
   const { commentOpen, commentId } = router.query;
   const { pathname, query } = router;
   const closeHandle = () => {
     delete query.commentOpen;
+    if (query.commentId) delete query.commentId;
     router.replace({ pathname, query }, undefined, {
       shallow: true,
     });
@@ -128,53 +132,50 @@ const StoryCommentButton = ({ story_code }: Props) => {
     return html;
   };
 
+  const findGroupContainsCommentId = async () => {
+    if (commentId && data) {
+      let find = data[data.length - 1].result.find(
+        (comment: CommentDataInterface) => comment._id === commentId
+      );
+      if (!find && size < data[data.length - 1]?.pagination.pages)
+        setSize(size + 1);
+    }
+  };
+
+  const calcLoadingTime = async () => {
+    if (data) {
+      let _count = 0;
+      for (let group of data) {
+        _count += group?.result.length;
+      }
+      setTimeout(() => {
+        setLoading(false);
+      }, _count * 80);
+    }
+  };
+
+  const showComment = async () => {
+    if (open) {
+      await mutate();
+      await findGroupContainsCommentId();
+      await calcLoadingTime();
+    }
+  };
+
   useEffect(() => {
     if (data && size > data[data.length - 1]?.pagination.pages && size !== 1) {
       setSize(size - 1);
     }
-    if (data) {
-      let findIndex: number = -1;
-      let group: number = 0;
-      for (let index in data) {
-        findIndex = data[index]?.result.findIndex(
-          (comment: CommentDataInterface) => comment._id === commentId
-        );
-        if (findIndex !== -1) {
-          group = +index;
-        }
-      }
-      if (findIndex !== -1) {
-        const index = group * 20 + findIndex;
-        if (commentWrapper.current) {
-          commentWrapper.current.scroll({
-            top: index * 96,
-            left: 0,
-          });
-        }
-      }
-    }
   }, [data]);
 
   useEffect(() => {
-    if (story_code && open) mutate();
-  }, [open]);
+    showComment();
+  }, [open, commentId, data]);
 
   useEffect(() => {
     if (commentOpen) setOpen(true);
     else setOpen(false);
   }, [commentOpen]);
-
-  useEffect(() => {
-    if (commentId && data) {
-      for (let group of data) {
-        const find = group?.result.find(
-          (comment: CommentDataInterface) => comment._id === commentId
-        );
-        if (!find) setSize(size + 1);
-        else break;
-      }
-    }
-  }, [commentId]);
 
   return (
     <>
@@ -201,7 +202,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
           <Box className="hr" />
 
           <CommentRowWrapper ref={commentWrapper}>
-            {isLoading
+            {loading
               ? commentLoadingRender()
               : data?.map((group: any) => {
                   return group?.result.map((comment: CommentDataInterface) => {
@@ -319,7 +320,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
       <Button
         color="secondary"
         startIcon={<ModeCommentIcon />}
-        onClick={() =>
+        onClick={() => {
           router.replace(
             {
               pathname: router.asPath,
@@ -329,8 +330,8 @@ const StoryCommentButton = ({ story_code }: Props) => {
             },
             undefined,
             { shallow: true }
-          )
-        }
+          );
+        }}
       >
         bình luận
       </Button>
