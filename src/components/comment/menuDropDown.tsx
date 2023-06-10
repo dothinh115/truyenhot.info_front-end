@@ -15,11 +15,11 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { alpha, styled } from "@mui/material/styles";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, memo, useContext } from "react";
 import { useRouter } from "next/router";
+import { StoryCommentRowContext } from "./commentRow";
 
 type Props = {
-  mutate: () => void;
   setReplying: (reply: boolean) => void;
   comment: CommentDataInterface | SubCommentDataInterface;
   setEditing: (edit: boolean) => void;
@@ -39,7 +39,6 @@ const MenuDropdownWrapper = styled(Box)(({ theme }) => ({
   zIndex: 50,
 }));
 const CommentMenuDropDown = ({
-  mutate,
   setReplying,
   comment,
   setEditing,
@@ -49,10 +48,17 @@ const CommentMenuDropDown = ({
   const menuDropdown = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { profile } = useAuth();
+  const { mutate, subCmtMutate } = useContext<any>(StoryCommentRowContext);
+
   const deleteHandle = async (_id: string) => {
     try {
       await API.delete(`/comments${subCmt ? "/sub" : ""}/delete/${_id}`);
-      mutate();
+      if (subCmt) {
+        mutate();
+        subCmtMutate();
+      } else {
+        mutate();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -155,4 +161,6 @@ const CommentMenuDropDown = ({
   );
 };
 
-export default CommentMenuDropDown;
+const MemorizedCommentMenuDropDown = memo(CommentMenuDropDown);
+
+export default MemorizedCommentMenuDropDown;

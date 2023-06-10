@@ -20,12 +20,12 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, createContext } from "react";
 import useSWRInfinite from "swr/infinite";
-import CommentMenuDropDown from "./menuDropDown";
 const CommentEditor = dynamic(() => import("./editor/wrapperEditor"));
 const MemorizedStorySubCommentRow = dynamic(() => import("./subCommentRow"));
 const StoryCommentContent = dynamic(() => import("./commentContent"));
+const CommentMenuDropDown = dynamic(() => import("./menuDropDown"));
 const CommentRowWrapper = styled(Stack)(({ theme }) => ({
   marginBottom: theme.spacing(1),
 }));
@@ -82,7 +82,9 @@ type Props = {
   mutate: () => void;
 };
 
-export const StoryCommentRow = ({ comment, mutate }: Props) => {
+export const StoryCommentRowContext = createContext({});
+
+const StoryCommentRow = ({ comment, mutate }: Props) => {
   const [subReplyTo, setSubReplyTo] = useState<string>("");
   const getKey = (pageIndex: number, previousPageData: any) => {
     pageIndex = pageIndex + 1;
@@ -147,10 +149,11 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
   };
 
   useEffect(() => {
-    if (comment.totalSubCmt > 0) {
-      subCmtMutate();
+    if (subCmtData && size > comment.totalSubCmtPages && size !== 1) {
+      setSize(size - 1);
     }
-  }, [comment]);
+    console.log(size, comment.totalSubCmtPages);
+  }, [subCmtData]);
 
   useEffect(() => {
     if (commentId === comment._id) {
@@ -166,196 +169,219 @@ export const StoryCommentRow = ({ comment, mutate }: Props) => {
 
   return (
     <CommentRowWrapper ref={commentWrapperEle}>
-      <CommentRow>
-        <CommentRowContentWrapper
-          sx={{
-            display: editing ? "flex" : "inline-flex",
-          }}
-        >
-          <Stack direction={"row"} width={"100%"} alignItems={"center"}>
-            <CommentRowContentInner>
-              <Stack direction={"row"} justifyContent={"space-between"}>
-                <Box>
-                  <PosterSpanStyled>
-                    {comment?.author.gender === "male" ? (
-                      <Box
-                        component={MaleIcon}
-                        sx={{
-                          color: "#2196f3",
-                        }}
-                      />
-                    ) : (
-                      <Box
-                        component={FemaleIcon}
-                        sx={{
-                          color: "#e91e63",
-                        }}
-                      />
-                    )}
-                    {comment?.author.user_id}
-                  </PosterSpanStyled>
-                </Box>
-                <Link
-                  underline="none"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (profile) setReplying(!replying);
-                    else
-                      router.push({
-                        pathname: "/login",
-                        query: {
-                          goAround: true,
-                        },
-                      });
-                  }}
-                  sx={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    cursor: "pointer",
-                  }}
-                >
-                  <ReplyIcon fontSize="small" /> Trả lời
-                </Link>
-              </Stack>
-              <Divider />
-              {editing ? (
-                <>
+      <StoryCommentRowContext.Provider
+        value={{
+          subCmtMutate,
+          setReplying,
+          setSubReplyTo,
+          mutate,
+        }}
+      >
+        <CommentRow>
+          <CommentRowContentWrapper
+            sx={{
+              display: editing ? "flex" : "inline-flex",
+            }}
+          >
+            <Stack direction={"row"} width={"100%"} alignItems={"center"}>
+              <CommentRowContentInner>
+                <Stack direction={"row"} justifyContent={"space-between"}>
+                  <Box>
+                    <PosterSpanStyled>
+                      {comment?.author.gender === "male" ? (
+                        <Box
+                          component={MaleIcon}
+                          sx={{
+                            color: "#2196f3",
+                          }}
+                        />
+                      ) : (
+                        <Box
+                          component={FemaleIcon}
+                          sx={{
+                            color: "#e91e63",
+                          }}
+                        />
+                      )}
+                      {comment?.author.user_id}
+                    </PosterSpanStyled>
+                  </Box>
+                  <Link
+                    underline="none"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (profile) setReplying(!replying);
+                      else
+                        router.push({
+                          pathname: "/login",
+                          query: {
+                            goAround: true,
+                          },
+                        });
+                    }}
+                    sx={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <ReplyIcon fontSize="small" /> Trả lời
+                  </Link>
+                </Stack>
+                <Divider />
+                {editing ? (
+                  <>
+                    <CommentEditor
+                      cb={submitHandle}
+                      clicked={editSubmitClicked}
+                      setClicked={setEditSubmitClicked}
+                      defaultValue={comment?.mainValue}
+                    />
+                    <IconWrapper>
+                      <IconButton
+                        size="small"
+                        color="error"
+                        onClick={() => setEditing(false)}
+                      >
+                        <CancelIcon />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        color="success"
+                        onClick={() => setEditSubmitClicked(true)}
+                      >
+                        <CheckCircleIcon />
+                      </IconButton>
+                    </IconWrapper>
+                  </>
+                ) : editLoading ? (
+                  <Box my={1}>
+                    <CircularProgress size="1em" /> Đang cập nhật...
+                  </Box>
+                ) : (
+                  <StoryCommentContent
+                    mainValue={comment?.mainValue}
+                    truncatedValue={comment?.truncatedValue}
+                  />
+                )}
+              </CommentRowContentInner>
+
+              <CommentMenuDropDown
+                comment={comment}
+                setEditing={setEditing}
+                setReplying={setReplying}
+              />
+            </Stack>
+          </CommentRowContentWrapper>
+        </CommentRow>
+        {replyLoading && (
+          <Box
+            my={1}
+            sx={{
+              color: "myText.primary",
+              fontSize: ".9em",
+              width: "100%",
+              textAlign: "center",
+            }}
+          >
+            <CircularProgress size="1em" /> Đang gửi trả lời...
+          </Box>
+        )}
+        {comment && comment.totalSubCmt > 0 && !subCmtData && (
+          <Link
+            underline="none"
+            sx={{
+              cursor: "pointer",
+              marginLeft: "5%",
+              display: "flex",
+              alignItem: "center",
+            }}
+            onClick={(event: React.MouseEvent<HTMLAnchorElement>) => {
+              event.preventDefault();
+              subCmtMutate();
+            }}
+          >
+            <ExpandMoreIcon />
+            Xem trả lời cho bình luận này
+          </Link>
+        )}
+        {showReplyFooter && (
+          <Stack direction={"row"}>
+            <Box
+              minWidth={"30px"}
+              textAlign={"right"}
+              sx={{
+                color: "myText.primary",
+              }}
+            >
+              <SubdirectoryArrowRightIcon />
+            </Box>
+            <Box
+              sx={{
+                flexGrow: 1,
+              }}
+            >
+              {replying && (
+                <ReplyInputWrapper>
                   <CommentEditor
-                    cb={submitHandle}
-                    clicked={editSubmitClicked}
-                    setClicked={setEditSubmitClicked}
-                    defaultValue={comment?.mainValue}
+                    cb={replySubmitHandle}
+                    clicked={replySubmitClicked}
+                    setClicked={setReplySubmitClicked}
+                    placeholder={`Trả lời ${comment?.author.user_id}...`}
+                    replyTo={subReplyTo ? subReplyTo : comment?.author.user_id}
                   />
                   <IconWrapper>
                     <IconButton
                       size="small"
                       color="error"
-                      onClick={() => setEditing(false)}
+                      onClick={() => setReplying(false)}
                     >
                       <CancelIcon />
                     </IconButton>
                     <IconButton
                       size="small"
                       color="success"
-                      onClick={() => setEditSubmitClicked(true)}
+                      onClick={() => setReplySubmitClicked(true)}
                     >
                       <CheckCircleIcon />
                     </IconButton>
                   </IconWrapper>
-                </>
-              ) : editLoading ? (
-                <Box my={1}>
-                  <CircularProgress size="1em" /> Đang cập nhật...
-                </Box>
-              ) : (
-                <StoryCommentContent
-                  mainValue={comment?.mainValue}
-                  truncatedValue={comment?.truncatedValue}
-                />
+                </ReplyInputWrapper>
               )}
-            </CommentRowContentInner>
-
-            <CommentMenuDropDown
-              comment={comment}
-              mutate={mutate}
-              setEditing={setEditing}
-              setReplying={setReplying}
-            />
+              {subCmtData &&
+                subCmtData[0]?.result.length !== 0 &&
+                subCmtData.map((group: any) => {
+                  return group?.result.map((sub: SubCommentDataInterface) => {
+                    return (
+                      <MemorizedStorySubCommentRow
+                        key={sub._id}
+                        subCmtData={sub}
+                      />
+                    );
+                  });
+                })}
+              {size < comment.totalSubCmtPages && (
+                <Link
+                  underline="none"
+                  sx={{
+                    cursor: "pointer",
+                    marginLeft: "5%",
+                    display: "flex",
+                    alignItem: "center",
+                  }}
+                  onClick={(event: React.MouseEvent<HTMLAnchorElement>) => {
+                    event.preventDefault();
+                    setSize(size + 1);
+                  }}
+                >
+                  <ExpandMoreIcon />
+                  Xem thêm bình luận cũ
+                </Link>
+              )}
+            </Box>
           </Stack>
-        </CommentRowContentWrapper>
-      </CommentRow>
-      {replyLoading && (
-        <Box
-          my={1}
-          sx={{
-            color: "myText.primary",
-            fontSize: ".9em",
-            width: "100%",
-            textAlign: "center",
-          }}
-        >
-          <CircularProgress size="1em" /> Đang gửi trả lời...
-        </Box>
-      )}
-      {showReplyFooter && (
-        <Stack direction={"row"}>
-          <Box
-            minWidth={"30px"}
-            textAlign={"right"}
-            sx={{
-              color: "myText.primary",
-            }}
-          >
-            <SubdirectoryArrowRightIcon />
-          </Box>
-          <Box
-            sx={{
-              flexGrow: 1,
-            }}
-          >
-            {replying && (
-              <ReplyInputWrapper>
-                <CommentEditor
-                  cb={replySubmitHandle}
-                  clicked={replySubmitClicked}
-                  setClicked={setReplySubmitClicked}
-                  placeholder={`Trả lời ${comment?.author.user_id}...`}
-                  replyTo={subReplyTo ? subReplyTo : comment?.author.user_id}
-                />
-                <IconWrapper>
-                  <IconButton
-                    size="small"
-                    color="error"
-                    onClick={() => setReplying(false)}
-                  >
-                    <CancelIcon />
-                  </IconButton>
-                  <IconButton
-                    size="small"
-                    color="success"
-                    onClick={() => setReplySubmitClicked(true)}
-                  >
-                    <CheckCircleIcon />
-                  </IconButton>
-                </IconWrapper>
-              </ReplyInputWrapper>
-            )}
-            {subCmtData &&
-              subCmtData[0]?.result.length !== 0 &&
-              subCmtData.map((group: any) => {
-                return group?.result.map((sub: SubCommentDataInterface) => {
-                  return (
-                    <MemorizedStorySubCommentRow
-                      key={sub._id}
-                      subCmtData={sub}
-                      mutate={subCmtMutate}
-                      setReplying={setReplying}
-                      setSubReplyTo={setSubReplyTo}
-                    />
-                  );
-                });
-              })}
-            {size < comment.totalSubCmtPages && (
-              <Link
-                underline="none"
-                sx={{
-                  cursor: "pointer",
-                  marginLeft: "5%",
-                  display: "flex",
-                  alignItem: "center",
-                }}
-                onClick={(event: React.MouseEvent<HTMLAnchorElement>) => {
-                  event.preventDefault();
-                  setSize(size + 1);
-                }}
-              >
-                <ExpandMoreIcon />
-                Xem thêm bình luận cũ
-              </Link>
-            )}
-          </Box>
-        </Stack>
-      )}
+        )}
+      </StoryCommentRowContext.Provider>
     </CommentRowWrapper>
   );
 };
