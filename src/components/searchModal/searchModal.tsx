@@ -344,24 +344,24 @@ const SearchModal = (props: Props) => {
                 </Stack>
               )) ||
               (searchData?.pagination?.pages &&
-                searchData?.pagination?.pages > 1 &&
-                !loading && (
-                  <Stack
-                    direction={"row"}
-                    justifyContent={"center"}
-                    sx={{
-                      textDecoration: "none",
-                      color: "myText.link",
-                    }}
-                    component={Link}
-                    href={`/search/title?keywords=${getValues("keywords")}`}
-                    onClick={() => {
-                      setSearchOpen(false);
-                    }}
-                  >
-                    Xem thêm kết quả
-                  </Stack>
-                ))}
+              searchData?.pagination?.pages > 1 &&
+              !loading ? (
+                <Stack
+                  direction={"row"}
+                  justifyContent={"center"}
+                  sx={{
+                    textDecoration: "none",
+                    color: "myText.link",
+                  }}
+                  component={Link}
+                  href={`/search/title?keywords=${getValues("keywords")}`}
+                  onClick={() => {
+                    setSearchOpen(false);
+                  }}
+                >
+                  Xem thêm kết quả
+                </Stack>
+              ) : null)}
           </ResultList>
         </ModalInner>
       </Modal>
