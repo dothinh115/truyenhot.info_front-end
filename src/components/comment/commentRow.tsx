@@ -284,24 +284,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
             <CircularProgress size="1em" /> Đang gửi trả lời...
           </Box>
         )}
-        {comment && comment.totalSubCmt > 0 && !subCmtData && (
-          <Link
-            underline="none"
-            sx={{
-              cursor: "pointer",
-              marginLeft: "5%",
-              display: "flex",
-              alignItem: "center",
-            }}
-            onClick={(event: React.MouseEvent<HTMLAnchorElement>) => {
-              event.preventDefault();
-              subCmtMutate();
-            }}
-          >
-            <ExpandMoreIcon />
-            Xem trả lời cho bình luận này
-          </Link>
-        )}
+
         {showReplyFooter && (
           <Stack direction={"row"}>
             <Box
@@ -357,6 +340,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
                     );
                   });
                 })}
+
               {size < comment.totalSubCmtPages && (
                 <Link
                   underline="none"
@@ -377,6 +361,38 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
               )}
             </Box>
           </Stack>
+        )}
+
+        {subCmtIsValidating && (
+          <Box
+            my={1}
+            sx={{
+              color: "myText.primary",
+              fontSize: ".9em",
+              width: "100%",
+              paddingLeft: "5%",
+            }}
+          >
+            <CircularProgress size="1em" /> Đang tải...
+          </Box>
+        )}
+        {comment && comment.totalSubCmt > 0 && !subCmtData && (
+          <Link
+            underline="none"
+            sx={{
+              cursor: "pointer",
+              marginLeft: "5%",
+              display: "flex",
+              alignItem: "center",
+            }}
+            onClick={(event: React.MouseEvent<HTMLAnchorElement>) => {
+              event.preventDefault();
+              subCmtMutate();
+            }}
+          >
+            <ExpandMoreIcon />
+            Xem trả lời cho bình luận này
+          </Link>
         )}
       </StoryCommentRowContext.Provider>
     </CommentRowWrapper>
