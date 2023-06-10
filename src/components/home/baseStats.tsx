@@ -13,7 +13,7 @@ const Wrapper = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));
 
-const Heading = styled("h3")(({ theme }) => ({
+const Heading = styled("h1")(({ theme }) => ({
   margin: "0",
   padding: "8px",
   borderBottomWidth: "1px",

@@ -61,6 +61,7 @@ const HotStoriesInCate = ({ category, hotStoriesInCategory }: Props) => {
                       sx={{
                         px: 0,
                       }}
+                      title={story.story_title}
                     >
                       <Box component={ListItemIcon} minWidth={"25px"}>
                         <ArrowForwardIosIcon

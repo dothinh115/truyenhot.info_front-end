@@ -91,6 +91,7 @@ const CategoriesDetail = ({
         xs: ".8rem",
       }}
       scroll={true}
+      title="Home"
     >
       <HomeIcon />
     </Box>,

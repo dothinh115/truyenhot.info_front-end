@@ -11,7 +11,7 @@ const Wrapper = styled(Box)(({ theme }) => ({
   boxShadow: `0 0 2px ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
 }));
 
-const Heading = styled("h3")(({ theme }) => ({
+const Heading = styled("h1")(({ theme }) => ({
   margin: "0",
   padding: theme.spacing(1),
   color: theme.palette.myText.main,

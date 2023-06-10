@@ -117,13 +117,20 @@ const RowStory = ({ storiesData }: Props) => {
           return (
             <ListItemStyled key={story._id}>
               <ListItemInnerWrapper>
-                <ListItemInnerImg src={story.story_cover} />
+                <ListItemInnerImg
+                  alt={story.story_title}
+                  src={story.story_cover}
+                />
               </ListItemInnerWrapper>
               <Stack width={"80%"} gap={"4px"}>
-                <ListItemInnerTitle href={`/story/${story.story_code}`}>
+                <ListItemInnerTitle
+                  title={story.story_title}
+                  href={`/story/${story.story_code}`}
+                >
                   {story.story_title}
                 </ListItemInnerTitle>
                 <ListItemInnerAuthor
+                  title={story.story_author}
                   href={`/search/author?keywords=${story.story_author}&exact=true`}
                 >
                   <CreateIcon />
