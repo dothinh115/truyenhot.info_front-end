@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import { styled, alpha } from "@mui/material/styles";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import Image from "next/image";
 type Props = {
   storiesData: {
     result: StoriesInCategoryInterface[];
@@ -36,19 +37,19 @@ const ListItemStyled = styled("li")(({ theme }) => ({
 const ListItemInnerWrapper = styled(Stack)(({ theme }) => ({
   flexDirection: "row",
   alignItems: "center",
+  position: "relative",
+  height: "90px",
+  borderRadius: theme.spacing(1),
+  overflow: "hidden",
   [theme.breakpoints.up("xs")]: {
     width: "30%",
   },
   [theme.breakpoints.up("md")]: {
     width: "20%",
   },
-}));
-
-const ListItemInnerImg = styled("img")(({ theme }) => ({
-  width: "100%",
-  height: "90px",
-  objectFit: "cover",
-  borderRadius: theme.spacing(1),
+  "&>img": {
+    objectFit: "cover",
+  },
 }));
 
 const ListItemInnerTitle = styled(Link)(({ theme }) => ({
@@ -117,9 +118,17 @@ const RowStory = ({ storiesData }: Props) => {
           return (
             <ListItemStyled key={story._id}>
               <ListItemInnerWrapper>
-                <ListItemInnerImg
+                {/* <ListItemInnerImg
                   alt={story.story_title}
                   src={story.story_cover}
+                /> */}
+                <Image
+                  // width={100}
+                  sizes="90px"
+                  src={story.story_cover}
+                  alt={story.story_title}
+                  fill={true}
+                  priority
                 />
               </ListItemInnerWrapper>
               <Stack width={"80%"} gap={"4px"}>
