@@ -175,13 +175,6 @@ const StoryReportButton = ({
               <Controller
                 name={"chapter_code"}
                 control={control}
-                rules={{
-                  required: "Không được để trống",
-                  maxLength: {
-                    value: 99,
-                    message: "Tối đa 100 ký tự!",
-                  },
-                }}
                 render={({ field: { onChange, value } }) => (
                   <FormControl fullWidth>
                     <InputLabel>Chương bị lỗi</InputLabel>
