@@ -134,11 +134,9 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
     setReplyLoading(true);
     try {
       setReplying(false);
-
       await API.post(`/comments/sub/new/${comment._id}`, {
         data,
       });
-
       await subCmtMutate();
     } catch (error) {
       console.log(error);
@@ -152,7 +150,6 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
     if (subCmtData && size > comment.totalSubCmtPages && size !== 1) {
       setSize(size - 1);
     }
-    console.log(size, comment.totalSubCmtPages);
   }, [subCmtData]);
 
   useEffect(() => {
