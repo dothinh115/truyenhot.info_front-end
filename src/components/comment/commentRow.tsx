@@ -156,9 +156,9 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
     }
   }, [subCmtData]);
 
-  const findGroupContainsCommentAndScroll = async () => {
-    if (commentId === comment._id) subCmtMutate();
-    if (subCmtData && commentId && subCommentId) {
+  const findGroupContainsComment = async () => {
+    if (commentId === comment._id && !subCmtData) subCmtMutate();
+    if (subCmtData && commentId && subCommentId && commentId === comment._id) {
       try {
         const check: { result: boolean } = await API.get(
           `/comments/findIfCommentContainsSub/${commentId}/${subCommentId}`
@@ -178,7 +178,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
   const scrollToComment = async () => {
     if (commentId) {
       if (subCommentId) {
-        await findGroupContainsCommentAndScroll();
+        await findGroupContainsComment();
       } else {
         if (commentId === comment._id) {
           subCmtMutate();
@@ -201,6 +201,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
 
   useEffect(() => {
     scrollToComment();
+    console.log(size);
   }, [commentId, subCommentId, subCmtData]);
 
   const showReplyFooter =
