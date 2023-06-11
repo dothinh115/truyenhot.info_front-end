@@ -37,6 +37,9 @@ const SubCommentInner = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.myBackground.secondary,
   padding: theme.spacing(1, 2),
   borderRadius: theme.spacing(2),
+  "&.markComment": {
+    backgroundColor: theme.palette.myBackground.markComment,
+  },
 }));
 
 const IconWrapper = styled(Stack)(({ theme }) => ({
@@ -94,7 +97,7 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
       commentRowRef.current
     ) {
       wrapperRef.current.scrollIntoView();
-      commentRowRef.current.style.backgroundColor = "#222";
+      commentRowRef.current.classList.add("markComment");
     }
   }, [subCommentId]);
 
