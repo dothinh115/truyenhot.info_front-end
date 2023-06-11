@@ -230,32 +230,33 @@ const StoryCommentButton = ({ story_code }: Props) => {
                     );
                   });
                 })}
-            {data && size < data[data.length - 1]?.pagination.pages ? (
-              <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
-                <Button
-                  size="small"
-                  onClick={() => setSize(size + 1)}
-                  disabled={isValidating ? true : false}
-                  startIcon={
-                    isValidating ? (
-                      <CircularProgress color="inherit" size={"1em"} />
-                    ) : null
-                  }
-                >
-                  Tải thêm bình luận cũ
-                </Button>
-              </Box>
-            ) : !data || data[0]?.result.length === 0 ? (
-              <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
-                Chưa có bình luận nào
-              </Box>
-            ) : (
-              <>
+            {!loading &&
+              (data && size < data[data.length - 1]?.pagination.pages ? (
                 <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
-                  Bạn đã xem hết bình luận
+                  <Button
+                    size="small"
+                    onClick={() => setSize(size + 1)}
+                    disabled={isValidating ? true : false}
+                    startIcon={
+                      isValidating ? (
+                        <CircularProgress color="inherit" size={"1em"} />
+                      ) : null
+                    }
+                  >
+                    Tải thêm bình luận cũ
+                  </Button>
                 </Box>
-              </>
-            )}
+              ) : !data || data[0]?.result.length === 0 ? (
+                <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
+                  Chưa có bình luận nào
+                </Box>
+              ) : (
+                <>
+                  <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
+                    Bạn đã xem hết bình luận
+                  </Box>
+                </>
+              ))}
           </CommentRowWrapper>
           <Box className={"hr"} />
           <Stack
