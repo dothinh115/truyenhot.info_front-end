@@ -49,6 +49,9 @@ const CommentRowContentInner = styled(Stack)(({ theme }) => ({
   borderRadius: theme.spacing(2),
   width: "calc(100% - 45px)",
   minHeight: "80px",
+  "&.markComment": {
+    backgroundColor: theme.palette.myBackground.markComment,
+  },
 }));
 
 const ReplyInputWrapper = styled(Box)(({ theme }) => ({
@@ -182,7 +185,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
           setTimeout(() => {
             if (commentWrapperEle.current && commentRowRef.current) {
               commentWrapperEle.current.scrollIntoView(true);
-              commentRowRef.current.style.backgroundColor = "#222";
+              commentRowRef.current.classList.add("markComment");
             }
           }, 300);
         }
