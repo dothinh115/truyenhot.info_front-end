@@ -18,6 +18,7 @@ import {
 } from "draft-js";
 import React, { memo, useContext, useEffect, useRef, useState } from "react";
 import { CommentEditorContext } from "./wrapperEditor";
+import { useAuth } from "@/hooks/auth/useAuth";
 type Props = {
   cb: (data: { truncatedValue: string; mainValue: string }) => void;
   clicked: boolean;
@@ -113,6 +114,7 @@ const CommentEditor = ({
   const editorRef = useRef<any>();
   const timeout = useRef<NodeJS.Timeout | number | undefined>();
   const characterCount = useRef<number>(0);
+  const { profile } = useAuth();
   const {
     setUserSuggestion,
     setListIndex,
@@ -412,6 +414,7 @@ const CommentEditor = ({
   };
 
   const handleReplyTo = () => {
+    if (replyTo === profile?.result.user_id) return;
     let contentState = editorState.getCurrentContent();
     const firstBlock = contentState.getFirstBlock();
     const selectionState = editorState.getSelection();

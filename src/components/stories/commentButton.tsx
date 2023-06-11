@@ -94,6 +94,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
   const closeHandle = () => {
     delete query.commentOpen;
     if (query.commentId) delete query.commentId;
+    if (query.subCommentId) delete query.subCommentId;
     router.replace({ pathname, query }, undefined, {
       shallow: true,
     });

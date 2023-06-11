@@ -100,7 +100,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
   } = useSWRInfinite(getKey, { revalidateOnMount: false });
   const { profile } = useAuth();
   const router = useRouter();
-  const { commentId } = router.query;
+  const { commentId, subCommentId } = router.query;
   const [editing, setEditing] = useState<boolean>(false);
   const [replying, setReplying] = useState<boolean>(false);
   const commentWrapperEle = useRef<HTMLDivElement>(null);
@@ -153,24 +153,52 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
     }
   }, [subCmtData]);
 
-  useEffect(() => {
-    if (commentId === comment._id) {
-      subCmtMutate();
-      setTimeout(() => {
-        if (commentWrapperEle.current && commentRowRef.current) {
-          commentWrapperEle.current.scrollIntoView(true);
-          commentRowRef.current.style.backgroundColor = "#222";
+  const findGroupContainsCommentAndScroll = async () => {
+    if (commentId === comment._id) subCmtMutate();
+    if (subCmtData && commentId && subCommentId) {
+      try {
+        const check: { result: boolean } = await API.get(
+          `/comments/findIfCommentContainsSub/${commentId}/${subCommentId}`
+        );
+        if (check.result) {
+          const find = subCmtData[subCmtData.length - 1].result.find(
+            (comment: SubCommentDataInterface) => comment._id === subCommentId
+          );
+          if (!find) setSize(size + 1);
         }
-      }, 300);
-    } else {
+      } catch (error) {
+        console.log(error);
+      }
     }
-  }, [commentId]);
+  };
+
+  const scrollToComment = async () => {
+    if (commentId) {
+      if (subCommentId) {
+        await findGroupContainsCommentAndScroll();
+      } else {
+        if (commentId === comment._id) {
+          subCmtMutate();
+          setTimeout(() => {
+            if (commentWrapperEle.current && commentRowRef.current) {
+              commentWrapperEle.current.scrollIntoView(true);
+              commentRowRef.current.style.backgroundColor = "#222";
+            }
+          }, 300);
+        }
+      }
+    }
+  };
 
   useEffect(() => {
     if (replying && commentWrapperEle.current) {
       commentWrapperEle.current.scrollIntoView(true);
     }
   }, [replying]);
+
+  useEffect(() => {
+    scrollToComment();
+  }, [commentId, subCommentId, subCmtData]);
 
   const showReplyFooter =
     (subCmtData && subCmtData[0]?.result.length !== 0) || replying;
