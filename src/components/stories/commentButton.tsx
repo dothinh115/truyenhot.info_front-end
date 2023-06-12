@@ -108,6 +108,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
   );
 
   const closeHandle = (disableClose: boolean = false) => {
+    setValidCmt(true);
     if (!disableClose) delete query.cmtopen;
     if (query.cmtid) delete query.cmtid;
     if (query.subcmtid) delete query.subcmtid;
