@@ -197,6 +197,11 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
     if (cmtid && subcmtid) setFindSize();
   }, [cmtid, subcmtid]);
 
+  useEffect(() => {
+    if (subReplyTo && commentWrapperEle.current)
+      commentWrapperEle.current.scrollIntoView();
+  }, [subReplyTo]);
+
   const showReplyFooter =
     (subCmtData && subCmtData[0]?.result.length !== 0) || replying;
   return (
@@ -206,6 +211,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
           subCmtMutate,
           setReplying,
           setSubReplyTo,
+          replying,
           mutate,
         }}
       >

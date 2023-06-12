@@ -48,7 +48,9 @@ const CommentMenuDropDown = ({
   const menuDropdown = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { profile } = useAuth();
-  const { mutate, subCmtMutate } = useContext<any>(StoryCommentRowContext);
+  const { mutate, subCmtMutate, replying } = useContext<any>(
+    StoryCommentRowContext
+  );
 
   const deleteHandle = async (_id: string) => {
     try {
@@ -107,7 +109,7 @@ const CommentMenuDropDown = ({
           >
             <ListItemButton
               onClick={() => {
-                if (profile) setReplying(true);
+                if (profile) setReplying(!replying);
                 else
                   router.push({
                     pathname: "/login",

@@ -429,16 +429,23 @@ const CommentEditor = ({
     if (replyTo?.user_id === profile?.result.user_id) return;
     let contentState = editorState.getCurrentContent();
     const firstBlock = contentState.getFirstBlock();
-    const selectionState = editorState.getSelection();
+    const lastBlock = contentState.getLastBlock();
+    const allSelected = new SelectionState({
+      anchorKey: firstBlock.getKey(),
+      anchorOffset: 0,
+      focusKey: lastBlock.getKey(),
+      focusOffset: lastBlock.getLength(),
+      hasFocus: true,
+    });
     contentState.createEntity("MENTION", "IMMUTABLE", {
       _id: replyTo?._id,
       url: `/user/${replyTo?.user_id.replace("@", "")}`,
     });
     const entityKey = contentState.getLastCreatedEntityKey();
 
-    const insertUserID = Modifier.insertText(
+    const insertUserID = Modifier.replaceText(
       contentState,
-      selectionState,
+      allSelected,
       replyTo?.user_id ? replyTo.user_id : "",
       undefined,
       entityKey

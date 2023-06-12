@@ -69,9 +69,8 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
   const commentRowRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const { subcmtid } = router.query;
-  const { subCmtMutate, setReplying, setSubReplyTo } = useContext<any>(
-    StoryCommentRowContext
-  );
+  const { subCmtMutate, setReplying, setSubReplyTo, replying } =
+    useContext<any>(StoryCommentRowContext);
 
   const submitHandle = async (data: {
     truncatedValue: string;
@@ -135,7 +134,7 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
             }}
             onClick={() => {
               if (profile) {
-                setReplying(true);
+                setReplying(!replying);
                 setSubReplyTo({
                   user_id: subCmtData?.author.user_id,
                   _id: subCmtData?.author._id,
