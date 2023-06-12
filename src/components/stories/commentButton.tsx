@@ -14,7 +14,7 @@ import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState, createContext } from "react";
 import useSWRInfinite from "swr/infinite";
 import { CommentLoading } from "../loading/commentLoading";
 import useSWR from "swr";
@@ -73,15 +73,16 @@ type Props = {
   story_code: string;
 };
 
+export const StoryCommentButtonContext = createContext({});
+
 const StoryCommentButton = ({ story_code }: Props) => {
   const { profile } = useAuth();
   const router = useRouter();
   const { cmtopen, cmtid, subcmtid } = router.query;
   const { pathname, query } = router;
-  const [open, setOpen] = useState<boolean>(false);
   const getKey = (pageIndex: number, previousPageData: any) => {
     pageIndex += 1;
-    return open
+    return cmtopen
       ? `/comments/getCommentsByStoryCode/${story_code}?page=${pageIndex}`
       : null;
   };
@@ -112,6 +113,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
     if (!disableClose) delete query.cmtopen;
     if (query.cmtid) delete query.cmtid;
     if (query.subcmtid) delete query.subcmtid;
+    if (query.reply) delete query.reply;
     router.replace({ pathname, query }, undefined, {
       shallow: true,
     });
@@ -186,8 +188,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
   };
 
   const firstLoad = async () => {
-    await cmtMutate();
-    await calcLoadingTime();
+    if (!cmtData) await cmtMutate();
   };
 
   const firstSingleCmtLoad = async () => {
@@ -200,17 +201,15 @@ const StoryCommentButton = ({ story_code }: Props) => {
   };
 
   useEffect(() => {
-    if (open) {
+    if (cmtopen) {
       if (cmtid || subcmtid) firstSingleCmtLoad();
       else firstLoad();
     }
-  }, [open, cmtid, subcmtid, cmtData]);
+  }, [cmtopen, cmtid, subcmtid]);
 
   useEffect(() => {
-    if (cmtopen) {
-      setOpen(true);
-    } else setOpen(false);
-  }, [cmtopen]);
+    calcLoadingTime();
+  }, [cmtData]);
 
   const showComment =
     cmtid && singleCmtData
@@ -219,7 +218,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
             <MemorizedStoryCommentRow
               key={comment._id}
               comment={comment}
-              mutate={singleCmtMutate}
+              mutate={cmtMutate}
             />
           );
         })
@@ -342,69 +341,74 @@ const StoryCommentButton = ({ story_code }: Props) => {
 
   return (
     <>
-      <Modal open={open} onClose={() => closeHandle()}>
-        <ModalInner>
-          <HeaddingStyled>
-            <Box
-              component={"h1"}
-              sx={{
-                margin: 0,
-                color: "myText.primary",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "8px",
-                fontSize: "20px",
-              }}
-            >
-              {cmtid && (
-                <IconButton onClick={() => closeHandle(true)}>
-                  <ArrowBackIosNewIcon />
+      <Modal open={cmtopen ? true : false} onClose={() => closeHandle()}>
+        <StoryCommentButtonContext.Provider value={{ closeHandle }}>
+          <ModalInner>
+            <HeaddingStyled>
+              <Box
+                component={"h1"}
+                sx={{
+                  margin: 0,
+                  color: "myText.primary",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "8px",
+                  fontSize: "20px",
+                }}
+              >
+                {cmtid && (
+                  <IconButton onClick={() => closeHandle(true)}>
+                    <ArrowBackIosNewIcon />
+                  </IconButton>
+                )}
+                Bình luận
+                <IconButton onClick={() => closeHandle()}>
+                  <CloseIcon />
                 </IconButton>
-              )}
-              Bình luận
-              <IconButton onClick={() => closeHandle()}>
-                <CloseIcon />
-              </IconButton>
-            </Box>
-          </HeaddingStyled>
-          <Box className="hr" />
-          {validCmt ? (
-            <>
-              <CommentRowWrapper ref={commentWrapper}>
-                {/* hiện bình luận tổng */}
-                {loading ? commentLoadingRender() : showComment}
-                {/* Hiện nút tải thêm bình luận */}
-                {!loading &&
-                  !cmtid &&
-                  (cmtData &&
-                  cmtSize < cmtData[cmtData.length - 1]?.pagination.pages ? (
-                    showMoreButton
-                  ) : !cmtData || cmtData[0]?.result.length === 0 ? (
-                    <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
-                      Chưa có bình luận nào
-                    </Box>
-                  ) : (
-                    <>
+              </Box>
+            </HeaddingStyled>
+            <Box className="hr" />
+            {validCmt ? (
+              <>
+                <CommentRowWrapper ref={commentWrapper}>
+                  {/* hiện bình luận tổng */}
+                  {loading ? commentLoadingRender() : showComment}
+                  {/* Hiện nút tải thêm bình luận */}
+                  {!loading &&
+                    !cmtid &&
+                    (cmtData &&
+                    cmtSize < cmtData[cmtData.length - 1]?.pagination.pages ? (
+                      showMoreButton
+                    ) : !cmtData || cmtData[0]?.result.length === 0 ? (
                       <Box
                         textAlign={"center"}
                         sx={{ color: "myText.primary" }}
                       >
-                        Bạn đã xem hết bình luận
+                        Chưa có bình luận nào
                       </Box>
-                    </>
-                  ))}
-              </CommentRowWrapper>
+                    ) : (
+                      <>
+                        <Box
+                          textAlign={"center"}
+                          sx={{ color: "myText.primary" }}
+                        >
+                          Bạn đã xem hết bình luận
+                        </Box>
+                      </>
+                    ))}
+                </CommentRowWrapper>
 
-              <Box className={"hr"} />
-              {/* hiện comment editor */}
+                <Box className={"hr"} />
+                {/* hiện comment editor */}
 
-              {!cmtid && editor}
-            </>
-          ) : (
-            invalidCmt
-          )}
-        </ModalInner>
+                {!cmtid && editor}
+              </>
+            ) : (
+              invalidCmt
+            )}
+          </ModalInner>
+        </StoryCommentButtonContext.Provider>
       </Modal>
 
       <Button

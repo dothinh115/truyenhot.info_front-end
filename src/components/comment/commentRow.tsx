@@ -20,8 +20,16 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, { createContext, useEffect, useRef, useState } from "react";
+import React, {
+  createContext,
+  useEffect,
+  useRef,
+  useState,
+  useContext,
+} from "react";
 import useSWRInfinite from "swr/infinite";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { StoryCommentButtonContext } from "../stories/commentButton";
 const CommentEditor = dynamic(() => import("./editor/wrapperEditor"));
 const MemorizedStorySubCommentRow = dynamic(() => import("./subCommentRow"));
 const StoryCommentContent = dynamic(() => import("./commentContent"));
@@ -89,8 +97,10 @@ export const StoryCommentRowContext = createContext({});
 
 const StoryCommentRow = ({ comment, mutate }: Props) => {
   const { profile } = useAuth();
+  const { closeHandle } = useContext<any>(StoryCommentButtonContext);
   const router = useRouter();
-  const { cmtid, subcmtid } = router.query;
+  let { pathname, query } = router;
+  const { cmtid, subcmtid, reply } = router.query;
   const [subReplyTo, setSubReplyTo] = useState<{
     user_id: string;
     _id: string;
@@ -107,14 +117,13 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
     isValidating: subCmtIsValidating,
     mutate: subCmtMutate,
   } = useSWRInfinite(getKey, {
-    revalidateOnMount: false,
     revalidateFirstPage: false,
   });
 
   const [editing, setEditing] = useState<boolean>(false);
-  const [replying, setReplying] = useState<boolean>(false);
   const commentWrapperEle = useRef<HTMLDivElement>(null);
   const commentRowRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLDivElement>(null);
   const [editSubmitClicked, setEditSubmitClicked] = useState<boolean>(false);
   const [replySubmitClicked, setReplySubmitClicked] = useState<boolean>(false);
   const [editLoading, setEditLoading] = useState<boolean>(false);
@@ -145,16 +154,16 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
   }) => {
     setReplyLoading(true);
     try {
-      setReplying(false);
       await API.post(`/comments/sub/new/${comment._id}`, {
         data,
       });
+      await mutate();
       await subCmtMutate();
+      setReplyLoading(false);
+      await setSize(comment.totalSubCmtPages + 1);
     } catch (error) {
       console.log(error);
     } finally {
-      await mutate();
-      setReplyLoading(false);
     }
   };
 
@@ -172,6 +181,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
   const setFindSize = async () => {
     if (cmtid && subcmtid) {
       const size = await findSize();
+      console.log(size);
       await setSize(size);
       await subCmtMutate();
     }
@@ -198,21 +208,20 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
   }, [cmtid, subcmtid]);
 
   useEffect(() => {
-    if (subReplyTo && commentWrapperEle.current)
-      commentWrapperEle.current.scrollIntoView();
-  }, [subReplyTo]);
+    if (reply && inputRef.current) inputRef.current.scrollIntoView(false);
+  }, [reply]);
 
   const showReplyFooter =
-    (subCmtData && subCmtData[0]?.result.length !== 0) || replying;
+    (subCmtData && subCmtData[0]?.result.length !== 0) || reply;
   return (
     <CommentRowWrapper ref={commentWrapperEle}>
       <StoryCommentRowContext.Provider
         value={{
           subCmtMutate,
-          setReplying,
           setSubReplyTo,
-          replying,
           mutate,
+          mainCmtId: comment._id,
+          subCmtIsValidating,
         }}
       >
         <CommentRow>
@@ -248,8 +257,20 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
                     underline="none"
                     onClick={(e) => {
                       e.preventDefault();
-                      if (profile) setReplying(!replying);
-                      else
+                      if (profile) {
+                        setSubReplyTo({
+                          user_id: comment?.author.user_id,
+                          _id: comment?.author._id,
+                        });
+                        query = {
+                          ...query,
+                          cmtid: comment._id,
+                          reply: "true",
+                        };
+                        router.replace({ pathname, query }, undefined, {
+                          shallow: true,
+                        });
+                      } else
                         router.push({
                           pathname: "/login",
                           query: {
@@ -304,11 +325,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
                 )}
               </CommentRowContentInner>
 
-              <CommentMenuDropDown
-                comment={comment}
-                setEditing={setEditing}
-                setReplying={setReplying}
-              />
+              <CommentMenuDropDown comment={comment} setEditing={setEditing} />
             </Stack>
           </CommentRowContentWrapper>
         </CommentRow>
@@ -342,27 +359,48 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
                 flexGrow: 1,
               }}
             >
-              {replying && (
-                <ReplyInputWrapper>
+              {subCmtData &&
+                subCmtData.map((group: any) => {
+                  return group?.result.map((sub: SubCommentDataInterface) => {
+                    return (
+                      <MemorizedStorySubCommentRow
+                        key={sub._id}
+                        subCmtData={sub}
+                      />
+                    );
+                  });
+                })}
+              {size < comment.totalSubCmtPages && (
+                <Link
+                  underline="none"
+                  sx={{
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItem: "center",
+                  }}
+                  onClick={(event: React.MouseEvent<HTMLAnchorElement>) => {
+                    event.preventDefault();
+                    setSize(size + 1);
+                  }}
+                >
+                  <KeyboardArrowDownIcon />
+                  Xem thêm bình luận mới
+                </Link>
+              )}
+              {reply && (
+                <ReplyInputWrapper ref={inputRef}>
                   <CommentEditor
                     cb={replySubmitHandle}
                     clicked={replySubmitClicked}
                     setClicked={setReplySubmitClicked}
                     placeholder={`Trả lời ${comment?.author.user_id}...`}
-                    replyTo={
-                      subReplyTo
-                        ? subReplyTo
-                        : {
-                            user_id: comment?.author.user_id,
-                            _id: comment?.author._id,
-                          }
-                    }
+                    replyTo={subReplyTo}
                   />
                   <IconWrapper>
                     <IconButton
                       size="small"
                       color="error"
-                      onClick={() => setReplying(false)}
+                      onClick={closeHandle}
                     >
                       <CancelIcon />
                     </IconButton>
@@ -375,38 +413,6 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
                     </IconButton>
                   </IconWrapper>
                 </ReplyInputWrapper>
-              )}
-
-              {subCmtData &&
-                subCmtData[0]?.result.length !== 0 &&
-                subCmtData.map((group: any) => {
-                  return group?.result.map((sub: SubCommentDataInterface) => {
-                    return (
-                      <MemorizedStorySubCommentRow
-                        key={sub._id}
-                        subCmtData={sub}
-                      />
-                    );
-                  });
-                })}
-
-              {size < comment.totalSubCmtPages && (
-                <Link
-                  underline="none"
-                  sx={{
-                    cursor: "pointer",
-                    marginLeft: "5%",
-                    display: "flex",
-                    alignItem: "center",
-                  }}
-                  onClick={(event: React.MouseEvent<HTMLAnchorElement>) => {
-                    event.preventDefault();
-                    setSize(size + 1);
-                  }}
-                >
-                  <ExpandMoreIcon />
-                  Xem thêm bình luận cũ
-                </Link>
               )}
             </Box>
           </Stack>

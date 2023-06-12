@@ -18,12 +18,13 @@ import { alpha, styled } from "@mui/material/styles";
 import { useEffect, useRef, memo, useContext } from "react";
 import { useRouter } from "next/router";
 import { StoryCommentRowContext } from "./commentRow";
+import { StoryCommentButtonContext } from "../stories/commentButton";
 
 type Props = {
-  setReplying: (reply: boolean) => void;
   comment: CommentDataInterface | SubCommentDataInterface;
   setEditing: (edit: boolean) => void;
   subCmt?: boolean;
+  subComment?: SubCommentDataInterface;
 };
 
 const MenuDropdownWrapper = styled(Box)(({ theme }) => ({
@@ -39,7 +40,6 @@ const MenuDropdownWrapper = styled(Box)(({ theme }) => ({
   zIndex: 50,
 }));
 const CommentMenuDropDown = ({
-  setReplying,
   comment,
   setEditing,
   subCmt = false,
@@ -47,19 +47,25 @@ const CommentMenuDropDown = ({
   const menuDropdownIcon = useRef<HTMLButtonElement>(null);
   const menuDropdown = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  let { pathname, query } = router;
+  const { cmtid } = query;
   const { profile } = useAuth();
-  const { mutate, subCmtMutate, replying } = useContext<any>(
+  const { mutate, subCmtMutate, mainCmtId } = useContext<any>(
     StoryCommentRowContext
   );
+  const { closeHandle } = useContext<any>(StoryCommentButtonContext);
 
   const deleteHandle = async (_id: string) => {
     try {
       await API.delete(`/comments${subCmt ? "/sub" : ""}/delete/${_id}`);
       if (subCmt) {
-        mutate();
-        subCmtMutate();
+        await mutate();
+        await subCmtMutate();
       } else {
-        mutate();
+        await mutate();
+        if (cmtid) {
+          closeHandle(true);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -109,8 +115,16 @@ const CommentMenuDropDown = ({
           >
             <ListItemButton
               onClick={() => {
-                if (profile) setReplying(!replying);
-                else
+                if (profile) {
+                  query = {
+                    ...query,
+                    cmtid: mainCmtId,
+                    reply: "true",
+                  };
+                  router.replace({ pathname, query }, undefined, {
+                    shallow: true,
+                  });
+                } else
                   router.push({
                     pathname: "/login",
                     query: {

@@ -1,23 +1,22 @@
-import { useEffect, useState } from "react";
-import IconButton from "@mui/material/IconButton";
+import { useAuth } from "@/hooks/auth/useAuth";
+import { NotificationInterface } from "@/models/notifications/noti.model";
+import { API } from "@/utils/config";
+import { timeSince } from "@/utils/function";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import CloseIcon from "@mui/icons-material/Close";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import Badge from "@mui/material/Badge";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import IconButton from "@mui/material/IconButton";
 import Modal from "@mui/material/Modal";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import CloseIcon from "@mui/icons-material/Close";
-import useSWRInfinite from "swr/infinite";
-import { useAuth } from "@/hooks/auth/useAuth";
-import Badge from "@mui/material/Badge";
-import { NotificationInterface } from "@/models/notifications/noti.model";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { API } from "@/utils/config";
-import Chip from "@mui/material/Chip";
-import { useRouter } from "next/router";
-import { timeSince } from "@/utils/function";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import useSWRInfinite from "swr/infinite";
 type Props = {};
 
 const ModalInner = styled(Stack)(({ theme }) => ({
@@ -102,8 +101,6 @@ const NotificationButton = (props: Props) => {
     keepPreviousData: true,
     refreshInterval: 10000,
   });
-
-  const router = useRouter();
 
   const getUnreadNotification = (): number => {
     let unreadNoti: number = 0;

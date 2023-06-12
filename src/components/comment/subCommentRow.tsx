@@ -68,8 +68,10 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const commentRowRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  let { pathname, query } = router;
+
   const { subcmtid } = router.query;
-  const { subCmtMutate, setReplying, setSubReplyTo, replying } =
+  const { subCmtMutate, setReplying, setSubReplyTo, subCmtIsValidating } =
     useContext<any>(StoryCommentRowContext);
 
   const submitHandle = async (data: {
@@ -94,12 +96,13 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
     if (
       subCmtData._id === subcmtid &&
       wrapperRef.current &&
-      commentRowRef.current
+      commentRowRef.current &&
+      !subCmtIsValidating
     ) {
       wrapperRef.current.scrollIntoView();
       commentRowRef.current.classList.add("markComment");
     }
-  }, [subcmtid]);
+  }, [subcmtid, subCmtIsValidating]);
 
   return (
     <SubCommentWrapper ref={wrapperRef}>
@@ -134,7 +137,14 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
             }}
             onClick={() => {
               if (profile) {
-                setReplying(!replying);
+                query = {
+                  ...query,
+                  cmtid: subCmtData.parent_id,
+                  reply: "true",
+                };
+                router.replace({ pathname, query }, undefined, {
+                  shallow: true,
+                });
                 setSubReplyTo({
                   user_id: subCmtData?.author.user_id,
                   _id: subCmtData?.author._id,
@@ -195,8 +205,8 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
 
       <CommentMenuDropDown
         comment={subCmtData}
+        subComment={subCmtData}
         setEditing={setEditing}
-        setReplying={setReplying}
         subCmt={true}
       />
     </SubCommentWrapper>
