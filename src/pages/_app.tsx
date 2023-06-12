@@ -13,6 +13,7 @@ import "../style/style.scss";
 import { MainLayout } from "@/layouts/main";
 
 const clientSideEmotionCache = createEmotionCache();
+
 NProgress.configure({ showSpinner: false, speed: 500 });
 export const NProgressStart = () => NProgress.start();
 export const NProgressDone = () => NProgress.done();

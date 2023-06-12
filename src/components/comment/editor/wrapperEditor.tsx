@@ -31,12 +31,19 @@ const Wrapper = styled(Stack)(({ theme }) => ({
 }));
 
 type Props = {
-  cb: (data: { truncatedValue: string; mainValue: string }) => void;
+  cb: (data: {
+    truncatedValue: string;
+    mainValue: string;
+    mentionData: string[];
+  }) => void;
   clicked: boolean;
   setClicked: (state: boolean) => any;
   placeholder?: string;
   defaultValue?: string;
-  replyTo?: string;
+  replyTo?: {
+    user_id: string;
+    _id: string;
+  };
   sendIcon?: boolean;
   showEmojiButton?: boolean;
 };

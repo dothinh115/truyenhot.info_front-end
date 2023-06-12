@@ -10,13 +10,15 @@ import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import Modal from "@mui/material/Modal";
 import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { memo, useEffect, useRef, useState } from "react";
 import useSWRInfinite from "swr/infinite";
 import { CommentLoading } from "../loading/commentLoading";
-
+import useSWR from "swr";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 const CommentEditor = dynamic(() => import("../comment/editor/wrapperEditor"));
 const MemorizedStoryCommentRow = dynamic(() => import("../comment/commentRow"));
 const ModalInner = styled(Stack)(({ theme }) => ({
@@ -73,6 +75,9 @@ type Props = {
 
 const StoryCommentButton = ({ story_code }: Props) => {
   const { profile } = useAuth();
+  const router = useRouter();
+  const { cmtopen, cmtid, subcmtid } = router.query;
+  const { pathname, query } = router;
   const [open, setOpen] = useState<boolean>(false);
   const getKey = (pageIndex: number, previousPageData: any) => {
     pageIndex += 1;
@@ -80,28 +85,41 @@ const StoryCommentButton = ({ story_code }: Props) => {
       ? `/comments/getCommentsByStoryCode/${story_code}?page=${pageIndex}`
       : null;
   };
-  const { data, size, setSize, mutate, isValidating } = useSWRInfinite(getKey, {
+  const {
+    data: cmtData,
+    size: cmtSize,
+    setSize: cmtSetSize,
+    mutate: cmtMutate,
+    isValidating: cmtIsValidating,
+  } = useSWRInfinite(getKey, {
     revalidateOnMount: false,
+    revalidateFirstPage: false,
   });
 
   const [submitClicked, setSubmitClicked] = useState<boolean>(false);
   const commentWrapper = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const router = useRouter();
-  const { commentOpen, commentId } = router.query;
-  const { pathname, query } = router;
+  const [validCmt, setValidCmt] = useState<boolean>(true);
+  const { data: singleCmtData, mutate: singleCmtMutate } = useSWR(
+    cmtid ? `/comments/getSingleCommentById/${cmtid}` : null,
+    {
+      revalidateOnMount: false,
+    }
+  );
 
-  const closeHandle = () => {
-    delete query.commentOpen;
-    if (query.commentId) delete query.commentId;
-    if (query.subCommentId) delete query.subCommentId;
+  const closeHandle = (disableClose: boolean = false) => {
+    if (!disableClose) delete query.cmtopen;
+    if (query.cmtid) delete query.cmtid;
+    if (query.subcmtid) delete query.subcmtid;
     router.replace({ pathname, query }, undefined, {
       shallow: true,
     });
   };
+
   const submitHandle = async (data: {
     truncatedValue: string;
     mainValue: string;
+    mentionData: string[];
   }) => {
     if (!profile)
       router.push({
@@ -122,7 +140,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
     } catch (error) {
       console.log(error);
     } finally {
-      await mutate();
+      await cmtMutate();
     }
   };
 
@@ -134,29 +152,27 @@ const StoryCommentButton = ({ story_code }: Props) => {
     return html;
   };
 
-  const findGroupContainsCommentId = async () => {
-    if (commentId && data) {
+  const checkValidCmt = async () => {
+    let result: boolean = false;
+    if (cmtid) {
       try {
-        const checkExistingId: { result: boolean } = await API.get(
-          `/comments/isCommentInStory/${story_code}?commentId=${commentId}`
+        const respone: { result: boolean } = await API.get(
+          `/comments/checkValidComment/${story_code}?cmtid=${cmtid}${
+            subcmtid ? `&subcmtid=${subcmtid}` : ""
+          }`
         );
-        if (checkExistingId.result) {
-          let find = data[data.length - 1].result.find(
-            (comment: CommentDataInterface) => comment._id === commentId
-          );
-          if (!find && size < data[data.length - 1]?.pagination.pages)
-            setSize(size + 1);
-        }
+        if (respone.result) result = true;
       } catch (error) {
-        console.log(error);
+        console.log();
       }
     }
+    return result;
   };
 
   const calcLoadingTime = async () => {
-    if (data) {
+    if (cmtData) {
       let _count = 0;
-      for (let group of data) {
+      for (let group of cmtData) {
         _count += group?.result.length;
       }
       let time = _count * 80;
@@ -168,32 +184,164 @@ const StoryCommentButton = ({ story_code }: Props) => {
     }
   };
 
-  const showComment = async () => {
-    if (open) {
-      if (!data) await mutate();
-      await findGroupContainsCommentId();
-      await calcLoadingTime();
+  const firstLoad = async () => {
+    await cmtMutate();
+    await calcLoadingTime();
+  };
+
+  const firstSingleCmtLoad = async () => {
+    if (cmtid || subcmtid) {
+      const valid = await checkValidCmt();
+      await setValidCmt(valid);
+      if (valid && cmtid) await singleCmtMutate();
     }
+    await setLoading(false);
   };
 
   useEffect(() => {
-    if (data && size > data[data.length - 1]?.pagination.pages && size !== 1) {
-      setSize(size - 1);
+    if (open) {
+      if (cmtid || subcmtid) firstSingleCmtLoad();
+      else firstLoad();
     }
-  }, [data]);
+  }, [open, cmtid, subcmtid, cmtData]);
 
   useEffect(() => {
-    showComment();
-  }, [open, commentId, data]);
+    if (cmtopen) {
+      setOpen(true);
+    } else setOpen(false);
+  }, [cmtopen]);
 
-  useEffect(() => {
-    if (commentOpen) setOpen(true);
-    else setOpen(false);
-  }, [commentOpen]);
+  const showComment =
+    cmtid && singleCmtData
+      ? singleCmtData.result.map((comment: CommentDataInterface) => {
+          return (
+            <MemorizedStoryCommentRow
+              key={comment._id}
+              comment={comment}
+              mutate={singleCmtMutate}
+            />
+          );
+        })
+      : cmtData?.map((group: any) => {
+          return group?.result.map((comment: CommentDataInterface) => {
+            return (
+              <MemorizedStoryCommentRow
+                key={comment._id}
+                comment={comment}
+                mutate={cmtMutate}
+              />
+            );
+          });
+        });
+
+  const showMoreButton = (
+    <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
+      <Button
+        size="small"
+        onClick={() => cmtSetSize(cmtSize + 1)}
+        disabled={cmtIsValidating ? true : false}
+        startIcon={
+          cmtIsValidating ? (
+            <CircularProgress color="inherit" size={"1em"} />
+          ) : null
+        }
+      >
+        Tải thêm bình luận cũ
+      </Button>
+    </Box>
+  );
+
+  const editor = (
+    <Stack
+      direction={"row"}
+      gap={"5px"}
+      alignItems={"center"}
+      mt={1}
+      sx={{
+        color: "myText.primary",
+        flexWrap: "wrap",
+      }}
+      position={"relative"}
+    >
+      {profile ? (
+        <>
+          <CommentEditor
+            cb={submitHandle}
+            clicked={submitClicked}
+            setClicked={setSubmitClicked}
+            placeholder="Viết bình luận..."
+            sendIcon={true}
+            showEmojiButton={true}
+          />
+
+          <Box
+            sx={{
+              fontSize: ".8em",
+              marginLeft: "4px",
+              width: "100%",
+            }}
+          >
+            Alt hoặc Shift + Enter để xuống hàng
+          </Box>
+        </>
+      ) : (
+        <Box textAlign={"center"} width={"100%"}>
+          Bạn cần{" "}
+          {
+            <Link
+              underline="none"
+              sx={{ cursor: "pointer" }}
+              onClick={() =>
+                router.push({
+                  pathname: "/login",
+                  query: {
+                    goAround: true,
+                  },
+                })
+              }
+            >
+              đăng nhập
+            </Link>
+          }{" "}
+          để bình luận. Chưa có tài khoản?{" "}
+          {
+            <Link
+              underline="none"
+              sx={{ cursor: "pointer" }}
+              onClick={() =>
+                router.push({
+                  pathname: "/register",
+                  query: {
+                    goAround: true,
+                  },
+                })
+              }
+            >
+              Đăng ký
+            </Link>
+          }
+        </Box>
+      )}
+    </Stack>
+  );
+
+  const invalidCmt = (
+    <Stack direction={"row"} justifyContent={"center"}>
+      <Typography
+        sx={{
+          fontSize: "20px",
+          marginTop: "10px",
+          color: "myText.primary",
+        }}
+      >
+        Nội dung không hợp lệ hoặc đã bị xóa
+      </Typography>
+    </Stack>
+  );
 
   return (
     <>
-      <Modal open={open} onClose={closeHandle}>
+      <Modal open={open} onClose={() => closeHandle()}>
         <ModalInner>
           <HeaddingStyled>
             <Box
@@ -208,128 +356,53 @@ const StoryCommentButton = ({ story_code }: Props) => {
                 fontSize: "20px",
               }}
             >
+              {cmtid && (
+                <IconButton onClick={() => closeHandle(true)}>
+                  <ArrowBackIosNewIcon />
+                </IconButton>
+              )}
               Bình luận
-              <IconButton onClick={closeHandle}>
+              <IconButton onClick={() => closeHandle()}>
                 <CloseIcon />
               </IconButton>
             </Box>
           </HeaddingStyled>
           <Box className="hr" />
+          {validCmt ? (
+            <>
+              <CommentRowWrapper ref={commentWrapper}>
+                {/* hiện bình luận tổng */}
+                {loading ? commentLoadingRender() : showComment}
+                {/* Hiện nút tải thêm bình luận */}
+                {!loading &&
+                  !cmtid &&
+                  (cmtData &&
+                  cmtSize < cmtData[cmtData.length - 1]?.pagination.pages ? (
+                    showMoreButton
+                  ) : !cmtData || cmtData[0]?.result.length === 0 ? (
+                    <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
+                      Chưa có bình luận nào
+                    </Box>
+                  ) : (
+                    <>
+                      <Box
+                        textAlign={"center"}
+                        sx={{ color: "myText.primary" }}
+                      >
+                        Bạn đã xem hết bình luận
+                      </Box>
+                    </>
+                  ))}
+              </CommentRowWrapper>
 
-          <CommentRowWrapper ref={commentWrapper}>
-            {loading
-              ? commentLoadingRender()
-              : data?.map((group: any) => {
-                  return group?.result.map((comment: CommentDataInterface) => {
-                    return (
-                      <MemorizedStoryCommentRow
-                        key={comment._id}
-                        comment={comment}
-                        mutate={mutate}
-                      />
-                    );
-                  });
-                })}
-            {!loading &&
-              (data && size < data[data.length - 1]?.pagination.pages ? (
-                <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
-                  <Button
-                    size="small"
-                    onClick={() => setSize(size + 1)}
-                    disabled={isValidating ? true : false}
-                    startIcon={
-                      isValidating ? (
-                        <CircularProgress color="inherit" size={"1em"} />
-                      ) : null
-                    }
-                  >
-                    Tải thêm bình luận cũ
-                  </Button>
-                </Box>
-              ) : !data || data[0]?.result.length === 0 ? (
-                <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
-                  Chưa có bình luận nào
-                </Box>
-              ) : (
-                <>
-                  <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
-                    Bạn đã xem hết bình luận
-                  </Box>
-                </>
-              ))}
-          </CommentRowWrapper>
-          <Box className={"hr"} />
-          <Stack
-            direction={"row"}
-            gap={"5px"}
-            alignItems={"center"}
-            mt={1}
-            sx={{
-              color: "myText.primary",
-              flexWrap: "wrap",
-            }}
-            position={"relative"}
-          >
-            {profile ? (
-              <>
-                <CommentEditor
-                  cb={submitHandle}
-                  clicked={submitClicked}
-                  setClicked={setSubmitClicked}
-                  placeholder="Viết bình luận..."
-                  sendIcon={true}
-                  showEmojiButton={true}
-                />
+              <Box className={"hr"} />
+              {/* hiện comment editor */}
 
-                <Box
-                  sx={{
-                    fontSize: ".8em",
-                    marginLeft: "4px",
-                    width: "100%",
-                  }}
-                >
-                  Alt hoặc Shift + Enter để xuống hàng
-                </Box>
-              </>
-            ) : (
-              <Box textAlign={"center"} width={"100%"}>
-                Bạn cần{" "}
-                {
-                  <Link
-                    underline="none"
-                    sx={{ cursor: "pointer" }}
-                    onClick={() =>
-                      router.push({
-                        pathname: "/login",
-                        query: {
-                          goAround: true,
-                        },
-                      })
-                    }
-                  >
-                    đăng nhập
-                  </Link>
-                }{" "}
-                để bình luận. Chưa có tài khoản?{" "}
-                {
-                  <Link
-                    underline="none"
-                    sx={{ cursor: "pointer" }}
-                    onClick={() =>
-                      router.push({
-                        pathname: "/register",
-                        query: {
-                          goAround: true,
-                        },
-                      })
-                    }
-                  >
-                    Đăng ký
-                  </Link>
-                }
-              </Box>
-            )}
-          </Stack>
+              {!cmtid && editor}
+            </>
+          ) : (
+            invalidCmt
+          )}
         </ModalInner>
       </Modal>
 
@@ -341,7 +414,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
             {
               pathname: router.asPath,
               query: {
-                commentOpen: true,
+                cmtopen: true,
               },
             },
             undefined,

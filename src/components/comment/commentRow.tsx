@@ -88,8 +88,14 @@ type Props = {
 export const StoryCommentRowContext = createContext({});
 
 const StoryCommentRow = ({ comment, mutate }: Props) => {
-  const [subReplyTo, setSubReplyTo] = useState<string>("");
-  const getKey = (pageIndex: number, previousPageData: any) => {
+  const { profile } = useAuth();
+  const router = useRouter();
+  const { cmtid, subcmtid } = router.query;
+  const [subReplyTo, setSubReplyTo] = useState<{
+    user_id: string;
+    _id: string;
+  }>();
+  const getKey = (pageIndex: number) => {
     pageIndex = pageIndex + 1;
     return `/comments/sub/getSubCommentByCommentId/${comment._id}?page=${pageIndex}`;
   };
@@ -100,10 +106,11 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
     setSize,
     isValidating: subCmtIsValidating,
     mutate: subCmtMutate,
-  } = useSWRInfinite(getKey, { revalidateOnMount: false });
-  const { profile } = useAuth();
-  const router = useRouter();
-  const { commentId, subCommentId } = router.query;
+  } = useSWRInfinite(getKey, {
+    revalidateOnMount: false,
+    revalidateFirstPage: false,
+  });
+
   const [editing, setEditing] = useState<boolean>(false);
   const [replying, setReplying] = useState<boolean>(false);
   const commentWrapperEle = useRef<HTMLDivElement>(null);
@@ -134,6 +141,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
   const replySubmitHandle = async (data: {
     truncatedValue: string;
     mainValue: string;
+    mentionData: string[];
   }) => {
     setReplyLoading(true);
     try {
@@ -150,63 +158,47 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
     }
   };
 
+  const findSize = async () => {
+    let size: number = 1;
+    try {
+      const response: { result: number } = await API.get(
+        `/comments/sub/checkSize/${cmtid}?breakpoint=${subcmtid}`
+      );
+      size = response.result;
+    } catch (error) {}
+    return size;
+  };
+
+  const setFindSize = async () => {
+    if (cmtid && subcmtid) {
+      const size = await findSize();
+      await setSize(size);
+      await subCmtMutate();
+    }
+  };
+
   useEffect(() => {
-    if (subCmtData && size > comment.totalSubCmtPages && size !== 1) {
+    if (
+      !cmtid &&
+      !subcmtid &&
+      subCmtData &&
+      size > comment.totalSubCmtPages &&
+      size !== 1
+    ) {
       setSize(size - 1);
     }
   }, [subCmtData]);
 
-  const findGroupContainsComment = async () => {
-    if (commentId === comment._id && !subCmtData) subCmtMutate();
-    if (subCmtData && commentId && subCommentId && commentId === comment._id) {
-      try {
-        const check: { result: boolean } = await API.get(
-          `/comments/findIfCommentContainsSub/${commentId}/${subCommentId}`
-        );
-        if (check.result) {
-          const find = subCmtData[subCmtData.length - 1].result.find(
-            (comment: SubCommentDataInterface) => comment._id === subCommentId
-          );
-          if (!find) setSize(size + 1);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-
-  const scrollToComment = async () => {
-    if (commentId) {
-      if (subCommentId) {
-        await findGroupContainsComment();
-      } else {
-        if (commentId === comment._id) {
-          subCmtMutate();
-          setTimeout(() => {
-            if (commentWrapperEle.current && commentRowRef.current) {
-              commentWrapperEle.current.scrollIntoView(true);
-              commentRowRef.current.classList.add("markComment");
-            }
-          }, 300);
-        }
-      }
-    }
-  };
-
   useEffect(() => {
-    if (replying && commentWrapperEle.current) {
-      commentWrapperEle.current.scrollIntoView(true);
+    if (cmtid && !subcmtid) {
+      if (comment.totalSubCmtPages <= 3) setSize(comment.totalSubCmtPages);
+      else setSize(3);
     }
-  }, [replying]);
-
-  useEffect(() => {
-    scrollToComment();
-    console.log(size);
-  }, [commentId, subCommentId, subCmtData]);
+    if (cmtid && subcmtid) setFindSize();
+  }, [cmtid, subcmtid]);
 
   const showReplyFooter =
     (subCmtData && subCmtData[0]?.result.length !== 0) || replying;
-
   return (
     <CommentRowWrapper ref={commentWrapperEle}>
       <StoryCommentRowContext.Provider
@@ -351,7 +343,14 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
                     clicked={replySubmitClicked}
                     setClicked={setReplySubmitClicked}
                     placeholder={`Trả lời ${comment?.author.user_id}...`}
-                    replyTo={subReplyTo ? subReplyTo : comment?.author.user_id}
+                    replyTo={
+                      subReplyTo
+                        ? subReplyTo
+                        : {
+                            user_id: comment?.author.user_id,
+                            _id: comment?.author._id,
+                          }
+                    }
                   />
                   <IconWrapper>
                     <IconButton
@@ -371,6 +370,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
                   </IconWrapper>
                 </ReplyInputWrapper>
               )}
+
               {subCmtData &&
                 subCmtData[0]?.result.length !== 0 &&
                 subCmtData.map((group: any) => {
@@ -419,7 +419,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
             <CircularProgress size="1em" /> Đang tải...
           </Box>
         )}
-        {comment && comment.totalSubCmt > 0 && !subCmtData && (
+        {comment && !subcmtid && comment.totalSubCmt > 0 && !subCmtData && (
           <Link
             underline="none"
             sx={{

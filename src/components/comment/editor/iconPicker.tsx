@@ -50,21 +50,23 @@ const EmojiPickerIcon = () => {
       >
         <InsertEmoticonIcon />
       </IconButton>
-      <PickerWrapper
-        sx={{
-          display: showPicker ? "flex" : "none",
-        }}
-        ref={wrapperRef}
-      >
-        <EmojiPicker
-          searchDisabled={true}
-          skinTonesDisabled={true}
-          theme={mode}
-          height={"300px"}
-          onEmojiClick={emojiClickHandle}
-          emojiStyle={EmojiStyle.TWITTER}
-        />
-      </PickerWrapper>
+      {showPicker ? (
+        <PickerWrapper
+          sx={{
+            display: showPicker ? "flex" : "none",
+          }}
+          ref={wrapperRef}
+        >
+          <EmojiPicker
+            searchDisabled={true}
+            skinTonesDisabled={true}
+            theme={mode}
+            height={"300px"}
+            onEmojiClick={emojiClickHandle}
+            emojiStyle={EmojiStyle.TWITTER}
+          />
+        </PickerWrapper>
+      ) : null}
     </Wrapper>
   );
 };

@@ -20,12 +20,19 @@ import React, { memo, useContext, useEffect, useRef, useState } from "react";
 import { CommentEditorContext } from "./wrapperEditor";
 import { useAuth } from "@/hooks/auth/useAuth";
 type Props = {
-  cb: (data: { truncatedValue: string; mainValue: string }) => void;
+  cb: (data: {
+    truncatedValue: string;
+    mainValue: string;
+    mentionData: string[];
+  }) => void;
   clicked: boolean;
   setClicked: (state: boolean) => any;
   placeholder?: string;
   defaultValue?: string;
-  replyTo?: string;
+  replyTo?: {
+    user_id: string;
+    _id: string;
+  };
   sendIcon?: boolean;
 };
 
@@ -46,6 +53,7 @@ const ContentEditableStyled = styled(Stack)(({ theme }) => ({
     minHeight: theme.spacing(4),
     outline: "none",
     color: theme.palette.myText.primary,
+    position: "relative",
     padding: theme.spacing(1),
     [theme.breakpoints.up("xs")]: {
       fontSize: theme.spacing(2),
@@ -206,7 +214,7 @@ const CommentEditor = ({
   const getAllMentionData = (
     contentState: ContentState,
     entityType: string
-  ) => {
+  ): string[] => {
     let entities: any[] = [];
     const blockArr: ContentBlock[] = contentState.getBlocksAsArray();
     //lấy toàn bộ thông tin entities có trong contentState
@@ -222,11 +230,15 @@ const CommentEditor = ({
           return false;
         },
         (start: number, end: number) => {
-          entities.push(block.getText().slice(start, end));
+          const _id = contentState
+            .getEntity(block.getEntityAt(start))
+            .getData()._id;
+
+          entities.push(_id);
         }
       );
     }
-    return entities;
+    return [...new Set(entities)];
   };
 
   const shouldContentTruncatedFunc = (
@@ -332,7 +344,6 @@ const CommentEditor = ({
       return;
     }
     const mentionData = getAllMentionData(blankBlockRemoveHandle(), "MENTION");
-
     const value = blankBlockRemoveHandle(); //Chưa truncated
 
     const shouldContentTruncated = shouldContentTruncatedFunc(value);
@@ -345,6 +356,7 @@ const CommentEditor = ({
             )
           : "",
       mainValue: JSON.stringify(convertToRaw(value)),
+      mentionData,
     };
 
     cb(mainValue);
@@ -414,19 +426,20 @@ const CommentEditor = ({
   };
 
   const handleReplyTo = () => {
-    if (replyTo === profile?.result.user_id) return;
+    if (replyTo?.user_id === profile?.result.user_id) return;
     let contentState = editorState.getCurrentContent();
     const firstBlock = contentState.getFirstBlock();
     const selectionState = editorState.getSelection();
     contentState.createEntity("MENTION", "IMMUTABLE", {
-      url: `/user/${replyTo?.replace("@", "")}`,
+      _id: replyTo?._id,
+      url: `/user/${replyTo?.user_id.replace("@", "")}`,
     });
     const entityKey = contentState.getLastCreatedEntityKey();
 
     const insertUserID = Modifier.insertText(
       contentState,
       selectionState,
-      replyTo ? replyTo : "",
+      replyTo?.user_id ? replyTo.user_id : "",
       undefined,
       entityKey
     );
@@ -439,9 +452,9 @@ const CommentEditor = ({
 
     const addBlankSelection = new SelectionState({
       anchorKey: firstBlock.getKey(),
-      anchorOffset: replyTo ? replyTo.length : 1,
+      anchorOffset: replyTo ? replyTo.user_id.length : 1,
       focusKey: firstBlock.getKey(),
-      focusOffset: replyTo ? replyTo.length : 1,
+      focusOffset: replyTo ? replyTo.user_id.length : 1,
     });
 
     const addBlank = Modifier.insertText(
@@ -535,6 +548,7 @@ const CommentEditor = ({
 
     //Tạo entity có data, chứa url đến trang profile của user
     contentState.createEntity("MENTION", "IMMUTABLE", {
+      _id,
       url: `/user/${_id}`,
     });
     const entityKey = contentState.getLastCreatedEntityKey();

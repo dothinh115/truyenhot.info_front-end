@@ -68,10 +68,11 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const commentRowRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const { subCommentId } = router.query;
+  const { subcmtid } = router.query;
   const { subCmtMutate, setReplying, setSubReplyTo } = useContext<any>(
     StoryCommentRowContext
   );
+
   const submitHandle = async (data: {
     truncatedValue: string;
     mainValue: string;
@@ -92,14 +93,14 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
 
   useEffect(() => {
     if (
-      subCmtData._id === subCommentId &&
+      subCmtData._id === subcmtid &&
       wrapperRef.current &&
       commentRowRef.current
     ) {
       wrapperRef.current.scrollIntoView();
       commentRowRef.current.classList.add("markComment");
     }
-  }, [subCommentId]);
+  }, [subcmtid]);
 
   return (
     <SubCommentWrapper ref={wrapperRef}>
@@ -135,7 +136,10 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
             onClick={() => {
               if (profile) {
                 setReplying(true);
-                setSubReplyTo(subCmtData?.author.user_id);
+                setSubReplyTo({
+                  user_id: subCmtData?.author.user_id,
+                  _id: subCmtData?.author._id,
+                });
               } else
                 router.push({
                   pathname: "/login",
