@@ -17,6 +17,7 @@ import { API } from "@/utils/config";
 import Chip from "@mui/material/Chip";
 import { useRouter } from "next/router";
 import { timeSince } from "@/utils/function";
+import Link from "next/link";
 type Props = {};
 
 const ModalInner = styled(Stack)(({ theme }) => ({
@@ -67,7 +68,8 @@ const NotiWrapper = styled(Box)(({ theme }) => ({
   },
 }));
 
-const NotiRowWrapper = styled(Stack)(({ theme }) => ({
+const NotiRowWrapper = styled(Link)(({ theme }) => ({
+  display: "flex",
   flexDirection: "row",
   alignItems: "center",
   justifyContent: "space-between",
@@ -176,13 +178,10 @@ const NotificationButton = (props: Props) => {
                 return (
                   <>
                     <NotiRowWrapper
+                      href={url}
                       key={noti._id}
                       onClick={() => {
                         setOpen(false);
-                        markAsRead(noti._id);
-                        router.replace(url, undefined, {
-                          shallow: true,
-                        });
                       }}
                     >
                       <NotiRowInner>
