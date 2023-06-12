@@ -182,6 +182,7 @@ const NotificationButton = (props: Props) => {
                       key={noti._id}
                       onClick={() => {
                         setOpen(false);
+                        markAsRead(noti._id);
                       }}
                     >
                       <NotiRowInner>
