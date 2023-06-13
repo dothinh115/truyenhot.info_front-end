@@ -207,7 +207,8 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
   }, [replyData]);
 
   const showReplyFooter =
-    (subCmtData && subCmtData[0]?.result.length !== 0) || cmtid;
+    (subCmtData && subCmtData[0]?.result.length !== 0) ||
+    (subCmtData && subCmtData[0]?.result.length !== 0 && cmtid);
   return (
     <CommentRowWrapper ref={commentWrapperEle}>
       <StoryCommentRowContext.Provider
