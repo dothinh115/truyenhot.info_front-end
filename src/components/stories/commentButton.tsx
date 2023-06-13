@@ -101,6 +101,11 @@ const StoryCommentButton = ({ story_code }: Props) => {
   const commentWrapper = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [validCmt, setValidCmt] = useState<boolean>(true);
+  const [replyData, setReplyData] = useState<{
+    truncatedValue: string;
+    mainValue: string;
+    mentionData: string[];
+  }>();
   const { data: singleCmtData, mutate: singleCmtMutate } = useSWR(
     cmtid ? `/comments/getSingleCommentById/${cmtid}` : null,
     {
@@ -113,7 +118,6 @@ const StoryCommentButton = ({ story_code }: Props) => {
     if (!disableClose) delete query.cmtopen;
     if (query.cmtid) delete query.cmtid;
     if (query.subcmtid) delete query.subcmtid;
-    if (query.reply) delete query.reply;
     router.replace({ pathname, query }, undefined, {
       shallow: true,
     });
@@ -145,6 +149,14 @@ const StoryCommentButton = ({ story_code }: Props) => {
     } finally {
       await cmtMutate();
     }
+  };
+
+  const replySubmitHandle = async (data: {
+    truncatedValue: string;
+    mainValue: string;
+    mentionData: string[];
+  }) => {
+    if (data) setReplyData({ ...data });
   };
 
   const commentLoadingRender = () => {
@@ -211,6 +223,13 @@ const StoryCommentButton = ({ story_code }: Props) => {
     calcLoadingTime();
   }, [cmtData]);
 
+  useEffect(() => {
+    if (!replyData && cmtid && commentWrapper.current)
+      commentWrapper.current.scroll({
+        top: commentWrapper.current.scrollHeight,
+      });
+  }, [replyData]);
+
   const showComment =
     cmtid && singleCmtData
       ? singleCmtData.result.map((comment: CommentDataInterface) => {
@@ -266,7 +285,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
       {profile ? (
         <>
           <CommentEditor
-            cb={submitHandle}
+            cb={cmtid ? replySubmitHandle : submitHandle}
             clicked={submitClicked}
             setClicked={setSubmitClicked}
             placeholder="Viết bình luận..."
@@ -342,7 +361,9 @@ const StoryCommentButton = ({ story_code }: Props) => {
   return (
     <>
       <Modal open={cmtopen ? true : false} onClose={() => closeHandle()}>
-        <StoryCommentButtonContext.Provider value={{ closeHandle }}>
+        <StoryCommentButtonContext.Provider
+          value={{ closeHandle, replyData, setReplyData, singleCmtMutate }}
+        >
           <ModalInner>
             <HeaddingStyled>
               <Box
@@ -402,7 +423,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
                 <Box className={"hr"} />
                 {/* hiện comment editor */}
 
-                {!cmtid && editor}
+                {editor}
               </>
             ) : (
               invalidCmt

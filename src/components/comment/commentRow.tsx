@@ -62,14 +62,6 @@ const CommentRowContentInner = styled(Stack)(({ theme }) => ({
   },
 }));
 
-const ReplyInputWrapper = styled(Box)(({ theme }) => ({
-  color: theme.palette.myText.primary,
-  width: "calc(100% - 45px)",
-  marginBottom: theme.spacing(0.5),
-  padding: theme.spacing(0, 0.5),
-  flexWrap: "wrap",
-}));
-
 const IconWrapper = styled(Stack)(({ theme }) => ({
   flexDirection: "row",
   alignItems: "center",
@@ -97,10 +89,12 @@ export const StoryCommentRowContext = createContext({});
 
 const StoryCommentRow = ({ comment, mutate }: Props) => {
   const { profile } = useAuth();
-  const { closeHandle } = useContext<any>(StoryCommentButtonContext);
+  const { replyData, setReplyData, singleCmtMutate } = useContext<any>(
+    StoryCommentButtonContext
+  );
   const router = useRouter();
   let { pathname, query } = router;
-  const { cmtid, subcmtid, reply } = router.query;
+  const { cmtid, subcmtid } = router.query;
   const [subReplyTo, setSubReplyTo] = useState<{
     user_id: string;
     _id: string;
@@ -125,7 +119,6 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
   const commentRowRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
   const [editSubmitClicked, setEditSubmitClicked] = useState<boolean>(false);
-  const [replySubmitClicked, setReplySubmitClicked] = useState<boolean>(false);
   const [editLoading, setEditLoading] = useState<boolean>(false);
   const [replyLoading, setReplyLoading] = useState<boolean>(false);
 
@@ -157,10 +150,11 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
       await API.post(`/comments/sub/new/${comment._id}`, {
         data,
       });
-      await mutate();
+      await singleCmtMutate();
       await subCmtMutate();
       setReplyLoading(false);
       await setSize(comment.totalSubCmtPages + 1);
+      await setReplyData(null);
     } catch (error) {
       console.log(error);
     } finally {
@@ -205,14 +199,15 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
       else setSize(3);
     }
     if (cmtid && subcmtid) setFindSize();
+    if (cmtid && inputRef.current) inputRef.current.scrollIntoView(false);
   }, [cmtid, subcmtid]);
 
   useEffect(() => {
-    if (reply && inputRef.current) inputRef.current.scrollIntoView(false);
-  }, [reply]);
+    if (replyData && cmtid) replySubmitHandle(replyData);
+  }, [replyData]);
 
   const showReplyFooter =
-    (subCmtData && subCmtData[0]?.result.length !== 0) || reply;
+    (subCmtData && subCmtData[0]?.result.length !== 0) || cmtid;
   return (
     <CommentRowWrapper ref={commentWrapperEle}>
       <StoryCommentRowContext.Provider
@@ -386,33 +381,6 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
                   <KeyboardArrowDownIcon />
                   Xem thêm bình luận mới
                 </Link>
-              )}
-              {reply && (
-                <ReplyInputWrapper ref={inputRef}>
-                  <CommentEditor
-                    cb={replySubmitHandle}
-                    clicked={replySubmitClicked}
-                    setClicked={setReplySubmitClicked}
-                    placeholder={`Trả lời ${comment?.author.user_id}...`}
-                    replyTo={subReplyTo}
-                  />
-                  <IconWrapper>
-                    <IconButton
-                      size="small"
-                      color="error"
-                      onClick={closeHandle}
-                    >
-                      <CancelIcon />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      color="success"
-                      onClick={() => setReplySubmitClicked(true)}
-                    >
-                      <CheckCircleIcon />
-                    </IconButton>
-                  </IconWrapper>
-                </ReplyInputWrapper>
               )}
             </Box>
           </Stack>

@@ -71,8 +71,9 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
   let { pathname, query } = router;
 
   const { subcmtid } = router.query;
-  const { subCmtMutate, setReplying, setSubReplyTo, subCmtIsValidating } =
-    useContext<any>(StoryCommentRowContext);
+  const { subCmtMutate, setSubReplyTo, subCmtIsValidating } = useContext<any>(
+    StoryCommentRowContext
+  );
 
   const submitHandle = async (data: {
     truncatedValue: string;
@@ -140,7 +141,6 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
                 query = {
                   ...query,
                   cmtid: subCmtData.parent_id,
-                  reply: "true",
                 };
                 router.replace({ pathname, query }, undefined, {
                   shallow: true,
