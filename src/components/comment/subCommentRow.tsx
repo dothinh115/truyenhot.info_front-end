@@ -17,6 +17,8 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { StoryCommentRowContext } from "./commentRow";
+import { StoryCommentButtonContext } from "../stories/commentButton";
+
 const CommentEditor = dynamic(() => import("./editor/wrapperEditor"));
 const StoryCommentContent = dynamic(() => import("./commentContent"));
 const CommentMenuDropDown = dynamic(() => import("./menuDropDown"));
@@ -71,9 +73,10 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
   let { pathname, query } = router;
 
   const { subcmtid } = router.query;
-  const { subCmtMutate, setSubReplyTo, subCmtIsValidating } = useContext<any>(
+  const { subCmtMutate, subCmtIsValidating } = useContext<any>(
     StoryCommentRowContext
   );
+  const { setSubReplyTo } = useContext<any>(StoryCommentButtonContext);
 
   const submitHandle = async (data: {
     truncatedValue: string;

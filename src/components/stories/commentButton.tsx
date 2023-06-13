@@ -106,6 +106,10 @@ const StoryCommentButton = ({ story_code }: Props) => {
     mainValue: string;
     mentionData: string[];
   }>();
+  const [subReplyTo, setSubReplyTo] = useState<{
+    user_id: string;
+    _id: string;
+  }>();
   const { data: singleCmtData, mutate: singleCmtMutate } = useSWR(
     cmtid ? `/comments/getSingleCommentById/${cmtid}` : null,
     {
@@ -288,8 +292,13 @@ const StoryCommentButton = ({ story_code }: Props) => {
             cb={cmtid ? replySubmitHandle : submitHandle}
             clicked={submitClicked}
             setClicked={setSubmitClicked}
-            placeholder="Viết bình luận..."
+            placeholder={
+              singleCmtData?.result[0]?.author.user_id
+                ? singleCmtData.result[0].author.user_id
+                : "Viết bình luận..."
+            }
             sendIcon={true}
+            replyTo={cmtid ? subReplyTo : undefined}
             showEmojiButton={true}
           />
 
@@ -362,7 +371,13 @@ const StoryCommentButton = ({ story_code }: Props) => {
     <>
       <Modal open={cmtopen ? true : false} onClose={() => closeHandle()}>
         <StoryCommentButtonContext.Provider
-          value={{ closeHandle, replyData, setReplyData, singleCmtMutate }}
+          value={{
+            closeHandle,
+            replyData,
+            setReplyData,
+            singleCmtMutate,
+            setSubReplyTo,
+          }}
         >
           <ModalInner>
             <HeaddingStyled>
@@ -383,7 +398,8 @@ const StoryCommentButton = ({ story_code }: Props) => {
                     <ArrowBackIosNewIcon />
                   </IconButton>
                 )}
-                Bình luận
+                Phản hồi{" "}
+                {singleCmtData && singleCmtData.result[0].author.user_id}
                 <IconButton onClick={() => closeHandle()}>
                   <CloseIcon />
                 </IconButton>

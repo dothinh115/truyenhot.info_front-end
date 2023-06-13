@@ -616,6 +616,7 @@ const CommentEditor = ({
 
   useEffect(() => {
     if (replyTo) handleReplyTo();
+    replyTo = undefined;
   }, [replyTo]);
 
   useEffect(() => {

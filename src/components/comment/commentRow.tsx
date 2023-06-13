@@ -89,16 +89,12 @@ export const StoryCommentRowContext = createContext({});
 
 const StoryCommentRow = ({ comment, mutate }: Props) => {
   const { profile } = useAuth();
-  const { replyData, setReplyData, singleCmtMutate } = useContext<any>(
-    StoryCommentButtonContext
-  );
+  const { replyData, setReplyData, singleCmtMutate, setSubReplyTo } =
+    useContext<any>(StoryCommentButtonContext);
   const router = useRouter();
   let { pathname, query } = router;
   const { cmtid, subcmtid } = router.query;
-  const [subReplyTo, setSubReplyTo] = useState<{
-    user_id: string;
-    _id: string;
-  }>();
+
   const getKey = (pageIndex: number) => {
     pageIndex = pageIndex + 1;
     return `/comments/sub/getSubCommentByCommentId/${comment._id}?page=${pageIndex}`;
@@ -175,7 +171,6 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
   const setFindSize = async () => {
     if (cmtid && subcmtid) {
       const size = await findSize();
-      console.log(size);
       await setSize(size);
       await subCmtMutate();
     }
@@ -214,7 +209,6 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
       <StoryCommentRowContext.Provider
         value={{
           subCmtMutate,
-          setSubReplyTo,
           mutate,
           mainCmtId: comment._id,
           subCmtIsValidating,
