@@ -101,6 +101,9 @@ const StoryCommentButton = ({ story_code }: Props) => {
   const commentWrapper = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [validCmt, setValidCmt] = useState<boolean>(true);
+  const [singleCmtData, setSingleCmtData] = useState<{
+    result: CommentDataInterface[];
+  }>();
   const [replyData, setReplyData] = useState<{
     truncatedValue: string;
     mainValue: string;
@@ -110,12 +113,17 @@ const StoryCommentButton = ({ story_code }: Props) => {
     user_id: string;
     _id: string;
   }>();
-  const { data: singleCmtData, mutate: singleCmtMutate } = useSWR(
-    cmtid ? `/comments/getSingleCommentById/${cmtid}` : null,
-    {
-      revalidateOnMount: false,
+
+  const getSingleComment = async () => {
+    try {
+      const response: { result: CommentDataInterface[] } = await API.get(
+        `/comments/getSingleCommentById/${cmtid}`
+      );
+      setSingleCmtData(response);
+    } catch (error) {
+      console.log(error);
     }
-  );
+  };
 
   const closeHandle = async (disableClose: boolean = false) => {
     setValidCmt(true);
@@ -126,6 +134,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
       shallow: true,
     });
     if (commentWrapper.current) commentWrapper.current.scroll({ top: 0 });
+    if (disableClose) cmtMutate();
   };
 
   const submitHandle = async (data: {
@@ -208,7 +217,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
     if (cmtid || subcmtid) {
       const valid = await checkValidCmt();
       await setValidCmt(valid);
-      if (valid && cmtid) await singleCmtMutate();
+      if (valid && cmtid) await getSingleComment();
     } else await cmtMutate();
     await setLoading(false);
   };
@@ -225,7 +234,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
 
   const showComment =
     cmtid && singleCmtData
-      ? singleCmtData.result.map((comment: CommentDataInterface) => {
+      ? singleCmtData.result?.map((comment: CommentDataInterface) => {
           return (
             <MemorizedStoryCommentRow
               key={comment._id}
@@ -363,9 +372,10 @@ const StoryCommentButton = ({ story_code }: Props) => {
             closeHandle,
             replyData,
             setReplyData,
-            singleCmtMutate,
             setSubReplyTo,
             commentWrapper,
+            cmtMutate,
+            getSingleComment,
           }}
         >
           <ModalInner>
@@ -387,8 +397,10 @@ const StoryCommentButton = ({ story_code }: Props) => {
                     <ArrowBackIosNewIcon />
                   </IconButton>
                 )}
-                Phản hồi{" "}
-                {singleCmtData && singleCmtData.result[0]?.author.user_id}
+
+                {cmtid && singleCmtData
+                  ? `Phản hồi ${singleCmtData.result[0]?.author.user_id}`
+                  : "Bình luận"}
                 <IconButton onClick={() => closeHandle()}>
                   <CloseIcon />
                 </IconButton>

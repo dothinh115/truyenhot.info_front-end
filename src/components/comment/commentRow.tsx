@@ -92,7 +92,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
   const {
     replyData,
     setReplyData,
-    singleCmtMutate,
+    getSingleComment,
     setSubReplyTo,
     commentWrapper,
   } = useContext<any>(StoryCommentButtonContext);
@@ -130,14 +130,16 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
           data,
         }
       );
-      await getData(1, true);
       query = {
         ...query,
+        cmtid: response.result.parent_id,
         subcmtid: response.result._id,
       };
       await router.replace({ pathname, query }, undefined, { shallow: true });
     } catch (error) {
       console.log(error);
+    } finally {
+      await getData(1, true);
     }
   };
 
@@ -232,10 +234,11 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
       await API.put(`/comments/edit/${comment._id}`, {
         data,
       });
+      if (cmtid) await getSingleComment();
+      await mutate();
     } catch (error) {
       console.log(error);
     } finally {
-      mutate();
       setEditLoading(false);
     }
   };
@@ -253,7 +256,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
           data,
         }
       );
-      await singleCmtMutate();
+      await getSingleComment();
       query = {
         ...query,
         subcmtid: response.result._id,
@@ -301,6 +304,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
 
   useEffect(() => {
     if (cmtid || subcmtid) setFindSize();
+    if (cmtid) getSingleComment();
   }, [cmtid, subcmtid]);
 
   useEffect(() => {
@@ -495,30 +499,28 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
           </Stack>
         )}
 
-        {comment.totalSubCmt > 0 &&
-          range.end < comment.totalSubCmtPages &&
-          subCmtData.length === 0 && (
-            <Link
-              underline="none"
-              sx={{
-                cursor: "pointer",
-                marginLeft: "5%",
-                display: "flex",
-                alignItem: "center",
-              }}
-              onClick={async (event: React.MouseEvent<HTMLAnchorElement>) => {
-                event.preventDefault();
-                await getData(1);
-                setRange({
-                  start: 1,
-                  end: 1,
-                });
-              }}
-            >
-              <ExpandMoreIcon />
-              Xem trả lời cho bình luận này
-            </Link>
-          )}
+        {comment.totalSubCmt > 0 && subCmtData.length === 0 && (
+          <Link
+            underline="none"
+            sx={{
+              cursor: "pointer",
+              marginLeft: "5%",
+              display: "flex",
+              alignItem: "center",
+            }}
+            onClick={async (event: React.MouseEvent<HTMLAnchorElement>) => {
+              event.preventDefault();
+              await getData(1);
+              setRange({
+                start: 1,
+                end: 1,
+              });
+            }}
+          >
+            <ExpandMoreIcon />
+            Xem trả lời cho bình luận này
+          </Link>
+        )}
         {replyLoading && (
           <Box
             my={1}
