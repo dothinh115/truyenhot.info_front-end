@@ -45,6 +45,7 @@ type Props = {
     _id: string;
   };
   showEmojiButton?: boolean;
+  sendIcon?: boolean;
 };
 
 const UserSuggestionUL = styled(List)(({ theme }) => ({

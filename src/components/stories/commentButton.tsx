@@ -298,6 +298,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
             }
             replyTo={cmtid ? subReplyTo : undefined}
             showEmojiButton={true}
+            sendIcon={true}
           />
 
           <Box

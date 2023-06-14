@@ -34,6 +34,7 @@ type Props = {
     user_id: string;
     _id: string;
   };
+  sendIcon?: boolean;
 };
 
 const ContentEditableStyled = styled(Stack)(({ theme }) => ({
@@ -114,6 +115,7 @@ const CommentEditor = ({
   placeholder,
   defaultValue,
   replyTo,
+  sendIcon = false,
 }: Props) => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty(mentionDecorator)
@@ -654,18 +656,19 @@ const CommentEditor = ({
           placeholder={placeholder}
         />
       </ContentEditableStyled>
-
-      <IconButton
-        type="submit"
-        size="large"
-        sx={{
-          height: "40px",
-          width: "40px",
-        }}
-        onClick={() => setClicked(true)}
-      >
-        <SendIcon />
-      </IconButton>
+      {sendIcon && (
+        <IconButton
+          type="submit"
+          size="large"
+          sx={{
+            height: "40px",
+            width: "40px",
+          }}
+          onClick={() => setClicked(true)}
+        >
+          <SendIcon />
+        </IconButton>
+      )}
     </>
   );
 };
