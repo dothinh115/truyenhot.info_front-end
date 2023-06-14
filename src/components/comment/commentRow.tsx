@@ -411,6 +411,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
                           router.replace({ pathname, query }, undefined, {
                             shallow: true,
                           });
+                          setEditing(false);
                         }}
                       >
                         <CancelIcon />
