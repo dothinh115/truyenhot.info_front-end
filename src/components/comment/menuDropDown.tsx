@@ -50,7 +50,9 @@ const CommentMenuDropDown = ({ comment, IsSubCmt = false }: Props) => {
   const { setEditing: subCmtSetEditing } = useContext<any>(
     StorySubCommentRowContext
   );
-  const { closeHandle } = useContext<any>(StoryCommentButtonContext);
+  const { closeHandle, setSubReplyTo } = useContext<any>(
+    StoryCommentButtonContext
+  );
 
   const deleteHandle = async (_id: string) => {
     await deleteCommentHandle(
@@ -109,9 +111,14 @@ const CommentMenuDropDown = ({ comment, IsSubCmt = false }: Props) => {
                   query = {
                     ...query,
                     cmtid: mainCmtId,
+                    ...(!cmtid && IsSubCmt && { subcmtid: comment._id }),
                   };
                   router.replace({ pathname, query }, undefined, {
                     shallow: true,
+                  });
+                  setSubReplyTo({
+                    user_id: comment?.author.user_id,
+                    _id: comment?.author._id,
                   });
                 } else
                   router.push({
