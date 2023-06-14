@@ -78,6 +78,7 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
   const commentRowRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   let { pathname, query } = router;
+  let { cmtid } = query;
   const { subcmtid } = router.query;
   const { setSubReplyTo } = useContext<any>(StoryCommentButtonContext);
   const { editSubComment } = useContext<any>(StoryCommentRowContext);
@@ -143,6 +144,7 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
                   query = {
                     ...query,
                     cmtid: subCmtData.parent_id,
+                    ...(!cmtid && { subcmtid: subCmtData._id }),
                   };
                   router.replace({ pathname, query }, undefined, {
                     shallow: true,
