@@ -44,7 +44,6 @@ type Props = {
     user_id: string;
     _id: string;
   };
-  sendIcon?: boolean;
   showEmojiButton?: boolean;
 };
 

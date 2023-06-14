@@ -100,6 +100,7 @@ const NotificationButton = (props: Props) => {
   const { data: notiData, mutate: notiMutate } = useSWRInfinite(getKey, {
     keepPreviousData: true,
     refreshInterval: 10000,
+    revalidateOnFocus: true,
   });
 
   const getUnreadNotification = (): number => {
@@ -184,53 +185,51 @@ const NotificationButton = (props: Props) => {
                 return group.result.map((noti: NotificationInterface) => {
                   const { text, url } = JSON.parse(noti.data);
                   return (
-                    <>
-                      <NotiRowWrapper
-                        href={url}
-                        key={noti._id}
-                        onClick={() => {
-                          setOpen(false);
-                          markAsRead(noti._id);
-                        }}
-                      >
-                        <NotiRowInner>
-                          <NotificationsActiveIcon
+                    <NotiRowWrapper
+                      href={url}
+                      key={noti._id}
+                      onClick={() => {
+                        setOpen(false);
+                        markAsRead(noti._id);
+                      }}
+                    >
+                      <NotiRowInner>
+                        <NotificationsActiveIcon
+                          sx={{
+                            color: noti.read
+                              ? "myText.primary"
+                              : "myPrimary.main",
+                          }}
+                        />
+                        <Stack>
+                          <Typography
                             sx={{
-                              color: noti.read
-                                ? "myText.primary"
-                                : "myPrimary.main",
+                              width: "100%",
+                              fontSize: "14px",
                             }}
-                          />
-                          <Stack>
-                            <Typography
-                              sx={{
-                                width: "100%",
-                                fontSize: "14px",
-                              }}
-                            >
-                              {text}
-                            </Typography>
-                            <Typography
-                              sx={{
-                                fontSize: "13px",
-                                fontWeight: "600",
-                                color: "myPrimary.main",
-                              }}
-                            >
-                              {timeSince(
-                                Math.abs(
-                                  new Date().valueOf() -
-                                    new Date(noti?.created_at).valueOf()
-                                )
-                              )}{" "}
-                              trước
-                            </Typography>
-                          </Stack>
-                        </NotiRowInner>
+                          >
+                            {text}
+                          </Typography>
+                          <Typography
+                            sx={{
+                              fontSize: "13px",
+                              fontWeight: "600",
+                              color: "myPrimary.main",
+                            }}
+                          >
+                            {timeSince(
+                              Math.abs(
+                                new Date().valueOf() -
+                                  new Date(noti?.created_at).valueOf()
+                              )
+                            )}{" "}
+                            trước
+                          </Typography>
+                        </Stack>
+                      </NotiRowInner>
 
-                        <ArrowForwardIcon />
-                      </NotiRowWrapper>
-                    </>
+                      <ArrowForwardIcon />
+                    </NotiRowWrapper>
                   );
                 });
               })

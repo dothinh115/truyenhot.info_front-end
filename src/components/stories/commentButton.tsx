@@ -117,14 +117,15 @@ const StoryCommentButton = ({ story_code }: Props) => {
     }
   );
 
-  const closeHandle = (disableClose: boolean = false) => {
+  const closeHandle = async (disableClose: boolean = false) => {
     setValidCmt(true);
     if (!disableClose) delete query.cmtopen;
     if (query.cmtid) delete query.cmtid;
     if (query.subcmtid) delete query.subcmtid;
-    router.replace({ pathname, query }, undefined, {
+    await router.replace({ pathname, query }, undefined, {
       shallow: true,
     });
+    if (commentWrapper.current) commentWrapper.current.scroll({ top: 0 });
   };
 
   const submitHandle = async (data: {
@@ -204,35 +205,23 @@ const StoryCommentButton = ({ story_code }: Props) => {
   };
 
   const firstLoad = async () => {
-    if (!cmtData) await cmtMutate();
-  };
-
-  const firstSingleCmtLoad = async () => {
     if (cmtid || subcmtid) {
       const valid = await checkValidCmt();
       await setValidCmt(valid);
       if (valid && cmtid) await singleCmtMutate();
-    }
+    } else await cmtMutate();
     await setLoading(false);
   };
 
   useEffect(() => {
     if (cmtopen) {
-      if (cmtid || subcmtid) firstSingleCmtLoad();
-      else firstLoad();
+      firstLoad();
     }
   }, [cmtopen, cmtid, subcmtid]);
 
   useEffect(() => {
     calcLoadingTime();
   }, [cmtData]);
-
-  useEffect(() => {
-    if (!replyData && cmtid && commentWrapper.current)
-      commentWrapper.current.scroll({
-        top: commentWrapper.current.scrollHeight,
-      });
-  }, [replyData]);
 
   const showComment =
     cmtid && singleCmtData
@@ -297,7 +286,6 @@ const StoryCommentButton = ({ story_code }: Props) => {
                 ? singleCmtData.result[0].author.user_id
                 : "Viết bình luận..."
             }
-            sendIcon={true}
             replyTo={cmtid ? subReplyTo : undefined}
             showEmojiButton={true}
           />
@@ -377,6 +365,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
             setReplyData,
             singleCmtMutate,
             setSubReplyTo,
+            commentWrapper,
           }}
         >
           <ModalInner>
@@ -399,7 +388,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
                   </IconButton>
                 )}
                 Phản hồi{" "}
-                {singleCmtData && singleCmtData.result[0].author.user_id}
+                {singleCmtData && singleCmtData.result[0]?.author.user_id}
                 <IconButton onClick={() => closeHandle()}>
                   <CloseIcon />
                 </IconButton>

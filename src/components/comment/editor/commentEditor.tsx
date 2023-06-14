@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/auth/useAuth";
 import SendIcon from "@mui/icons-material/Send";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
@@ -18,7 +19,7 @@ import {
 } from "draft-js";
 import React, { memo, useContext, useEffect, useRef, useState } from "react";
 import { CommentEditorContext } from "./wrapperEditor";
-import { useAuth } from "@/hooks/auth/useAuth";
+
 type Props = {
   cb: (data: {
     truncatedValue: string;
@@ -33,7 +34,6 @@ type Props = {
     user_id: string;
     _id: string;
   };
-  sendIcon?: boolean;
 };
 
 const ContentEditableStyled = styled(Stack)(({ theme }) => ({
@@ -114,7 +114,6 @@ const CommentEditor = ({
   placeholder,
   defaultValue,
   replyTo,
-  sendIcon = false,
 }: Props) => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty(mentionDecorator)
@@ -135,6 +134,7 @@ const CommentEditor = ({
     setIconPick,
     setShowPicker,
   } = useContext<any>(CommentEditorContext);
+
   const currentRangeSuggestion = useRef<{
     start: number;
     end: number;
@@ -654,13 +654,13 @@ const CommentEditor = ({
           placeholder={placeholder}
         />
       </ContentEditableStyled>
+
       <IconButton
         type="submit"
         size="large"
         sx={{
           height: "40px",
           width: "40px",
-          display: sendIcon ? "flex" : "none",
         }}
         onClick={() => setClicked(true)}
       >

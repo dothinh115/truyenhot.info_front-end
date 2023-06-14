@@ -27,8 +27,8 @@ import React, {
   useState,
   useContext,
 } from "react";
-import useSWRInfinite from "swr/infinite";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { StoryCommentButtonContext } from "../stories/commentButton";
 const CommentEditor = dynamic(() => import("./editor/wrapperEditor"));
 const MemorizedStorySubCommentRow = dynamic(() => import("./subCommentRow"));
@@ -89,34 +89,102 @@ export const StoryCommentRowContext = createContext({});
 
 const StoryCommentRow = ({ comment, mutate }: Props) => {
   const { profile } = useAuth();
-  const { replyData, setReplyData, singleCmtMutate, setSubReplyTo } =
-    useContext<any>(StoryCommentButtonContext);
+  const {
+    replyData,
+    setReplyData,
+    singleCmtMutate,
+    setSubReplyTo,
+    commentWrapper,
+  } = useContext<any>(StoryCommentButtonContext);
   const router = useRouter();
   let { pathname, query } = router;
   const { cmtid, subcmtid } = router.query;
 
-  const getKey = (pageIndex: number) => {
-    pageIndex = pageIndex + 1;
-    return `/comments/sub/getSubCommentByCommentId/${comment._id}?page=${pageIndex}`;
-  };
-
-  const {
-    data: subCmtData,
-    size,
-    setSize,
-    isValidating: subCmtIsValidating,
-    mutate: subCmtMutate,
-  } = useSWRInfinite(getKey, {
-    revalidateFirstPage: false,
-  });
-
   const [editing, setEditing] = useState<boolean>(false);
   const commentWrapperEle = useRef<HTMLDivElement>(null);
   const commentRowRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLDivElement>(null);
   const [editSubmitClicked, setEditSubmitClicked] = useState<boolean>(false);
   const [editLoading, setEditLoading] = useState<boolean>(false);
   const [replyLoading, setReplyLoading] = useState<boolean>(false);
+  const [subCmtData, setSubCmtData] = useState<any[]>([]);
+  const [size, setSize] = useState<number>(0);
+  const [range, setRange] = useState<{
+    start: number;
+    end: number;
+  }>({
+    start: 0,
+    end: 0,
+  });
+
+  const getData = async (
+    page: number,
+    fromFirstPage: boolean = false,
+    join: boolean = false
+  ) => {
+    if (fromFirstPage) {
+      try {
+        let arr: any[] = [];
+        for (let i = 1; i <= page; i++) {
+          const response: { result: SubCommentDataInterface[] } = await API.get(
+            `/comments/sub/getSubCommentByCommentId/${comment._id}?page=${i}`
+          );
+          arr = [
+            ...arr,
+            {
+              result: response.result,
+            },
+          ];
+          setSubCmtData(arr);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      return;
+    }
+
+    try {
+      const response: { result: SubCommentDataInterface[] } = await API.get(
+        `/comments/sub/getSubCommentByCommentId/${comment._id}?page=${page}`
+      );
+      if (join) {
+        if (query.subcmtid) delete query.subcmtid;
+        router.replace({ pathname, query }, undefined, { shallow: true });
+        if (page < range.start) {
+          setSubCmtData([
+            {
+              result: response.result,
+            },
+            ...subCmtData,
+          ]);
+          setRange({
+            ...range,
+            start: range.start - 1,
+          });
+          return;
+        } else if (page > range.end) {
+          setSubCmtData([
+            ...subCmtData,
+            {
+              result: response.result,
+            },
+          ]);
+          setRange({
+            ...range,
+            end: range.end + 1,
+          });
+          return;
+        }
+      } else {
+        setSubCmtData([{ result: response.result }]);
+        setRange({
+          start: page,
+          end: page,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const submitHandle = async (data: {
     truncatedValue: string;
@@ -131,7 +199,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
     } catch (error) {
       console.log(error);
     } finally {
-      await mutate();
+      mutate();
       setEditLoading(false);
     }
   };
@@ -141,16 +209,26 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
     mainValue: string;
     mentionData: string[];
   }) => {
-    setReplyLoading(true);
+    await setReplyLoading(true);
     try {
-      await API.post(`/comments/sub/new/${comment._id}`, {
-        data,
-      });
+      const response: { result: any } = await API.post(
+        `/comments/sub/new/${comment._id}`,
+        {
+          data,
+        }
+      );
       await singleCmtMutate();
-      await subCmtMutate();
-      setReplyLoading(false);
-      await setSize(comment.totalSubCmtPages + 1);
+      query = {
+        ...query,
+        subcmtid: response.result._id,
+      };
+      await router.replace({ pathname, query }, undefined, { shallow: true });
+      if (commentWrapper.current)
+        commentWrapper.current.scroll({
+          top: commentWrapper.current.scrollHeight,
+        });
       await setReplyData(null);
+      setReplyLoading(false);
     } catch (error) {
       console.log(error);
     } finally {
@@ -169,10 +247,17 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
   };
 
   const setFindSize = async () => {
-    if (cmtid && subcmtid) {
-      const size = await findSize();
-      await setSize(size);
-      await subCmtMutate();
+    if (cmtid || subcmtid) {
+      if (subcmtid) {
+        const size = await findSize();
+        await getData(size);
+        return;
+      }
+      await getData(1, true);
+      setRange({
+        start: 1,
+        end: 1,
+      });
     }
   };
 
@@ -184,17 +269,15 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
       size > comment.totalSubCmtPages &&
       size !== 1
     ) {
-      setSize(size - 1);
+      setSize(comment.totalSubCmtPages);
     }
   }, [subCmtData]);
 
   useEffect(() => {
-    if (cmtid && !subcmtid) {
-      if (comment.totalSubCmtPages <= 3) setSize(comment.totalSubCmtPages);
-      else setSize(3);
+    if (cmtid || subcmtid) setFindSize();
+    else {
+      setSize(1);
     }
-    if (cmtid && subcmtid) setFindSize();
-    if (cmtid && inputRef.current) inputRef.current.scrollIntoView(false);
   }, [cmtid, subcmtid]);
 
   useEffect(() => {
@@ -202,16 +285,14 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
   }, [replyData]);
 
   const showReplyFooter =
-    (subCmtData && subCmtData[0]?.result.length !== 0) ||
-    (subCmtData && subCmtData[0]?.result.length !== 0 && cmtid);
+    (comment.totalSubCmt > 0 && subCmtData.length !== 0) ||
+    (comment.totalSubCmt > 0 && cmtid);
   return (
     <CommentRowWrapper ref={commentWrapperEle}>
       <StoryCommentRowContext.Provider
         value={{
-          subCmtMutate,
           mutate,
           mainCmtId: comment._id,
-          subCmtIsValidating,
         }}
       >
         <CommentRow>
@@ -255,7 +336,6 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
                         query = {
                           ...query,
                           cmtid: comment._id,
-                          reply: "true",
                         };
                         router.replace({ pathname, query }, undefined, {
                           shallow: true,
@@ -319,19 +399,6 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
             </Stack>
           </CommentRowContentWrapper>
         </CommentRow>
-        {replyLoading && (
-          <Box
-            my={1}
-            sx={{
-              color: "myText.primary",
-              fontSize: ".9em",
-              width: "100%",
-              textAlign: "center",
-            }}
-          >
-            <CircularProgress size="1em" /> Đang gửi trả lời...
-          </Box>
-        )}
 
         {showReplyFooter && (
           <Stack direction={"row"}>
@@ -349,6 +416,25 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
                 flexGrow: 1,
               }}
             >
+              {range.start > 1 && (
+                <Link
+                  underline="none"
+                  sx={{
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItem: "center",
+                  }}
+                  onClick={async (
+                    event: React.MouseEvent<HTMLAnchorElement>
+                  ) => {
+                    event.preventDefault();
+                    await getData(range.start - 1, false, true);
+                  }}
+                >
+                  <KeyboardArrowUpIcon />
+                  Xem thêm bình luận cũ
+                </Link>
+              )}
               {subCmtData &&
                 subCmtData.map((group: any) => {
                   return group?.result.map((sub: SubCommentDataInterface) => {
@@ -360,41 +446,31 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
                     );
                   });
                 })}
-              {size < comment.totalSubCmtPages && (
-                <Link
-                  underline="none"
-                  sx={{
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItem: "center",
-                  }}
-                  onClick={(event: React.MouseEvent<HTMLAnchorElement>) => {
-                    event.preventDefault();
-                    setSize(size + 1);
-                  }}
-                >
-                  <KeyboardArrowDownIcon />
-                  Xem thêm bình luận mới
-                </Link>
-              )}
+              {subCmtData.length !== 0 &&
+                range.end < comment.totalSubCmtPages && (
+                  <Link
+                    underline="none"
+                    sx={{
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItem: "center",
+                    }}
+                    onClick={async (
+                      event: React.MouseEvent<HTMLAnchorElement>
+                    ) => {
+                      event.preventDefault();
+                      await getData(range.end + 1, false, true);
+                    }}
+                  >
+                    <KeyboardArrowDownIcon />
+                    Xem thêm bình luận mới
+                  </Link>
+                )}
             </Box>
           </Stack>
         )}
 
-        {subCmtIsValidating && (
-          <Box
-            my={1}
-            sx={{
-              color: "myText.primary",
-              fontSize: ".9em",
-              width: "100%",
-              paddingLeft: "5%",
-            }}
-          >
-            <CircularProgress size="1em" /> Đang tải...
-          </Box>
-        )}
-        {comment && !subcmtid && comment.totalSubCmt > 0 && !subCmtData && (
+        {comment.totalSubCmt > 0 && range.end < comment.totalSubCmtPages && (
           <Link
             underline="none"
             sx={{
@@ -403,14 +479,31 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
               display: "flex",
               alignItem: "center",
             }}
-            onClick={(event: React.MouseEvent<HTMLAnchorElement>) => {
+            onClick={async (event: React.MouseEvent<HTMLAnchorElement>) => {
               event.preventDefault();
-              subCmtMutate();
+              await getData(1);
+              setRange({
+                start: 1,
+                end: 1,
+              });
             }}
           >
             <ExpandMoreIcon />
             Xem trả lời cho bình luận này
           </Link>
+        )}
+        {replyLoading && (
+          <Box
+            my={1}
+            sx={{
+              color: "myText.primary",
+              fontSize: ".9em",
+              width: "100%",
+              textAlign: "center",
+            }}
+          >
+            <CircularProgress size="1em" /> Đang gửi trả lời...
+          </Box>
         )}
       </StoryCommentRowContext.Provider>
     </CommentRowWrapper>

@@ -14,7 +14,7 @@ import Stack from "@mui/material/Stack";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useEffect, createContext } from "react";
+import { useEffect } from "react";
 type Props = {
   story: StoryInterface;
   categories: CategoryInterface[];

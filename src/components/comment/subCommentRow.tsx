@@ -16,7 +16,6 @@ import { styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { StoryCommentRowContext } from "./commentRow";
 import { StoryCommentButtonContext } from "../stories/commentButton";
 
 const CommentEditor = dynamic(() => import("./editor/wrapperEditor"));
@@ -71,11 +70,9 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
   const commentRowRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   let { pathname, query } = router;
+  const [subData, setSubData] = useState<SubCommentDataInterface>(subCmtData);
 
   const { subcmtid } = router.query;
-  const { subCmtMutate, subCmtIsValidating } = useContext<any>(
-    StoryCommentRowContext
-  );
   const { setSubReplyTo } = useContext<any>(StoryCommentButtonContext);
 
   const submitHandle = async (data: {
@@ -85,13 +82,20 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
     setLoading(true);
     try {
       setEditing(false);
-      await API.put(`/comments/sub/edit/${subCmtData._id}`, {
-        data,
+      const response: { result: any } = await API.put(
+        `/comments/sub/edit/${subCmtData._id}`,
+        {
+          data,
+        }
+      );
+      setSubData({
+        ...subData,
+        mainValue: data.mainValue,
+        truncatedValue: data.truncatedValue,
       });
     } catch (error) {
       console.log(error);
     } finally {
-      await subCmtMutate();
       setLoading(false);
     }
   };
@@ -100,13 +104,17 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
     if (
       subCmtData._id === subcmtid &&
       wrapperRef.current &&
-      commentRowRef.current &&
-      !subCmtIsValidating
+      commentRowRef.current
     ) {
-      wrapperRef.current.scrollIntoView();
       commentRowRef.current.classList.add("markComment");
+      setTimeout(() => {
+        if (wrapperRef.current) wrapperRef.current.scrollIntoView();
+      }, 200);
+    } else {
+      if (commentRowRef.current)
+        commentRowRef.current.classList.remove("markComment");
     }
-  }, [subcmtid, subCmtIsValidating]);
+  }, [subcmtid]);
 
   return (
     <SubCommentWrapper ref={wrapperRef}>
@@ -171,7 +179,7 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
               cb={submitHandle}
               clicked={submitClick}
               setClicked={setSubmitClick}
-              defaultValue={subCmtData?.mainValue}
+              defaultValue={subData?.mainValue}
             />
             <IconWrapper>
               <IconButton
@@ -198,8 +206,8 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
               </Box>
             ) : (
               <StoryCommentContent
-                mainValue={subCmtData?.mainValue}
-                truncatedValue={subCmtData?.truncatedValue}
+                mainValue={subData?.mainValue}
+                truncatedValue={subData?.truncatedValue}
               />
             )}
           </>
@@ -208,9 +216,9 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
 
       <CommentMenuDropDown
         comment={subCmtData}
-        subComment={subCmtData}
         setEditing={setEditing}
-        subCmt={true}
+        IsSubCmt={true}
+        EleToDel={wrapperRef}
       />
     </SubCommentWrapper>
   );

@@ -23,8 +23,8 @@ import { StoryCommentButtonContext } from "../stories/commentButton";
 type Props = {
   comment: CommentDataInterface | SubCommentDataInterface;
   setEditing: (edit: boolean) => void;
-  subCmt?: boolean;
-  subComment?: SubCommentDataInterface;
+  IsSubCmt?: boolean;
+  EleToDel?: any;
 };
 
 const MenuDropdownWrapper = styled(Box)(({ theme }) => ({
@@ -42,7 +42,8 @@ const MenuDropdownWrapper = styled(Box)(({ theme }) => ({
 const CommentMenuDropDown = ({
   comment,
   setEditing,
-  subCmt = false,
+  IsSubCmt = false,
+  EleToDel,
 }: Props) => {
   const menuDropdownIcon = useRef<HTMLButtonElement>(null);
   const menuDropdown = useRef<HTMLDivElement>(null);
@@ -50,25 +51,21 @@ const CommentMenuDropDown = ({
   let { pathname, query } = router;
   const { cmtid } = query;
   const { profile } = useAuth();
-  const { mutate, subCmtMutate, mainCmtId } = useContext<any>(
-    StoryCommentRowContext
-  );
+  const { mutate, mainCmtId } = useContext<any>(StoryCommentRowContext);
   const { closeHandle } = useContext<any>(StoryCommentButtonContext);
 
   const deleteHandle = async (_id: string) => {
     try {
-      await API.delete(`/comments${subCmt ? "/sub" : ""}/delete/${_id}`);
-      if (subCmt) {
-        await mutate();
-        await subCmtMutate();
-      } else {
-        await mutate();
-        if (cmtid) {
-          closeHandle(true);
-        }
+      await API.delete(`/comments${IsSubCmt ? "/sub" : ""}/delete/${_id}`);
+      if (!IsSubCmt && cmtid) {
+        closeHandle(true);
+        mutate();
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      mutate();
+      if (EleToDel?.current) EleToDel.current.remove();
     }
   };
   const menuDropdownClickHandle = (event: { target: any }) => {
@@ -119,7 +116,6 @@ const CommentMenuDropDown = ({
                   query = {
                     ...query,
                     cmtid: mainCmtId,
-                    reply: "true",
                   };
                   router.replace({ pathname, query }, undefined, {
                     shallow: true,
