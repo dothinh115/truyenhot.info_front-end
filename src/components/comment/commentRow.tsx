@@ -107,7 +107,6 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
   const [editLoading, setEditLoading] = useState<boolean>(false);
   const [replyLoading, setReplyLoading] = useState<boolean>(false);
   const [subCmtData, setSubCmtData] = useState<any[]>([]);
-  const [size, setSize] = useState<number>(0);
   const [range, setRange] = useState<{
     start: number;
     end: number;
@@ -116,15 +115,51 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
     end: 0,
   });
 
+  const editSubComment = async (
+    data: {
+      truncatedValue: string;
+      mainValue: string;
+    },
+    _id: string
+  ) => {
+    try {
+      setEditing(false);
+      const response: { result: any } = await API.put(
+        `/comments/sub/edit/${_id}`,
+        {
+          data,
+        }
+      );
+      await getData(1, true);
+      query = {
+        ...query,
+        subcmtid: response.result._id,
+      };
+      await router.replace({ pathname, query }, undefined, { shallow: true });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteCommentHandle = async (url: string) => {
+    try {
+      await API.delete(url);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      await getData(1, true);
+    }
+  };
+
   const getData = async (
     page: number,
-    fromFirstPage: boolean = false,
+    fromRange: boolean = false,
     join: boolean = false
   ) => {
-    if (fromFirstPage) {
+    if (fromRange) {
       try {
         let arr: any[] = [];
-        for (let i = 1; i <= page; i++) {
+        for (let i = range.start; i <= range.end; i++) {
           const response: { result: SubCommentDataInterface[] } = await API.get(
             `/comments/sub/getSubCommentByCommentId/${comment._id}?page=${i}`
           );
@@ -149,6 +184,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
       if (join) {
         if (query.subcmtid) delete query.subcmtid;
         router.replace({ pathname, query }, undefined, { shallow: true });
+        console.log(page, range);
         if (page < range.start) {
           setSubCmtData([
             {
@@ -158,7 +194,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
           ]);
           setRange({
             ...range,
-            start: range.start - 1,
+            start: page,
           });
           return;
         } else if (page > range.end) {
@@ -170,7 +206,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
           ]);
           setRange({
             ...range,
-            end: range.end + 1,
+            end: page,
           });
           return;
         }
@@ -253,31 +289,18 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
         await getData(size);
         return;
       }
-      await getData(1, true);
-      setRange({
-        start: 1,
-        end: 1,
-      });
+      if (subCmtData.length === 0) {
+        await getData(1);
+        setRange({
+          start: 1,
+          end: 1,
+        });
+      }
     }
   };
 
   useEffect(() => {
-    if (
-      !cmtid &&
-      !subcmtid &&
-      subCmtData &&
-      size > comment.totalSubCmtPages &&
-      size !== 1
-    ) {
-      setSize(comment.totalSubCmtPages);
-    }
-  }, [subCmtData]);
-
-  useEffect(() => {
     if (cmtid || subcmtid) setFindSize();
-    else {
-      setSize(1);
-    }
   }, [cmtid, subcmtid]);
 
   useEffect(() => {
@@ -293,6 +316,8 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
         value={{
           mutate,
           mainCmtId: comment._id,
+          editSubComment,
+          deleteCommentHandle,
         }}
       >
         <CommentRow>
@@ -470,28 +495,30 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
           </Stack>
         )}
 
-        {comment.totalSubCmt > 0 && range.end < comment.totalSubCmtPages && (
-          <Link
-            underline="none"
-            sx={{
-              cursor: "pointer",
-              marginLeft: "5%",
-              display: "flex",
-              alignItem: "center",
-            }}
-            onClick={async (event: React.MouseEvent<HTMLAnchorElement>) => {
-              event.preventDefault();
-              await getData(1);
-              setRange({
-                start: 1,
-                end: 1,
-              });
-            }}
-          >
-            <ExpandMoreIcon />
-            Xem trả lời cho bình luận này
-          </Link>
-        )}
+        {comment.totalSubCmt > 0 &&
+          range.end < comment.totalSubCmtPages &&
+          subCmtData.length === 0 && (
+            <Link
+              underline="none"
+              sx={{
+                cursor: "pointer",
+                marginLeft: "5%",
+                display: "flex",
+                alignItem: "center",
+              }}
+              onClick={async (event: React.MouseEvent<HTMLAnchorElement>) => {
+                event.preventDefault();
+                await getData(1);
+                setRange({
+                  start: 1,
+                  end: 1,
+                });
+              }}
+            >
+              <ExpandMoreIcon />
+              Xem trả lời cho bình luận này
+            </Link>
+          )}
         {replyLoading && (
           <Box
             my={1}

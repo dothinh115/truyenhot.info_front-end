@@ -1,6 +1,5 @@
 import { useAuth } from "@/hooks/auth/useAuth";
 import { SubCommentDataInterface } from "@/models/stories";
-import { API } from "@/utils/config";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import FemaleIcon from "@mui/icons-material/Female";
@@ -17,6 +16,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { StoryCommentButtonContext } from "../stories/commentButton";
+import { StoryCommentRowContext } from "./commentRow";
 
 const CommentEditor = dynamic(() => import("./editor/wrapperEditor"));
 const StoryCommentContent = dynamic(() => import("./commentContent"));
@@ -70,34 +70,18 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
   const commentRowRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   let { pathname, query } = router;
-  const [subData, setSubData] = useState<SubCommentDataInterface>(subCmtData);
-
   const { subcmtid } = router.query;
   const { setSubReplyTo } = useContext<any>(StoryCommentButtonContext);
+  const { editSubComment } = useContext<any>(StoryCommentRowContext);
 
   const submitHandle = async (data: {
     truncatedValue: string;
     mainValue: string;
   }) => {
     setLoading(true);
-    try {
-      setEditing(false);
-      const response: { result: any } = await API.put(
-        `/comments/sub/edit/${subCmtData._id}`,
-        {
-          data,
-        }
-      );
-      setSubData({
-        ...subData,
-        mainValue: data.mainValue,
-        truncatedValue: data.truncatedValue,
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
+    await editSubComment(data, subCmtData._id);
+    setEditing(false);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -107,9 +91,7 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
       commentRowRef.current
     ) {
       commentRowRef.current.classList.add("markComment");
-      setTimeout(() => {
-        if (wrapperRef.current) wrapperRef.current.scrollIntoView();
-      }, 200);
+      if (wrapperRef.current) wrapperRef.current.scrollIntoView(false);
     } else {
       if (commentRowRef.current)
         commentRowRef.current.classList.remove("markComment");
@@ -179,7 +161,7 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
               cb={submitHandle}
               clicked={submitClick}
               setClicked={setSubmitClick}
-              defaultValue={subData?.mainValue}
+              defaultValue={subCmtData?.mainValue}
             />
             <IconWrapper>
               <IconButton
@@ -206,8 +188,8 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
               </Box>
             ) : (
               <StoryCommentContent
-                mainValue={subData?.mainValue}
-                truncatedValue={subData?.truncatedValue}
+                mainValue={subCmtData?.mainValue}
+                truncatedValue={subCmtData?.truncatedValue}
               />
             )}
           </>
@@ -224,6 +206,6 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
   );
 };
 
-const MemorizedStorySubCommentRow = React.memo(StorySubCommentRow);
+const MemorizedStorySubCommentRow = StorySubCommentRow;
 
 export default MemorizedStorySubCommentRow;

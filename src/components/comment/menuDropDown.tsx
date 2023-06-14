@@ -51,22 +51,19 @@ const CommentMenuDropDown = ({
   let { pathname, query } = router;
   const { cmtid } = query;
   const { profile } = useAuth();
-  const { mutate, mainCmtId } = useContext<any>(StoryCommentRowContext);
+  const { mutate, mainCmtId, deleteCommentHandle } = useContext<any>(
+    StoryCommentRowContext
+  );
   const { closeHandle } = useContext<any>(StoryCommentButtonContext);
 
   const deleteHandle = async (_id: string) => {
-    try {
-      await API.delete(`/comments${IsSubCmt ? "/sub" : ""}/delete/${_id}`);
-      if (!IsSubCmt && cmtid) {
-        closeHandle(true);
-        mutate();
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      mutate();
-      if (EleToDel?.current) EleToDel.current.remove();
+    await deleteCommentHandle(
+      `/comments${IsSubCmt ? "/sub" : ""}/delete/${_id}`
+    );
+    if (!IsSubCmt && cmtid) {
+      closeHandle(true);
     }
+    mutate();
   };
   const menuDropdownClickHandle = (event: { target: any }) => {
     if (menuDropdown?.current) {
