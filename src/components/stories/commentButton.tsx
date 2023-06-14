@@ -130,6 +130,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
     if (!disableClose) delete query.cmtopen;
     if (query.cmtid) delete query.cmtid;
     if (query.subcmtid) delete query.subcmtid;
+    if (query.editing) delete query.editing;
     await router.replace({ pathname, query }, undefined, {
       shallow: true,
     });
@@ -397,16 +398,26 @@ const StoryCommentButton = ({ story_code }: Props) => {
                     <ArrowBackIosNewIcon />
                   </IconButton>
                 )}
-
-                {cmtid && singleCmtData
-                  ? `Phản hồi ${singleCmtData.result[0]?.author.user_id}`
-                  : "Bình luận"}
+                Bình luận
                 <IconButton onClick={() => closeHandle()}>
                   <CloseIcon />
                 </IconButton>
               </Box>
             </HeaddingStyled>
             <Box className="hr" />
+            <Typography
+              sx={{
+                fontSize: "13px",
+                width: "100%",
+                textAlign: "center",
+                marginTop: "16px",
+                color: "myText.primary",
+              }}
+            >
+              {cmtid &&
+                singleCmtData &&
+                `Bạn đang xem bình luận của ${singleCmtData.result[0]?.author.user_id}`}
+            </Typography>
             {validCmt ? (
               <>
                 <CommentRowWrapper ref={commentWrapper}>
@@ -439,7 +450,6 @@ const StoryCommentButton = ({ story_code }: Props) => {
 
                 <Box className={"hr"} />
                 {/* hiện comment editor */}
-
                 {editor}
               </>
             ) : (

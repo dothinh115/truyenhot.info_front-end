@@ -19,12 +19,11 @@ import { useEffect, useRef, memo, useContext } from "react";
 import { useRouter } from "next/router";
 import { StoryCommentRowContext } from "./commentRow";
 import { StoryCommentButtonContext } from "../stories/commentButton";
+import { StorySubCommentRowContext } from "./subCommentRow";
 
 type Props = {
   comment: CommentDataInterface | SubCommentDataInterface;
-  setEditing: (edit: boolean) => void;
   IsSubCmt?: boolean;
-  EleToDel?: any;
 };
 
 const MenuDropdownWrapper = styled(Box)(({ theme }) => ({
@@ -39,20 +38,17 @@ const MenuDropdownWrapper = styled(Box)(({ theme }) => ({
   display: "none",
   zIndex: 50,
 }));
-const CommentMenuDropDown = ({
-  comment,
-  setEditing,
-  IsSubCmt = false,
-  EleToDel,
-}: Props) => {
+const CommentMenuDropDown = ({ comment, IsSubCmt = false }: Props) => {
   const menuDropdownIcon = useRef<HTMLButtonElement>(null);
   const menuDropdown = useRef<HTMLDivElement>(null);
   const router = useRouter();
   let { pathname, query } = router;
   const { cmtid } = query;
   const { profile } = useAuth();
-  const { mutate, mainCmtId, deleteCommentHandle } = useContext<any>(
-    StoryCommentRowContext
+  const { mutate, mainCmtId, deleteCommentHandle, setEditing } =
+    useContext<any>(StoryCommentRowContext);
+  const { setEditing: subCmtSetEditing } = useContext<any>(
+    StorySubCommentRowContext
   );
   const { closeHandle } = useContext<any>(StoryCommentButtonContext);
 
@@ -149,8 +145,19 @@ const CommentMenuDropDown = ({
                   </ListItemButton>
 
                   <ListItemButton
-                    onClick={() => {
-                      setEditing(true);
+                    onClick={async () => {
+                      if (!cmtid && !IsSubCmt) {
+                        query = {
+                          ...query,
+                          cmtid: comment._id,
+                          editing: "true",
+                        };
+                        await router.replace({ pathname, query }, undefined, {
+                          shallow: true,
+                        });
+                      }
+                      if (cmtid && !IsSubCmt) setEditing(true);
+                      if (IsSubCmt) subCmtSetEditing(true);
                     }}
                   >
                     <ListItemIcon>

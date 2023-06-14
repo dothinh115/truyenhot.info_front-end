@@ -14,7 +14,13 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { StoryCommentButtonContext } from "../stories/commentButton";
 import { StoryCommentRowContext } from "./commentRow";
 
@@ -61,6 +67,8 @@ const PosterSpanStyled = styled("span")(({ theme }) => ({
   alignItems: "center",
 }));
 
+export const StorySubCommentRowContext = createContext({});
+
 const StorySubCommentRow = ({ subCmtData }: Props) => {
   const [editing, setEditing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -100,108 +108,105 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
 
   return (
     <SubCommentWrapper ref={wrapperRef}>
-      <SubCommentInner ref={commentRowRef}>
-        <Stack direction={"row"} justifyContent={"space-between"}>
-          <Box>
-            <PosterSpanStyled>
-              {subCmtData?.author.gender === "male" ? (
-                <Box
-                  component={MaleIcon}
-                  sx={{
-                    color: "#2196f3",
-                  }}
-                />
+      <StorySubCommentRowContext.Provider value={{ setEditing }}>
+        <SubCommentInner ref={commentRowRef}>
+          <Stack direction={"row"} justifyContent={"space-between"}>
+            <Box>
+              <PosterSpanStyled>
+                {subCmtData?.author.gender === "male" ? (
+                  <Box
+                    component={MaleIcon}
+                    sx={{
+                      color: "#2196f3",
+                    }}
+                  />
+                ) : (
+                  <Box
+                    component={FemaleIcon}
+                    sx={{
+                      color: "#e91e63",
+                    }}
+                  />
+                )}
+                {subCmtData?.author.user_id}
+              </PosterSpanStyled>
+            </Box>
+            <Link
+              underline="none"
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                if (profile) {
+                  query = {
+                    ...query,
+                    cmtid: subCmtData.parent_id,
+                  };
+                  router.replace({ pathname, query }, undefined, {
+                    shallow: true,
+                  });
+                  setSubReplyTo({
+                    user_id: subCmtData?.author.user_id,
+                    _id: subCmtData?.author._id,
+                  });
+                } else
+                  router.push({
+                    pathname: "/login",
+                    query: {
+                      goAround: true,
+                    },
+                  });
+              }}
+            >
+              <ReplyIcon fontSize="small" /> Trả lời
+            </Link>
+          </Stack>
+          <Divider />
+          {editing ? (
+            <>
+              <CommentEditor
+                cb={submitHandle}
+                clicked={submitClick}
+                setClicked={setSubmitClick}
+                defaultValue={subCmtData?.mainValue}
+              />
+              <IconWrapper>
+                <IconButton
+                  size="small"
+                  color="error"
+                  onClick={() => setEditing(false)}
+                >
+                  <CancelIcon />
+                </IconButton>
+                <IconButton
+                  size="small"
+                  color="success"
+                  onClick={() => setSubmitClick(true)}
+                >
+                  <CheckCircleIcon />
+                </IconButton>
+              </IconWrapper>
+            </>
+          ) : (
+            <>
+              {loading ? (
+                <Box my={1}>
+                  <CircularProgress size={"1em"} /> Đang cập nhật...
+                </Box>
               ) : (
-                <Box
-                  component={FemaleIcon}
-                  sx={{
-                    color: "#e91e63",
-                  }}
+                <StoryCommentContent
+                  mainValue={subCmtData?.mainValue}
+                  truncatedValue={subCmtData?.truncatedValue}
                 />
               )}
-              {subCmtData?.author.user_id}
-            </PosterSpanStyled>
-          </Box>
-          <Link
-            underline="none"
-            sx={{
-              display: "inline-flex",
-              alignItems: "center",
-              cursor: "pointer",
-            }}
-            onClick={() => {
-              if (profile) {
-                query = {
-                  ...query,
-                  cmtid: subCmtData.parent_id,
-                };
-                router.replace({ pathname, query }, undefined, {
-                  shallow: true,
-                });
-                setSubReplyTo({
-                  user_id: subCmtData?.author.user_id,
-                  _id: subCmtData?.author._id,
-                });
-              } else
-                router.push({
-                  pathname: "/login",
-                  query: {
-                    goAround: true,
-                  },
-                });
-            }}
-          >
-            <ReplyIcon fontSize="small" /> Trả lời
-          </Link>
-        </Stack>
-        <Divider />
-        {editing ? (
-          <>
-            <CommentEditor
-              cb={submitHandle}
-              clicked={submitClick}
-              setClicked={setSubmitClick}
-              defaultValue={subCmtData?.mainValue}
-            />
-            <IconWrapper>
-              <IconButton
-                size="small"
-                color="error"
-                onClick={() => setEditing(false)}
-              >
-                <CancelIcon />
-              </IconButton>
-              <IconButton
-                size="small"
-                color="success"
-                onClick={() => setSubmitClick(true)}
-              >
-                <CheckCircleIcon />
-              </IconButton>
-            </IconWrapper>
-          </>
-        ) : (
-          <>
-            {loading ? (
-              <Box my={1}>
-                <CircularProgress size={"1em"} /> Đang cập nhật...
-              </Box>
-            ) : (
-              <StoryCommentContent
-                mainValue={subCmtData?.mainValue}
-                truncatedValue={subCmtData?.truncatedValue}
-              />
-            )}
-          </>
-        )}
-      </SubCommentInner>
+            </>
+          )}
+        </SubCommentInner>
 
-      <CommentMenuDropDown
-        comment={subCmtData}
-        setEditing={setEditing}
-        IsSubCmt={true}
-        EleToDel={wrapperRef}
-      />
+        <CommentMenuDropDown comment={subCmtData} IsSubCmt={true} />
+      </StorySubCommentRowContext.Provider>
     </SubCommentWrapper>
   );
 };

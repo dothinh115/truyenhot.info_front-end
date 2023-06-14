@@ -98,7 +98,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
   } = useContext<any>(StoryCommentButtonContext);
   const router = useRouter();
   let { pathname, query } = router;
-  const { cmtid, subcmtid } = router.query;
+  const { cmtid, subcmtid, editing: qEditing } = router.query;
 
   const [editing, setEditing] = useState<boolean>(false);
   const commentWrapperEle = useRef<HTMLDivElement>(null);
@@ -186,7 +186,6 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
       if (join) {
         if (query.subcmtid) delete query.subcmtid;
         router.replace({ pathname, query }, undefined, { shallow: true });
-        console.log(page, range);
         if (page < range.start) {
           setSubCmtData([
             {
@@ -240,6 +239,10 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
       console.log(error);
     } finally {
       setEditLoading(false);
+      if (query.editing) delete query.editing;
+      await router.replace({ pathname, query }, undefined, {
+        shallow: true,
+      });
     }
   };
 
@@ -304,12 +307,15 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
 
   useEffect(() => {
     if (cmtid || subcmtid) setFindSize();
-    if (cmtid) getSingleComment();
   }, [cmtid, subcmtid]);
 
   useEffect(() => {
     if (replyData && cmtid) replySubmitHandle(replyData);
   }, [replyData]);
+
+  useEffect(() => {
+    setEditing(qEditing ? true : false);
+  }, [qEditing]);
 
   const showReplyFooter =
     (comment.totalSubCmt > 0 && subCmtData.length !== 0) ||
@@ -322,6 +328,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
           mainCmtId: comment._id,
           editSubComment,
           deleteCommentHandle,
+          setEditing,
         }}
       >
         <CommentRow>
@@ -399,7 +406,12 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
                       <IconButton
                         size="small"
                         color="error"
-                        onClick={() => setEditing(false)}
+                        onClick={() => {
+                          if (query.editing) delete query.editing;
+                          router.replace({ pathname, query }, undefined, {
+                            shallow: true,
+                          });
+                        }}
                       >
                         <CancelIcon />
                       </IconButton>
@@ -424,7 +436,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
                 )}
               </CommentRowContentInner>
 
-              <CommentMenuDropDown comment={comment} setEditing={setEditing} />
+              <CommentMenuDropDown comment={comment} />
             </Stack>
           </CommentRowContentWrapper>
         </CommentRow>

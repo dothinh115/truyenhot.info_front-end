@@ -91,7 +91,6 @@ const EditChapter = (props: Props) => {
   };
 
   const updateByUrlSubmitHandle = async (data: any) => {
-    console.log(document.cookie);
     try {
       const response: any = await API.get(
         `/bot/updateSingleChapterByUrl?url=${data.url}`
