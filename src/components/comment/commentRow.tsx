@@ -286,10 +286,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
     if (cmtid || subcmtid) {
       if (subcmtid) {
         const size = await findSize();
-        await getData(
-          size,
-          range.start !== 0 && range.end !== 0 ? true : false
-        );
+        await getData(size);
         return;
       }
       if (subCmtData.length === 0) {
