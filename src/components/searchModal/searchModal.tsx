@@ -17,7 +17,7 @@ import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { MainLayoutContext } from "@/layouts/main";
+import { MainLayoutContext, MainLayoutContextInterface } from "@/layouts/main";
 
 type Props = {};
 
@@ -111,7 +111,8 @@ const SearchModal = (props: Props) => {
     },
   });
 
-  const { setSearchOpen, searchOpen } = useContext<any>(MainLayoutContext);
+  const { setSearchOpen, searchOpen } =
+    useContext<MainLayoutContextInterface>(MainLayoutContext);
   const [loading, setLoading] = useState<boolean>(false);
   const timeout = useRef<NodeJS.Timeout | number | undefined>();
   const [searchData, setSearchData] = useState<SearchDataInterface | null>(
@@ -157,7 +158,9 @@ const SearchModal = (props: Props) => {
     return html;
   };
 
-  const onCloseHandle = () => setSearchOpen(!searchOpen);
+  const onCloseHandle = () => {
+    if (setSearchOpen) setSearchOpen(!searchOpen);
+  };
 
   useEffect(() => {
     if (searchData?.result.length === 0)
@@ -174,7 +177,7 @@ const SearchModal = (props: Props) => {
 
   return (
     <>
-      <Modal open={searchOpen} onClose={onCloseHandle}>
+      <Modal open={searchOpen ? searchOpen : false} onClose={onCloseHandle}>
         <ModalInner>
           <Stack
             direction={"row"}
@@ -191,7 +194,9 @@ const SearchModal = (props: Props) => {
             >
               <IconButton
                 sx={{ width: "42px", height: "42px" }}
-                onClick={() => setSearchOpen(false)}
+                onClick={() => {
+                  if (setSearchOpen) setSearchOpen(false);
+                }}
                 size="small"
               >
                 <ArrowBackIosIcon />
@@ -270,7 +275,7 @@ const SearchModal = (props: Props) => {
                       key={item._id}
                       href={`/story/${item.story_code}`}
                       onClick={() => {
-                        setSearchOpen(false);
+                        if (setSearchOpen) setSearchOpen(false);
                       }}
                     >
                       <Stack direction={"row"} alignItems={"center"}>
@@ -337,7 +342,7 @@ const SearchModal = (props: Props) => {
                   component={Link}
                   href={`/search/author?keywords=${getValues("keywords")}`}
                   onClick={() => {
-                    setSearchOpen(false);
+                    if (setSearchOpen) setSearchOpen(false);
                   }}
                 >
                   Xem thêm kết quả
@@ -356,7 +361,7 @@ const SearchModal = (props: Props) => {
                   component={Link}
                   href={`/search/title?keywords=${getValues("keywords")}`}
                   onClick={() => {
-                    setSearchOpen(false);
+                    if (setSearchOpen) setSearchOpen(false);
                   }}
                 >
                   Xem thêm kết quả

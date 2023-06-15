@@ -5,6 +5,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import Stack from "@mui/material/Stack";
 import { alpha, styled } from "@mui/material/styles";
 import {
+  RefObject,
   createContext,
   memo,
   useCallback,
@@ -15,7 +16,30 @@ import {
 import MemoriezedCommentEditor from "./commentEditor";
 import MemorizedEmojiPickerIcon from "./iconPicker";
 
-export const CommentEditorContext = createContext({});
+export interface CommentEditorContextInterface {
+  setUserSuggestion?: (data: UserSuggesionInterface[]) => void;
+  setListIndex?: (num: number) => void;
+  listIndex?: number;
+  mentionClickData?:
+    | {
+        user_id: string;
+        _id: string;
+      }
+    | undefined;
+
+  userSuggestion?: UserSuggesionInterface[];
+  getUserSuggestion?: (user_id: string) => void;
+  suggestionULRef?: RefObject<HTMLUListElement>;
+  setIconPick?: (data: string | null) => void;
+  iconPick?: string | null;
+  showPicker?: boolean;
+  setShowPicker?: (data: boolean) => void;
+  wrapperRef?: RefObject<HTMLDivElement>;
+  iconButtonRef?: RefObject<HTMLButtonElement>;
+}
+
+export const CommentEditorContext =
+  createContext<CommentEditorContextInterface>({});
 
 const Wrapper = styled(Stack)(({ theme }) => ({
   marginTop: theme.spacing(0.5),

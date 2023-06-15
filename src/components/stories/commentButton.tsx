@@ -14,7 +14,14 @@ import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { memo, useEffect, useRef, useState, createContext } from "react";
+import {
+  memo,
+  useEffect,
+  useRef,
+  useState,
+  createContext,
+  RefObject,
+} from "react";
 import useSWRInfinite from "swr/infinite";
 import { CommentLoading } from "../loading/commentLoading";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -72,7 +79,38 @@ type Props = {
   story_code: string;
 };
 
-export const StoryCommentButtonContext = createContext({});
+export interface StoryCommentButtonContextInterface {
+  closeHandle?: (disableClose: boolean) => void;
+  replyData?:
+    | {
+        truncatedValue: string;
+        mainValue: string;
+        mentionData: string[];
+      }
+    | undefined;
+  setReplyData?: (
+    data:
+      | {
+          truncatedValue: string;
+          mainValue: string;
+          mentionData: string[];
+        }
+      | undefined
+  ) => void;
+  setSubReplyTo?: (
+    data:
+      | {
+          user_id: string;
+          _id: string;
+        }
+      | undefined
+  ) => void;
+  commentWrapper?: RefObject<HTMLDivElement>;
+  cmtMutate?: () => void;
+}
+
+export const StoryCommentButtonContext =
+  createContext<StoryCommentButtonContextInterface>({});
 
 const StoryCommentButton = ({ story_code }: Props) => {
   const { profile } = useAuth();
@@ -225,13 +263,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
         cmtid && validCmt ? comment._id === cmtid : comment
       )
       .map((comment: CommentDataInterface) => {
-        return (
-          <MemorizedStoryCommentRow
-            key={comment._id}
-            comment={comment}
-            mutate={cmtMutate}
-          />
-        );
+        return <MemorizedStoryCommentRow key={comment._id} comment={comment} />;
       });
   });
 

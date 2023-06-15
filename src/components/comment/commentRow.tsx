@@ -29,7 +29,10 @@ import React, {
 } from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { StoryCommentButtonContext } from "../stories/commentButton";
+import {
+  StoryCommentButtonContext,
+  StoryCommentButtonContextInterface,
+} from "../stories/commentButton";
 const CommentEditor = dynamic(() => import("./editor/wrapperEditor"));
 const MemorizedStorySubCommentRow = dynamic(() => import("./subCommentRow"));
 const StoryCommentContent = dynamic(() => import("./commentContent"));
@@ -82,15 +85,25 @@ const PosterSpanStyled = styled("span")(({ theme }) => ({
 
 type Props = {
   comment: CommentDataInterface;
-  mutate: () => void;
 };
 
-export const StoryCommentRowContext = createContext({});
+export interface StoryCommentRowContextInterface {
+  mainCmtId?: string;
+  editSubComment?: (
+    data: { truncatedValue: string; mainValue: string; mentionData: string[] },
+    _id: string
+  ) => void;
+  deleteCommentHandle?: (url: string) => void;
+  setEditing?: (bool: boolean) => void;
+}
 
-const StoryCommentRow = ({ comment, mutate }: Props) => {
+export const StoryCommentRowContext =
+  createContext<StoryCommentRowContextInterface>({});
+
+const StoryCommentRow = ({ comment }: Props) => {
   const { profile } = useAuth();
-  const { replyData, setReplyData, setSubReplyTo, commentWrapper } =
-    useContext<any>(StoryCommentButtonContext);
+  const { replyData, setReplyData, setSubReplyTo, commentWrapper, cmtMutate } =
+    useContext<StoryCommentButtonContextInterface>(StoryCommentButtonContext);
   const router = useRouter();
   let { pathname, query } = router;
   const { cmtid, subcmtid, editing: qEditing } = router.query;
@@ -101,7 +114,9 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
   const [editSubmitClicked, setEditSubmitClicked] = useState<boolean>(false);
   const [editLoading, setEditLoading] = useState<boolean>(false);
   const [replyLoading, setReplyLoading] = useState<boolean>(false);
-  const [subCmtData, setSubCmtData] = useState<any[]>([]);
+  const [subCmtData, setSubCmtData] = useState<
+    { result: SubCommentDataInterface[] }[]
+  >([]);
   const [range, setRange] = useState<{
     start: number;
     end: number;
@@ -114,6 +129,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
     data: {
       truncatedValue: string;
       mainValue: string;
+      mentionData: string[];
     },
     _id: string
   ) => {
@@ -228,7 +244,7 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
       await API.put(`/comments/edit/${comment._id}`, {
         data,
       });
-      await mutate();
+      if (cmtMutate) await cmtMutate();
     } catch (error) {
       console.log(error);
     } finally {
@@ -258,11 +274,11 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
         subcmtid: response.result._id,
       };
       await router.replace({ pathname, query }, undefined, { shallow: true });
-      if (commentWrapper.current)
+      if (commentWrapper && commentWrapper.current)
         commentWrapper.current.scroll({
           top: commentWrapper.current.scrollHeight,
         });
-      await setReplyData(null);
+      if (setReplyData) await setReplyData(undefined);
       setReplyLoading(false);
     } catch (error) {
       console.log(error);
@@ -317,7 +333,6 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
     <CommentRowWrapper ref={commentWrapperEle}>
       <StoryCommentRowContext.Provider
         value={{
-          mutate,
           mainCmtId: comment._id,
           editSubComment,
           deleteCommentHandle,
@@ -358,10 +373,11 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
                     onClick={(e) => {
                       e.preventDefault();
                       if (profile) {
-                        setSubReplyTo({
-                          user_id: comment?.author.user_id,
-                          _id: comment?.author._id,
-                        });
+                        if (setSubReplyTo)
+                          setSubReplyTo({
+                            user_id: comment?.author.user_id,
+                            _id: comment?.author._id,
+                          });
                         query = {
                           ...query,
                           cmtid: comment._id,

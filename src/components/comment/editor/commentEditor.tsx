@@ -18,7 +18,10 @@ import {
   getDefaultKeyBinding,
 } from "draft-js";
 import React, { memo, useContext, useEffect, useRef, useState } from "react";
-import { CommentEditorContext } from "./wrapperEditor";
+import {
+  CommentEditorContext,
+  CommentEditorContextInterface,
+} from "./wrapperEditor";
 
 type Props = {
   cb: (data: {
@@ -135,7 +138,7 @@ const CommentEditor = ({
     iconPick,
     setIconPick,
     setShowPicker,
-  } = useContext<any>(CommentEditorContext);
+  } = useContext<CommentEditorContextInterface>(CommentEditorContext);
 
   const currentRangeSuggestion = useRef<{
     start: number;
@@ -173,8 +176,12 @@ const CommentEditor = ({
 
   const clearSuggestion = () => {
     clearTimeout(timeout.current);
-    if (userSuggestion.length !== 0) setUserSuggestion([]);
-    if (listIndex !== 0) setListIndex(0);
+    if (userSuggestion && userSuggestion.length !== 0) {
+      if (setUserSuggestion) setUserSuggestion([]);
+    }
+    if (listIndex !== 0) {
+      if (setListIndex) setListIndex(0);
+    }
   };
 
   const blankBlockRemoveHandle = (): ContentState => {
@@ -363,7 +370,7 @@ const CommentEditor = ({
 
     cb(mainValue);
     clearContent();
-    setShowPicker(false);
+    if (setShowPicker) setShowPicker(false);
   };
 
   const clearContent = () => {
@@ -407,13 +414,13 @@ const CommentEditor = ({
         return "handled";
       }
       case "send-cmt": {
-        if (userSuggestion.length === 0) {
+        if (userSuggestion && userSuggestion.length === 0) {
           const plainText = editorState.getCurrentContent().getPlainText();
           if (plainText === "") return "not-handled";
           sendCmt();
           return "handled";
         } else {
-          if (suggestionULRef.current) {
+          if (suggestionULRef && listIndex && suggestionULRef.current) {
             suggestionULRef.current.querySelectorAll("div")[listIndex].click();
           }
         }
@@ -428,7 +435,13 @@ const CommentEditor = ({
   };
 
   const handleReplyTo = () => {
-    if (replyTo?.user_id === profile?.result.user_id) return;
+    if (replyTo?.user_id === profile?.result.user_id) {
+      //di chuyển con trỏ đến ký tự cuối cùng
+      const newEditorState = EditorState.moveFocusToEnd(editorState);
+
+      setEditorState(newEditorState);
+      return;
+    }
     let contentState = editorState.getCurrentContent();
     const firstBlock = contentState.getFirstBlock();
     const lastBlock = contentState.getLastBlock();
@@ -538,7 +551,8 @@ const CommentEditor = ({
         }
         //vượt qua tất cả thì đã có value của mention, tiến hành call api lấy suggestion
         const user_id = range.value;
-        await getUserSuggestion(user_id.replace("@", ""));
+        if (getUserSuggestion)
+          await getUserSuggestion(user_id.replace("@", ""));
         characterCount.current = contentState.getPlainText().length;
         currentRangeSuggestion.current = { ...range, key: keyOfBlockStanding }; //lưu thông tin range hiện tại để dùng sau
         break;
@@ -648,7 +662,7 @@ const CommentEditor = ({
   useEffect(() => {
     if (iconPick) {
       iconPickChange(iconPick);
-      setIconPick(null);
+      if (setIconPick) setIconPick(null);
     }
   }, [iconPick]);
 

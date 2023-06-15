@@ -5,7 +5,10 @@ import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import EmojiPicker, { EmojiClickData, EmojiStyle } from "emoji-picker-react";
 import { memo, useContext } from "react";
-import { CommentEditorContext } from "./wrapperEditor";
+import {
+  CommentEditorContext,
+  CommentEditorContextInterface,
+} from "./wrapperEditor";
 
 const Wrapper = styled(Stack)(({ theme }) => ({
   flexDirection: "row",
@@ -29,13 +32,13 @@ const PickerWrapper = styled(Stack)(() => ({
 const EmojiPickerIcon = () => {
   const { mode } = useContext<any>(MainLayoutContext);
   const { setIconPick, showPicker, setShowPicker, wrapperRef, iconButtonRef } =
-    useContext<any>(CommentEditorContext);
+    useContext<CommentEditorContextInterface>(CommentEditorContext);
   const emojiButtonClick = () => {
-    setShowPicker(!showPicker);
+    if (setShowPicker) setShowPicker(!showPicker);
   };
 
   const emojiClickHandle = (emojiData: EmojiClickData, event: MouseEvent) => {
-    setIconPick(emojiData.emoji);
+    if (setIconPick) setIconPick(emojiData.emoji);
   };
 
   return (
@@ -60,7 +63,7 @@ const EmojiPickerIcon = () => {
           <EmojiPicker
             searchDisabled={true}
             skinTonesDisabled={true}
-            theme={mode}
+            theme={mode ? mode : undefined}
             height={"300px"}
             onEmojiClick={emojiClickHandle}
             emojiStyle={EmojiStyle.TWITTER}

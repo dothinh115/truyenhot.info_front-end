@@ -14,7 +14,7 @@ import { styled, alpha } from "@mui/material/styles";
 import Link from "next/link";
 import { useContext, useState } from "react";
 import useSWR from "swr";
-import { MainLayoutContext } from "@/layouts/main";
+import { MainLayoutContext, MainLayoutContextInterface } from "@/layouts/main";
 import { useAuth } from "@/hooks/auth/useAuth";
 
 type Props = {};
@@ -68,23 +68,28 @@ const WrapperHeadding = styled("h4")(({ theme }) => ({
 export const Drawer = (props: Props) => {
   const [cateShow, setCateShow] = useState<boolean>(false);
   const { mode, setMode, setMobileMenuOpen, mobileMenuOpen } =
-    useContext<any>(MainLayoutContext);
+    useContext<MainLayoutContextInterface>(MainLayoutContext);
   const { profile, logout } = useAuth();
   const { data: categoriesList } = useSWR(`/categories/getAll`, {
     dedupingInterval: 60 * 60 * 24,
   });
-  const closeHandle = () => setMobileMenuOpen(!mobileMenuOpen);
+  const closeHandle = () => {
+    if (setMobileMenuOpen) setMobileMenuOpen(!mobileMenuOpen);
+  };
 
   return (
     <>
-      <Modal open={mobileMenuOpen} onClose={closeHandle}>
+      <Modal
+        open={mobileMenuOpen ? mobileMenuOpen : false}
+        onClose={closeHandle}
+      >
         <Slide direction="left" in={mobileMenuOpen} unmountOnExit>
           <ModalInner>
             <ModalMainHeadding>
               <Box>
                 <IconButton
                   onClick={() => {
-                    setMobileMenuOpen(false);
+                    if (setMobileMenuOpen) setMobileMenuOpen(false);
                   }}
                   size="small"
                   color="secondary"
@@ -168,7 +173,9 @@ export const Drawer = (props: Props) => {
                 <Switch
                   checked={mode === "dark" ? true : false}
                   color="primary"
-                  onClick={() => setMode(mode === "light" ? "dark" : "light")}
+                  onClick={() => {
+                    if (setMode) setMode(mode === "light" ? "dark" : "light");
+                  }}
                 />
               </Wrapper>
               <Wrapper alignItems={"flex-start"}>
@@ -190,7 +197,9 @@ export const Drawer = (props: Props) => {
                           mt: 1,
                           fontSize: "13px",
                         }}
-                        onClick={() => setMobileMenuOpen(false)}
+                        onClick={() => {
+                          if (setMobileMenuOpen) setMobileMenuOpen(false);
+                        }}
                       />
                     );
                   })}

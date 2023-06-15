@@ -14,7 +14,17 @@ const FooterSection = dynamic(() => import("../sections/footer"));
 const SearchModal = dynamic(
   () => import("../components/searchModal/searchModal")
 );
-export const MainLayoutContext = createContext({});
+
+export interface MainLayoutContextInterface {
+  mobileMenuOpen?: boolean;
+  setMobileMenuOpen?: (data: boolean) => void;
+  searchOpen?: boolean;
+  setSearchOpen?: (data: boolean) => void;
+  mode?: "light" | "dark";
+  setMode?: (data: "light" | "dark") => void;
+}
+
+export const MainLayoutContext = createContext<MainLayoutContextInterface>({});
 
 export const MainLayout = ({ children }: MainLayoutInterface) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);

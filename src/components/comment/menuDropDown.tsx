@@ -17,9 +17,18 @@ import ListItemText from "@mui/material/ListItemText";
 import { alpha, styled } from "@mui/material/styles";
 import { useEffect, useRef, memo, useContext } from "react";
 import { useRouter } from "next/router";
-import { StoryCommentRowContext } from "./commentRow";
-import { StoryCommentButtonContext } from "../stories/commentButton";
-import { StorySubCommentRowContext } from "./subCommentRow";
+import {
+  StoryCommentRowContext,
+  StoryCommentRowContextInterface,
+} from "./commentRow";
+import {
+  StoryCommentButtonContext,
+  StoryCommentButtonContextInterface,
+} from "../stories/commentButton";
+import {
+  StorySubCommentRowContext,
+  StorySubCommentRowContextInterface,
+} from "./subCommentRow";
 
 type Props = {
   comment: CommentDataInterface | SubCommentDataInterface;
@@ -45,23 +54,23 @@ const CommentMenuDropDown = ({ comment, IsSubCmt = false }: Props) => {
   let { pathname, query } = router;
   const { cmtid } = query;
   const { profile } = useAuth();
-  const { mutate, mainCmtId, deleteCommentHandle, setEditing } =
-    useContext<any>(StoryCommentRowContext);
-  const { setEditing: subCmtSetEditing } = useContext<any>(
-    StorySubCommentRowContext
-  );
-  const { closeHandle, setSubReplyTo } = useContext<any>(
-    StoryCommentButtonContext
-  );
+  const { mainCmtId, deleteCommentHandle, setEditing } =
+    useContext<StoryCommentRowContextInterface>(StoryCommentRowContext);
+
+  const { setEditing: subCmtSetEditing } =
+    useContext<StorySubCommentRowContextInterface>(StorySubCommentRowContext);
+  const { closeHandle, setSubReplyTo, cmtMutate } =
+    useContext<StoryCommentButtonContextInterface>(StoryCommentButtonContext);
 
   const deleteHandle = async (_id: string) => {
-    await deleteCommentHandle(
-      `/comments${IsSubCmt ? "/sub" : ""}/delete/${_id}`
-    );
+    if (deleteCommentHandle)
+      await deleteCommentHandle(
+        `/comments${IsSubCmt ? "/sub" : ""}/delete/${_id}`
+      );
     if (!IsSubCmt && cmtid) {
-      closeHandle(true);
+      if (closeHandle) closeHandle(true);
     }
-    mutate();
+    if (cmtMutate) cmtMutate();
   };
   const menuDropdownClickHandle = (event: { target: any }) => {
     if (menuDropdown?.current) {
@@ -116,10 +125,11 @@ const CommentMenuDropDown = ({ comment, IsSubCmt = false }: Props) => {
                   router.replace({ pathname, query }, undefined, {
                     shallow: true,
                   });
-                  setSubReplyTo({
-                    user_id: comment?.author.user_id,
-                    _id: comment?.author._id,
-                  });
+                  if (setSubReplyTo)
+                    setSubReplyTo({
+                      user_id: comment?.author.user_id,
+                      _id: comment?.author._id,
+                    });
                 } else
                   router.push({
                     pathname: "/login",
@@ -163,8 +173,12 @@ const CommentMenuDropDown = ({ comment, IsSubCmt = false }: Props) => {
                           shallow: true,
                         });
                       }
-                      if (cmtid && !IsSubCmt) setEditing(true);
-                      if (IsSubCmt) subCmtSetEditing(true);
+                      if (cmtid && !IsSubCmt) {
+                        if (setEditing) setEditing(true);
+                      }
+                      if (IsSubCmt) {
+                        if (subCmtSetEditing) subCmtSetEditing(true);
+                      }
                     }}
                   >
                     <ListItemIcon>

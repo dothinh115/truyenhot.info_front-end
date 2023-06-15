@@ -21,8 +21,14 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { StoryCommentButtonContext } from "../stories/commentButton";
-import { StoryCommentRowContext } from "./commentRow";
+import {
+  StoryCommentButtonContext,
+  StoryCommentButtonContextInterface,
+} from "../stories/commentButton";
+import {
+  StoryCommentRowContext,
+  StoryCommentRowContextInterface,
+} from "./commentRow";
 
 const CommentEditor = dynamic(() => import("./editor/wrapperEditor"));
 const StoryCommentContent = dynamic(() => import("./commentContent"));
@@ -67,7 +73,12 @@ const PosterSpanStyled = styled("span")(({ theme }) => ({
   alignItems: "center",
 }));
 
-export const StorySubCommentRowContext = createContext({});
+export interface StorySubCommentRowContextInterface {
+  setEditing?: (bool: boolean) => void;
+}
+
+export const StorySubCommentRowContext =
+  createContext<StorySubCommentRowContextInterface>({});
 
 const StorySubCommentRow = ({ subCmtData }: Props) => {
   const [editing, setEditing] = useState<boolean>(false);
@@ -80,15 +91,20 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
   let { pathname, query } = router;
   let { cmtid } = query;
   const { subcmtid } = router.query;
-  const { setSubReplyTo } = useContext<any>(StoryCommentButtonContext);
-  const { editSubComment } = useContext<any>(StoryCommentRowContext);
+  const { setSubReplyTo } = useContext<StoryCommentButtonContextInterface>(
+    StoryCommentButtonContext
+  );
+  const { editSubComment } = useContext<StoryCommentRowContextInterface>(
+    StoryCommentRowContext
+  );
 
   const submitHandle = async (data: {
     truncatedValue: string;
     mainValue: string;
+    mentionData: string[];
   }) => {
     setLoading(true);
-    await editSubComment(data, subCmtData._id);
+    if (editSubComment) await editSubComment(data, subCmtData._id);
     setEditing(false);
     setLoading(false);
   };
@@ -149,10 +165,11 @@ const StorySubCommentRow = ({ subCmtData }: Props) => {
                   router.replace({ pathname, query }, undefined, {
                     shallow: true,
                   });
-                  setSubReplyTo({
-                    user_id: subCmtData?.author.user_id,
-                    _id: subCmtData?.author._id,
-                  });
+                  if (setSubReplyTo)
+                    setSubReplyTo({
+                      user_id: subCmtData?.author.user_id,
+                      _id: subCmtData?.author._id,
+                    });
                 } else
                   router.push({
                     pathname: "/login",
