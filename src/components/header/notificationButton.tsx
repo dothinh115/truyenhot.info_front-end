@@ -198,7 +198,7 @@ const NotificationButton = (props: Props) => {
                           sx={{
                             color: noti.read
                               ? "myText.primary"
-                              : "myPrimary.main",
+                              : "myNoti.unread",
                           }}
                         />
                         <Stack>

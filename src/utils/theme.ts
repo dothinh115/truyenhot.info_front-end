@@ -106,6 +106,9 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             heading: indigo[300],
             footerLink: "#fff",
           },
+          myNoti: {
+            unread: "#ff7961",
+          },
         }
       : {
           myPrimary: {
@@ -147,6 +150,9 @@ export const getDesignTokens = (mode: PaletteMode) => ({
             heading: indigo[100],
             footerLink: "#fff",
           },
+          myNoti: {
+            unread: "#ff7961",
+          },
         }),
   },
 });
@@ -157,11 +163,13 @@ declare module "@mui/material/styles" {
     myBackground?: any;
     mySecondary?: any;
     myText?: any;
+    myNoti?: any;
   }
   interface ThemeOptions {
     myPrimary?: any;
     myBackground?: any;
     mySecondary?: any;
     myText?: any;
+    myNoti?: any;
   }
 }

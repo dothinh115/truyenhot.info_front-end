@@ -204,8 +204,8 @@ const StoryCommentButton = ({ story_code }: Props) => {
     if (cmtid || subcmtid) {
       const valid = await checkValidCmt();
       await setValidCmt(valid);
-    }
-    await cmtMutate();
+      if (valid) await cmtMutate();
+    } else await cmtMutate();
     await setLoading(false);
   };
 
@@ -368,11 +368,17 @@ const StoryCommentButton = ({ story_code }: Props) => {
                 }}
               >
                 {cmtid && (
-                  <IconButton onClick={() => closeHandle(true)}>
-                    <ArrowBackIosNewIcon />
-                  </IconButton>
+                  <Button
+                    onClick={() => closeHandle(true)}
+                    startIcon={<ArrowBackIosNewIcon />}
+                    size="small"
+                    variant="outlined"
+                  >
+                    trở về
+                  </Button>
                 )}
-                Bình luận
+                {!cmtid && "Bình luận"}
+
                 <IconButton onClick={() => closeHandle()}>
                   <CloseIcon />
                 </IconButton>
