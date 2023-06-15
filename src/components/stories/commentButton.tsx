@@ -17,7 +17,6 @@ import { useRouter } from "next/router";
 import { memo, useEffect, useRef, useState, createContext } from "react";
 import useSWRInfinite from "swr/infinite";
 import { CommentLoading } from "../loading/commentLoading";
-import useSWR from "swr";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 const CommentEditor = dynamic(() => import("../comment/editor/wrapperEditor"));
 const MemorizedStoryCommentRow = dynamic(() => import("../comment/commentRow"));
@@ -101,9 +100,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
   const commentWrapper = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [validCmt, setValidCmt] = useState<boolean>(true);
-  const [singleCmtData, setSingleCmtData] = useState<{
-    result: CommentDataInterface[];
-  }>();
+
   const [replyData, setReplyData] = useState<{
     truncatedValue: string;
     mainValue: string;
@@ -113,17 +110,6 @@ const StoryCommentButton = ({ story_code }: Props) => {
     user_id: string;
     _id: string;
   }>();
-
-  const getSingleComment = async () => {
-    try {
-      const response: { result: CommentDataInterface[] } = await API.get(
-        `/comments/getSingleCommentById/${cmtid}`
-      );
-      setSingleCmtData(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const closeHandle = async (disableClose: boolean = false) => {
     setValidCmt(true);
@@ -218,8 +204,8 @@ const StoryCommentButton = ({ story_code }: Props) => {
     if (cmtid || subcmtid) {
       const valid = await checkValidCmt();
       await setValidCmt(valid);
-      if (valid && cmtid) await getSingleComment();
-    } else await cmtMutate();
+    }
+    await cmtMutate();
     await setLoading(false);
   };
 
@@ -233,28 +219,21 @@ const StoryCommentButton = ({ story_code }: Props) => {
     calcLoadingTime();
   }, [cmtData]);
 
-  const showComment =
-    cmtid && singleCmtData
-      ? singleCmtData.result?.map((comment: CommentDataInterface) => {
-          return (
-            <MemorizedStoryCommentRow
-              key={comment._id}
-              comment={comment}
-              mutate={cmtMutate}
-            />
-          );
-        })
-      : cmtData?.map((group: any) => {
-          return group?.result.map((comment: CommentDataInterface) => {
-            return (
-              <MemorizedStoryCommentRow
-                key={comment._id}
-                comment={comment}
-                mutate={cmtMutate}
-              />
-            );
-          });
-        });
+  const showComment = cmtData?.map((group: any) => {
+    return group?.result
+      .filter((comment: CommentDataInterface) =>
+        cmtid && validCmt ? comment._id === cmtid : comment
+      )
+      .map((comment: CommentDataInterface) => {
+        return (
+          <MemorizedStoryCommentRow
+            key={comment._id}
+            comment={comment}
+            mutate={cmtMutate}
+          />
+        );
+      });
+  });
 
   const showMoreButton = (
     <Box textAlign={"center"} sx={{ color: "myText.primary" }}>
@@ -291,11 +270,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
             cb={cmtid ? replySubmitHandle : submitHandle}
             clicked={submitClicked}
             setClicked={setSubmitClicked}
-            placeholder={
-              singleCmtData?.result[0]?.author.user_id
-                ? singleCmtData.result[0].author.user_id
-                : "Viết bình luận..."
-            }
+            placeholder={"Viết bình luận..."}
             replyTo={cmtid ? subReplyTo : undefined}
             showEmojiButton={true}
             sendIcon={true}
@@ -365,7 +340,6 @@ const StoryCommentButton = ({ story_code }: Props) => {
       </Typography>
     </Stack>
   );
-
   return (
     <>
       <Modal open={cmtopen ? true : false} onClose={() => closeHandle()}>
@@ -377,7 +351,6 @@ const StoryCommentButton = ({ story_code }: Props) => {
             setSubReplyTo,
             commentWrapper,
             cmtMutate,
-            getSingleComment,
           }}
         >
           <ModalInner>
@@ -416,8 +389,14 @@ const StoryCommentButton = ({ story_code }: Props) => {
               }}
             >
               {cmtid &&
-                singleCmtData &&
-                `Bạn đang xem bình luận của ${singleCmtData.result[0]?.author.user_id}`}
+                validCmt &&
+                `Bạn đang xem bình luận của ${
+                  cmtData?.map((group: any) => {
+                    return group.result.filter(
+                      (comment: CommentDataInterface) => comment._id === cmtid
+                    )[0];
+                  })[0].author.user_id
+                }`}
             </Typography>
             {validCmt ? (
               <>

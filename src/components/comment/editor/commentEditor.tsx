@@ -607,6 +607,17 @@ const CommentEditor = ({
     clearSuggestion();
   };
 
+  const defaultValueHandle = (defaultValue: string) => {
+    const parse = JSON.parse(defaultValue);
+    let newEditorState = EditorState.createWithContent(
+      convertFromRaw(parse),
+      mentionDecorator
+    );
+    //di chuyển con trỏ đến ký tự cuối cùng
+    newEditorState = EditorState.moveFocusToEnd(newEditorState);
+    setEditorState(newEditorState);
+  };
+
   useEffect(() => {
     if (mentionClickData)
       mentionClickHandle(mentionClickData.user_id, mentionClickData._id);
@@ -623,10 +634,7 @@ const CommentEditor = ({
 
   useEffect(() => {
     if (defaultValue) {
-      const parse = JSON.parse(defaultValue);
-      setEditorState(
-        EditorState.createWithContent(convertFromRaw(parse), mentionDecorator)
-      );
+      defaultValueHandle(defaultValue);
     }
   }, [defaultValue]);
 

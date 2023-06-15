@@ -89,13 +89,8 @@ export const StoryCommentRowContext = createContext({});
 
 const StoryCommentRow = ({ comment, mutate }: Props) => {
   const { profile } = useAuth();
-  const {
-    replyData,
-    setReplyData,
-    getSingleComment,
-    setSubReplyTo,
-    commentWrapper,
-  } = useContext<any>(StoryCommentButtonContext);
+  const { replyData, setReplyData, setSubReplyTo, commentWrapper } =
+    useContext<any>(StoryCommentButtonContext);
   const router = useRouter();
   let { pathname, query } = router;
   const { cmtid, subcmtid, editing: qEditing } = router.query;
@@ -233,7 +228,6 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
       await API.put(`/comments/edit/${comment._id}`, {
         data,
       });
-      if (cmtid) await getSingleComment();
       await mutate();
     } catch (error) {
       console.log(error);
@@ -259,7 +253,6 @@ const StoryCommentRow = ({ comment, mutate }: Props) => {
           data,
         }
       );
-      await getSingleComment();
       query = {
         ...query,
         subcmtid: response.result._id,
