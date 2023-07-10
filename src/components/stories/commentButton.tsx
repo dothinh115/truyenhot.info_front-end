@@ -433,7 +433,7 @@ const StoryCommentButton = ({ story_code }: Props) => {
                     return group.result.filter(
                       (comment: CommentDataInterface) => comment._id === cmtid
                     )[0];
-                  })[0].author.user_id
+                  })[0]?.author?.user_id
                 }`}
             </Typography>
             {validCmt ? (
