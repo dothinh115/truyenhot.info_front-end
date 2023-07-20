@@ -13,7 +13,7 @@ type Props = {
   storyData: StoryInterface;
   mutate: any;
 };
-const filetypes = /jpeg|jpg|png|gif/;
+const filetypes = /jpeg|jpg|png|gif|webp/;
 
 export const AdminNoCoverStoriesRow = ({ storyData, mutate }: Props) => {
   const { setSnackbar, snackbar } = useSnackbar();
@@ -28,7 +28,7 @@ export const AdminNoCoverStoriesRow = ({ storyData, mutate }: Props) => {
       const fileTypeCheck = filetypes.test(file.name);
       if (!fileTypeCheck) {
         setSnackbar({
-          message: "Chỉ hỗ trợ đuôi jpeg|jpg|png|gif",
+          message: "Chỉ hỗ trợ đuôi jpeg|jpg|png|gif|webp",
           open: true,
           type: "error",
         });
@@ -165,9 +165,7 @@ export const AdminNoCoverStoriesRow = ({ storyData, mutate }: Props) => {
                   "Content-Type": "multipart/form-data",
                 },
               });
-              await setTimeout(async () => {
-                await mutate();
-              }, 1500);
+              await mutate();
               setSnackbar({
                 message: "Update truyện thành công",
                 open: true,
