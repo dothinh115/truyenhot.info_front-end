@@ -350,7 +350,7 @@ const StoryCommentRow = ({ comment }: Props) => {
                 <Stack direction={"row"} justifyContent={"space-between"}>
                   <Box>
                     <PosterSpanStyled>
-                      {comment?.author.gender === "male" ? (
+                      {comment?.author?.gender === "male" ? (
                         <Box
                           component={MaleIcon}
                           sx={{
@@ -365,7 +365,7 @@ const StoryCommentRow = ({ comment }: Props) => {
                           }}
                         />
                       )}
-                      {comment?.author.user_id}
+                      {comment?.author?.user_id}
                     </PosterSpanStyled>
                   </Box>
                   <Link

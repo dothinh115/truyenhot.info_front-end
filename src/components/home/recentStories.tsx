@@ -299,13 +299,15 @@ const IndexRecentStories = ({ categories }: Props) => {
           : recentUpdateStoriesList?.result?.map(
               (story: RecentStoriesInterface, index: number) => {
                 if (story.lastChapter)
-                  story.lastChapter.chapter_name =
-                    story.lastChapter?.chapter_name
-                      .replaceAll("Chương ", "C")
-                      .replaceAll("Quyển ", "Q")
-                      .replaceAll(" - ", "-")
-                      .replaceAll("CHƯƠNG ", "C")
-                      .replaceAll("QUYỂN ", "Q");
+                  story.lastChapter.chapter_name = story?.lastChapter
+                    ?.chapter_name
+                    ? story?.lastChapter?.chapter_name
+                        .replaceAll("Chương ", "C")
+                        .replaceAll("Quyển ", "Q")
+                        .replaceAll(" - ", "-")
+                        .replaceAll("CHƯƠNG ", "C")
+                        .replaceAll("QUYỂN ", "Q")
+                    : "";
                 return (
                   <ItemRowWrapper key={story._id} direction={"row"}>
                     <ItemFirstRow>
