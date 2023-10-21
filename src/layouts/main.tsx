@@ -8,7 +8,6 @@ import { createTheme } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { createContext, useState, useEffect } from "react";
-import Head from "next/head";
 import Script from "next/script";
 
 const HeaderSection = dynamic(() => import("../sections/header"));
@@ -43,16 +42,13 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
       });
     }
   }, [query]);
+  useEffect(() => {
+    document.head
+      .append(`<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9923804716755487"
+    crossorigin="anonymous"></script>`);
+  }, []);
   return (
     <>
-      <Head>
-        <Script
-          strategy="afterInteractive"
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9923804716755487`}
-          crossOrigin="anonymous"
-        />
-      </Head>
       <ThemeProvider theme={theme}>
         <MainLayoutContext.Provider
           value={{
