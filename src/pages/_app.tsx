@@ -11,7 +11,7 @@ import "react-quill/dist/quill.snow.css";
 import { SWRConfig } from "swr/_internal";
 import "../style/style.scss";
 import { MainLayout } from "@/layouts/main";
-
+import Script from "next/script";
 const clientSideEmotionCache = createEmotionCache();
 
 NProgress.configure({ showSpinner: false, speed: 500 });
@@ -42,6 +42,7 @@ export default function App({
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
         <meta charSet="utf-8" />
+        <meta name="google-adsense-account" content="ca-pub-9923804716755487" />
       </Head>
       <CssBaseline />
       <SWRConfig
