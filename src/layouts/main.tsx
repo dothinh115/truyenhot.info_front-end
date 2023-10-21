@@ -7,8 +7,9 @@ import Stack from "@mui/material/Stack";
 import { createTheme } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import Script from "next/script";
 import { createContext, useState, useEffect } from "react";
+import Head from "next/head";
+import Script from "next/script";
 
 const HeaderSection = dynamic(() => import("../sections/header"));
 const FooterSection = dynamic(() => import("../sections/footer"));
@@ -44,12 +45,14 @@ export const MainLayout = ({ children }: MainLayoutInterface) => {
   }, [query]);
   return (
     <>
-      <Script
-        async
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9923804716755487`}
-        strategy="lazyOnload"
-        crossOrigin="anonymous"
-      />
+      <Head>
+        <Script
+          strategy="afterInteractive"
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9923804716755487`}
+          crossOrigin="anonymous"
+        />
+      </Head>
       <ThemeProvider theme={theme}>
         <MainLayoutContext.Provider
           value={{
