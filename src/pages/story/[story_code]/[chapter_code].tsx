@@ -214,7 +214,6 @@ const ChapterDetail = ({ chapterData }: Props) => {
         <Stack direction={"row"} justifyContent={"center"}>
           <Container maxWidth={"md"}>
             <ChapterTitle>{chapterData?.story_title}</ChapterTitle>
-            <Ads ref={ads}></Ads>
             <ChapterName>{chapterData?.chapter_title}</ChapterName>
 
             <StoryChapterPicker
@@ -233,6 +232,7 @@ const ChapterDetail = ({ chapterData }: Props) => {
               />
             </Box>
             <Box className={"hr"} my={4} />
+            <Ads ref={ads}></Ads>
 
             <ChapterContent
               dangerouslySetInnerHTML={{
