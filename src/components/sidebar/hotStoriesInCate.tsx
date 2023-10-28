@@ -31,7 +31,7 @@ const ListItemTextStyled = styled(ListItemText)(({ theme }) => ({
   },
 }));
 
-const Headding = styled("h3")(({ theme }) => ({
+const Headding = styled("h2")(({ theme }) => ({
   padding: theme.spacing(1),
   margin: theme.spacing(0),
   borderBottom: `1px dashed ${theme.palette.mySecondary.borderBottom}`,

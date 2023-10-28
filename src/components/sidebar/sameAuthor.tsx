@@ -19,7 +19,7 @@ const ListItemStyled = styled(ListItem)(({ theme }) => ({
   },
 }));
 
-const H3Styled = styled("h3")(({ theme }) => ({
+const H3Styled = styled("h2")(({ theme }) => ({
   padding: theme.spacing(1),
   margin: "0",
   borderBottomWidth: "1px",

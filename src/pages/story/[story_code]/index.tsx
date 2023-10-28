@@ -14,13 +14,19 @@ import Stack from "@mui/material/Stack";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { styled } from "@mui/material/styles";
+
 type Props = {
   story: StoryInterface;
   categories: CategoryInterface[];
   sameAuthor: StoriesSearchResultInterface[];
 };
-
+const Ads = styled(Box)(() => ({
+  backgroundColor: "#fff",
+  width: "fit-content",
+  margin: "20px auto",
+}));
 const CategoriesSidebar = dynamic(
   () => import("../../../components/sidebar/categories")
 );
@@ -70,6 +76,38 @@ const StoryDetail = ({ story, categories, sameAuthor }: Props) => {
       {story?.story_title}
     </Box>,
   ];
+  const atOptions_md = {
+    key: "279b64fd892aecce906091ace21a9db6",
+    format: "iframe",
+    height: 90,
+    width: 728,
+    params: {},
+  };
+
+  const atOptions_xs = {
+    key: "6a1d29a1712c42f55cc21490ee777c91",
+    format: "iframe",
+    height: 50,
+    width: 280,
+    params: {},
+  };
+  const ads = useRef<HTMLDivElement>();
+  useEffect(() => {
+    if (ads.current && !ads.current.firstChild) {
+      const config = document.createElement("script");
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.async = true;
+      script.src = `//www.highperformancedformats.com/${
+        screen.width > 390 ? atOptions_md.key : atOptions_xs.key
+      }/invoke.js`;
+      config.innerHTML = `atOptions = ${JSON.stringify(
+        screen.width > 390 ? atOptions_md : atOptions_xs
+      )}`;
+      ads.current.append(config);
+      ads.current.append(script);
+    }
+  }, []);
   return (
     <>
       <Seo
@@ -88,6 +126,7 @@ const StoryDetail = ({ story, categories, sameAuthor }: Props) => {
             m: "auto!important",
           }}
         >
+          <Ads ref={ads}></Ads>
           <Stack
             direction={{
               md: "row",

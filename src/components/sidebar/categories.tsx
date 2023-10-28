@@ -11,7 +11,7 @@ const Wrapper = styled(Box)(({ theme }) => ({
   boxShadow: `0 0 2px ${alpha(theme.palette.mySecondary.boxShadow, 0.2)}`,
 }));
 
-const Heading = styled("h1")(({ theme }) => ({
+const Heading = styled("h2")(({ theme }) => ({
   margin: "0",
   padding: theme.spacing(1),
   color: theme.palette.myText.main,
@@ -61,27 +61,29 @@ type Props = {
 
 const CategoriesSidebar = ({ categories }: Props) => {
   return (
-    <Stack spacing={2}>
-      <Wrapper>
-        <Heading>Thể loại</Heading>
+    <>
+      <Stack spacing={2}>
+        <Wrapper>
+          <Heading>Thể loại</Heading>
 
-        <UList>
-          {categories?.map((cate: CategoryInterface) => {
-            return (
-              <ListItem key={cate.cate_id}>
-                <Box
-                  component={Link}
-                  href={`/categories/${cate.cate_code}`}
-                  title={cate.cate_title}
-                >
-                  {cate.cate_title}
-                </Box>
-              </ListItem>
-            );
-          })}
-        </UList>
-      </Wrapper>
-    </Stack>
+          <UList>
+            {categories?.map((cate: CategoryInterface) => {
+              return (
+                <ListItem key={cate.cate_id}>
+                  <Box
+                    component={Link}
+                    href={`/categories/${cate.cate_code}`}
+                    title={cate.cate_title}
+                  >
+                    {cate.cate_title}
+                  </Box>
+                </ListItem>
+              );
+            })}
+          </UList>
+        </Wrapper>
+      </Stack>
+    </>
   );
 };
 

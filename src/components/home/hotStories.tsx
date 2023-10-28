@@ -115,7 +115,7 @@ const HomeHotStories = ({ categories }: Props) => {
         justifyContent={"space-between"}
       >
         <Box
-          component={"h2"}
+          component={"h1"}
           m={0}
           sx={{
             color: "myText.primary",

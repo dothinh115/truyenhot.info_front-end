@@ -11,8 +11,15 @@ import Stack from "@mui/material/Stack";
 import { GetStaticProps } from "next";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
+import { styled } from "@mui/material/styles";
 
+const Ads = styled(Box)(() => ({
+  backgroundColor: "#fff",
+  width: "fit-content",
+  margin: "auto",
+  marginTop: "20px",
+}));
 const BaseStats = dynamic(() => import("../components/home/baseStats"));
 const HomeFullStories = dynamic(() => import("../components/home/fullStories"));
 const HomeHotStories = dynamic(() => import("../components/home/hotStories"));
@@ -32,6 +39,24 @@ type Props = {
 
 const Index = ({ categories }: Props) => {
   useContext<any>(MainLayoutContext);
+
+  const ads = useRef<HTMLDivElement>();
+  const atOptions_md = {
+    key: "279b64fd892aecce906091ace21a9db6",
+    format: "iframe",
+    height: 90,
+    width: 728,
+    params: {},
+  };
+
+  const atOptions_xs = {
+    key: "6a1d29a1712c42f55cc21490ee777c91",
+    format: "iframe",
+    height: 50,
+    width: 280,
+    params: {},
+  };
+
   const breadCrumbs = [
     <Stack
       key={1}
@@ -50,6 +75,23 @@ const Index = ({ categories }: Props) => {
     </Stack>,
   ];
 
+  useEffect(() => {
+    if (ads.current && !ads.current.firstChild) {
+      const config = document.createElement("script");
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.async = true;
+      script.src = `//www.highperformancedformats.com/${
+        screen.width > 390 ? atOptions_md.key : atOptions_xs.key
+      }/invoke.js`;
+      config.innerHTML = `atOptions = ${JSON.stringify(
+        screen.width > 390 ? atOptions_md : atOptions_xs
+      )}`;
+      ads.current.append(config);
+      ads.current.append(script);
+    }
+  }, []);
+
   return (
     <>
       <Seo
@@ -64,6 +106,7 @@ const Index = ({ categories }: Props) => {
       <Stack direction={"row"} justifyContent={"center"} mt={4}>
         <Container maxWidth={"md"}>
           <HomeHotStories categories={categories} />
+          <Ads ref={ads}></Ads>
           <Stack
             direction={"row"}
             gap={"15px"}
@@ -93,6 +136,7 @@ const Index = ({ categories }: Props) => {
               <BaseStats />
             </Box>
           </Stack>
+
           <HomeFullStories categories={categories} />
         </Container>
       </Stack>
