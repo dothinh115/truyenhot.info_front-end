@@ -53,7 +53,7 @@ const Index = ({ categories }: Props) => {
     key: "6a1d29a1712c42f55cc21490ee777c91",
     format: "iframe",
     height: 50,
-    width: 280,
+    width: 320,
     params: {},
   };
 
@@ -82,10 +82,10 @@ const Index = ({ categories }: Props) => {
       script.type = "text/javascript";
       script.async = true;
       script.src = `//www.highperformancedformats.com/${
-        screen.width > 390 ? atOptions_md.key : atOptions_xs.key
+        screen.width > 768 ? atOptions_md.key : atOptions_xs.key
       }/invoke.js`;
       config.innerHTML = `atOptions = ${JSON.stringify(
-        screen.width > 390 ? atOptions_md : atOptions_xs
+        screen.width > 768 ? atOptions_md : atOptions_xs
       )}`;
       ads.current.append(config);
       ads.current.append(script);
