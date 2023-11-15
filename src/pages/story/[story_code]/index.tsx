@@ -92,7 +92,11 @@ const StoryDetail = ({ story, categories, sameAuthor }: Props) => {
     params: {},
   };
   const ads = useRef<HTMLDivElement>();
+
   useEffect(() => {
+    if (ads.current?.firstChild) {
+      ads.current.innerHTML = "";
+    }
     if (ads.current && !ads.current.firstChild) {
       const config = document.createElement("script");
       const script = document.createElement("script");
@@ -107,7 +111,7 @@ const StoryDetail = ({ story, categories, sameAuthor }: Props) => {
       ads.current.append(config);
       ads.current.append(script);
     }
-  }, []);
+  }, [story?.story_code]);
   return (
     <>
       <Seo

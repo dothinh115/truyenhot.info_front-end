@@ -90,6 +90,11 @@ const Index = ({ categories }: Props) => {
       ads.current.append(config);
       ads.current.append(script);
     }
+    return () => {
+      if (ads.current?.firstChild) {
+        ads.current.innerHTML = "";
+      }
+    };
   }, []);
 
   return (

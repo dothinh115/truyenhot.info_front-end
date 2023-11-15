@@ -125,8 +125,14 @@ const ChapterDetail = ({ chapterData }: Props) => {
     width: 280,
     params: {},
   };
-  const ads = useRef<HTMLDivElement>();
+
+  const ads = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {}, []);
+
   useEffect(() => {
+    if (ads.current?.firstChild) {
+      ads.current.innerHTML = "";
+    }
     if (ads.current && !ads.current.firstChild) {
       const config = document.createElement("script");
       const script = document.createElement("script");
@@ -141,7 +147,7 @@ const ChapterDetail = ({ chapterData }: Props) => {
       ads.current.append(config);
       ads.current.append(script);
     }
-  }, []);
+  }, [chapterData?.chapter_code]);
 
   const breadCrumbs = [
     <Box
